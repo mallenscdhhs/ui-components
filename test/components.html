@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Components</title>
+    <script src="components.js"></script>
+  </head>
+
+  <body>
+      <div id="page"></div>
+      <script>
+        var React = components.React;
+        var Page = React.createFactory(components.Page);
+        React.render(
+          Page({title: "Page component", content: [
+            { type: 'paragraph', config: { text: 'I am a paragraph component.' }}
+          ]}),
+          document.getElementById('page')
+        );
+      </script>
+  </body>
+</html>
