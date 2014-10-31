@@ -1,4 +1,3 @@
-var fs = require('fs');
 var gulp = require('gulp');
 var jsHint = require('gulp-jshint');
 var del = require('del');
@@ -6,9 +5,6 @@ var reactify = require('reactify');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var karma = require('karma').server;
-var webpack = require('gulp-webpack');
-
-var COMPONENTS_PATH = './src/components/**/*.jsx';
 
 gulp.task('hint', function(){
   return gulp.src(['./src/**/*.js', './test/**/*.js']).pipe(jsHint());
