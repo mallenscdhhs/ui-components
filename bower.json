@@ -1,0 +1,9 @@
+{
+  "name": "ui-components",
+  "version": "1.0.0",
+  "ignore": ["node_modules", "test", "src"],
+  "main": "dist/ui-components.js",
+  "dependencies": {
+    "react": "~0.12.0"
+  }
+}

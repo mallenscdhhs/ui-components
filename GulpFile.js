@@ -2,13 +2,16 @@ var gulp = require('gulp');
 var jsHint = require('gulp-jshint');
 var del = require('del');
 var reactify = require('reactify');
+var react = require('gulp-react');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var karma = require('karma').server;
+var wrap = require('gulp-wrap-js');
+var pkg = require('./package.json');
+var copy = require('gulp-copy');
+var _ = require('underscore');
+var requirejs = require('gulp-requirejs-simple');
 
-gulp.task('hint', function(){
-  return gulp.src(['./src/**/*.js', './test/**/*.js']).pipe(jsHint());
-});
 
 gulp.task('clean', function(done){
   return del(['dist/'], done);
@@ -18,20 +21,73 @@ gulp.task('clean-specs', function(done){
   return del(['test/lib/specs.js'], done);
 });
 
+gulp.task('hint', function(){
+  return gulp.src(['./src/**/*.js', './test/**/*.js']).pipe(jsHint());
+});
+
+
 gulp.task('test', ['hint'], function(done){
   karma.start({
     configFile: __dirname + '/karma.conf.js'
   }, done);
 });
 
-gulp.task('compile', ['clean'], function(){
-  browserify({entries: ['./node_modules/components'], standalone: 'components'})
-    .transform(reactify)
-    .bundle()
-    .pipe(source('components.js'))
-    .pipe(gulp.dest('./dist'));
+/**
+ * Build all components by transforming JSX to JS, and then
+ * wrapping the code for AMD and pushing all assets to their
+ * respective folders. We create assets for AMD, CJS and browser
+ * global environments.
+ */
+gulp.task('build', ['clean'], function(){
+  // AMD
+  gulp.src(['./src/**/*.jsx'])
+    .pipe(react())
+    .pipe(wrap('define(function(require, exports, module){%= body %});'))
+    .pipe(gulp.dest('./dist/amd'));
+  // CJS
+  gulp.src(['./src/**/*.jsx'])
+    .pipe(react())
+    .pipe(gulp.dest('./dist/cjs'));
+  
+  gulp.src(['./src/amd/*', './src/cjs/*'])
+    .pipe(copy('./dist', {prefix: 1}));
 });
 
+/**
+  * Builds a browser-based version of the component library. This will
+  * attach the "Components" namespace to the window object so that you
+  * can reference components like: Components.Page. You will need to supply
+  * your own version of React and Underscore.
+  */
+gulp.task('build:browser', requirejs({
+  baseUrl: "dist/amd",
+  nodeRequire: require,
+  paths: {
+    "ui-components": "./index",
+    almond: "../../node_modules/almond/almond",
+    underscore: "../../node_modules/underscore/underscore"
+  },
+  packages: [
+    { name: 'react/addons', location: '../../node_modules/react', main: './addons' }
+  ],
+  include: ["almond", "ui-components"],
+  exclude: ["react/addons"],
+  out: "dist/ui-components.js",
+  cjsTranslate: true,
+  wrap: {
+    startFile: "src/amd/wrap.start",
+    endFile: "src/amd/wrap.end"
+  },
+  rawText: {
+    'react/addons': 'define({});'
+  },
+  optimize: "none"
+}));
+
+/**
+ * Build a browserified version of the library for use in the test/specs.html
+ * file. This page is a browser-based spec runner that uses Jasmine. 
+ */
 gulp.task('specs', ['hint'], function(){
   browserify(['./test/unit/index.js'])
     .transform(reactify)
@@ -40,8 +96,7 @@ gulp.task('specs', ['hint'], function(){
     .pipe(gulp.dest('./test/lib'));
 });
 
-
 gulp.task('watch', function(){
   gulp.watch(['test/**/*-spec.js'], ['specs']);
-  gulp.watch(['node_modules/components/**/*.jsx'], ['compile']);
+  gulp.watch(['src/**/*.jsx'], ['build']);
 });

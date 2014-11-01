@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var Page = require('components/page.jsx');
+var Page = require('../../dist/cjs/Page');
 var TestUtils = React.addons.TestUtils;
 
 describe('page component', function() {
@@ -8,7 +8,7 @@ describe('page component', function() {
     title: 'Hello',
     content: [
       {
-        type: "paragraph",
+        type: "p",
         config: {
           text: "hello, world"
         }
@@ -42,9 +42,9 @@ describe('page component', function() {
     var p = TestUtils.findRenderedDOMComponentWithTag(page, 'p');
     expect(h2.getDOMNode().textContent).toEqual(fixture.title);
     expect(p.getDOMNode().textContent).toEqual(fixture.content[0].config.text);
-    page.setState({title: 'bye', content: [{type: 'paragraph', config: { text: 'foo' }}]});
+    page.setState({title: 'bye', content: [{type: 'p', config: { text: 'foo' }}]});
     expect(p.getDOMNode().textContent).toEqual('foo');
-    expect(h2.getDOMNode().textContent).toEqual('bye');    
+    expect(h2.getDOMNode().textContent).toEqual('bye');
   });
 
   it('renders a list of components');
