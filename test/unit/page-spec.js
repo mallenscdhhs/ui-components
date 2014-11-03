@@ -1,5 +1,6 @@
 var React = require('react/addons');
-var Page = require('../../dist/cjs/Page');
+var Page = require('../../src/Page.jsx');
+var request = require('superagent');
 var TestUtils = React.addons.TestUtils;
 
 describe('page component', function() {
@@ -49,6 +50,12 @@ describe('page component', function() {
 
   it('renders a list of components');
   it('can use a layout config to arrange its components');
-  it('can load its state from a server');
+
+  it('can load its state from a server', function(){
+    spyOn(request, 'get');
+    var page = TestUtils.renderIntoDocument(<Page url="lib/data/page-config.json"/>);
+    expect(request.get.calls.count()).toEqual(1);
+    expect(request.get.calls.argsFor(0)[0]).toEqual('lib/data/page-config.json');
+  });
 
 });

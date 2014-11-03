@@ -9,19 +9,12 @@
     <script src="lib/react/react-with-addons.min.js"></script>
     <script src="ui-components.js"></script>
   </head>
-
-  <body>
+  <body style="padding: 2em">
       <div id="page"></div>
-      <script> 
-        var data = {
-          title: "Page component", 
-          content: [
-            { type: 'p', config: { text: 'I am a paragraph component.' }}
-          ]
-        };       
+      <script>
         var Page = React.createFactory(Components.Page);
         React.render(
-          Page(data),
+          Page({ url: 'lib/data/page-config.json'}),
           document.getElementById('page')
         );
       </script>

@@ -1,3 +1,4 @@
+var fs = require('fs');
 var gulp = require('gulp');
 var jsHint = require('gulp-jshint');
 var del = require('del');
@@ -40,15 +41,15 @@ gulp.task('test', ['hint'], function(done){
  */
 gulp.task('build', ['clean'], function(){
   // AMD
-  gulp.src(['./src/**/*.jsx'])
+  gulp.src(['./src/**/*.jsx', './src/*.js'])
     .pipe(react())
     .pipe(wrap('define(function(require, exports, module){%= body %});'))
     .pipe(gulp.dest('./dist/amd'));
   // CJS
-  gulp.src(['./src/**/*.jsx'])
+  gulp.src(['./src/**/*.jsx', './src/*.js'])
     .pipe(react())
     .pipe(gulp.dest('./dist/cjs'));
-  
+
   gulp.src(['./src/amd/*', './src/cjs/*'])
     .pipe(copy('./dist', {prefix: 1}));
 });
@@ -65,7 +66,8 @@ gulp.task('build:browser', requirejs({
   paths: {
     "ui-components": "./index",
     almond: "../../node_modules/almond/almond",
-    underscore: "../../node_modules/underscore/underscore"
+    underscore: "../../node_modules/underscore/underscore",
+    superagent: "../../node_modules/superagent/superagent"
   },
   packages: [
     { name: 'react/addons', location: '../../node_modules/react', main: './addons' }
@@ -86,17 +88,19 @@ gulp.task('build:browser', requirejs({
 
 /**
  * Build a browserified version of the library for use in the test/specs.html
- * file. This page is a browser-based spec runner that uses Jasmine. 
+ * file. This page is a browser-based spec runner that uses Jasmine.
  */
 gulp.task('specs', ['hint'], function(){
-  browserify(['./test/unit/index.js'])
-    .transform(reactify)
-    .bundle()
-    .pipe(source('specs.js'))
-    .pipe(gulp.dest('./test/lib'));
+  fs.readdir('./test/unit', function(err, files){
+    browserify(files.map(function(file){ return './test/unit/'+file; }))
+      .transform(reactify)
+      .bundle()
+      .pipe(source('specs.js'))
+      .pipe(gulp.dest('./test/lib'));
+  });
 });
 
 gulp.task('watch', function(){
   gulp.watch(['test/**/*-spec.js'], ['specs']);
-  gulp.watch(['src/**/*.jsx'], ['build']);
+  gulp.watch(['src/**/*.jsx'], ['build', 'build:browser']);
 });
