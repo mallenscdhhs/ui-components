@@ -3,7 +3,7 @@ var Page = require('../../src/Page.jsx');
 var request = require('superagent');
 var TestUtils = React.addons.TestUtils;
 
-describe('page component', function() {
+describe('Page component', function() {
 
   var fixture = {
     title: 'Hello',
