@@ -57,6 +57,8 @@ gulp.task('build:copy', ['build:amd', 'build:cjs'], function(){
     .pipe(copy('./dist', {prefix: 1}));
 });
 
+gulp.task('build', ['clean', 'hint', 'build:amd', 'build:cjs', 'build:copy']);
+
 /**
   * Builds a browser-based version of the component library. This will
   * attach the "Components" namespace to the window object so that you
@@ -105,5 +107,5 @@ gulp.task('specs', ['hint'], function(){
 
 gulp.task('watch', function(){
   gulp.watch(['test/**/*-spec.js'], ['specs']);
-  gulp.watch(['src/**/*.jsx'], ['clean', 'build:amd', 'build:cjs', 'build:copy', 'build:browser']);
+  gulp.watch(['src/**/*.jsx'], ['build']);
 });
