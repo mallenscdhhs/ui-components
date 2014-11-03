@@ -23,7 +23,7 @@ gulp.task('clean-specs', function(done){
 });
 
 gulp.task('hint', function(){
-  return gulp.src(['./src/**/*.js', './test/**/*.js']).pipe(jsHint());
+  return gulp.src(['./src/**/*.js', './src/**/*.jsx', './test/**/*.js']).pipe(jsHint());
 });
 
 
@@ -39,18 +39,21 @@ gulp.task('test', ['hint'], function(done){
  * respective folders. We create assets for AMD, CJS and browser
  * global environments.
  */
-gulp.task('build', ['clean'], function(){
-  // AMD
-  gulp.src(['./src/**/*.jsx', './src/*.js'])
+gulp.task('build:amd', ['clean', 'hint'], function(){
+  return gulp.src(['./src/**/*.jsx', './src/*.js'])
     .pipe(react())
     .pipe(wrap('define(function(require, exports, module){%= body %});'))
     .pipe(gulp.dest('./dist/amd'));
-  // CJS
-  gulp.src(['./src/**/*.jsx', './src/*.js'])
+});
+
+gulp.task('build:cjs', ['clean', 'hint'], function(){
+  return gulp.src(['./src/**/*.jsx', './src/*.js'])
     .pipe(react())
     .pipe(gulp.dest('./dist/cjs'));
+});
 
-  gulp.src(['./src/amd/*', './src/cjs/*'])
+gulp.task('build:copy', ['build:amd', 'build:cjs'], function(){
+  return gulp.src(['./src/amd/*', './src/cjs/*'])
     .pipe(copy('./dist', {prefix: 1}));
 });
 
@@ -60,7 +63,7 @@ gulp.task('build', ['clean'], function(){
   * can reference components like: Components.Page. You will need to supply
   * your own version of React and Underscore.
   */
-gulp.task('build:browser', requirejs({
+gulp.task('build:browser', ['build:copy'], requirejs({
   baseUrl: "dist/amd",
   nodeRequire: require,
   paths: {
@@ -102,5 +105,5 @@ gulp.task('specs', ['hint'], function(){
 
 gulp.task('watch', function(){
   gulp.watch(['test/**/*-spec.js'], ['specs']);
-  gulp.watch(['src/**/*.jsx'], ['build', 'build:browser']);
+  gulp.watch(['src/**/*.jsx'], ['clean', 'build:amd', 'build:cjs', 'build:copy', 'build:browser']);
 });
