@@ -10,7 +10,7 @@ This project requires the following to be installed on your local machine:
 * [karma](http://karma-runner.github.io/0.12/index.html)
 
 After you have installed the prerequisite software you must clone this repo to your local machine. From the project root directory type:
-```sh
+```bash
 $ npm install
 $ bower install
 ```
