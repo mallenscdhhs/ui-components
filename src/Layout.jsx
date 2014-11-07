@@ -12,6 +12,14 @@ var Layout = React.createClass({
 		type: React.PropTypes.string,
 		config: React.PropTypes.object
 	},
+	/** 
+	 * Every component that uses Layout must render their
+	 * child components through Layout, so here we give the option to
+	 * not specify a layout and just render the children. This prevents
+	 * every component that wishes to use Layout from having to do existence
+	 * checks in their render method.
+	 * @returns {React.DOM}
+	 */
 	render: function(){
 		var components = this.props.components;
 		var cn = React.addons.classSet({
