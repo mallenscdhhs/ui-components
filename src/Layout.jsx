@@ -14,14 +14,14 @@ var Layout = React.createClass({
 	},
 	render: function(){
 		var components = this.props.components;
-		if ( this.props && this.props.config ) {
+		var cn = React.addons.classSet({
+			'components': !this.props.type,
+			'layout': !!this.props.type
+		});
+		if ( this.props && this.props.type ) {
 			components = React.render(utils.initialCap(this.props.type), this.props);
 		}
-		return (
-			<div className="layout">
-				{components}
-			</div>
-		);
+		return <div className={cn}>{components}</div>;
 	}
 });
 

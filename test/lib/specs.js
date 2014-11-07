@@ -22,7 +22,7 @@ describe('Layout component', function(){
     var layout = TestUtils.renderIntoDocument(React.createElement(Layout, {components: [React.createElement("p", null, "foo")]}));
     var p = TestUtils.findRenderedDOMComponentWithTag(layout, 'p');
     expect(p.getDOMNode().textContent).toEqual('foo');
-    expect(p.getDOMNode().parentNode.className).toEqual('layout');
+    expect(p.getDOMNode().parentNode.className).toEqual('components');
   });
   it('can render a list components with the given layout type');
 });
@@ -22822,14 +22822,14 @@ var Layout = React.createClass({displayName: 'Layout',
 	},
 	render: function(){
 		var components = this.props.components;
-		if ( this.props && this.props.config ) {
+		var cn = React.addons.classSet({
+			'components': !this.props.type,
+			'layout': !!this.props.type
+		});
+		if ( this.props && this.props.type ) {
 			components = React.render(utils.initialCap(this.props.type), this.props);
 		}
-		return (
-			React.createElement("div", {className: "layout"}, 
-				components
-			)
-		);
+		return React.createElement("div", {className: cn}, components);
 	}
 });
 
