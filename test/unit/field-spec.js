@@ -13,16 +13,68 @@ describe('Field component', function() {
     options : { }
   };
 
-  it('Renders field with label', function(){
+  it('Renders text label', function(){
     var field = tu.renderIntoDocument(<Field {...textFixture}/>);
-    var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
+    var label = tu.findRenderedDOMComponentWithTag(field, 'label');
     expect(label.getDOMNode().textContent).toEqual(textFixture.label);
   });
 
-  it('Renders field with text input type', function(){
+  it('Renders text field', function(){
     var field = tu.renderIntoDocument(<Field {...textFixture}/>);
-    var inputText = tu.findRenderedDOMComponentWithClass(field, 'input-text');
+    var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputText.getDOMNode().type).toEqual(textFixture.type);
   });
+
+  var textareaFixture = {
+    type : 'textarea',
+    name : 'test-textarea',
+    label : 'Test Textarea',
+    required : false,
+    options : { }
+  };
+
+  it('Renders textarea label', function(){
+    var field = tu.renderIntoDocument(<Field {...textareaFixture}/>);
+    var label = tu.findRenderedDOMComponentWithTag(field, 'label');
+    expect(label.getDOMNode().textContent).toEqual(textareaFixture.label);
+  });
+
+  it('Renders textarea field', function(){
+    var field = tu.renderIntoDocument(<Field {...textareaFixture}/>);
+    var inputTextarea = tu.findRenderedDOMComponentWithClass(field, 'form-control');
+    expect(inputTextarea.getDOMNode().type).toEqual(textareaFixture.type);
+  });  
+
+
+  var checkboxFixture = {
+    type : 'checkbox',
+    name : 'test-checkbox',
+    label : 'Test Checkbox',
+    required : false,
+    options : {
+      'items' : [
+        {
+          'label' : 'Checkbox 1',
+          'value' : '1'
+        },
+        {
+          'label' : 'Checkbox 2',
+          'value' : '2'
+        }        
+      ]
+    }
+  };
+
+  it('Renders checkbox label', function(){
+    var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
+    var label = tu.findRenderedDOMComponentWithTag(field, 'label');
+    expect(label.getDOMNode().textContent).toEqual(checkboxFixture.label);
+  });
+
+  it('Renders checkbox field', function(){
+    var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
+    var inputCheckbox = tu.findRenderedDOMComponentWithClass(field, 'form-control');
+    expect(inputCheckbox.getDOMNode().type).toEqual(checkboxFixture.type);
+  });   
 
 });
