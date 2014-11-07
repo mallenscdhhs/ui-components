@@ -1,12 +1,27 @@
 var React = require('react/addons');
-
-var getComponentName = function(name){
-	return [name.slice(0,1).toUpperCase(), name.slice(1)].join('');
-};
-
+var utils = require('./utilities');
+/**
+ * Represents a static layout configuration. A layout is independent
+ * of the component(s) it displays. Therefore components can be added
+ * or removed from a Layout without affecting the underlying layout structure.
+ * @module Layout
+ */
 var Layout = React.createClass({
+	propTypes: {
+		components: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+		type: React.PropTypes.string,
+		config: React.PropTypes.object
+	},
 	render: function(){
-		React.render(getComponentName(this.props.type), this.props.config);
+		var components = this.props.components;
+		if ( this.props && this.props.config ) {
+			components = React.render(utils.initialCap(this.props.type), this.props);
+		}
+		return (
+			<div className="layout">
+				{components}
+			</div>
+		);
 	}
 });
 
