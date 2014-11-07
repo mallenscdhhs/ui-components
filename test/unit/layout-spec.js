@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var Layout = require('../../src/Layout.jsx');
+var Layout = require('../../dist/cjs/Layout');
 var TestUtils = React.addons.TestUtils;
 
 describe('Layout component', function(){
