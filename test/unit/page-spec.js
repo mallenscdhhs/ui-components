@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var Page = require('../../src/Page.jsx');
+var Page = require('../../dist/cjs/Page');
 var request = require('superagent');
 var TestUtils = React.addons.TestUtils;
 
