@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var utils = require('./utilities');
+var Grid = require('./Grid');
 /**
  * Represents a static layout configuration. A layout is independent
  * of the component(s) it displays. Therefore components can be added
