@@ -13,6 +13,10 @@ var Field = React.createClass({
     return state;
   },
 
+  /**
+   * Concat relevant classes with spaces for use in class="..."
+   * @returns {String}
+   */
   classSet : function(classNames){
     if (typeof classNames == 'object') {
       return Object.keys(classNames).filter(function(className) {
@@ -23,6 +27,11 @@ var Field = React.createClass({
     }
   },
 
+  /**
+   * Boolean helper if type is radio or checkbox.  Used to determine if we 
+   * need to use special wrapper for those field types.
+   * @returns {object}
+   */
   isCheckboxOrRadio: function () {
     return this.props.type === 'radio' || this.props.type === 'checkbox';
   },
@@ -37,8 +46,8 @@ var Field = React.createClass({
     var fieldKey = 'option';
     var labelKey = fieldType + 'Label'    
     var fields = this.props.options.items.map(function(item, i){
-      fieldKey = 'option-' + i;
-      labelKey = fieldType + 'Label-' + i;
+      fieldKey = fieldType + 'Option' + i;
+      labelKey = fieldType + 'Label' + i;
       return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  /> {item.label}</label>);
     });
 
@@ -50,10 +59,12 @@ var Field = React.createClass({
    * @returns {JSX template}
    */
   getSelect : function(){
+    var fieldName = this.props.name;
+    var fieldKey = fieldName +'-fieldSelect';
     return (
-        <select className="form-control" key="fieldSelect">
+        <select className="form-control" key={fieldKey}>
           {this.props.options.items.map(function(item, i){
-            return (<option value={item.value}>{item.label}</option>);
+            return (<option value={item.value} key={i}>{item.label}</option>);
           })}
         </select>
       );
@@ -113,7 +124,8 @@ var Field = React.createClass({
   },
 
   /**
-   * Wraps label and field templates and returns new template
+   * Wraps checkbox or radio fields with specific label and field template 
+   * and returns new template
    * @returns {JSX template}
    */
   renderCheckboxOrRadioFieldWithLabel : function(label,field){
