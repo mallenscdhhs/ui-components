@@ -11,12 +11,51 @@
   </head>
   <body style="padding: 2em">
       <div id="page"></div>
+      <fieldset id="field-text"></fieldset>
+      <fieldset id="field-textarea"></fieldset>
+      <fieldset id="field-checkbox"></fieldset>
       <script>
         var Page = React.createFactory(Components.Page);
         React.render(
           Page({ url: 'lib/data/page-config.json'}),
           document.getElementById('page')
         );
+
+
+        var fixture = {
+          'text' : {
+            type : 'text',
+            name : 'test-text',
+            label : 'Test Text'
+          },
+          'textarea' : {
+            type : 'textarea',
+            name : 'test-textarea',
+            label : 'Test Textarea'
+          },
+          'checkbox' : {
+            type : 'checkbox',
+            name : 'test-checkbox',
+            label : 'Test Checkbox',
+            options : {
+              'items' : [
+                {
+                  'label' : 'Checkbox 1',
+                  'value' : '1'
+                },
+                {
+                  'label' : 'Checkbox 2',
+                  'value' : '2'
+                }        
+              ]
+            }            
+          }                
+        };
+
+        var Field = React.createFactory(Components.Field);
+        React.render(Field(fixture.text),document.getElementById('field-text'));
+        React.render(Field(fixture.textarea),document.getElementById('field-textarea'));
+        React.render(Field(fixture.checkbox),document.getElementById('field-checkbox'));
       </script>
   </body>
 </html>
