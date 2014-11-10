@@ -9,5 +9,13 @@ describe('Layout component', function(){
     expect(p.getDOMNode().textContent).toEqual('foo');
     expect(p.getDOMNode().parentNode.className).toEqual('components');
   });
-  it('can render a list components with the given layout type');
+
+  it('can render a list components with the given layout type', function(){
+  	var config = {rows: [[{md: '4', sm: '2'}]]};
+  	var layout = TestUtils.renderIntoDocument(<Layout type="grid" config={config} components={[<p>foo</p>]}/>);  	
+  	var gl = TestUtils.findRenderedDOMComponentWithClass(layout, 'grid-layout');
+  	expect(layout.getDOMNode().className).toEqual('layout');
+  	expect(gl.getDOMNode().childNodes[0].className).toEqual('row');
+  	expect(gl.getDOMNode().childNodes[0].childNodes[0].className).toEqual('col-md-4 col-sm-2');
+  });
 });

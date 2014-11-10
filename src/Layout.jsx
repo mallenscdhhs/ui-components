@@ -1,6 +1,8 @@
 var React = require('react/addons');
-var utils = require('./utilities');
-var Grid = require('./Grid');
+var types = {
+	'grid': require('./Grid')
+};
+
 /**
  * Represents a static layout configuration. A layout is independent
  * of the component(s) it displays. Therefore components can be added
@@ -13,6 +15,7 @@ var Layout = React.createClass({
 		type: React.PropTypes.string,
 		config: React.PropTypes.object
 	},
+	
 	/** 
 	 * Every component that uses Layout must render their
 	 * child components through Layout, so here we give the option to
@@ -27,8 +30,12 @@ var Layout = React.createClass({
 			'components': !this.props.type,
 			'layout': !!this.props.type
 		});
+		var config = this.props;
 		if ( this.props && this.props.type ) {
-			components = React.render(utils.initialCap(this.props.type), this.props);
+			if ( ! types[this.props.type] ) {
+				config = this.props.config;
+			}
+			components = React.createElement(types[this.props.type], config);
 		}
 		return <div className={cn}>{components}</div>;
 	}

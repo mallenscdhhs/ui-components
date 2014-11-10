@@ -2,6 +2,7 @@ var React = require('react/addons');
 var Page = require('../../dist/cjs/Page');
 var request = require('superagent');
 var TestUtils = React.addons.TestUtils;
+var _ = require('underscore');
 
 describe('Page component', function() {
 
@@ -49,7 +50,25 @@ describe('Page component', function() {
   });
 
   it('renders a list of components');
-  it('can use a layout config to arrange its components');
+  
+  it('can use a layout config to arrange its components', function(){
+    var fix = _.extend({
+      layout: {
+        type: 'grid',
+        config: {
+          rows: [[{md: '4'}, {md: '4'}]]
+        }
+      }
+    }, fixture);
+    var page = TestUtils.renderIntoDocument(React.createElement(Page, fix));
+    var h2 = TestUtils.findRenderedDOMComponentWithTag(page, 'h2');
+    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'p');
+    var gl = TestUtils.findRenderedDOMComponentWithClass(page, 'grid-layout');
+    var row = gl.getDOMNode().childNodes[0];
+    expect(h2.getDOMNode().textContent).toEqual(fix.title);
+    expect(p.getDOMNode().textContent).toEqual(fix.content[0].config.text);
+    expect(row.className).toEqual('row');
+  });
 
   it('can load its state from a server', function(){
     spyOn(request, 'get');
