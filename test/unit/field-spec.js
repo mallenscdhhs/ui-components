@@ -164,7 +164,7 @@ describe('Field component', function() {
   }); 
 
   var phoneFixture = {
-    type : 'phone',
+    type : 'tel',
     name : 'test-phone',
     label : 'Test Phone',
     required : false,
@@ -180,7 +180,7 @@ describe('Field component', function() {
   it('Renders phone field', function(){
     var field = tu.renderIntoDocument(<Field {...phoneFixture}/>);
     var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
-    expect(inputText.getDOMNode().type).toEqual('tel'); // custom mapping from 'phone' type to 'tel', so test for tel
+    expect(inputText.getDOMNode().type).toEqual(phoneFixture.type); 
   });  
 
   var dateFixture = {
@@ -222,5 +222,20 @@ describe('Field component', function() {
     var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputText.getDOMNode().type).toEqual(passwordFixture.type);
   }); 
+
+  var requiredFixture = {
+    type : 'text',
+    name : 'test-required',
+    label : 'Required Text',
+    required : true,
+    options : { }
+  };
+
+  it('Renders required asterisk in label', function(){
+    var field = tu.renderIntoDocument(<Field {...requiredFixture}/>);
+    var errorAst = tu.findRenderedDOMComponentWithTag(field, 'span');
+    expect(errorAst.getDOMNode().className).toEqual('text-danger');
+    expect(errorAst.getDOMNode().textContent).toEqual('*');
+  });  
 
 });

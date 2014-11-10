@@ -14,20 +14,6 @@ var Field = React.createClass({
   },
 
   /**
-   * Concat relevant classes with spaces for use in class="..."
-   * @returns {String}
-   */
-  classSet : function(classNames){
-    if (typeof classNames == 'object') {
-      return Object.keys(classNames).filter(function(className) {
-        return classNames[className];
-      }).join(' ');
-    } else {
-      return Array.prototype.join.call(arguments, ' ');
-    }
-  },
-
-  /**
    * Boolean helper if type is radio or checkbox.  Used to determine if we 
    * need to use special wrapper for those field types.
    * @returns {object}
@@ -75,11 +61,10 @@ var Field = React.createClass({
    * @returns {JSX template}
    */
   getLabel : function(){
-    return (
-        <label htmlFor={this.props.name} className="field-label" key="fieldLabel">
-          {this.props.label}
-        </label>
-      )
+    if(this.props.required){
+      return (<label htmlFor={this.props.name} className="field-label" key="fieldLabelRequired"><span className="text-danger" key="requiredField">*</span>{this.props.label}</label>)
+    }
+    return (<label htmlFor={this.props.name} className="field-label" key="fieldLabel">{this.props.label}</label>)
   },
 
   /**
@@ -88,38 +73,23 @@ var Field = React.createClass({
    */
   getField : function(){
       var fieldType = this.props.type;
+      var fieldKey = 'field'+fieldType;
       var field = null;
 
       switch(fieldType){
-        case 'text':
-          field = (<input type="text" placeholder="" id={this.props.name} className="form-control" key="fieldText" />);
-          break;
         case 'textarea':
           field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea"></textarea>);
-          break; 
-        case 'email':
-          field = (<input type="email" placeholder="" id={this.props.name} className="form-control"  key="fieldEmail"/>);
-          break;   
-        case 'phone':
-          field = (<input type="tel" placeholder="" id={this.props.name} className="form-control"  key="fieldPhone"/>);
-          break;   
-        case 'date':
-          field = (<input type="date" placeholder="" id={this.props.name} className="form-control"  key="fieldDate"/>);
           break;  
-        case 'radio':
-          field = this.getCheckboxOrRadio();
-          break;   
+        case 'radio':  
         case 'checkbox':
           field = this.getCheckboxOrRadio();
           break;      
         case 'select':
           field = this.getSelect();
-          break;   
-        case 'password':
-          field = (<input type="password" id={this.props.name} className="form-control"  key="fieldPassword"/>);
-          break;                                                                   
+          break;     
+        default:
+          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" />);                                                                                  
       }
-
       return field;
   },
 
@@ -137,7 +107,7 @@ var Field = React.createClass({
     return  (
       <div className="form-group" key="fieldRadioCheckboxGroup">
         {label}
-        <div className={this.classSet(classes)}>
+        <div className={React.addons.classSet(classes)}>
           {field}
         </div>
       </div>
