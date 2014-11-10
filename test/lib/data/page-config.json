@@ -2,6 +2,12 @@
   "type": "page",
   "config": {
     "title": "My page",
+    "layout": {
+      "type": "grid",
+      "config": {
+        "rows": [[{"md": "6"}]]
+      }
+    },
     "content": [
       {
         "type": "p",

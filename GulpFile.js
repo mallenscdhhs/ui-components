@@ -65,7 +65,7 @@ gulp.task('build', ['clean', 'hint', 'build:amd', 'build:cjs', 'build:copy']);
   * can reference components like: Components.Page. You will need to supply
   * your own version of React and Underscore.
   */
-gulp.task('build:browser', ['build:copy'], requirejs({
+gulp.task('build:browser', requirejs({
   baseUrl: "dist/amd",
   nodeRequire: require,
   paths: {

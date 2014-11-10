@@ -1,6 +1,7 @@
 var React = require('react/addons');
 var _ = require('underscore');
 var ConfigLoader = require('./ConfigLoader');
+var Layout = require('./Layout');
 
 var Page = React.createClass({
   mixins: [ConfigLoader],
@@ -11,6 +12,7 @@ var Page = React.createClass({
    */
   getInitialState: function(){
     var state = _.extend({ title: '', content: [], components: [], layout: {} }, this.props);
+    state.layout.components = state.components;
     return state;
   },
 
@@ -29,6 +31,7 @@ var Page = React.createClass({
             item.config.key = 'content-item-'+i;
             return React.createElement(item.type, item.config, item.config.text);
           })}
+          {React.createElement(Layout, this.state.layout)}
         </section>
       </article>
     );
