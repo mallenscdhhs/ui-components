@@ -13,6 +13,7 @@
       <fieldset id="field-text"></fieldset>
       <fieldset id="field-textarea"></fieldset>
       <fieldset id="field-checkbox"></fieldset>
+      <fieldset id="field-radio"></fieldset>
       <script>
         var fixture = {
           'text' : {
@@ -41,6 +42,23 @@
                 }        
               ]
             }            
+          },
+          'radio' : {
+            type : 'radio',
+            name : 'test-radio',
+            label : 'Test Radio',
+            options : {
+              'items' : [
+                {
+                  'label' : 'Radio 1',
+                  'value' : '1'
+                },
+                {
+                  'label' : 'Radio 2',
+                  'value' : '2'
+                }        
+              ]
+            }            
           }                
         };
 
@@ -48,6 +66,7 @@
         React.render(Field(fixture.text),document.getElementById('field-text'));
         React.render(Field(fixture.textarea),document.getElementById('field-textarea'));
         React.render(Field(fixture.checkbox),document.getElementById('field-checkbox'));
+        React.render(Field(fixture.radio),document.getElementById('field-radio'));
       </script>
   </body>
 </html>

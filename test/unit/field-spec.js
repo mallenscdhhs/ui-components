@@ -1,6 +1,7 @@
 var React = require('react/addons');
 var Field = require('../../src/Field.jsx');
 var request = require('superagent');
+var _ = require('underscore');
 var tu = React.addons.TestUtils;
 
 describe('Field component', function() {
@@ -45,7 +46,6 @@ describe('Field component', function() {
     expect(inputTextarea.getDOMNode().type).toEqual(textareaFixture.type);
   });  
 
-
   var checkboxFixture = {
     type : 'checkbox',
     name : 'test-checkbox',
@@ -65,16 +65,51 @@ describe('Field component', function() {
     }
   };
 
-  it('Renders checkbox label', function(){
+  it('Renders checkbox labels', function(){
     var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
-    var label = tu.findRenderedDOMComponentWithTag(field, 'label');
-    expect(label.getDOMNode().textContent).toEqual(checkboxFixture.label);
+    var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
+    expect(label.getDOMNode().textContent).toEqual(checkboxFixture.label);          
   });
 
-  it('Renders checkbox field', function(){
+  it('Renders checkbox fields', function(){
     var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
-    var inputCheckbox = tu.findRenderedDOMComponentWithClass(field, 'form-control');
-    expect(inputCheckbox.getDOMNode().type).toEqual(checkboxFixture.type);
-  });   
+    var inputCheckboxes = tu.scryRenderedDOMComponentsWithClass(field, 'form-control');
+    _.each(inputCheckboxes,function(checkbox,i){
+      expect(checkbox.getDOMNode().value).toEqual(checkboxFixture.options.items[i].value);     
+    });    
+  }); 
+
+  var radioFixture = {
+    type : 'radio',
+    name : 'test-radio',
+    label : 'Test Radio',
+    required : false,
+    options : {
+      'items' : [
+        {
+          'label' : 'Radio 1',
+          'value' : '1'
+        },
+        {
+          'label' : 'Radio 2',
+          'value' : '2'
+        }        
+      ]
+    }
+  };
+
+  it('Renders radio labels', function(){
+    var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
+    var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
+    expect(label.getDOMNode().textContent).toEqual(radioFixture.label);          
+  });
+
+  it('Renders radio fields', function(){
+    var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
+    var inputRadios = tu.scryRenderedDOMComponentsWithClass(field, 'form-control');
+    _.each(inputRadios,function(radio,i){
+      expect(radio.getDOMNode().value).toEqual(radioFixture.options.items[i].value);     
+    });    
+  });     
 
 });

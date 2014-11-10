@@ -28,29 +28,21 @@ var Field = React.createClass({
   },
 
   /**
-   * Build Radio template
+   * Build Checkbox or Radio template based on type.
    * @returns {JSX template}
    */
-  getRadio : function(){
+  getCheckboxOrRadio : function(){
     var fieldName = this.props.name;
-    var radios = this.props.options.items.map(function(item, i){
-      return (<label><input type="radio" id={fieldName} name={fieldName} value={item.value}  /> {item.label}</label>);
+    var fieldType = (this.props.type).toLowerCase();
+    var fieldKey = 'option';
+    var labelKey = fieldType + 'Label'    
+    var fields = this.props.options.items.map(function(item, i){
+      fieldKey = 'option-' + i;
+      labelKey = fieldType + 'Label-' + i;
+      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  /> {item.label}</label>);
     });
 
-    return radios;
-  },
-
-  /**
-   * Build Checkbox template
-   * @returns {JSX template}
-   */
-  getCheckbox : function(){
-    var fieldName = this.props.name;
-    var checkboxes = this.props.options.items.map(function(item, i){
-      return (<label><input type="checkbox" id={fieldName} name={fieldName} value={item.value}  /> {item.label}</label>);
-    });
-
-    return checkboxes;
+    return fields;
   },
 
   /**
@@ -59,7 +51,7 @@ var Field = React.createClass({
    */
   getSelect : function(){
     return (
-        <select className="form-control">
+        <select className="form-control" key="fieldSelect">
           {this.props.options.items.map(function(item, i){
             return (<option value={item.value}>{item.label}</option>);
           })}
@@ -73,7 +65,7 @@ var Field = React.createClass({
    */
   getLabel : function(){
     return (
-        <label htmlFor={this.props.name} className="field-label" /*for={this.props.name} */>
+        <label htmlFor={this.props.name} className="field-label" key="fieldLabel">
           {this.props.label}
         </label>
       )
@@ -89,31 +81,31 @@ var Field = React.createClass({
 
       switch(fieldType){
         case 'text':
-          field = (<input type="text" placeholder="" id={this.props.name} className="form-control" />);
+          field = (<input type="text" placeholder="" id={this.props.name} className="form-control" key="fieldText" />);
           break;
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name} ></textarea>);
+          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea"></textarea>);
           break; 
         case 'email':
-          field = (<input type="email" placeholder="" id={this.props.name} className="form-control" />);
+          field = (<input type="email" placeholder="" id={this.props.name} className="form-control"  key="fieldEmail"/>);
           break;   
         case 'phone':
-          field = (<input type="tel" placeholder="" id={this.props.name} className="form-control" />);
+          field = (<input type="tel" placeholder="" id={this.props.name} className="form-control"  key="fieldPhone"/>);
           break;   
         case 'date':
-          field = (<input type="date" placeholder="" id={this.props.name} className="form-control" />);
+          field = (<input type="date" placeholder="" id={this.props.name} className="form-control"  key="fieldDate"/>);
           break;  
         case 'radio':
-          field = this.getRadio();
+          field = this.getCheckboxOrRadio();
           break;   
         case 'checkbox':
-          field = this.getCheckbox();
+          field = this.getCheckboxOrRadio();
           break;      
         case 'select':
           field = this.getSelect();
           break;   
         case 'password':
-          field = (<input type="password" id={this.props.name} className="form-control" />);
+          field = (<input type="password" id={this.props.name} className="form-control"  key="fieldPassword"/>);
           break;                                                                   
       }
 
@@ -131,7 +123,7 @@ var Field = React.createClass({
     };
 
     return  (
-      <div className="form-group">
+      <div className="form-group" key="fieldRadioCheckboxGroup">
         {label}
         <div className={this.classSet(classes)}>
           {field}
@@ -146,7 +138,7 @@ var Field = React.createClass({
    */
   renderFieldWithLabel : function(label,field){
     return  (
-      <div className="form-group">
+      <div className="form-group" key="fieldDefaultGroup">
         {label}
         {field}
       </div>
