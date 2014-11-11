@@ -1,12 +1,13 @@
 var React = require('react/addons');
 var _ = require('underscore');
 var ConfigLoader = require('./ConfigLoader');
-var Layout = React.createFactory(require('./Layout'));
+var Layout = require('./Layout');
+var marked = require('marked');
 
-var componentTypes = {
-  form: require('./Form'),
-  workflow: require('./Workflow')
-};
+marked.setOptions({  
+  sanitize: true,
+  smartLists: true
+});
 
 var Page = React.createClass({
   mixins: [ConfigLoader],
@@ -18,35 +19,23 @@ var Page = React.createClass({
   getInitialState: function(){
     return _.extend({ 
       title: '', 
-      content: [], 
-      components: [], 
-      layout: {
-        components: []
-      } }, this.props);    
+      content: '', 
+      components: []
+    }, this.props);    
   },
 
   /**
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){
-    if ( this.state.layout.type ) {
-      this.state.layout.components = this.state.components.map(function(component){
-        return componentTypes[component.type](component.config);
-      });
-    }
+  render: function(){       
     return(
       <article>
         <header>
           <h2>{this.state.title}</h2>
         </header>
-        <section>
-          {this.state.content.map(function(item, i){
-            item.config.key = 'content-item-'+i;
-            return React.createElement(item.type, item.config, item.config.text);
-          })}
-          {Layout(this.state.layout)}
-        </section>
+        <section dangerouslySetInnerHTML={{__html: marked(this.state.content)}}></section>
+        <Layout schema={this.state.layout} components={this.state.components}/>
       </article>
     );
   }

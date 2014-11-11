@@ -20,17 +20,21 @@ var getColumnClassNames = function(col){
  * @module Grid
  */
 var Grid = React.createClass({
+	propTypes: {
+		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired,
+		components: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+	},
 	render: function(){
 		var componentIndex = -1;
 		return (
 			<div className="grid-layout">
-			{this.props.config.rows.map(function(row, i){				
+			{this.props.rows.map(function(row, i){				
 				return (
-					<div className="row">
+					<div className="row" key={"row-"+i}>
 						{row.map(function(col, n){							
 							componentIndex+=1;
 							return(
-								<div className={getColumnClassNames(col)}>
+								<div className={getColumnClassNames(col)} key={"col-"+i+"-"+n}>
 									{this.props.components[componentIndex]}
 								</div>
 							);
