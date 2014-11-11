@@ -67,7 +67,7 @@ describe('Field component', function() {
 
   it('Renders checkbox labels', function(){
     var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
-    var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
+    var label = tu.findRenderedDOMComponentWithTag(field, 'legend');
     expect(label.getDOMNode().textContent).toEqual(checkboxFixture.label);          
   });
 
@@ -100,7 +100,7 @@ describe('Field component', function() {
 
   it('Renders radio labels', function(){
     var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
-    var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
+    var label = tu.findRenderedDOMComponentWithTag(field, 'legend');
     expect(label.getDOMNode().textContent).toEqual(radioFixture.label);          
   });
 

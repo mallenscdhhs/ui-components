@@ -16,10 +16,13 @@ var Field = React.createClass({
   /**
    * Boolean helper if type is radio or checkbox.  Used to determine if we 
    * need to use special wrapper for those field types.
+   * Check the type AND if there are available items to show.
    * @returns {object}
    */
   isCheckboxOrRadio: function () {
-    return this.props.type === 'radio' || this.props.type === 'checkbox';
+    var checkType = this.props.type === 'radio' || this.props.type === 'checkbox';
+    var checkItems = this.props.options && this.props.options.items && this.props.options.items.length;
+    return checkType && checkItems;
   },
 
   /**
@@ -114,12 +117,12 @@ var Field = React.createClass({
     };
 
     return  (
-      <div className="form-group" key="fieldRadioCheckboxGroup">
+      <fieldset className="form-group" key="fieldRadioCheckboxGroup">
         {label}
         <div className={React.addons.classSet(classes)}>
           {field}
         </div>
-      </div>
+      </fieldset>
     );
   },
 
