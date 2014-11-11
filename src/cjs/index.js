@@ -1,4 +1,5 @@
 module.exports = {
-  Page: require('./Page.jsx'),
-  Layout: require('./Layout.jsx')
+	Page: require('./Page.jsx'),
+	Field: require('./Field.js'),
+	Layout: require('./Layout.jsx')
 };

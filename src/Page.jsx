@@ -5,7 +5,7 @@ var Layout = React.createFactory(require('./Layout'));
 
 var componentTypes = {
   form: require('./Form'),
-  workflow: require('./Workflow')
+  //workflow: require('./Workflow')
 };
 
 var Page = React.createClass({
