@@ -65,10 +65,16 @@ describe('Field component', function() {
     }
   };
 
-  it('Renders checkbox labels', function(){
+  it('Renders checkbox field wrapped in a fieldset', function(){
     var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
-    var label = tu.findRenderedDOMComponentWithTag(field, 'legend');
-    expect(label.getDOMNode().textContent).toEqual(checkboxFixture.label);          
+    var fieldset = tu.scryRenderedDOMComponentsWithTag(field, 'fieldset');
+    expect(fieldset.length).toEqual(1);    
+  });  
+
+  it('Renders checkbox legend', function(){
+    var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
+    var legend = tu.findRenderedDOMComponentWithTag(field, 'legend');
+    expect(legend.getDOMNode().textContent).toEqual(checkboxFixture.label);          
   });
 
   it('Renders checkbox fields', function(){
@@ -102,10 +108,16 @@ describe('Field component', function() {
     }
   };
 
-  it('Renders radio labels', function(){
+  it('Renders radio field wrapped in a fieldset', function(){
     var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
-    var label = tu.findRenderedDOMComponentWithTag(field, 'legend');
-    expect(label.getDOMNode().textContent).toEqual(radioFixture.label);          
+    var fieldset = tu.scryRenderedDOMComponentsWithTag(field, 'fieldset');
+    expect(fieldset.length).toEqual(1);    
+  }); 
+
+  it('Renders radio legend', function(){
+    var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
+    var legend = tu.findRenderedDOMComponentWithTag(field, 'legend');
+    expect(legend.getDOMNode().textContent).toEqual(radioFixture.label);          
   });
 
   it('Renders radio fields', function(){
