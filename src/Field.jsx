@@ -19,7 +19,7 @@ var Field = React.createClass({
    * Check the type AND if there are available items to show.
    * @returns {object}
    */
-  isCheckboxOrRadio: function () {
+  isFieldGroup: function () {
     var checkType = this.props.type === 'radio' || this.props.type === 'checkbox';
     var checkItems = this.props.options && this.props.options.items && this.props.options.items.length;
     return checkType && checkItems;
@@ -71,7 +71,7 @@ var Field = React.createClass({
       labelRequired = <span className="text-danger" key="requiredField">*</span>;
       labelKey = 'fieldLabelRequired';
     }
-    if(this.isCheckboxOrRadio()){
+    if(this.isFieldGroup()){
       return (<legend htmlFor={this.props.name} className="field-legend" key={labelKey}>{labelRequired}{this.props.label}</legend>)
     }else{
       return (<label htmlFor={this.props.name} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
@@ -110,14 +110,14 @@ var Field = React.createClass({
    * and returns new template
    * @returns {JSX template}
    */
-  renderCheckboxOrRadioFieldWithLabel : function(label,field){
+  renderFieldGroup : function(label,field){
     var classes = {
       'checkbox': this.props.type === 'checkbox',
       'radio': this.props.type === 'radio'
     };
 
     return  (
-      <fieldset className="form-group" key="fieldRadioCheckboxGroup">
+      <fieldset className="form-group" key="fieldGroup">
         {label}
         <div className={React.addons.classSet(classes)}>
           {field}
@@ -144,8 +144,8 @@ var Field = React.createClass({
    * @returns {JSX}
    */
   render: function(){
-    if(this.isCheckboxOrRadio()){
-      return this.renderCheckboxOrRadioFieldWithLabel(
+    if(this.isFieldGroup()){
+      return this.renderFieldGroup(
         this.getLabel(),
         this.getField()
       );
