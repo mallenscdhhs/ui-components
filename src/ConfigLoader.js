@@ -5,14 +5,13 @@ var request = require('superagent');
  * @module ConfigLoader
  */
 module.exports = {
-  componentDidMount: function(){
-    var component = this;
+  componentDidMount: function(){    
     if ( this.props.url ) {
-      request.get(this.props.url, function(res){
-        if ( res.status === 200 ) {
-          component.setState(res.body.config);
+      request.get(this.props.url, function(res){        
+        if ( res.ok ) {                  
+          this.setState(res.body.config);
         }
-      });
+      }.bind(this));
     }
   }
 };

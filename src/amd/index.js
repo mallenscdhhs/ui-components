@@ -1,6 +1,6 @@
 define(function(require, exports, module){
 	return {
-		Page: require('./Page.js'),
-		Layout: require('./Layout.js')
+		Page: require('./Page'),
+		Layout: require('./Layout')
 	};
 });
