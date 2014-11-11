@@ -73,9 +73,13 @@ describe('Field component', function() {
 
   it('Renders checkbox fields', function(){
     var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
-    var inputCheckboxes = tu.scryRenderedDOMComponentsWithClass(field, 'form-control');
-    _.each(inputCheckboxes,function(checkbox,i){
-      expect(checkbox.getDOMNode().value).toEqual(checkboxFixture.options.items[i].value);     
+    // Check that each input count and item count match
+    var inputs = tu.scryRenderedDOMComponentsWithTag(field, 'input');
+    expect(inputs.length).toEqual(checkboxFixture.options.items.length); 
+    // Each input should have it's own label
+    var inputLabels = tu.scryRenderedDOMComponentsWithTag(field, 'label');
+    _.each(inputLabels,function(label,i){
+      expect(label.getDOMNode().textContent).toEqual(checkboxFixture.options.items[i].label);     
     });    
   }); 
 
@@ -106,9 +110,13 @@ describe('Field component', function() {
 
   it('Renders radio fields', function(){
     var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
-    var inputRadios = tu.scryRenderedDOMComponentsWithClass(field, 'form-control');
-    _.each(inputRadios,function(radio,i){
-      expect(radio.getDOMNode().value).toEqual(radioFixture.options.items[i].value);     
+    // Check that each input count and item count match
+    var inputs = tu.scryRenderedDOMComponentsWithTag(field, 'input');
+    expect(inputs.length).toEqual(radioFixture.options.items.length); 
+    // Each input should have it's own label
+    var inputLabels = tu.scryRenderedDOMComponentsWithTag(field, 'label');
+    _.each(inputLabels,function(label,i){
+      expect(label.getDOMNode().textContent).toEqual(radioFixture.options.items[i].label);     
     });    
   });
 
