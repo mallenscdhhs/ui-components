@@ -26,6 +26,7 @@ var Grid = React.createClass({
 	},
 	render: function(){
 		var componentIndex = -1;
+		var components = this.props.components || this.props.children;
 		return (
 			<div className="grid-layout">
 			{this.props.rows.map(function(row, i){				
@@ -35,7 +36,7 @@ var Grid = React.createClass({
 							componentIndex+=1;
 							return(
 								<div className={getColumnClassNames(col)} key={"col-"+i+"-"+n}>
-									{this.props.components[componentIndex]}
+									{components[componentIndex]}
 								</div>
 							);
 						}, this)}
