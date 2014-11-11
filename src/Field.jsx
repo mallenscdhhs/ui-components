@@ -34,7 +34,7 @@ var Field = React.createClass({
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
-      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  /> {item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  />{item.label}</label>);
     });
 
     return fields;
@@ -49,7 +49,7 @@ var Field = React.createClass({
     var fieldKey = fieldName +'-fieldSelect';
     var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select multiple={isMultiSelect} className="form-control" key={fieldKey}>
+        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName}>
           {this.props.options.items.map(function(item, i){
             return (<option value={item.value} key={i}>{item.label}</option>);
           })}
@@ -68,7 +68,11 @@ var Field = React.createClass({
       labelRequired = <span className="text-danger" key="requiredField">*</span>;
       labelKey = 'fieldLabelRequired';
     }
-    return (<label htmlFor={this.props.name} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
+    if(this.isCheckboxOrRadio()){
+      return (<legend htmlFor={this.props.name} className="field-legend" key={labelKey}>{labelRequired}{this.props.label}</legend>)
+    }else{
+      return (<label htmlFor={this.props.name} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
+    }
   },
 
   /**
