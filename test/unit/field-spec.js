@@ -141,7 +141,38 @@ describe('Field component', function() {
     var field = tu.renderIntoDocument(<Field {...selectFixture}/>);
     var inputSelect = tu.findRenderedDOMComponentWithTag(field, 'select');
     expect(inputSelect.getDOMNode().value).toEqual(selectFixture.options.items[0].value);   // Defaults to first value, so compare first values
-  });     
+  });   
+
+  var multiselectFixture = {
+    type : 'multiselect',
+    name : 'test-multiselect',
+    label : 'Test Multi-Select',
+    required : false,
+    options : {
+      'items' : [
+        {
+          'label' : 'Multi-Select 1',
+          'value' : '1'
+        },
+        {
+          'label' : 'Multi-Select 2',
+          'value' : '2'
+        }        
+      ]
+    }
+  };
+
+  it('Renders multiselect label', function(){
+    var field = tu.renderIntoDocument(<Field {...multiselectFixture}/>);
+    var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
+    expect(label.getDOMNode().textContent).toEqual(multiselectFixture.label);          
+  });
+
+  it('Renders multiselect field', function(){
+    var field = tu.renderIntoDocument(<Field {...multiselectFixture}/>);
+    var inputSelect = tu.findRenderedDOMComponentWithTag(field, 'select');
+    expect(inputSelect.getDOMNode().multiple).toEqual(true);   // Defaults to first value, so compare first values
+  });    
 
   var emailFixture = {
     type : 'email',

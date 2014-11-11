@@ -16,6 +16,7 @@
       <fieldset id="field-checkbox"></fieldset>
       <fieldset id="field-radio"></fieldset>
       <fieldset id="field-select"></fieldset>
+      <fieldset id="field-multiselect"></fieldset>
       <fieldset id="field-email"></fieldset>
       <fieldset id="field-phone"></fieldset>
       <fieldset id="field-date"></fieldset>
@@ -84,6 +85,23 @@
               ]
             }            
           },
+          'multiselect' : {
+            type : 'multiselect',
+            name : 'test-multiselect',
+            label : 'Test MultiSelect',
+            options : {
+              'items' : [
+                {
+                  'label' : 'MultiSelect 1',
+                  'value' : '1'
+                },
+                {
+                  'label' : 'MultiSelect 2',
+                  'value' : '2'
+                }        
+              ]
+            }            
+          },          
           'email' : {
             type : 'email',
             name : 'test-email',
@@ -113,6 +131,7 @@
         React.render(Field(fixture.checkbox),document.getElementById('field-checkbox'));
         React.render(Field(fixture.radio),document.getElementById('field-radio'));
         React.render(Field(fixture.select),document.getElementById('field-select'));
+        React.render(Field(fixture.multiselect),document.getElementById('field-multiselect'));
         React.render(Field(fixture.email),document.getElementById('field-email'));
         React.render(Field(fixture.phone),document.getElementById('field-phone'));
         React.render(Field(fixture.date),document.getElementById('field-date'));

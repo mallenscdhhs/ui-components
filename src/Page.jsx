@@ -1,7 +1,12 @@
 var React = require('react/addons');
 var _ = require('underscore');
 var ConfigLoader = require('./ConfigLoader');
-var Layout = require('./Layout');
+var Layout = React.createFactory(require('./Layout'));
+
+var componentTypes = {
+  form: require('./Form'),
+  //workflow: require('./Workflow')
+};
 
 var Page = React.createClass({
   mixins: [ConfigLoader],
@@ -11,9 +16,13 @@ var Page = React.createClass({
    * @returns {object}
    */
   getInitialState: function(){
-    var state = _.extend({ title: '', content: [], components: [], layout: {} }, this.props);
-    state.layout.components = state.components;
-    return state;
+    return _.extend({ 
+      title: '', 
+      content: [], 
+      components: [], 
+      layout: {
+        components: []
+      } }, this.props);    
   },
 
   /**
@@ -21,6 +30,11 @@ var Page = React.createClass({
    * @returns {JSX}
    */
   render: function(){
+    if ( this.state.layout.type ) {
+      this.state.layout.components = this.state.components.map(function(component){
+        return componentTypes[component.type](component.config);
+      });
+    }
     return(
       <article>
         <header>
@@ -31,7 +45,7 @@ var Page = React.createClass({
             item.config.key = 'content-item-'+i;
             return React.createElement(item.type, item.config, item.config.text);
           })}
-          {React.createElement(Layout, this.state.layout)}
+          {Layout(this.state.layout)}
         </section>
       </article>
     );

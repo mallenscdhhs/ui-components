@@ -47,8 +47,9 @@ var Field = React.createClass({
   getSelect : function(){
     var fieldName = this.props.name;
     var fieldKey = fieldName +'-fieldSelect';
+    var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select className="form-control" key={fieldKey}>
+        <select multiple={isMultiSelect} className="form-control" key={fieldKey}>
           {this.props.options.items.map(function(item, i){
             return (<option value={item.value} key={i}>{item.label}</option>);
           })}
@@ -61,10 +62,13 @@ var Field = React.createClass({
    * @returns {JSX template}
    */
   getLabel : function(){
+    var labelRequired = ''; 
+    var labelKey = 'fieldLabel';
     if(this.props.required){
-      return (<label htmlFor={this.props.name} className="field-label" key="fieldLabelRequired"><span className="text-danger" key="requiredField">*</span>{this.props.label}</label>)
+      labelRequired = <span className="text-danger" key="requiredField">*</span>;
+      labelKey = 'fieldLabelRequired';
     }
-    return (<label htmlFor={this.props.name} className="field-label" key="fieldLabel">{this.props.label}</label>)
+    return (<label htmlFor={this.props.name} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
   },
 
   /**
@@ -85,6 +89,7 @@ var Field = React.createClass({
           field = this.getCheckboxOrRadio();
           break;      
         case 'select':
+        case 'multiselect':
           field = this.getSelect();
           break;     
         default:

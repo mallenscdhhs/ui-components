@@ -35,7 +35,7 @@ var Layout = React.createClass({
 			if ( ! types[this.props.type] ) {
 				config = this.props.config;
 			}
-			components = React.createElement(types[this.props.type], config);
+			components = types[this.props.type](config);
 		}
 		return <div className={cn}>{components}</div>;
 	}
