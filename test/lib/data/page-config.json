@@ -8,6 +8,14 @@
         "rows": [[{"md": "6"}]]
       }
     },
+    "components": [
+      {
+        "type": "form",
+        "config": {
+          
+        }
+      }
+    ],
     "content": [
       {
         "type": "p",
