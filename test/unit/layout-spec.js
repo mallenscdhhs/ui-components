@@ -10,9 +10,9 @@ describe('Layout component', function(){
     expect(p.getDOMNode().parentNode.className).toEqual('components');
   });
 
-  it('can render a list components with the given layout type', function(){
+  it('can render a list of components with the given layout type', function(){
   	var config = {rows: [[{md: '4', sm: '2'}]]};
-  	var layout = TestUtils.renderIntoDocument(<Layout type="grid" config={config} components={[<p>foo</p>]}/>);  	
+  	var layout = TestUtils.renderIntoDocument(<Layout schema={{type: "grid", config: config}} components={[<p>foo</p>]}/>);  	
   	var gl = TestUtils.findRenderedDOMComponentWithClass(layout, 'grid-layout');
   	expect(layout.getDOMNode().className).toEqual('layout');
   	expect(gl.getDOMNode().childNodes[0].className).toEqual('row');

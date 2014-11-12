@@ -2,6 +2,7 @@
   "type": "page",
   "config": {
     "title": "My page",
+    "content": "My **content** here.",
     "layout": {
       "type": "grid",
       "config": {
@@ -15,14 +16,6 @@
           
         }
       }
-    ],
-    "content": [
-      {
-        "type": "p",
-        "config": {
-          "text": "My content here."
-        }
-      }
-    ]
+    ]    
   }
 }

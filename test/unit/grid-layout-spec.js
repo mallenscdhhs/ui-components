@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var Grid = require('../../dist/cjs/Grid');
+var Grid = React.createFactory(require('../../dist/cjs/Grid'));
 var TestUtils = React.addons.TestUtils;
 
 var components = [
@@ -10,8 +10,11 @@ var components = [
 
 describe('Grid Layout component', function(){
 	it('can render a Bootstrap 3 grid', function(){
-		var config = { rows: [[{md: '6', sm: '4'}, {md: '12', sm: '12', xs: '12'}]]};
-		var grid = TestUtils.renderIntoDocument(<Grid type="grid" config={config} components={components}/>);		
+		var config = { 
+			rows: [[{md: '6', sm: '4'}, {md: '12', sm: '12', xs: '12'}]],
+			components: components
+		};
+		var grid = TestUtils.renderIntoDocument(Grid(config));		
 		var row = grid.getDOMNode().childNodes[0];
 		var cols = row.childNodes;
 		expect(grid.getDOMNode().className).toEqual('grid-layout');
@@ -23,12 +26,14 @@ describe('Grid Layout component', function(){
 	});
 
 	it('can render multiple rows', function(){
-		var config = { rows: [
+		var config = { 
+			components: components,
+			rows: [
 				[{md: '6', sm: '4'}, {md: '12', sm: '12', xs: '12'}],
 				[{md: '4'}, {md: '4'}]
 			]
 		};
-		var grid = TestUtils.renderIntoDocument(<Grid type="grid" config={config} components={components}/>);		
+		var grid = TestUtils.renderIntoDocument(Grid(config));		
 		expect(grid.getDOMNode().childNodes.length).toEqual(2);
 	});
 });
