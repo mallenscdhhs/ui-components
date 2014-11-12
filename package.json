@@ -5,7 +5,7 @@
   "main": "dist/cjs/index.js",
   "scripts": {
     "test": "gulp build && gulp build:browser && gulp specs && gulp test",
-    "start": "node test/server",
+    "start": "PORT=3000 IP=localhost node test/server",
     "build": "gulp build && gulp build:browser"
   },
   "repository": {

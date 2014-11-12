@@ -1,8 +1,16 @@
 var express = require('express');
 var app = express();
+var fs = require('fs');
+var path = require('path');
+var IP = process.env.IP;
+var PORT = process.env.PORT;
+
+app.get('/lib/data/pages/:pageId', function(req, res){
+  fs.createReadStream(path.join(process.cwd(), 'test/lib/data', req.params.pageId+'.json')).pipe(res);
+});
 
 app.use(express.static('dist'));
 app.use(express.static('test'));
 app.use(express.static('node_modules'));
 
-app.listen(3000, console.log.bind(null, 'test server started...'));
+app.listen(PORT, IP, console.log.bind(null, 'test server started at', IP+':'+PORT));
