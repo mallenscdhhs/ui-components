@@ -13,6 +13,7 @@
     "url": "https://mrmichael@bitbucket.org/mrmichael/ui-component-library.git"
   },
   "dependencies": {
+    "marked": "^0.3.2",
     "react": "^0.12.0",
     "superagent": "^0.20.0",
     "underscore": "^1.7.0"

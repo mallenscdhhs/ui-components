@@ -8,19 +8,11 @@ describe('Page component', function() {
 
   var fixture = {
     title: 'Hello',
-    content: [
-      {
-        type: "p",
-        config: {
-          text: "hello, world"
-        }
-      }
-    ],
+    content: "hello, **world**",
     components: [
       {
-        type: 'div',
-        config: {
-          textContent: 'hello'
+        type: 'form',
+        config: {          
         }
       }
     ]
@@ -32,21 +24,22 @@ describe('Page component', function() {
     expect(h2.getDOMNode().textContent).toEqual(fixture.title);
   });
 
-  it('renders a page with content', function(){
+  it('renders a page with markdown content', function(){
     var page = TestUtils.renderIntoDocument(<Page title={fixture.title} content={fixture.content} />);
-    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'p');
-    expect(p.getDOMNode().textContent).toEqual(fixture.content[0].config.text);
+    var section = TestUtils.findRenderedDOMComponentWithTag(page, 'section');
+    expect(section.getDOMNode().childNodes[0].textContent).toEqual('hello, world');
+    expect(section.getDOMNode().childNodes[0].childNodes[1].tagName).toEqual('STRONG');
   });
 
   it('will re-render itself if its state changes', function(){
     var page = TestUtils.renderIntoDocument(<Page title={fixture.title} content={fixture.content} />);
     var h2 = TestUtils.findRenderedDOMComponentWithTag(page, 'h2');
-    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'p');
+    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'section').getDOMNode().childNodes[0];
     expect(h2.getDOMNode().textContent).toEqual(fixture.title);
-    expect(p.getDOMNode().textContent).toEqual(fixture.content[0].config.text);
-    page.setState({title: 'bye', content: [{type: 'p', config: { text: 'foo' }}]});
-    expect(p.getDOMNode().textContent).toEqual('foo');
+    expect(p.textContent).toEqual('hello, world');
+    page.setState({title: 'bye', content: 'hi'});
     expect(h2.getDOMNode().textContent).toEqual('bye');
+    expect(TestUtils.findRenderedDOMComponentWithTag(page, 'section').getDOMNode().childNodes[0].textContent).toEqual('hi');    
   });
 
   it('renders a list of components');
@@ -62,11 +55,11 @@ describe('Page component', function() {
     }, fixture);
     var page = TestUtils.renderIntoDocument(React.createElement(Page, fix));
     var h2 = TestUtils.findRenderedDOMComponentWithTag(page, 'h2');
-    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'p');
+    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'section').getDOMNode().childNodes[0];
     var gl = TestUtils.findRenderedDOMComponentWithClass(page, 'grid-layout');
     var row = gl.getDOMNode().childNodes[0];
     expect(h2.getDOMNode().textContent).toEqual(fix.title);
-    expect(p.getDOMNode().textContent).toEqual(fix.content[0].config.text);
+    expect(p.textContent).toEqual('hello, world');
     expect(row.className).toEqual('row');
   });
 

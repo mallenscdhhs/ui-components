@@ -6,16 +6,45 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="lib/react/react-with-addons.min.js"></script>
+    <script src="lib/react/react-with-addons.js"></script>
     <script src="ui-components.js"></script>
   </head>
   <body style="padding: 2em">
       <div id="page"></div>
+      <div id="tree"></div>
       <script>
         var Page = React.createFactory(Components.Page);
+        var Tree = React.createFactory(Components.Tree);
         React.render(
           Page({ url: 'lib/data/page-config.json'}),
           document.getElementById('page')
+        );
+        React.render(
+          Tree({
+              title: 'test tree',
+              api: {},
+              items: [
+                {
+                  title: 'One',
+                  pageId: 'page1',
+                  items: [
+                    {
+                      title: 'One b',
+                      pageId: 'page1b'
+                    },
+                    {
+                      title: 'One a',
+                      pageId: 'page1a'
+                    }
+                  ]
+                },
+                {
+                  title: 'Two',
+                  pageId: 'page2'
+                }
+              ]
+            }),
+          document.getElementById('tree')
         );
       </script>
   </body>

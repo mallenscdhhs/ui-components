@@ -72,7 +72,8 @@ gulp.task('build:browser', requirejs({
     "ui-components": "./index",
     almond: "../../node_modules/almond/almond",
     underscore: "../../node_modules/underscore/underscore",
-    superagent: "../../node_modules/superagent/superagent"
+    superagent: "../../node_modules/superagent/superagent",
+    marked: "../../node_modules/marked/lib/marked"
   },
   packages: [
     { name: 'react/addons', location: '../../node_modules/react', main: './addons' }

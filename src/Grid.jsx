@@ -8,10 +8,69 @@ var _ = require('underscore');
  * @returns {string} "col-md-3 col-sm-3 col-xs-12"
  */
 var getColumnClassNames = function(col){
-	return _.map(_.pairs(col), function(pair){
+	return _.map(_.pairs(_.pick(col, ['md', 'sm', 'xs'])), function(pair){
 		pair.unshift('col');
 		return pair.join('-');
 	}).join(' ');
+};
+
+/**
+ * Returns the correct component index to retrieve based on the current
+ * row index, column index, and possible range offset.
+ * @param {number} rowNum
+ * @param {number} colNum
+ * @param {number} rangeOffset
+ * @returns {number}
+ */
+var getComponentIndex = function(rowNum, colNum, rangeOffset){
+	var indx = colNum + rangeOffset;
+	if ( rowNum > 0 ) {
+		indx = this.props.rows[rowNum-1].length + (colNum +1) + rangeOffset;
+	}
+	return indx;
+};
+
+/**
+ * Renders a row <div>. Computes the current componentIndex by either
+ * examining the column config for an indexRange property to specify a
+ * slice of the passed-in components array or by incrementing the componentIndex
+ * by one and retreiving that specific component from the array.
+ * @param {array} components - a list of components
+ * @param {array} row - a list of row configs
+ * @param {number} i - the current row index
+ * @returns {React.DOM.div}
+ */
+var renderRow = function(components, row, i){
+	var componentIndexRange = 0;
+	var componentList;
+	return (
+		<div className="row" key={"row-"+i}>
+			{row.map(function(col, n){
+				if ( col.indexRange ) {
+					componentIndexRange += (col.indexRange[1] - 1);
+					componentList = Array.prototype.slice.apply(components, col.indexRange);
+				}	else {
+					componentList = components[getComponentIndex.call(this, i, n, componentIndexRange)];
+				}
+				return renderColumn(componentList, col, n);
+			}, this)}
+		</div>
+	);
+};
+
+/**
+ * Renders a column <div>. Will add Bootstrap 3 column sizes.
+ * @param {array} components - a list of components
+ * @param {object} col - a column config
+ * @param {number} n - the current column index
+ * @returns {React.DOM.div}
+ */
+var renderColumn = function(components, col, n){
+	return (
+		<div className={getColumnClassNames(col)} key={"col-"+n}>
+			{components}
+		</div>
+	);
 };
 
 /**
@@ -20,23 +79,16 @@ var getColumnClassNames = function(col){
  * @module Grid
  */
 var Grid = React.createClass({
-	render: function(){
-		var componentIndex = -1;
+	propTypes: {
+		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired,
+		components: React.PropTypes.arrayOf(React.PropTypes.object)
+	},
+	render: function(){		
+		var components = this.props.components || this.props.children;		
 		return (
 			<div className="grid-layout">
-			{this.props.config.rows.map(function(row, i){				
-				return (
-					<div className="row">
-						{row.map(function(col, n){							
-							componentIndex+=1;
-							return(
-								<div className={getColumnClassNames(col)}>
-									{this.props.components[componentIndex]}
-								</div>
-							);
-						}, this)}
-					</div>
-				);
+			{this.props.rows.map(function(row, i){				
+				return renderRow.call(this, components, row, i);
 			}, this)}
 			</div>
 		);

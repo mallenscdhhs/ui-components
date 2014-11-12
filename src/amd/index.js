@@ -3,6 +3,7 @@ define(function(require, exports, module){
 		Field: require('./Field'),
 		Page: require('./Page'),
 		Layout: require('./Layout'),
-		Fieldset: require('./Fieldset')
+		Fieldset: require('./Fieldset'),
+		Tree: require('./Tree')
 	};
 });

@@ -1,6 +1,10 @@
 var React = require('react/addons');
+
 var types = {
-	'grid': require('./Grid')
+	grid: React.createFactory(require('./Grid')),
+	form: React.createFactory(require('./Form')),
+	fieldset: React.createFactory(require('./Fieldset')),
+	field: React.createFactory(require('./Field'))
 };
 
 /**
@@ -12,8 +16,7 @@ var types = {
 var Layout = React.createClass({
 	propTypes: {
 		components: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-		type: React.PropTypes.string,
-		config: React.PropTypes.object
+		schema: React.PropTypes.object
 	},
 	
 	/** 
@@ -25,17 +28,20 @@ var Layout = React.createClass({
 	 * @returns {React.DOM}
 	 */
 	render: function(){
-		var components = this.props.components;
-		var cn = React.addons.classSet({
-			'components': !this.props.type,
-			'layout': !!this.props.type
+		var components = this.props.components.map(function(schema){
+			var componentType = types[schema.type];
+			return ( componentType )? componentType(schema.config) : schema;
 		});
-		var config = this.props;
-		if ( this.props && this.props.type ) {
-			if ( ! types[this.props.type] ) {
-				config = this.props.config;
-			}
-			components = types[this.props.type](config);
+		var cn = React.addons.classSet({
+			'components': !this.props.schema,
+			'layout': !!this.props.schema
+		});
+		var config, layoutType;
+		if ( this.props.schema ) {
+			config = this.props.schema.config;
+			config.components = components;
+			layoutType = types[this.props.schema.type];
+			components = layoutType(config);
 		}
 		return <div className={cn}>{components}</div>;
 	}

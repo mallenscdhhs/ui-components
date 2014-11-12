@@ -9,7 +9,12 @@ describe('Fieldset component', function() {
 
   var fieldsetFixture = {
     'name' : 'Test Legend',
-    'layout' : {},
+    'layout' : {
+      type: "grid", 
+      config: {
+        rows: [[{md: '4', sm: '2'}]]
+      }
+    },
     'components' :[{
       'type' :'field',
       'config' : { 
@@ -28,11 +33,20 @@ describe('Fieldset component', function() {
     expect(legend.getDOMNode().textContent).toEqual(fieldsetFixture.name);
   });
 
+  it('Renders fieldset container', function(){
+    var fieldset = tu.renderIntoDocument(<Fieldset {...fieldsetFixture}/>);
+    var inputText = tu.scryRenderedDOMComponentsWithTag(fieldset, 'fieldset');
+    expect(inputText.length).toEqual(1);    
+  });
+
   it('Renders fieldset fields', function(){
     var fieldset = tu.renderIntoDocument(<Fieldset {...fieldsetFixture}/>);
-    var inputText = tu.findRenderedDOMComponentWithClass(fieldset, 'form-control');
-    expect(inputText.getDOMNode().type).toEqual(fieldsetFixture.components[0].config.type);    
-  });
+    var inputText = tu.scryRenderedDOMComponentsWithTag(fieldset, 'input');
+    expect(inputText.length).toEqual(fieldsetFixture.components.length);    
+    _.each(inputText,function(elm,j){
+      expect(elm.getDOMNode().type).toEqual(fieldsetFixture.components[j].config.type);
+    })
+  });  
   
 
 });
