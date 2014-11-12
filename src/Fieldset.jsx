@@ -13,12 +13,12 @@ var Fieldset = React.createClass({
    * @returns {object}
    */
   getInitialState: function(){
-    var state = _.extend({ }, this.props);
+    var state = _.extend({ componentParts : '' }, this.props);
     return state;
   },
 
   /**
-   * Render a Field component.
+   * Render a Fieldset component.
    * @returns {JSX}
    */
   render: function(){
