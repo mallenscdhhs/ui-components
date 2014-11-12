@@ -15,6 +15,22 @@ var getColumnClassNames = function(col){
 };
 
 /**
+ * Returns the correct component index to retrieve based on the current
+ * row index, column index, and possible range offset.
+ * @param {number} rowNum
+ * @param {number} colNum
+ * @param {number} rangeOffset
+ * @returns {number}
+ */
+var getComponentIndex = function(rowNum, colNum, rangeOffset){
+	var indx = colNum + rangeOffset;
+	if ( rowNum > 0 ) {
+		indx = this.props.rows[rowNum-1].length + (colNum +1) + rangeOffset;
+	}
+	return indx;
+};
+
+/**
  * Renders a row <div>. Computes the current componentIndex by either
  * examining the column config for an indexRange property to specify a
  * slice of the passed-in components array or by incrementing the componentIndex
@@ -25,19 +41,18 @@ var getColumnClassNames = function(col){
  * @returns {React.DOM.div}
  */
 var renderRow = function(components, row, i){
-	var componentIndex = -1;
+	var componentIndexRange = 0;
 	var componentList;
 	return (
 		<div className="row" key={"row-"+i}>
 			{row.map(function(col, n){
 				if ( col.indexRange ) {
-					componentIndex += col.indexRange.length;
-					componentList = components.slice.apply(components, col.indexRange);
+					componentIndexRange += (col.indexRange[1] - 1);
+					componentList = Array.prototype.slice.apply(components, col.indexRange);
 				}	else {
-					componentIndex += 1;
-					componentList = components[componentIndex];
+					componentList = components[getComponentIndex.call(this, i, n, componentIndexRange)];
 				}
-				renderColumn(componentList, col, n);
+				return renderColumn(componentList, col, n);
 			}, this)}
 		</div>
 	);
@@ -51,7 +66,7 @@ var renderRow = function(components, row, i){
  * @returns {React.DOM.div}
  */
 var renderColumn = function(components, col, n){
-	return(
+	return (
 		<div className={getColumnClassNames(col)} key={"col-"+n}>
 			{components}
 		</div>
