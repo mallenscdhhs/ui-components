@@ -119,7 +119,7 @@ var Field = React.createClass({
     return  (
       <fieldset className="form-group" key="fieldGroup">
         {label}
-        <div className={React.addons.classSet(classes)}>
+        <div className={React.addons.classSet(classes)} key="fieldGroupContent">
           {field}
         </div>
       </fieldset>
