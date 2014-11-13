@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Components</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="lib/react/react-with-addons.js"></script>
+    <script src="ui-components.js"></script>
+  </head>
+  <body style="padding: 2em">
+
+      <div id="test-form"></div>
+
+      <script>
+        var fieldsFixture = {
+          'text' : {
+            'type' : 'field',
+            'config' : {
+              type : 'text',
+              name : 'test-text',
+              label : 'Test Text'
+            }
+          },
+          'textarea' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'textarea',
+              name : 'test-textarea',
+              label : 'Test Textarea'
+            }
+          },
+          'checkbox' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'checkbox',
+              name : 'test-checkbox',
+              label : 'Test Checkbox',
+              options : {
+                'items' : [
+                  {
+                    'label' : 'Checkbox 1',
+                    'value' : '1'
+                  },
+                  {
+                    'label' : 'Checkbox 2',
+                    'value' : '2'
+                  }        
+                ]
+              }
+            }          
+          },
+          'radio' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'radio',
+              name : 'test-radio',
+              label : 'Test Radio',
+              options : {
+                'items' : [
+                  {
+                    'label' : 'Radio 1',
+                    'value' : '1'
+                  },
+                  {
+                    'label' : 'Radio 2',
+                    'value' : '2'
+                  }        
+                ]
+              }  
+            }          
+          },
+          'select' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'select',
+              name : 'test-select',
+              label : 'Test Select',
+              options : {
+                'items' : [
+                  {
+                    'label' : 'Select 1',
+                    'value' : '1'
+                  },
+                  {
+                    'label' : 'Select 2',
+                    'value' : '2'
+                  }        
+                ]
+              }
+            }            
+          },
+          'multiselect' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'multiselect',
+              name : 'test-multiselect',
+              label : 'Test MultiSelect',
+              options : {
+                'items' : [
+                  {
+                    'label' : 'MultiSelect 1',
+                    'value' : '1'
+                  },
+                  {
+                    'label' : 'MultiSelect 2',
+                    'value' : '2'
+                  }        
+                ]
+              } 
+            }           
+          },          
+          'email' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'email',
+              name : 'test-email',
+              label : 'Test Email'
+            }
+          },
+          'phone' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'phone',
+              name : 'test-phone',
+              label : 'Test Phone'
+            }
+          },
+          'date' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'date',
+              name : 'test-date',
+              label : 'Test Date',
+              required : true
+            }
+          },
+          'password' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'password',
+              name : 'test-password',
+              label : 'Test Password'
+            }
+          }   
+        };
+
+        var fieldsetFixture = {
+          'name' : 'Test Legend',
+          'layout' : {
+            type: "grid", 
+            config: {
+              rows: [[{"md": "6"}]]
+            }
+          },
+          'components' :[]
+        };
+
+        // Add fields to components
+        fieldsetFixture.components.push(fieldsFixture.text);
+        fieldsetFixture.components.push(fieldsFixture.select);
+        fieldsetFixture.components.push(fieldsFixture.multiselect);
+        fieldsetFixture.components.push(fieldsFixture.date);
+        fieldsetFixture.components.push(fieldsFixture.radio);
+        fieldsetFixture.components.push(fieldsFixture.checkbox);
+
+        var formFixture = {
+          'name' : 'Test Form',
+          'model' : {},
+          'actions':[],
+          'rules': [],
+          'layout' : {
+            'type': "grid", 
+            'config': {
+              'rows': [[{'md': '6'}]]
+            }
+          },
+          'components' :[]  
+        };
+
+        formFixture.components.push(fieldsetFixture);
+
+        var Form = React.createFactory(Components.Form);
+        React.render(Form(formFixture),document.getElementById('test-form'));
+      </script>
+  </body>
+</html>

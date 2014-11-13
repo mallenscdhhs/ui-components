@@ -48,5 +48,4 @@ describe('Fieldset component', function() {
     })
   });  
   
-
 });
