@@ -11,7 +11,7 @@ var Form = React.createClass({
     return (
     	<form key="formWithComponentsKey">
     		<legend className="field-label" key="legendFormKey">{this.props.name}</legend>
-			<Layout schema={this.props.layout} components={this.props.components}/>
+    		<Layout schema={this.props.layout} components={this.props.components}/>
     	</form>
     );
   }

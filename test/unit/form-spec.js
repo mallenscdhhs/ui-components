@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var FormComponent = require('../../dist/cjs/Form');
+var Form = require('../../dist/cjs/Form');
 
 var request = require('superagent');
 var _ = require('underscore');
@@ -43,7 +43,7 @@ describe('Form component', function() {
   };
 
   it('Renders form container', function(){
-    var formPage = tu.renderIntoDocument(<FormComponent {...formFixture}/>);
+    var formPage = tu.renderIntoDocument(<Form {...formFixture}/>);
     var inputText = tu.scryRenderedDOMComponentsWithTag(formPage, 'form');
     expect(inputText.length).toEqual(1);    
   });
