@@ -6,6 +6,7 @@ var IP = process.env.IP;
 var PORT = process.env.PORT;
 
 app.get('/lib/data/pages/:pageId', function(req, res){
+  res.writeHead(200, {"Content-Type": "application/json"});
   fs.createReadStream(path.join(process.cwd(), 'test/lib/data', req.params.pageId+'.json')).pipe(res);
 });
 

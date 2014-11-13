@@ -111,3 +111,7 @@ gulp.task('watch', function(){
   gulp.watch(['src/**/*.jsx'], ['build']);
   gulp.watch(['dist/amd/index.js'], ['build:browser']);
 });
+
+gulp.task('watch:specs', function(){
+  gulp.watch(['test/**/*-spec.js'], ['specs']);
+});

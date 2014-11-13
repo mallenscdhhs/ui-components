@@ -1,0 +1,29 @@
+{
+  "type": "workflow",
+  "config": {
+    "title": "Test workflow",
+    "api": {
+      "get": "lib/data/pages/:pageId"
+    },
+    "items": [
+      {
+        "title": "Page one",
+        "pageId": "page1"
+      },
+      {
+        "title": "Page two",
+        "pageId": "page2",
+        "items": [
+          {
+            "title": "Page three",
+            "pageId": "page3"
+          }
+        ]
+      },
+      {
+        "title": "Page four",
+        "pageId": "page4"
+      }
+    ]
+  }
+}

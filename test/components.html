@@ -8,44 +8,41 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="lib/react/react-with-addons.js"></script>
     <script src="ui-components.js"></script>
+    <style type="text/css">
+      .nav.nav-tree ul {
+        margin-left: 1em;
+      }
+      .nav.nav-tree ul li {
+        border-left: dotted 1px #ccc;
+        margin-left: 4px;
+      }
+      .nav.nav-tree .active > a,
+      .nav.nav-tree .active > a:hover {
+        background: #2a6496;
+        color: #fff;
+      }
+    </style>
   </head>
   <body style="padding: 2em">
-      <div id="page"></div>
-      <div id="tree"></div>
-      <script>
-        var Page = React.createFactory(Components.Page);
-        var Tree = React.createFactory(Components.Tree);
+    <div id="page"></div>
+    <div id="workflow"></div>
+    <script>
+      var Page = React.createFactory(Components.Page);
+      var Workflow = React.createFactory(Components.Workflow);
+      
+      $.getJSON('lib/data/page-config.json').then(function(res){
         React.render(
-          Page({ url: 'lib/data/page-config.json'}),
+          Page(res.config),
           document.getElementById('page')
-        );
+        );    
+      });
+      
+      $.getJSON('lib/data/workflow.json').then(function(res){
         React.render(
-          Tree({
-              title: 'test tree',
-              api: {},
-              items: [
-                {
-                  title: 'One',
-                  pageId: 'page1',
-                  items: [
-                    {
-                      title: 'One b',
-                      pageId: 'page1b'
-                    },
-                    {
-                      title: 'One a',
-                      pageId: 'page1a'
-                    }
-                  ]
-                },
-                {
-                  title: 'Two',
-                  pageId: 'page2'
-                }
-              ]
-            }),
-          document.getElementById('tree')
+          Workflow(res.config),
+          document.getElementById('workflow')
         );
-      </script>
+      });
+    </script>
   </body>
 </html>

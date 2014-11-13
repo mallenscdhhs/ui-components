@@ -1,6 +1,4 @@
 var React = require('react/addons');
-var _ = require('underscore');
-var ConfigLoader = require('./ConfigLoader');
 var Layout = require('./Layout');
 var marked = require('marked');
 
@@ -10,18 +8,24 @@ marked.setOptions({
 });
 
 var Page = React.createClass({
-  mixins: [ConfigLoader],
   /**
-   * Load the initial state of the component from any passed-in props, and
-   * set defaults for any props that were not set.
+   * Set initial state.
    * @returns {object}
    */
   getInitialState: function(){
-    return _.extend({ 
-      title: '', 
-      content: '', 
+    return {};    
+  },
+  
+  /**
+   * Set default props.
+   * @returns {object}
+   */
+  getDefaultProps: function(){
+    return {
+      content: '',
+      title: '',
       components: []
-    }, this.props);    
+    }
   },
 
   /**
@@ -32,10 +36,10 @@ var Page = React.createClass({
     return(
       <article>
         <header>
-          <h2>{this.state.title}</h2>
+          <h2>{this.props.title}</h2>
         </header>
-        <section dangerouslySetInnerHTML={{__html: marked(this.state.content)}}></section>
-        <Layout schema={this.state.layout} components={this.state.components}/>
+        <section dangerouslySetInnerHTML={{__html: marked(this.props.content)}}></section>
+        <Layout schema={this.props.layout} components={this.props.components}/>
       </article>
     );
   }
