@@ -1,7 +1,5 @@
 var React = require('react/addons');
 var Fieldset = require('../../dist/cjs/Fieldset');
-
-var request = require('superagent');
 var _ = require('underscore');
 var tu = React.addons.TestUtils;
 

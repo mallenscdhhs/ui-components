@@ -4,5 +4,6 @@ module.exports = {
 	Tree: require('./Tree.jsx'),
 	Form: require('./Form.jsx'),
 	Fieldset : require('./Fieldset.jsx'),
-	Field: require('./Field.jsx')
+	Field: require('./Field.jsx'),
+	Action: require('./Action.jsx')
 };

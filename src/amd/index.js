@@ -5,6 +5,7 @@ define(function(require, exports, module){
 		Form: require('./Form'),
 		Fieldset: require('./Fieldset'),
 		Field: require('./Field'),
-		Tree: require('./Tree')
+		Tree: require('./Tree'),
+		Action: require('./Action')
 	};
 });

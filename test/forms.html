@@ -168,7 +168,22 @@
         var formFixture = {
           'name' : 'Test Form',
           'model' : {},
-          'actions':[],
+          'actions':[
+            {
+              'type' : 'link'            
+              'config' : {
+                'name' : 'Test Action'
+                'url' : 'testURLHTTP'              
+              }
+            },
+            {
+              'type' : 'button'            
+              'config' : {
+                'name' : 'Test Action'
+                'url' : 'testURLHTTP'              
+              }
+            }
+          ],
           'rules': [],
           'layout' : {
             'type': "grid", 

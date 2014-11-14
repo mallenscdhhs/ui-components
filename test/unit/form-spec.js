@@ -1,7 +1,5 @@
 var React = require('react/addons');
 var Form = require('../../dist/cjs/Form');
-
-var request = require('superagent');
 var _ = require('underscore');
 var tu = React.addons.TestUtils;
 
