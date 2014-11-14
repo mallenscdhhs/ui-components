@@ -5,6 +5,7 @@
     "api": {
       "get": "lib/data/pages/:pageId"
     },
+    "lastSectionCompleted": "page2",
     "items": [
       {
         "title": "Page one",

@@ -9,9 +9,10 @@ var Workflow = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string,
 		items: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-		api: React.PropTypes.object.isRequired
+		api: React.PropTypes.object.isRequired,
+    lastSectionCompleted: React.PropTypes.string
 	},
-	
+
   /**
    * Load the initial state of the component from any passed-in props, and
    * set defaults for any props that were not set.
@@ -45,22 +46,31 @@ var Workflow = React.createClass({
    * in the tree nav.
    */
   componentDidMount: function(){
-    var hash = window.location.hash;
-    var pageId = hash? hash.slice(1) : this.refs.outline.state.selectedItem;
-    this.loadPageFromServer(pageId);
-    this.refs.outline.on('item:select', function(){
-      console.log(arguments);
-    });
+    var startPageId = this.props.lastSectionCompleted? this.props.lastSectionCompleted : this.props.items[0].pageId;
+    this.setState({currentPage: startPageId});
+    this.refs.outline.on('item:select', this.loadPageFromServer, this);    
+    this.refs.outline.selectItem(startPageId);
   },
+
+  /**
+   * Deregister event handlers, perform component cleanup.
+   */
+  componentWillUnmount: function(){
+    this.refs.outline.off('item:select', this.loadPageFromServer);
+  },
+
+  next: function(){},
+  prev: function(){},
+  cancel: function(){},
 	
   /**
    * 
    * @returns {React}
    */
-  render: function(){
+  render: function(){    
     return (
       <Grid rows={[[{md: '4', indexRange: [0, 2]}, {md: '8'}]]}>
-        <h3>{this.props.title}</h3>
+        <h4>{this.props.title}</h4>
         <Tree {...this.props} ref="outline" />
         <Page {...this.state.currentPageProps}  ref="currentPage" />
       </Grid>
