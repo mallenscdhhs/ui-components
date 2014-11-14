@@ -7,7 +7,7 @@ var Action = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
-    return (<a href={this.props.url} key="actionLinkKey" className="btn btn-primary active">{this.props.name}</a>);
+    return (<a href={this.props.url} key="actionLinkKey" className="btn btn-default active">{this.props.name}</a>);
   },
 
   /**
@@ -15,7 +15,7 @@ var Action = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
-    return (<button type="button" key="actionButtonKey" className="btn btn-primary">{this.props.name}</button>);
+    return (<button type="button" key="actionButtonKey" className="btn btn-default">{this.props.name}</button>);
   },
 
   /**

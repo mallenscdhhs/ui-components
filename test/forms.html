@@ -8,8 +8,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="lib/react/react-with-addons.js"></script>
     <script src="ui-components.js"></script>
+    <style>.btn{margin:0 3px;}</style>
   </head>
-  <body style="padding: 2em">
+  <body style="padding: 2em;">
 
       <div id="test-form"></div>
 
@@ -172,14 +173,14 @@
             {
               'type' : 'link',            
               'config' : {
-                'name' : 'Test Action',
+                'name' : 'Test Link Action',
                 'url' : 'testURLHTTP'              
               }
             },
             {
               'type' : 'button',            
               'config' : {
-                'name' : 'Test Action',
+                'name' : 'Test Button Action',
                 'url' : 'testURLHTTP'              
               }
             }
@@ -191,7 +192,28 @@
               'rows': [[{'md': '6'}]]
             }
           },
-          'components' :[]  
+          'components' :[{
+            'type' : 'fieldset',
+            'config':{
+              'name' : 'Test Fieldset',
+              'layout' : {
+                'type': "grid", 
+                'config': {
+                  'rows': [[{'md': '4', 'sm': '2'}]]
+                }
+              },
+              'components' :[{
+                'type' :'field',
+                'config' : { 
+                  'type' : 'text',
+                  'name' : 'test-text',
+                  'label' : 'Test Text Field',
+                  'required' : false,
+                  'options' : { }
+                }
+              }]
+            }  
+          }]  
         };
 
         formFixture.components.push(fieldsetFixture);

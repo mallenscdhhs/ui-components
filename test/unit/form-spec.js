@@ -8,7 +8,22 @@ describe('Form component', function() {
   var formFixture = {
     'name' : 'Test Form',
     'model' : {},
-    'actions':[],
+    'actions':[
+      {
+        'type' : 'link',            
+        'config' : {
+          'name' : 'Test Action',
+          'url' : 'testURLHTTP'              
+        }
+      },
+      {
+        'type' : 'button',            
+        'config' : {
+          'name' : 'Test Action',
+          'url' : 'testURLHTTP'              
+        }
+      }
+    ],
     'rules': [],
     'layout' : {
       'type': "grid", 
@@ -43,10 +58,8 @@ describe('Form component', function() {
   it('Renders form container', function(){
     var formPage = tu.renderIntoDocument(<Form {...formFixture}/>);
     var inputText = tu.scryRenderedDOMComponentsWithTag(formPage, 'form');
+    console.log(inputText.length);
     expect(inputText.length).toEqual(1);    
   });
-
- 
-  
 
 });
