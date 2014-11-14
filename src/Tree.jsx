@@ -8,13 +8,14 @@ var React = require('react/addons');
  */
 var renderItems = function(config){
 	return config.items.map(function(item, n){
+		var classes = React.addons.classSet({ active: this.state.selectedItem === item.pageId });
 		return (
-			<li role="presentation" key={"tree-item"+n}>
-				<a href={item.pageId}>{item.title}</a>
-				{renderTree(item)}
+			<li className={classes} role="presentation" ref={item.pageId} key={item.pageId} onClick={this.handleClick}>
+				<a href={"#"+item.pageId}>{item.title}</a>
+				{renderTree.call(this, item)}
 			</li>
 		);
-	});
+	}, this);
 };
 
 /**
@@ -24,8 +25,8 @@ var renderItems = function(config){
  */
 var renderTree = function(config){	
 	return (config && config.items? 
-		<ul className="nav tree-nav">
-			{renderItems(config)}
+		<ul className="nav nav-tree">
+			{renderItems.call(this, config)}
 		</ul> : null);
 };
 
@@ -38,10 +39,19 @@ var Tree = React.createClass({
 		items: React.PropTypes.arrayOf(React.PropTypes.object)
 	},
 	getInitialState: function(){
-		return this.props;
+	  var first = this.props.items[0];
+		return {
+			selectedItem: first.pageId
+		};
+	},
+	handleClick: function(e){
+		this.setState({selectedItem: e.target.hash.slice(1)});
+	},
+	selectItem: function(pageId){
+		this.refs[pageId].getDOMNode().click();
 	},
 	render: function(){
-		return renderTree(this.state);
+		return renderTree.call(this, this.props);
 	}
 });
 
