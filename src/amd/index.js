@@ -6,6 +6,7 @@ define(function(require, exports, module){
 		Fieldset: require('./Fieldset'),
 		Field: require('./Field'),
 		Tree: require('./Tree'),
-		Action: require('./Action')
+		Action: require('./Action'),
+		Container: require('./Container')
 	};
 });

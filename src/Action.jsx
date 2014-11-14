@@ -2,10 +2,32 @@ var React = require('react/addons');
 
 var Action = React.createClass({
 
-  getURL: function(){
-    var url = this.props.url;
+  /**
+  * Return an <a> (link) template
+  * @return {JSX Template}
+  */
+  getLink: function(){
+    return (<a href={this.props.url} key="actionLinkKey" className="btn btn-primary active">{this.props.name}</a>);
+  },
 
-    return url;
+  /**
+  * Return a Button template
+  * @return {JSX Template}
+  */
+  getButton: function(){
+    return (<button type="button" key="actionButtonKey" className="btn btn-primary">{this.props.name}</button>);
+  },
+
+  /**
+  * Determine what action template to return
+  * @returns {JSX Template}
+  */
+  getAction: function(){
+    if(this.props.type === 'button'){
+      return this.getButton();
+    }else{
+      return this.getLink();
+    }
   },
 
   /**
@@ -13,9 +35,7 @@ var Action = React.createClass({
    * @returns {JSX}
    */
   render: function(){ 
-    return (
-    	<a href={this.getURL()} key="actionKey">{this.props.name}</a>
-    );
+    return ( this.getAction() );
   }
 
 });

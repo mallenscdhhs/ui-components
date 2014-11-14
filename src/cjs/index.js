@@ -5,5 +5,6 @@ module.exports = {
 	Form: require('./Form.jsx'),
 	Fieldset : require('./Fieldset.jsx'),
 	Field: require('./Field.jsx'),
-	Action: require('./Action.jsx')
+	Action: require('./Action.jsx'),
+	Container: require('./Container.jsx')
 };
