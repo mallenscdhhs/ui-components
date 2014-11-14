@@ -14,7 +14,9 @@ var Form = React.createClass({
     	<form key="formWithComponentsKey">
     		<legend className="field-label" key="legendFormKey">{this.props.name}</legend>
         <Container>
-          <Action name="Test Button" type="button" />
+          {this.props.actions.map(function(action,i){
+            return <Action type={action.type} {...action.config} />
+          })}
         </Container>
     	</form>
     );
