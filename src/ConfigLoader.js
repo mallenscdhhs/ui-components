@@ -8,7 +8,7 @@ module.exports = {
   componentDidMount: function(){    
     if ( this.props.url ) {
       request.get(this.props.url, function(res){        
-        if ( res.ok ) {                  
+        if ( res.ok && this.isMounted() ) {
           this.setState(res.body.config);
         }
       }.bind(this));
