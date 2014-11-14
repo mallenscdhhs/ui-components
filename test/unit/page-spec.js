@@ -31,17 +31,6 @@ describe('Page component', function() {
     expect(section.getDOMNode().childNodes[0].childNodes[1].tagName).toEqual('STRONG');
   });
 
-  it('will re-render itself if its state changes', function(){
-    var page = TestUtils.renderIntoDocument(<Page title={fixture.title} content={fixture.content} />);
-    var h2 = TestUtils.findRenderedDOMComponentWithTag(page, 'h2');
-    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'section').getDOMNode().childNodes[0];
-    expect(h2.getDOMNode().textContent).toEqual(fixture.title);
-    expect(p.textContent).toEqual('hello, world');
-    page.setState({title: 'bye', content: 'hi'});
-    expect(h2.getDOMNode().textContent).toEqual('bye');
-    expect(TestUtils.findRenderedDOMComponentWithTag(page, 'section').getDOMNode().childNodes[0].textContent).toEqual('hi');    
-  });
-
   it('renders a list of components');
   
   it('can use a layout config to arrange its components', function(){
@@ -62,12 +51,4 @@ describe('Page component', function() {
     expect(p.textContent).toEqual('hello, world');
     expect(row.className).toEqual('row');
   });
-
-  it('can load its state from a server', function(){
-    spyOn(request, 'get');
-    var page = TestUtils.renderIntoDocument(<Page url="lib/data/page-config.json"/>);
-    expect(request.get.calls.count()).toEqual(1);
-    expect(request.get.calls.argsFor(0)[0]).toEqual('lib/data/page-config.json');
-  });
-
 });
