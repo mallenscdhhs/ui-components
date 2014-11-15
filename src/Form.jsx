@@ -20,13 +20,11 @@ var Form = React.createClass({
    * @returns {JSX}
    */
   render: function(){ 
+    var formName = (this.props.name).replace(' ','_');
     return (
-    	<form key="formWithComponentsKey">
-    		<legend className="field-label" key="legendFormKey">{this.props.name}</legend>
-        <Container key="containerComponent">
-          {this.getComponents()}
-        </Container>
-        <Container key="containerActions">
+    	<form name={formName} key="formWithComponentsKey">
+        {this.getComponents()}
+        <Container classes="form-group" key="containerActions">
           {this.props.actions.map(function(action,i){
             return <Action type={action.type} {...action.config} key={"actionKey"+i} />
           })}

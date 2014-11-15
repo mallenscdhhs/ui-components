@@ -1,13 +1,30 @@
 var React = require('react/addons');
+var _ = require('underscore');
 
 var Action = React.createClass({
+  /**
+  * Return a string of classes
+  * @return {String}
+  */
+  getClasses: function(){
+    var classes = ['btn'];
+    if(this.props.classes){
+      _.each(this.props.classes,function(cla,i){
+        classes.push('btn-'+cla);
+      });
+    }else{
+      classes.push('btn-primary');
+      classes.push('active');
+    }
+    return classes.join(' ');
+  },
 
   /**
   * Return an <a> (link) template
   * @return {JSX Template}
   */
   getLink: function(){
-    return (<a href={this.props.url} key="actionLinkKey" className="btn btn-default active">{this.props.name}</a>);
+    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()}>{this.props.name}</a>);
   },
 
   /**
@@ -15,7 +32,7 @@ var Action = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
-    return (<button type="button" key="actionButtonKey" className="btn btn-default">{this.props.name}</button>);
+    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()}>{this.props.name}</button>);
   },
 
   /**
