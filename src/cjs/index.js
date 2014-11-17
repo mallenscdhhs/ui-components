@@ -1,6 +1,10 @@
 module.exports = {
-	Page: require('./Page.jsx'),
-	Field: require('./Field.js'),
-	Layout: require('./Layout.jsx'),
-	Tree: require('./Tree')
+	Page: require('./Page.jsx'),	
+	Layout: require('./Layout.jsx'),	
+	Tree: require('./Tree.jsx'),
+	Form: require('./Form.jsx'),
+	Fieldset : require('./Fieldset.jsx'),
+	Field: require('./Field.jsx'),
+	Action: require('./Action.jsx'),
+	Container: require('./Container.jsx')
 };

@@ -2,7 +2,9 @@ var React = require('react/addons');
 
 var types = {
 	grid: React.createFactory(require('./Grid')),
-	form: React.createFactory(require('./Form'))
+	form: React.createFactory(require('./Form')),
+	fieldset: React.createFactory(require('./Fieldset')),
+	field: React.createFactory(require('./Field'))
 };
 
 /**

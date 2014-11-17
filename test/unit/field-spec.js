@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var Field = require('../../src/Field.jsx');
+var Field = require('../../dist/cjs/Field');
 var request = require('superagent');
 var _ = require('underscore');
 var tu = React.addons.TestUtils;
