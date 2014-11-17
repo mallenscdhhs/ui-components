@@ -8,14 +8,17 @@ var Action = React.createClass({
   */
   getClasses: function(){
     var classes = ['btn'];
+    // Add default link-type for action links
+    if(this.props.type==='link'){
+      classes.push('btn-link');
+    }
+    // Add all passed in classes
     if(this.props.classes){
       _.each(this.props.classes,function(cla,i){
         classes.push('btn-'+cla);
       });
-    }else{
-      classes.push('btn-primary');
-      classes.push('active');
     }
+
     return classes.join(' ');
   },
 

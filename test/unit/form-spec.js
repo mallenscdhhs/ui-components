@@ -58,7 +58,6 @@ describe('Form component', function() {
   it('Renders form container', function(){
     var formPage = tu.renderIntoDocument(<Form {...formFixture}/>);
     var inputText = tu.scryRenderedDOMComponentsWithTag(formPage, 'form');
-    console.log(inputText.length);
     expect(inputText.length).toEqual(1);    
   });
 
