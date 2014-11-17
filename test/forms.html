@@ -148,23 +148,23 @@
         };
 
         var fieldsetFixture = {
-          'name' : 'Test Legend',
-          'layout' : {
-            type: "grid", 
-            config: {
-              rows: [[{"md": "6"}]]
-            }
-          },
-          'components' :[]
+          'type' : 'fieldset',
+          'config':{          
+            'name' : 'Test Fieldset With All Fields',
+            'layout' : {
+              type: "grid", 
+              config: {
+                rows: [[{"md": "6"}]]
+              }
+            },
+            'components' :[]
+          }
         };
 
         // Add fields to components
-        fieldsetFixture.components.push(fieldsFixture.text);
-        fieldsetFixture.components.push(fieldsFixture.select);
-        fieldsetFixture.components.push(fieldsFixture.multiselect);
-        fieldsetFixture.components.push(fieldsFixture.date);
-        fieldsetFixture.components.push(fieldsFixture.radio);
-        fieldsetFixture.components.push(fieldsFixture.checkbox);
+        _.each(Object.keys(fieldsFixture),function(key,j){
+          fieldsetFixture.config.components.push(fieldsFixture[key]);
+        })
 
         var formFixture = {
           'name' : 'Test Form',
