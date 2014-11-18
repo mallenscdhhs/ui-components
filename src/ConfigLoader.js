@@ -7,7 +7,7 @@ var request = require('superagent');
 module.exports = {
   componentDidMount: function(){    
     if ( this.props.url ) {
-      request.get(this.props.url, function(res){        
+      request.get(this.props.url, function(res){
         if ( res.ok && this.isMounted() ) {
           this.setState(res.body.config);
         }

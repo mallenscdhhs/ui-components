@@ -1,0 +1,8 @@
+{
+  "type": "page",
+  "config": {
+    "title": "Page two",
+    "content": "This is content for **page2**.",
+    "components": []
+  }
+}

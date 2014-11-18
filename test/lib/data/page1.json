@@ -1,0 +1,8 @@
+{
+  "type": "page",
+  "config": {
+    "title": "Page one",
+    "content": "I am some content.",
+    "components": []
+  }
+}
