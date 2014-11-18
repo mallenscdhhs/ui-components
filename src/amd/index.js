@@ -1,13 +1,15 @@
 define(function(require){		
 	return {
-		Page: require('./Page'),
+		Form: require('./Form'),
+		Fieldset : require('./Fieldset'),
+		Field: require('./Field'),
+		Action: require('./Action'),
+		Container: require('./Container'),
 		Workflow: require('./Workflow'),
+		Page: require('./Page'),
 		Layout: require('./Layout'),
 		Grid: require('./Grid'),
-		Fieldset: require('./Fieldset'),
-		Field: require('./Field'),
 		Tree: require('./Tree'),
-		Action: require('./Action'),
-		Container: require('./Container')
+		TreeItem: require('./TreeItem')
 	}
 });

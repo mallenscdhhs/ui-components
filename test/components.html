@@ -27,9 +27,8 @@
     <div id="page"></div>
     <div id="workflow"></div>
     <script>            
-//      var Workflow = React.createFactory(Components.Workflow);
-  console.log(Components);   
-      var Page = React.createFactory(Components.Page);
+      var Workflow = React.createFactory(Components.Workflow);  
+      var Page = React.createFactory(Components.Page);      
       
       $.getJSON('lib/data/page-config.json').then(function(res){        
         React.render(
@@ -37,14 +36,7 @@
           document.getElementById('page')
         );    
       });
-      /*
-      $.getJSON('lib/data/workflow.json').then(function(res){
-        React.render(
-          Workflow(res.config),
-          document.getElementById('workflow')
-        );
-      });
-      */
+
     </script>
   </body>
 </html>

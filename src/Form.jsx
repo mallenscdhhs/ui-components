@@ -1,7 +1,8 @@
 var React = require('react/addons');
-var Action = require('./Action');
-var Container = require('./Container');
-var Fieldset = require('./Fieldset');
+var Components = require('./Components');
+var Action = Components.element('action');
+var Container = Components.element('container');
+var Fieldset = Components.element('fieldset');
 
 var Form = React.createClass({
 

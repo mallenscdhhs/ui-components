@@ -13,7 +13,6 @@ var Workflow = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string,
 		items: React.PropTypes.object.isRequired,
-		api: React.PropTypes.object.isRequired,
     lastSectionCompleted: React.PropTypes.string
 	},
 
@@ -35,20 +34,6 @@ var Workflow = React.createClass({
   },
   
   /**
-   * Fetch a page instance from the server with the passed-in pageId, and
-   * set the currentPageProps state with the results.
-   * @param {string} pageId
-   */
-  loadPageFromServer: function(pageId){
-    var pageURL = this.props.api.get.replace(':pageId', pageId);
-    request.get(pageURL, function(res){
-      if ( res.ok ) {
-        this.setState({currentPageProps: res.body.config});
-      }
-    }.bind(this));
-  },
-  
-  /**
    * Load the first page in the workflow. This method will first look for
    * a URL hash to specify the pageId, or else it will use the first item
    * in the tree nav.
@@ -56,15 +41,15 @@ var Workflow = React.createClass({
   componentDidMount: function(){
     var startPageId = this.props.lastSectionCompleted? this.state.flow[this.props.lastSectionCompleted].next : this.refs.outline.items[0].pageId;
     this.setState({currentPage: startPageId});
-    //this.refs.outline.on('item:select', this.loadPageFromServer, this);    
-    //this.refs.outline.selectItem(startPageId);
+    this.refs.outline.on('item:select', this.loadPageFromServer, this);    
+    this.refs.outline.selectItem(startPageId);
   },
 
   /**
    * Deregister event handlers, perform component cleanup.
    */
   componentWillUnmount: function(){
-    //this.refs.outline.off('item:select', this.loadPageFromServer);
+    this.refs.outline.off('item:select', this.loadPageFromServer);
   },
 
   next: function(){},
