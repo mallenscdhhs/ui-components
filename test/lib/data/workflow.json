@@ -5,26 +5,29 @@
     "api": {
       "get": "lib/data/pages/:pageId"
     },
-    "lastSectionCompleted": "page2",
-    "items": [
-      {
-        "title": "Page one",
-        "pageId": "page1"
+    "lastSectionCompleted": "page1",
+    "items": {
+      "page1": {
+        "title": "Page One",
+        "pageId": "page1",
+        "next": "page2"
       },
-      {
-        "title": "Page two",
+      "page2": {
+        "title": "Page Two",
         "pageId": "page2",
-        "items": [
-          {
-            "title": "Page three",
-            "pageId": "page3"
-          }
-        ]
+        "next": "page3"
       },
-      {
-        "title": "Page four",
-        "pageId": "page4"
+      "page3": {
+        "title": "Page Three",
+        "pageId": "page3",
+        "next": "page4",
+        "parentId": "page2"
+      },
+      "page4": {
+        "title": "Page Four",
+        "pageId": "page4",
+        "next": null
       }
-    ]
+    }
   }
 }

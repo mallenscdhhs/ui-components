@@ -1,12 +1,13 @@
-define(function(require, exports, module){
+define(function(require){		
 	return {
 		Page: require('./Page'),
+		Workflow: require('./Workflow'),
 		Layout: require('./Layout'),
-		Form: require('./Form'),
+		Grid: require('./Grid'),
 		Fieldset: require('./Fieldset'),
 		Field: require('./Field'),
 		Tree: require('./Tree'),
 		Action: require('./Action'),
 		Container: require('./Container')
-	};
+	}
 });

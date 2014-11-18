@@ -92,6 +92,14 @@ gulp.task('build:browser', requirejs({
   optimize: "none"
 }));
 
+gulp.task('pleasework', ['build:copy'], function(){
+  browserify(['./dist/cjs/index.js'], {standalone: 'Components'})
+    .transform(reactify)
+    .bundle()
+    .pipe(source('ui-components-brwsfy.js'))
+    .pipe(gulp.dest('./dist'));
+});
+
 /**
  * Build a browserified version of the library for use in the test/specs.html
  * file. This page is a browser-based spec runner that uses Jasmine.

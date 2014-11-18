@@ -1,21 +1,42 @@
 {
   "type": "page",
   "config": {
-    "title": "My page",
-    "content": "My **content** here.",
-    "layout": {
-      "type": "grid",
-      "config": {
-        "rows": [[{"md": "6"}]]
-      }
-    },
+    "title": "My workflow page",
+    "content": "My **content** here.",   
     "components": [
       {
-        "type": "form",
+        "type": "workflow",
         "config": {
-          
+          "title": "Test workflow",
+          "api": {
+            "get": "lib/data/pages/:pageId"
+          },
+          "lastSectionCompleted": "page1",
+          "items": {
+            "page1": {
+              "title": "Page One",
+              "pageId": "page1",
+              "next": "page2"
+            },
+            "page2": {
+              "title": "Page Two",
+              "pageId": "page2",
+              "next": "page3"
+            },
+            "page3": {
+              "title": "Page Three",
+              "pageId": "page3",
+              "next": "page4",
+              "parentId": "page2"
+            },
+            "page4": {
+              "title": "Page Four",
+              "pageId": "page4",
+              "next": null
+            }
+          }
         }
-      }
+      }    
     ]    
   }
 }

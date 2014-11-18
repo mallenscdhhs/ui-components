@@ -1,6 +1,8 @@
 var React = require('react/addons');
 var EventEmitter = require('./EventEmitter');
-var TreeItem = require('./TreeItem');
+var Components = require('./Components');
+var TreeItem = Components.element('TreeItem');
+var _ = require('underscore');
 
 /**
  * Creates a list of <li> components and optionally renders

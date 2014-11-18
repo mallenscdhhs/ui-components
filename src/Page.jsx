@@ -1,6 +1,7 @@
 var React = require('react/addons');
-var Layout = require('./Layout');
 var marked = require('marked');
+var Components = require('./Components');
+var Layout = Components.element('layout');
 
 marked.setOptions({  
   sanitize: true,
@@ -8,14 +9,8 @@ marked.setOptions({
 });
 
 var Page = React.createClass({
-  /**
-   * Set initial state.
-   * @returns {object}
-   */
-  getInitialState: function(){
-    return {};    
-  },
-  
+  displayName: 'Page',
+
   /**
    * Set default props.
    * @returns {object}
@@ -25,21 +20,25 @@ var Page = React.createClass({
       content: '',
       title: '',
       components: []
-    }
+    };
   },
 
   /**
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){       
-    return(
+  render: function(){
+    return (
       <article>
         <header>
           <h2>{this.props.title}</h2>
         </header>
         <section dangerouslySetInnerHTML={{__html: marked(this.props.content)}}></section>
-        <Layout schema={this.props.layout} components={this.props.components}/>
+        <Layout schema={this.props.layout}>
+          {this.props.components.map(function(component){
+            return Components.factory(component.type)(component.config);            
+          }, this)}
+        </Layout>
       </article>
     );
   }
