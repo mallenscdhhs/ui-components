@@ -1,15 +1,18 @@
 var React = require('react/addons');
+var _ = require('underscore');
 var request = require('superagent');
-var Grid = require('./Grid');
-var Page = require('./Page');
-var Tree = require('./Tree');
+var Components = require('./Components');
+var Page = Components.element('page');
+var Grid = Components.element('grid');
+var Tree = Components.element('Tree');
 
 var Workflow = React.createClass({
+  
+  displayName: 'Workflow',
 
 	propTypes: {
 		title: React.PropTypes.string,
-		items: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-		api: React.PropTypes.object.isRequired,
+		items: React.PropTypes.object.isRequired,
     lastSectionCompleted: React.PropTypes.string
 	},
 
@@ -19,25 +22,15 @@ var Workflow = React.createClass({
    * @returns {object}
    */
   getInitialState: function(){
+    var flow = this.getWorkflowState(_.clone(this.props.items), this.props.items[this.props.lastSectionCompleted].next);
+    var lastSection = flow[this.props.lastSectionCompleted];
+    var currentSection = flow[lastSection.next];
     return {
-      currentPage: '',
+      currentPage: currentSection.pageId,
       previousPage: '',
-      currentPageProps: {}
+      currentPageProps: currentSection,
+      flow: flow
     };
-  },
-  
-  /**
-   * Fetch a page instance from the server with the passed-in pageId, and
-   * set the currentPageProps state with the results.
-   * @param {string} pageId
-   */
-  loadPageFromServer: function(pageId){
-    var pageURL = this.props.api.get.replace(':pageId', pageId);
-    request.get(pageURL, function(res){
-      if ( res.ok ) {
-        this.setState({currentPageProps: res.body.config});
-      }
-    }.bind(this));
   },
   
   /**
@@ -46,7 +39,7 @@ var Workflow = React.createClass({
    * in the tree nav.
    */
   componentDidMount: function(){
-    var startPageId = this.props.lastSectionCompleted? this.props.lastSectionCompleted : this.props.items[0].pageId;
+    var startPageId = this.props.lastSectionCompleted? this.state.flow[this.props.lastSectionCompleted].next : this.refs.outline.items[0].pageId;
     this.setState({currentPage: startPageId});
     this.refs.outline.on('item:select', this.loadPageFromServer, this);    
     this.refs.outline.selectItem(startPageId);
@@ -62,16 +55,56 @@ var Workflow = React.createClass({
   next: function(){},
   prev: function(){},
   cancel: function(){},
+
+  getWorkflowState: function(list, id){
+    var next = list[id].next;    
+    if ( next ) {
+      list[next].disabled = true;
+      this.getWorkflowState(list, next);
+    }
+    return list;
+  },
+
+  buildTree: function(source, head, children){ 
+    var tree = [];
+    while(head){
+      var branches = children[head.pageId];   
+      var next = source[head.next];
+      if ( !!branches ) {
+        head.items = children[head.pageId];   
+      }
+      tree.push(head);    
+      head = ( next && branches )? source[next.next] : next;
+    }
+    return tree;
+  },
 	
   /**
    * 
    * @returns {React}
    */
-  render: function(){    
+  render: function(){
+    // list of page configs
+    var values = _.values(this.state.flow);
+    // list of all "next" pageId's
+    var nexts = _.map(values, function(item, i){
+      return item.next;
+    });
+    // the first item in the linked list
+    var head = _.difference(Object.keys(this.state.flow), nexts)[0];
+    // hash of all pages with sub items
+    var childrenGroups = _.groupBy(_.filter(values, function(item){
+      return !!item.parentId;
+    }), 'parentId');
+
+    var treeProps = {
+      items: this.buildTree(this.state.flow, this.state.flow[head], childrenGroups)
+    };
+  
     return (
       <Grid rows={[[{md: '4', indexRange: [0, 2]}, {md: '8'}]]}>
         <h4>{this.props.title}</h4>
-        <Tree {...this.props} ref="outline" />
+        <Tree {...treeProps} ref="outline" />
         <Page {...this.state.currentPageProps}  ref="currentPage" />
       </Grid>
     );

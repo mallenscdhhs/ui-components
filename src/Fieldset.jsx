@@ -1,6 +1,6 @@
 var React = require('react/addons');
-var Layout = require('./Layout');
-var Field = require('./Field');
+var Components = require('./Components');
+var Field = Components.element('field');
 
 var Fieldset = React.createClass({
   

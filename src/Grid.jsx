@@ -83,12 +83,11 @@ var Grid = React.createClass({
 		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired,
 		components: React.PropTypes.arrayOf(React.PropTypes.object)
 	},
-	render: function(){		
-		var components = this.props.components || this.props.children;		
+	render: function(){				
 		return (
 			<div className="grid-layout">
 			{this.props.rows.map(function(row, i){				
-				return renderRow.call(this, components, row, i);
+				return renderRow.call(this, this.props.children, row, i);
 			}, this)}
 			</div>
 		);
