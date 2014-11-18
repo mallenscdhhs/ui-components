@@ -21,8 +21,7 @@ module.exports = {
 	/**
 	 * Returns a ReactElement Class for use in JSX. Internally looks up a
 	 * module definition from require's cache if not already in cache object-
-	 * so, your modules must be loaded into require's cache first(see amd/index.js 
-	 * and cjs/index.js).
+	 * so, your modules must be loaded into require's cache first(see amd/index.js and cjs/index.js).
 	 * @param {string} name - can be exact module name or all lowercase
 	 * @returns {ReactElement}
 	 */
