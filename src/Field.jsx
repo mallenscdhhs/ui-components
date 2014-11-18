@@ -2,17 +2,6 @@ var React = require('react/addons');
 var _ = require('underscore');
 
 var Field = React.createClass({
-
-  /**
-   * Load the initial state of the component from any passed-in props, and
-   * set defaults for any props that were not set.
-   * @returns {object}
-   */
-  getInitialState: function(){
-    var state = _.extend({ 'type' : 'text', 'name' : '', 'label' : '', 'required' : false, 'options' : { 'items' : [] } }, this.props);
-    return state;
-  },
-
   /**
    * Boolean helper if type is radio or checkbox.  Used to determine if we 
    * need to use special wrapper for those field types.
@@ -119,7 +108,7 @@ var Field = React.createClass({
     return  (
       <fieldset className="form-group" key="fieldGroup">
         {label}
-        <div className={React.addons.classSet(classes)}>
+        <div className={React.addons.classSet(classes)} key="fieldGroupContent">
           {field}
         </div>
       </fieldset>
@@ -155,8 +144,8 @@ var Field = React.createClass({
         this.getField()
       );
     }
-
   }
+  
 });
 
 module.exports = Field;

@@ -1,9 +1,12 @@
 define(function(require, exports, module){
 	return {
-		Field: require('./Field'),
 		Page: require('./Page'),
 		Layout: require('./Layout'),
+		Form: require('./Form'),
+		Fieldset: require('./Fieldset'),
+		Field: require('./Field'),
 		Tree: require('./Tree'),
-		Workflow: require('./Workflow')
+		Action: require('./Action'),
+		Container: require('./Container')
 	};
 });
