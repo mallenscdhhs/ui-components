@@ -4,8 +4,23 @@ var Action = Components.element('action');
 var Container = Components.element('container');
 var Fieldset = Components.element('fieldset');
 var Layout = Components.element('layout');
+var Q = require('EventQueue');
 
 var Form = React.createClass({
+
+  componentDidMount: function(){
+    Q.subscribe('button:next','form',function(data){
+      console.log('Form got event!'+JSON.stringify(data));
+      Q.unSubscribe('button:next','form');
+    });
+    Q.subscribe('all','form',function(data){
+      console.log('Form got ALL event!'+JSON.stringify(data));
+    });    
+  },
+
+  componentWillUnmount: function(){
+    Q.unSubscribe('button:next','form');
+  },
 
   /**
    * Create components template

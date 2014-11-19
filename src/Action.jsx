@@ -1,4 +1,5 @@
 var React = require('react/addons');
+var Q = require('EventQueue');
 var _ = require('underscore');
 
 var Action = React.createClass({
@@ -25,6 +26,7 @@ var Action = React.createClass({
   handleClick: function(){
     console.log('CLICK:'+this.props.name);
     console.log(this.props);
+    Q.push({'entityEvent':'button:next','data':{'page':1}});
   },
 
   /**

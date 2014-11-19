@@ -10,6 +10,7 @@ define(function(require){
 		Layout: require('./Layout'),
 		Grid: require('./Grid'),
 		Tree: require('./Tree'),
-		TreeItem: require('./TreeItem')
+		TreeItem: require('./TreeItem'),
+		EventQueue:require('./EventQueue')
 	}
 });

@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var _ = require('underscore');
+var Q = require('EventQueue');
 
 var Field = React.createClass({
   /**
@@ -32,6 +33,11 @@ var Field = React.createClass({
     return fields;
   },
 
+  handleBlur: function(){
+    console.log('BLUR:::::'+this.props.name);
+    Q.push({'entityEvent':'input:blur','data':{'fieldName':this.props.name,'fieldValue':this.props}});
+  },
+
   /**
    * Build Select template
    * @returns {JSX template}
@@ -54,7 +60,7 @@ var Field = React.createClass({
    * @returns {JSX template}
    */
   getLabel : function(){
-    var labelRequired = ''; 
+    var labelRequired = '';
     var labelKey = 'fieldLabel';
     if(this.props.required){
       labelRequired = <span className="text-danger" key="requiredField">*</span>;
@@ -78,18 +84,18 @@ var Field = React.createClass({
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" />);
-          break;  
-        case 'radio':  
+          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" onBlur={this.handleBlur} defaultValue={this.props.value} />);
+          break;
+        case 'radio':
         case 'checkbox':
           field = this.getCheckboxOrRadio();
-          break;      
+          break;
         case 'select':
         case 'multiselect':
           field = this.getSelect();
-          break;     
+          break;
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" defaultValue={this.props.value}  />);                                                                                  
+          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" defaultValue={this.props.value} onBlur={this.handleBlur} />);                                                                                  
       }
       return field;
   },
