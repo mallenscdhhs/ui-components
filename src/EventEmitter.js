@@ -51,8 +51,10 @@ module.exports = {
   triggerEvent: function(event, data){
     var e = this.events[event];    
     if ( e ) {
-      e.forEach(function(handler){        
-        handler.fn.call(handler.scope, data);
+      e.forEach(function(handler){   
+        if(handler.fn){
+          handler.fn.call(handler.scope, data);
+        }
       });
     }
   }

@@ -9,7 +9,7 @@ var Fieldset = React.createClass({
     if(this.props.components){
       comps = this.props.components.map(function(field,i){
         return <Field {...field.config} key={"fieldKey"+i} />
-      }) ;  
+      });  
     }
     return comps;
   },

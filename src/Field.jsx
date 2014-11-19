@@ -78,7 +78,7 @@ var Field = React.createClass({
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea"></textarea>);
+          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" />);
           break;  
         case 'radio':  
         case 'checkbox':
@@ -89,7 +89,7 @@ var Field = React.createClass({
           field = this.getSelect();
           break;     
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" />);                                                                                  
+          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" defaultValue={this.props.value}  />);                                                                                  
       }
       return field;
   },
