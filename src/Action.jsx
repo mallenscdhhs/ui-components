@@ -26,7 +26,8 @@ var Action = React.createClass({
   handleClick: function(){
     console.log('CLICK:'+this.props.name);
     console.log(this.props);
-    Q.push({'entityEvent':'button:next','data':{'page':1}});
+    // TODO: update 'next' with actual 'verbs' for the actions
+    Q.push({'entityEvent':'action:next','data':{'page':1}});
   },
 
   /**

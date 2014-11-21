@@ -3,6 +3,64 @@ var _ = require('underscore');
 var Q = require('EventQueue');
 
 var Field = React.createClass({
+
+  componentDidMount: function(){
+    if(this.hasDependency()){
+      var comp = this;
+      var initState = comp.props.dependency.initialState === 'hidden' ? false : true;
+      var depName = comp.props.dependency.name;
+      var depValues = comp.props.dependency.value.split('|'); // Array of 'actionable' values
+      Q.subscribe('field:blur:'+depName,'field:'+comp.props.name,function(data){
+        // Verify field is correct and new value is in the 'actionable' array
+        if(data.fieldName === depName && depValues.indexOf(data.fieldValue) >= 0){ 
+          // Change from initial display state.
+          comp.setState({display: !initState}); 
+        }else{
+          // Otherwise, revert to (or stay at) initState
+          comp.setState({display: initState})
+        }
+      });
+    }      
+  },
+
+  componentWillUnmount: function(){
+    if(this.hasDependency()){
+      var depName = this.props.dependency.name;
+      Q.unSubscribe('field:blur:'+depName,'field:'+this.props.name);
+    }    
+  },
+
+  hasDependency: function(){
+    return this.props.dependency && this.props.dependency.name && this.props.dependency.value && this.props.dependency.initialState;
+  },
+
+  getInitialState: function() {
+    var viewableState = true; // default is 'visible'
+    if(this.hasDependency() && this.props.dependency.initialState && this.props.dependency.initialState ==='hidden'){
+      viewableState = false;
+    }
+    return {'value': this.props.value, 'display': viewableState};
+  },
+
+  handleBlur: function(){
+    console.log('BLUR:'+this.props.name+':VALUE:'+this.state.value+':');
+    Q.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
+  },
+
+  handleChange: function(event) {
+    this.setState({value: event.target.value});
+    //console.log('CHANGE:'+this.props.name+':VALUE:'+this.state.value+':');
+    //Q.push({'entityEvent':'field:change:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
+  },  
+
+  getRenderViewClasses: function(){
+    var classes = {
+      'form-group' : true,
+      'hidden' : !this.state.display
+    } 
+    return classes;
+  },  
+
   /**
    * Boolean helper if type is radio or checkbox.  Used to determine if we 
    * need to use special wrapper for those field types.
@@ -27,16 +85,12 @@ var Field = React.createClass({
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
-      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  />{item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  onChange={this.handleChange} onBlur={this.handleBlur}  />{item.label}</label>);
     });
 
     return fields;
   },
 
-  handleBlur: function(){
-    console.log('BLUR:::::'+this.props.name);
-    Q.push({'entityEvent':'input:blur','data':{'fieldName':this.props.name,'fieldValue':this.props}});
-  },
 
   /**
    * Build Select template
@@ -47,7 +101,7 @@ var Field = React.createClass({
     var fieldKey = fieldName +'-fieldSelect';
     var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName}>
+        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName} onChange={this.handleChange} onBlur={this.handleBlur}>
           {this.props.options.items.map(function(item, i){
             return (<option value={item.value} key={i}>{item.label}</option>);
           })}
@@ -84,7 +138,7 @@ var Field = React.createClass({
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" onBlur={this.handleBlur} defaultValue={this.props.value} />);
+          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" onChange={this.handleChange} onBlur={this.handleBlur} defaultValue={this.props.value} />);
           break;
         case 'radio':
         case 'checkbox':
@@ -95,7 +149,7 @@ var Field = React.createClass({
           field = this.getSelect();
           break;
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" defaultValue={this.props.value} onBlur={this.handleBlur} />);                                                                                  
+          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" defaultValue={this.props.value} onChange={this.handleChange} onBlur={this.handleBlur} />);                                                                                  
       }
       return field;
   },
@@ -106,15 +160,15 @@ var Field = React.createClass({
    * @returns {JSX template}
    */
   renderFieldGroup : function(label,field){
-    var classes = {
+    var fieldClasses = {
       'checkbox': this.props.type === 'checkbox',
       'radio': this.props.type === 'radio'
     };
 
     return  (
-      <fieldset className="form-group" key="fieldGroup">
+      <fieldset className={React.addons.classSet(this.getRenderViewClasses())} key="fieldGroup">
         {label}
-        <div className={React.addons.classSet(classes)} key="fieldGroupContent">
+        <div className={React.addons.classSet(fieldClasses)} key="fieldGroupContent">
           {field}
         </div>
       </fieldset>
@@ -127,7 +181,7 @@ var Field = React.createClass({
    */
   renderFieldWithLabel : function(label,field){
     return  (
-      <div className="form-group" key="fieldDefaultGroup">
+      <div className={React.addons.classSet(this.getRenderViewClasses())} key="fieldDefaultGroup">
         {label}
         {field}
       </div>
