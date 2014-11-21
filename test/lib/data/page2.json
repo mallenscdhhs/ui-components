@@ -3,6 +3,15 @@
   "config": {
     "title": "Page two",
     "content": "This is content for **page2**.",
-    "components": []
+    "components": [
+    	{
+    		"type": "field",
+    		"config": {
+    			"type": "text",
+    			"name": "test",
+    			"label": "Test"
+    		}
+    	}
+    ]
   }
 }

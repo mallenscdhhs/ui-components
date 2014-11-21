@@ -14,27 +14,31 @@ module.exports = function(config) {
 
 	// list of files / patterns to load in the browser
 	files: [
-		'node_modules/es5-shim/es5-shim.js',
-		'test/unit/**/*-spec.js'
-	],
-
-
-	// list of files to exclude
-	exclude: [
+		'node_modules/es5-shim/es5-shim.js',		
+		'dist/Components.js',
+		'test/shim.js',
+		'test/unit/**/*.js'
 	],
 
 
 	// preprocess matching files before serving them to the browser
 	// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 	preprocessors: {
-	  'test/**/*.js': ['browserify']
+	  'test/unit/**/*.js': ['browserify']
 	},
+
 
 	browserify: {
 	  debug: true,
-	  transform: ['reactify']
+	  transform: ['reactify'],
+	  exclude: ['Components']
 	},
 
+
+
+	// list of files to exclude
+	exclude: [
+	],
 
 	// test results reporter to use
 	// possible values: 'dots', 'progress'

@@ -1,6 +1,6 @@
 var React = require('react/addons');
 
-var Container = React.createClass({
+module.exports = React.createClass({
 
   /**
    * Render a Container component for form components.
@@ -11,5 +11,3 @@ var Container = React.createClass({
   }
 
 });
-
-module.exports = Container;

@@ -1,10 +1,6 @@
-var React = require('react/addons');
-var Form = require('../../dist/cjs/Form');
-var _ = require('underscore');
-var tu = React.addons.TestUtils;
-
 describe('Form component', function() {
-
+  var tu = React.addons.TestUtils;
+  var Form = Components.elements.form;
   var formFixture = {
     'name' : 'Test Form',
     'model' : {},

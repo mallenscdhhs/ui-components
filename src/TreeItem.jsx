@@ -1,6 +1,6 @@
 var React = require('react/addons');
 
-var TreeItem = React.createClass({	
+module.exports = React.createClass({	
 
 	getInitialState: function(){
 		return {
@@ -22,5 +22,3 @@ var TreeItem = React.createClass({
 		);
 	}
 });
-
-module.exports = TreeItem;

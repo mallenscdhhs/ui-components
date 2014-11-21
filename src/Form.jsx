@@ -1,13 +1,19 @@
 var React = require('react/addons');
-var Components = require('./Components');
-var Action = Components.element('action');
-var Container = Components.element('container');
-var Fieldset = Components.element('fieldset');
+var Fieldset = require('./Fieldset');
+var Container = require('./Container');
+var Action = require('./Action');
 
-var Form = React.createClass({
+module.exports = React.createClass({
+
+  getDefaultProps: function(){
+    return {
+      name: '',
+      actions: []
+    };
+  },
 
   getComponents: function(){
-    var comps;
+    var comps;    
     if(this.props.components){
       comps = this.props.components.map(function(fieldset,i){
         return <Fieldset {...fieldset.config} key={"fieldsetKey"+i} />
@@ -22,6 +28,7 @@ var Form = React.createClass({
    */
   render: function(){ 
     var formName = (this.props.name).replace(' ','_');
+       
     return (
     	<form name={formName} key="formWithComponentsKey">
         {this.getComponents()}
@@ -35,5 +42,3 @@ var Form = React.createClass({
   }
 
 });
-
-module.exports = Form;

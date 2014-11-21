@@ -1,6 +1,6 @@
-var EventEmitter = require('../../src/EventEmitter');
-
 describe('EventEmitter mixin', function(){
+  var EventEmitter = require('../../src/EventEmitter');
+  
   var handler = function(data){
     return data;
   };

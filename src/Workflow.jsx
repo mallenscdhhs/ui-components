@@ -1,12 +1,10 @@
 var React = require('react/addons');
 var _ = require('underscore');
-var request = require('superagent');
-var Components = require('./Components');
-var Page = Components.element('page');
-var Grid = Components.element('grid');
-var Tree = Components.element('Tree');
+var Page = require('./Page');
+var Tree = require('./Tree');
+var Grid = require('./Grid');
 
-var Workflow = React.createClass({
+module.exports = React.createClass({
   
   displayName: 'Workflow',
 
@@ -40,16 +38,15 @@ var Workflow = React.createClass({
    */
   componentDidMount: function(){
     var startPageId = this.props.lastSectionCompleted? this.state.flow[this.props.lastSectionCompleted].next : this.refs.outline.items[0].pageId;
-    this.setState({currentPage: startPageId});
-    this.refs.outline.on('item:select', this.loadPageFromServer, this);    
+    this.setState({currentPage: startPageId});      
     this.refs.outline.selectItem(startPageId);
-  },
+  },  
 
   /**
    * Deregister event handlers, perform component cleanup.
    */
   componentWillUnmount: function(){
-    this.refs.outline.off('item:select', this.loadPageFromServer);
+    
   },
 
   next: function(){},
@@ -110,5 +107,3 @@ var Workflow = React.createClass({
     );
 	}
 });
-
-module.exports = Workflow;

@@ -1,8 +1,7 @@
 var React = require('react/addons');
 var EventEmitter = require('./EventEmitter');
-var Components = require('./Components');
-var TreeItem = Components.element('TreeItem');
 var _ = require('underscore');
+var TreeItem = require('./TreeItem');
 
 /**
  * Creates a list of <li> components and optionally renders
@@ -10,7 +9,7 @@ var _ = require('underscore');
  * @param {object} config
  * @returns {array}
  */
-var renderItems = function(config){
+var renderItems = function(config){  
   return config.items.map(function(item, n){
     item.active = this.state.selectedItem === item.pageId;
     return (
@@ -37,7 +36,7 @@ var renderTree = function(config){
  * A tree navigation component.
  * @module Tree
  */
-var Tree = React.createClass({
+module.exports = React.createClass({
   mixins: [EventEmitter],
   
   propTypes: {
@@ -78,5 +77,3 @@ var Tree = React.createClass({
     return renderTree.call(this, this.props);
   }
 });
-
-module.exports = Tree;
