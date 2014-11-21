@@ -207,5 +207,3 @@ var Field = React.createClass({
   }
   
 });
-
-module.exports = Field;

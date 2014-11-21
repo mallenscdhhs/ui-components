@@ -5,9 +5,9 @@
     <title>Components</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="lib/react/react-with-addons.min.js"></script>
-    <script src="ui-components.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> 
+    <script src="Components.js"></script>
+    <script src="shim.js"></script>
   </head>
   <body style="padding: 2em">
 
@@ -126,7 +126,7 @@
           }   
         };
 
-        var Field = React.createFactory(Components.Field);
+        var Field = React.createFactory(Components.elements.field);
         React.render(Field(fixture.text),document.getElementById('field-text'));
         React.render(Field(fixture.textarea),document.getElementById('field-textarea'));
         React.render(Field(fixture.checkbox),document.getElementById('field-checkbox'));

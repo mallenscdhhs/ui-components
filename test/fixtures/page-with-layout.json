@@ -1,0 +1,30 @@
+{
+  "type": "page",
+  "config": {
+    "title": "Test",
+    "layout": {
+      "type": "grid",
+      "config": {
+        "rows": [[{"md": "6"}, {"md": "6"}]]
+      }
+    },
+    "components": [
+      {
+        "type": "field",
+        "config": {
+          "type": "text",
+          "name": "testone",
+          "label": "Test one"
+        }
+      },
+      {
+        "type": "field",
+        "config": {
+          "type": "text",
+          "name": "testtwo",
+          "label": "Test two"
+        }
+      }
+    ]
+  }
+}

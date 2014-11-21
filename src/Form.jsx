@@ -1,12 +1,17 @@
 var React = require('react/addons');
-var Components = require('./Components');
-var Action = Components.element('action');
-var Container = Components.element('container');
-var Fieldset = Components.element('fieldset');
-var Layout = Components.element('layout');
+var Fieldset = require('./Fieldset');
+var Container = require('./Container');
+var Action = require('./Action');
 var Q = require('EventQueue');
 
-var Form = React.createClass({
+module.exports = React.createClass({
+
+  getDefaultProps: function(){
+    return {
+      name: '',
+      actions: []
+    };
+  },
 
   componentDidMount: function(){
     Q.subscribe('button:next','form',function(data){
@@ -27,7 +32,7 @@ var Form = React.createClass({
    * @returns {JSX Template} 
    */
   getComponents: function(){
-    var comps;
+    var comps;    
     if(this.props.components){
       comps = this.props.components.map(function(fieldset,i){
         return <Fieldset {...fieldset.config} key={"fieldsetKey"+i} />
@@ -63,7 +68,5 @@ var Form = React.createClass({
       </form>
     );
   }
-
+  
 });
-
-module.exports = Form;

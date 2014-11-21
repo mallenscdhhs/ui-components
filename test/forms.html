@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="lib/react/react-with-addons.js"></script>
-    <script src="ui-components.js"></script>
+    <script src="Components.js"></script>
+    <script src="shim.js"></script>
     <style>.btn{margin:0 3px;}</style>
   </head>
   <body style="padding: 2em;">
@@ -168,9 +168,9 @@
         };
 
         // Add fields to components
-        _.each(Object.keys(fieldsFixture),function(key,j){
+        Object.keys(fieldsFixture).forEach(function(key,j){
           fieldsetFixture.config.components.push(fieldsFixture[key]);
-        })
+        });
 
         var formFixture = {
           'name' : 'Test Form',
@@ -224,7 +224,7 @@
 
         formFixture.components.push(fieldsetFixture);
 
-        var Form = React.createFactory(Components.Form);
+        var Form = React.createFactory(Components.elements.form);
 
         // Demo of App Layer getting and using events from Actions below
         var Q = Components.EventQueue;

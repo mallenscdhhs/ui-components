@@ -1,16 +1,16 @@
-var React = require('react/addons');
-var Action = require('../../dist/cjs/Action');
-var tu = React.addons.TestUtils;
-
-describe('Action component', function() {
-
+describe('Action component', function() {    
+  var tu = React.addons.TestUtils;	
   var actionFixture = {
-    'name' : 'Test Form',
-    'url' : 'testing.html'
+    type: 'action',
+    config: {
+      'name' : 'Test Form',
+      'url' : 'testing.html'
+    }    
   };
 
   it('Renders action', function(){
-    var action = tu.renderIntoDocument(<Action {...actionFixture}/>);
+    var Action = Components.factory(actionFixture);
+    var action = tu.renderIntoDocument(Action);
     var inputText = tu.scryRenderedDOMComponentsWithTag(action, 'a');
     expect(inputText.length).toEqual(1);    
   });
