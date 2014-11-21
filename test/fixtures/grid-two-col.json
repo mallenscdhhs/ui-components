@@ -1,0 +1,24 @@
+{ 
+	"type": "grid",
+	"config": {
+		"rows": [[{"md": "6", "sm": "4"}, {"md": "12", "sm": "12", "xs": "12"}]],
+		"components": [
+			{
+				"type": "field",
+				"config": {
+					"type": "text",
+					"name": "testone",
+					"label": "Test one"
+				}
+			},
+			{
+				"type": "field",
+				"config": {
+					"type": "text",
+					"name": "testtwo",
+					"label": "Test two"
+				}
+			}
+		]
+	}
+}

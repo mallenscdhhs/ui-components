@@ -8,9 +8,6 @@
         "type": "workflow",
         "config": {
           "title": "Test workflow",
-          "api": {
-            "get": "lib/data/pages/:pageId"
-          },
           "lastSectionCompleted": "page1",
           "items": {
             "page1": {

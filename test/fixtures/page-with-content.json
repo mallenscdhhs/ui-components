@@ -1,0 +1,7 @@
+{
+	"type": "page",
+	"config": {
+		"title": "Hello, world",
+		"content": "I am some **content**."
+	}
+}

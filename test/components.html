@@ -3,11 +3,10 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Components</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="lib/react/react-with-addons.js"></script>
-    <script src="ui-components.js"></script>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
+    <script src="Components.js"></script>
     <style type="text/css">
       .nav.nav-tree ul {
         margin-left: 1em;
@@ -26,17 +25,15 @@
   <body style="padding: 2em">
     <div id="page"></div>
     <div id="workflow"></div>
-    <script>            
-      var Workflow = React.createFactory(Components.Workflow);  
-      var Page = React.createFactory(Components.Page);      
-      
+    <script>           
+      var React = require('react/addons');
+      var Components = require('Components');
       $.getJSON('lib/data/page-config.json').then(function(res){        
         React.render(
-          Page(res.config),
+          Components.factory(res),
           document.getElementById('page')
         );    
       });
-
     </script>
   </body>
 </html>

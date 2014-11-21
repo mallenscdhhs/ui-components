@@ -1,10 +1,6 @@
-var React = require('react/addons');
-var Field = require('../../dist/cjs/Field');
-var request = require('superagent');
-var _ = require('underscore');
-var tu = React.addons.TestUtils;
-
 describe('Field component', function() {
+  var Field = React.createFactory(Components.elements.field);
+  var tu = React.addons.TestUtils;
 
   var textFixture = {
     type : 'text',
@@ -15,13 +11,13 @@ describe('Field component', function() {
   };
 
   it('Renders text label', function(){
-    var field = tu.renderIntoDocument(<Field {...textFixture}/>);
+    var field = tu.renderIntoDocument(Field(textFixture));
     var label = tu.findRenderedDOMComponentWithTag(field, 'label');
     expect(label.getDOMNode().textContent).toEqual(textFixture.label);
   });
 
   it('Renders text field', function(){
-    var field = tu.renderIntoDocument(<Field {...textFixture}/>);
+    var field = tu.renderIntoDocument(Field(textFixture));
     var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputText.getDOMNode().type).toEqual(textFixture.type);
   });
@@ -35,13 +31,13 @@ describe('Field component', function() {
   };
 
   it('Renders textarea label', function(){
-    var field = tu.renderIntoDocument(<Field {...textareaFixture}/>);
+    var field = tu.renderIntoDocument(Field(textareaFixture));
     var label = tu.findRenderedDOMComponentWithTag(field, 'label');
     expect(label.getDOMNode().textContent).toEqual(textareaFixture.label);
   });
 
   it('Renders textarea field', function(){
-    var field = tu.renderIntoDocument(<Field {...textareaFixture}/>);
+    var field = tu.renderIntoDocument(Field(textareaFixture));
     var inputTextarea = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputTextarea.getDOMNode().type).toEqual(textareaFixture.type);
   });  
@@ -66,25 +62,25 @@ describe('Field component', function() {
   };
 
   it('Renders checkbox field wrapped in a fieldset', function(){
-    var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
+    var field = tu.renderIntoDocument(Field(checkboxFixture));
     var fieldset = tu.scryRenderedDOMComponentsWithTag(field, 'fieldset');
     expect(fieldset.length).toEqual(1);    
   });  
 
   it('Renders checkbox legend', function(){
-    var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
+    var field = tu.renderIntoDocument(Field(checkboxFixture));
     var legend = tu.findRenderedDOMComponentWithTag(field, 'legend');
     expect(legend.getDOMNode().textContent).toEqual(checkboxFixture.label);          
   });
 
   it('Renders checkbox fields', function(){
-    var field = tu.renderIntoDocument(<Field {...checkboxFixture}/>);
+    var field = tu.renderIntoDocument(Field(checkboxFixture));
     // Check that each input count and item count match
     var inputs = tu.scryRenderedDOMComponentsWithTag(field, 'input');
     expect(inputs.length).toEqual(checkboxFixture.options.items.length); 
     // Each input should have it's own label
     var inputLabels = tu.scryRenderedDOMComponentsWithTag(field, 'label');
-    _.each(inputLabels,function(label,i){
+    inputLabels.forEach(function(label,i){
       expect(label.getDOMNode().textContent).toEqual(checkboxFixture.options.items[i].label);     
     });    
   }); 
@@ -109,25 +105,25 @@ describe('Field component', function() {
   };
 
   it('Renders radio field wrapped in a fieldset', function(){
-    var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
+    var field = tu.renderIntoDocument(Field(radioFixture));
     var fieldset = tu.scryRenderedDOMComponentsWithTag(field, 'fieldset');
     expect(fieldset.length).toEqual(1);    
   }); 
 
   it('Renders radio legend', function(){
-    var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
+    var field = tu.renderIntoDocument(Field(radioFixture));
     var legend = tu.findRenderedDOMComponentWithTag(field, 'legend');
     expect(legend.getDOMNode().textContent).toEqual(radioFixture.label);          
   });
 
   it('Renders radio fields', function(){
-    var field = tu.renderIntoDocument(<Field {...radioFixture}/>);
+    var field = tu.renderIntoDocument(Field(radioFixture));
     // Check that each input count and item count match
     var inputs = tu.scryRenderedDOMComponentsWithTag(field, 'input');
     expect(inputs.length).toEqual(radioFixture.options.items.length); 
     // Each input should have it's own label
     var inputLabels = tu.scryRenderedDOMComponentsWithTag(field, 'label');
-    _.each(inputLabels,function(label,i){
+    inputLabels.forEach(function(label,i){
       expect(label.getDOMNode().textContent).toEqual(radioFixture.options.items[i].label);     
     });    
   });
@@ -152,13 +148,13 @@ describe('Field component', function() {
   };
 
   it('Renders select label', function(){
-    var field = tu.renderIntoDocument(<Field {...selectFixture}/>);
+    var field = tu.renderIntoDocument(Field(selectFixture));
     var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
     expect(label.getDOMNode().textContent).toEqual(selectFixture.label);          
   });
 
   it('Renders select field', function(){
-    var field = tu.renderIntoDocument(<Field {...selectFixture}/>);
+    var field = tu.renderIntoDocument(Field(selectFixture));
     var inputSelect = tu.findRenderedDOMComponentWithTag(field, 'select');
     expect(inputSelect.getDOMNode().value).toEqual(selectFixture.options.items[0].value);   // Defaults to first value, so compare first values
   });   
@@ -183,13 +179,13 @@ describe('Field component', function() {
   };
 
   it('Renders multiselect label', function(){
-    var field = tu.renderIntoDocument(<Field {...multiselectFixture}/>);
+    var field = tu.renderIntoDocument(Field(multiselectFixture));
     var label = tu.findRenderedDOMComponentWithClass(field, 'field-label');
     expect(label.getDOMNode().textContent).toEqual(multiselectFixture.label);          
   });
 
   it('Renders multiselect field', function(){
-    var field = tu.renderIntoDocument(<Field {...multiselectFixture}/>);
+    var field = tu.renderIntoDocument(Field(multiselectFixture));
     var inputSelect = tu.findRenderedDOMComponentWithTag(field, 'select');
     expect(inputSelect.getDOMNode().multiple).toEqual(true);   // Defaults to first value, so compare first values
   });    
@@ -203,13 +199,13 @@ describe('Field component', function() {
   };
 
   it('Renders email label', function(){
-    var field = tu.renderIntoDocument(<Field {...emailFixture}/>);
+    var field = tu.renderIntoDocument(Field(emailFixture));
     var label = tu.findRenderedDOMComponentWithTag(field, 'label');
     expect(label.getDOMNode().textContent).toEqual(emailFixture.label);
   });
 
   it('Renders email field', function(){
-    var field = tu.renderIntoDocument(<Field {...emailFixture}/>);
+    var field = tu.renderIntoDocument(Field(emailFixture));
     var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputText.getDOMNode().type).toEqual(emailFixture.type);
   }); 
@@ -223,13 +219,13 @@ describe('Field component', function() {
   };
 
   it('Renders phone label', function(){
-    var field = tu.renderIntoDocument(<Field {...phoneFixture}/>);
+    var field = tu.renderIntoDocument(Field(phoneFixture));
     var label = tu.findRenderedDOMComponentWithTag(field, 'label');
     expect(label.getDOMNode().textContent).toEqual(phoneFixture.label);
   });
 
   it('Renders phone field', function(){
-    var field = tu.renderIntoDocument(<Field {...phoneFixture}/>);
+    var field = tu.renderIntoDocument(Field(phoneFixture));
     var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputText.getDOMNode().type).toEqual(phoneFixture.type); 
   });  
@@ -243,13 +239,13 @@ describe('Field component', function() {
   };
 
   it('Renders date label', function(){
-    var field = tu.renderIntoDocument(<Field {...dateFixture}/>);
+    var field = tu.renderIntoDocument(Field(dateFixture));
     var label = tu.findRenderedDOMComponentWithTag(field, 'label');
     expect(label.getDOMNode().textContent).toEqual(dateFixture.label);
   });
 
   it('Renders date field', function(){
-    var field = tu.renderIntoDocument(<Field {...dateFixture}/>);
+    var field = tu.renderIntoDocument(Field(dateFixture));
     var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputText.getDOMNode().type).toEqual(dateFixture.type);
   });  
@@ -263,13 +259,13 @@ describe('Field component', function() {
   };
 
   it('Renders password label', function(){
-    var field = tu.renderIntoDocument(<Field {...passwordFixture}/>);
+    var field = tu.renderIntoDocument(Field(passwordFixture));
     var label = tu.findRenderedDOMComponentWithTag(field, 'label');
     expect(label.getDOMNode().textContent).toEqual(passwordFixture.label);
   });
 
   it('Renders password field', function(){
-    var field = tu.renderIntoDocument(<Field {...passwordFixture}/>);
+    var field = tu.renderIntoDocument(Field(passwordFixture));
     var inputText = tu.findRenderedDOMComponentWithClass(field, 'form-control');
     expect(inputText.getDOMNode().type).toEqual(passwordFixture.type);
   }); 
@@ -283,7 +279,7 @@ describe('Field component', function() {
   };
 
   it('Renders required asterisk in label', function(){
-    var field = tu.renderIntoDocument(<Field {...requiredFixture}/>);
+    var field = tu.renderIntoDocument(Field(requiredFixture));
     var errorAst = tu.findRenderedDOMComponentWithTag(field, 'span');
     expect(errorAst.getDOMNode().className).toEqual('text-danger');
     expect(errorAst.getDOMNode().textContent).toEqual('*');
