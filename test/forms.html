@@ -220,7 +220,17 @@
         formFixture.components.push(fieldsetFixture);
 
         var Form = React.createFactory(Components.Form);
+        var Q = Components.EventQueue;
+        var i = 1;
+        Q.subscribe('all','page-test',function(data){
+          console.log('TestGlobalGotIt!'+JSON.stringify(data));
+          formFixture.actions[1].config.name='Test Button Action '+i;
+          i++;
+          React.render(Form(formFixture),document.getElementById('test-form'));
+        });
+
         React.render(Form(formFixture),document.getElementById('test-form'));
+
       </script>
   </body>
 </html>
