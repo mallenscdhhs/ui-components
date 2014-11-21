@@ -1,7 +1,7 @@
 var React = require('react/addons');
 var _ = require('underscore');
 
-var Field = React.createClass({
+module.exports = React.createClass({
   /**
    * Boolean helper if type is radio or checkbox.  Used to determine if we 
    * need to use special wrapper for those field types.
@@ -147,5 +147,3 @@ var Field = React.createClass({
   }
   
 });
-
-module.exports = Field;

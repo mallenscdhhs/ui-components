@@ -1,11 +1,10 @@
 var React = require('react/addons');
-var Components = require('./Components');
-var Field = Components.element('field');
+var Field = require('./Field');
 
-var Fieldset = React.createClass({
+module.exports = React.createClass({
   
   getComponents: function(){
-    var comps;
+    var comps;    
     if(this.props.components){
       comps = this.props.components.map(function(field,i){
         return <Field {...field.config} key={"fieldKey"+i} />
@@ -28,5 +27,3 @@ var Fieldset = React.createClass({
   }
 
 });
-
-module.exports = Fieldset;

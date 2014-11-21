@@ -78,10 +78,9 @@ var renderColumn = function(components, col, n){
  * Bootstrap 3 grid markup.
  * @module Grid
  */
-var Grid = React.createClass({
+module.exports = React.createClass({
 	propTypes: {
-		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired,
-		components: React.PropTypes.arrayOf(React.PropTypes.object)
+		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired		
 	},
 	render: function(){				
 		return (
@@ -93,5 +92,3 @@ var Grid = React.createClass({
 		);
 	}
 });
-
-module.exports = Grid;

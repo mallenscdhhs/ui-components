@@ -1,9 +1,0 @@
-(function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		// AMD.
-		define(['react/addons'], factory);
-	} else {
-		// Browser globals
-		root.Components = factory(root.React);
-	}
-}(this, function (React) {

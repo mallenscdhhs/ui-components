@@ -1,7 +1,7 @@
 var React = require('react/addons');
 var _ = require('underscore');
 
-var Action = React.createClass({
+module.exports = React.createClass({
   /**
   * Return a string of classes
   * @return {String}
@@ -59,5 +59,3 @@ var Action = React.createClass({
   }
 
 });
-
-module.exports = Action;
