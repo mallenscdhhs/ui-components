@@ -1,9 +1,14 @@
 var React = require('react/addons');
 var _ = require('underscore');
-var Q = require('EventQueue');
+var Q = require('./EventQueue');
 
 var Field = React.createClass({
 
+  /**
+   * Upon mounting, subscribe to any dependency that the field has, an monitor the field
+   * for events that would require you to make a state change.
+   * @returns {void}
+   */
   componentDidMount: function(){
     if(this.hasDependency()){
       var comp = this;
@@ -23,6 +28,10 @@ var Field = React.createClass({
     }      
   },
 
+  /**
+   * UnSubscribe from any dependent field events that the current field was listening to.
+   * @returns {void}
+   */
   componentWillUnmount: function(){
     if(this.hasDependency()){
       var depName = this.props.dependency.name;
@@ -30,10 +39,18 @@ var Field = React.createClass({
     }    
   },
 
+  /**
+   * Check if the field has a dependency, which requires name, value and initialState to be set
+   * @returns {boolean}
+   */
   hasDependency: function(){
     return this.props.dependency && this.props.dependency.name && this.props.dependency.value && this.props.dependency.initialState;
   },
 
+  /**
+   * Init Field state, including if the field is viewable based on a dependency
+   * @returns {object}
+   */
   getInitialState: function() {
     var viewableState = true; // default is 'visible'
     if(this.hasDependency() && this.props.dependency.initialState && this.props.dependency.initialState ==='hidden'){
@@ -42,17 +59,29 @@ var Field = React.createClass({
     return {'value': this.props.value, 'display': viewableState};
   },
 
+  /**
+   * Event handler for onBlur, that pushes a message to the queue, with the field's name and value.
+   * @returns {void}
+   */
   handleBlur: function(){
     console.log('BLUR:'+this.props.name+':VALUE:'+this.state.value+':');
     Q.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
   },
 
+  /**
+   * Event handler for onChange, that updates the field's state with the new value
+   * @returns {void}
+   */
   handleChange: function(event) {
     this.setState({value: event.target.value});
     //console.log('CHANGE:'+this.props.name+':VALUE:'+this.state.value+':');
     //Q.push({'entityEvent':'field:change:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
   },  
 
+  /**
+   * Based on display state, return group of classes for the form group container
+   * @returns {object}
+   */
   getRenderViewClasses: function(){
     var classes = {
       'form-group' : true,
@@ -87,7 +116,6 @@ var Field = React.createClass({
       labelKey = fieldType + 'Label' + i;
       return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  onChange={this.handleChange} onBlur={this.handleBlur}  />{item.label}</label>);
     });
-
     return fields;
   },
 

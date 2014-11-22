@@ -1,8 +1,9 @@
 var React = require('react/addons');
-var Q = require('EventQueue');
 var _ = require('underscore');
+var Q = require('./EventQueue');
 
 module.exports = React.createClass({
+
   /**
   * Return a string of classes
   * @return {String}
@@ -19,10 +20,14 @@ module.exports = React.createClass({
         classes.push('btn-'+cla);
       });
     }
-
     return classes.join(' ');
   },
 
+  /**
+   * Event handler for onClick, that pushes a message to the queue, with the action is clicked.
+   * It's used with workflow to update page based on the action clicked.
+   * @returns {void}
+   */
   handleClick: function(){
     console.log('CLICK:'+this.props.name);
     console.log(this.props);

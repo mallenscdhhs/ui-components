@@ -2,7 +2,7 @@ var React = require('react/addons');
 var Fieldset = require('./Fieldset');
 var Container = require('./Container');
 var Action = require('./Action');
-var Q = require('EventQueue');
+var Q = require('./EventQueue');
 
 module.exports = React.createClass({
 
