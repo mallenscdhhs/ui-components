@@ -1,6 +1,5 @@
 window.q = [];
 window.subs = {};
-var str = JSON.stringify;
 var _ = require('underscore');
 
 module.exports = {
@@ -8,7 +7,7 @@ module.exports = {
 	push: function(data){
 		q.push(data);
 		this.notify();	
-		console.log('Push:'+str(data));
+		console.log('Push:'+JSON.stringify(data));
 	},
 
 	notify: function(){
@@ -27,7 +26,7 @@ module.exports = {
 			var subscribers = Object.keys(subs[entityEvent]);
 			_.each(subscribers,function(cbId,i){			
 				setTimeout(function(){
-					console.log('Notified:'+entityEvent+':'+cbId+':'+str(data));
+					console.log('Notified:'+entityEvent+':'+cbId+':'+JSON.stringify(data));
 					subs[entityEvent][cbId](data);
 				},0);
 			});

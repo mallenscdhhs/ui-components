@@ -224,10 +224,10 @@
 
         formFixture.components.push(fieldsetFixture);
 
-        var Form = React.createFactory(Components.elements.form);
+        var Form = Components.elements.form;
 
         // Demo of App Layer getting and using events from Actions below
-        var Q = Components.EventQueue;
+        var Q = Components.elements.eventQueue;
         var i = 1;
         Q.subscribe('all','page-test',function(data){
           console.log('TestGlobalGotIt!'+JSON.stringify(data)); 
