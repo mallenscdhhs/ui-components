@@ -17,7 +17,6 @@ describe('Page component', function() {
     var Page = Components.factory(config);
     var p = TestUtils.renderIntoDocument(Page);
     var cols = TestUtils.scryRenderedDOMComponentsWithClass(p, 'col-md-6');
-    console.log(p.getDOMNode()); 
     expect(cols.length).toEqual(2);    
   });
   
