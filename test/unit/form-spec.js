@@ -56,5 +56,15 @@ describe('Form component', function() {
     var inputText = tu.scryRenderedDOMComponentsWithTag(formPage, 'form');
     expect(inputText.length).toEqual(1);    
   });
+  
+  it('can render a fieldset', function(){
+    var config = {type: 'form', config: formFixture};
+    var Form = Components.factory(config);
+    var form = tu.renderIntoDocument(Form);
+    
+    expect(tu.scryRenderedDOMComponentsWithTag(form, 'fieldset').length).toEqual(1);
+    expect(tu.scryRenderedDOMComponentsWithTag(form, 'input').length).toEqual(1);
+  });
+  
 
 });

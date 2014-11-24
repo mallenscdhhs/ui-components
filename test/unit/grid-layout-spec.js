@@ -28,7 +28,6 @@ describe('Grid Layout component', function(){
 		var grid = TestUtils.renderIntoDocument(Grid);		
 		var row = grid.getDOMNode().childNodes[0];
 		var cols = row.childNodes;		
-		console.log(cols[1]);
 		expect(cols.length).toEqual(2);
 		expect(cols[0].childNodes.length).toEqual(2);
 		expect(cols[1].childNodes.length).toEqual(1);

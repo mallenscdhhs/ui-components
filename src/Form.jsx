@@ -1,5 +1,4 @@
 var React = require('react/addons');
-var Fieldset = require('./Fieldset');
 var Container = require('./Container');
 var Action = require('./Action');
 var Q = require('./EventQueue');
@@ -28,20 +27,6 @@ module.exports = React.createClass({
   },
 
   /**
-   * Create components template
-   * @returns {JSX Template} 
-   */
-  getComponents: function(){
-    var comps;    
-    if(this.props.components){
-      comps = this.props.components.map(function(fieldset,i){
-        return <Fieldset {...fieldset.config} key={"fieldsetKey"+i} />
-      });  
-    }
-    return comps;
-  },
-
-  /**
    * Create actions component template
    * @returns {JSX Template} 
    */
@@ -63,7 +48,7 @@ module.exports = React.createClass({
     var formName = this.props.name ? (this.props.name).replace(' ','_') : '';
     return (
       <form name={formName} key="formWithComponentsKey">
-        {this.getComponents()}
+        {this.props.children}
         <Container classes="form-group" key="containerActions">{this.getActions()}</Container>
       </form>
     );
