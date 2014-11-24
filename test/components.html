@@ -28,7 +28,7 @@
     <script>           
       var React = require('react/addons');
       var Components = require('Components');
-      $.getJSON('lib/data/page-config.json').then(function(res){        
+      $.getJSON('lib/data/components.json').then(function(res){        
         React.render(
           Components.factory(res),
           document.getElementById('page')
