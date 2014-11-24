@@ -12,12 +12,12 @@ function componentFactory(schema){
 	var factory = React.createFactory(element);
 	var config = _.clone(schema.config);
 	var children = null;
-	var layoutConfig = config && config.layout ? config.layout : null;
+	var layoutConfig = config.layout;
 
 	if ( layoutConfig ) {		
 		layoutConfig.config.components = config.components;
 		children = componentFactory(layoutConfig);
-	} else if ( config !== null && config.components ) {
+	} else if ( config.components ) {
 		children = config.components.map(componentFactory);
 	}
 

@@ -30,7 +30,6 @@ module.exports = React.createClass({
    */
   handleClick: function(){
     console.log('CLICK:'+this.props.name);
-    console.log(this.props);
     // TODO: update 'next' with actual 'verbs' for the actions
     Q.push({'entityEvent':'action:next','data':{'page':1}});
   },
@@ -40,7 +39,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
-    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick} >{this.props.name}</a>);
+    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick}>{this.props.name}</a>);
   },
 
   /**
@@ -48,7 +47,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
-    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()}  onClick={this.handleClick} >{this.props.name}</button>);
+    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()} onClick={this.handleClick}>{this.props.name}</button>);
   },
 
   /**

@@ -20,9 +20,8 @@
             'type' : 'field',
             'config' : {
               type : 'text',
-              name : 'test-text1',
-              label : 'Test Text',
-              value : 'Testing Value Setting'
+              name : 'test-text',
+              label : 'Test Text'
             }
           },
           'textarea' : {
@@ -99,11 +98,6 @@
               type : 'multiselect',
               name : 'test-multiselect',
               label : 'Test MultiSelect',
-              dependency : {
-                name : 'test-text1',
-                value : 'hi|hello|goodbye',
-                initialState : 'hidden'
-              },
               options : {
                 'items' : [
                   {
@@ -212,7 +206,7 @@
                 'type' :'field',
                 'config' : { 
                   'type' : 'text',
-                  'name' : 'test-text2',
+                  'name' : 'test-text',
                   'label' : 'Test Text Field',
                   'required' : false,
                   'options' : { }
@@ -223,24 +217,10 @@
         };
 
         formFixture.components.push(fieldsetFixture);
-
-        var Form = Components.elements.form;
-
-        // Demo of App Layer getting and using events from Actions below
-        var Q = Components.elements.eventQueue;
-        var i = 1;
-        Q.subscribe('all','page-test',function(data){
-          console.log('TestGlobalGotIt!'+JSON.stringify(data)); 
-          // Demo, update fixture to show we can
-          formFixture.actions[1].config.name='Test Button Action '+i;
-          i++;
-          // Demo, push fixture back to render
-          React.render(Form(formFixture),document.getElementById('test-form'));
-        });
-
-        // Init Render
-        React.render(Form(formFixture),document.getElementById('test-form'));
-
+        var config = {'type':'form','config':formFixture};
+        console.log(config);
+        var Form = Components.factory(config);
+        React.render(Form,document.getElementById('test-form'));
       </script>
   </body>
 </html>

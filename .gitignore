@@ -2,3 +2,4 @@ node_modules/*
 dist
 !test/**/dist
 test/lib/specs.js
+npm-debug.log

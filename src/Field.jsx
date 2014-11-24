@@ -2,7 +2,7 @@ var React = require('react/addons');
 var _ = require('underscore');
 var Q = require('./EventQueue');
 
-var Field = React.createClass({
+module.exports = React.createClass({
 
   /**
    * Upon mounting, subscribe to any dependency that the field has, an monitor the field
@@ -114,11 +114,10 @@ var Field = React.createClass({
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
-      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey}  onChange={this.handleChange} onBlur={this.handleBlur}  />{item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
     });
     return fields;
   },
-
 
   /**
    * Build Select template
@@ -129,7 +128,7 @@ var Field = React.createClass({
     var fieldKey = fieldName +'-fieldSelect';
     var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName} onChange={this.handleChange} onBlur={this.handleBlur}>
+        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName} onChange={this.handleChange} onBlur={this.handleBlur} >
           {this.props.options.items.map(function(item, i){
             return (<option value={item.value} key={i}>{item.label}</option>);
           })}
@@ -142,7 +141,7 @@ var Field = React.createClass({
    * @returns {JSX template}
    */
   getLabel : function(){
-    var labelRequired = '';
+    var labelRequired = ''; 
     var labelKey = 'fieldLabel';
     if(this.props.required){
       labelRequired = <span className="text-danger" key="requiredField">*</span>;
@@ -166,18 +165,18 @@ var Field = React.createClass({
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" onChange={this.handleChange} onBlur={this.handleBlur} defaultValue={this.props.value} />);
-          break;
-        case 'radio':
+          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
+          break;  
+        case 'radio':  
         case 'checkbox':
           field = this.getCheckboxOrRadio();
-          break;
+          break;      
         case 'select':
         case 'multiselect':
           field = this.getSelect();
-          break;
+          break;     
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" defaultValue={this.props.value} onChange={this.handleChange} onBlur={this.handleBlur} />);                                                                                  
+          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" onChange={this.handleChange} onBlur={this.handleBlur} />);                                                                                  
       }
       return field;
   },
@@ -188,7 +187,7 @@ var Field = React.createClass({
    * @returns {JSX template}
    */
   renderFieldGroup : function(label,field){
-    var fieldClasses = {
+    var classes = {
       'checkbox': this.props.type === 'checkbox',
       'radio': this.props.type === 'radio'
     };
@@ -196,7 +195,7 @@ var Field = React.createClass({
     return  (
       <fieldset className={React.addons.classSet(this.getRenderViewClasses())} key="fieldGroup">
         {label}
-        <div className={React.addons.classSet(fieldClasses)} key="fieldGroupContent">
+        <div className={React.addons.classSet(classes)} key="fieldGroupContent">
           {field}
         </div>
       </fieldset>

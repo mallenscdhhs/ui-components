@@ -1,5 +1,5 @@
 describe('Field component', function() {
-  var Field = Components.elements.field;
+  var Field = React.createFactory(Components.elements.field);
   var tu = React.addons.TestUtils;
 
   var textFixture = {

@@ -8,6 +8,5 @@ module.exports = {
 	page: require('./Page'),	
 	grid: require('./Grid'),
 	tree: require('./Tree'),
-	treeItem: require('./TreeItem'),
-	eventQueue: require('./EventQueue')
+	treeItem: require('./TreeItem')
 };
