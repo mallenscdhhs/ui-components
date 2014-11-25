@@ -45,11 +45,11 @@ module.exports = React.createClass({
    * @returns {JSX} 
    */
   render: function(){ 
-    var formName = this.props.name ? (this.props.name).replace(' ','_') : '';
+    var formName = this.props.name ? (this.props.name).replace(/ /g,'_') : '';
     return (
-      <form name={formName} key="formWithComponentsKey">
+      <form name={formName} key={"formWithComponentsKey"+formName}>
         {this.props.children}
-        <Container classes="form-group" key="containerActions">{this.getActions()}</Container>
+        <Container classes="form-group" key={"containerActions"+formName}>{this.getActions()}</Container>
       </form>
     );
   }

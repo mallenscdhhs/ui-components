@@ -149,14 +149,14 @@
 
         var fieldsetFixture = {
           'type' : 'fieldset',
+          'layout' : {
+            'type': "grid", 
+            'config': {
+              'rows': [[{'md': '8'}]]
+            }
+          },          
           'config':{          
             'name' : 'Test Fieldset With All Fields',
-            'layout' : {
-              type: "grid", 
-              config: {
-                rows: [[{"md": "6"}]]
-              }
-            },
             'components' :[]
           }
         };
@@ -167,46 +167,37 @@
         });
 
         var formFixture = {
-          'name' : 'Test Form',
+          'name' : 'Test Form One',
           'model' : {},
-          'actions':[
-            {
+          'actions':[{
               'type' : 'link',            
               'config' : {
                 'name' : 'Test Link Action',
                 'url' : 'testURLHTTP'              
               }
-            },
-            {
+            },{
               'type' : 'button',            
               'config' : {
                 'name' : 'Test Button Action',
                 'url' : 'testURLHTTP'              
               }
-            }
-          ],
+          }],
           'rules': [],
-          'layout' : {
-            'type': "grid", 
-            'config': {
-              'rows': [[{'md': '6'}]]
-            }
-          },
           'components' :[{
             'type' : 'fieldset',
             'config':{
-              'name' : 'Test Fieldset',
+              'name' : 'Test Fieldset One',
               'layout' : {
                 'type': "grid", 
                 'config': {
-                  'rows': [[{'md': '4', 'sm': '2'}]]
+                  'rows': [[{'md': '3'}]]
                 }
-              },
+              },              
               'components' :[{
                 'type' :'field',
                 'config' : { 
                   'type' : 'text',
-                  'name' : 'test-text',
+                  'name' : 'test-text-2',
                   'label' : 'Test Text Field',
                   'required' : false,
                   'options' : { }
@@ -218,7 +209,6 @@
 
         formFixture.components.push(fieldsetFixture);
         var config = {'type':'form','config':formFixture};
-        console.log(config);
         var Form = Components.factory(config);
         React.render(Form,document.getElementById('test-form'));
       </script>

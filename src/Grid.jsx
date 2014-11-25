@@ -40,11 +40,11 @@ var getComponentIndex = function(rowNum, colNum, rangeOffset){
  * @param {number} i - the current row index
  * @returns {React.DOM.div}
  */
-var renderRow = function(components, row, i){
+var renderRow = function(components, row, i, key){
 	var componentIndexRange = 0;
 	var componentList;
 	return (
-		<div className="row" key={"row-"+i}>
+		<div className="row" key={"row-"+i+"-"+key}>
 			{row.map(function(col, n){
 				if ( col.indexRange ) {
 					componentIndexRange += (col.indexRange[1] - 1);
@@ -52,7 +52,7 @@ var renderRow = function(components, row, i){
 				}	else {
 					componentList = components[getComponentIndex.call(this, i, n, componentIndexRange)];
 				}
-				return renderColumn(componentList, col, n);
+				return renderColumn(componentList, col, n, key);
 			}, this)}
 		</div>
 	);
@@ -65,9 +65,9 @@ var renderRow = function(components, row, i){
  * @param {number} n - the current column index
  * @returns {React.DOM.div}
  */
-var renderColumn = function(components, col, n){
+var renderColumn = function(components, col, n, key){
 	return (
-		<div className={getColumnClassNames(col)} key={"col-"+n}>
+		<div className={getColumnClassNames(col)} key={"col-"+n+"-"+key}>
 			{components}
 		</div>
 	);
@@ -82,11 +82,14 @@ module.exports = React.createClass({
 	propTypes: {
 		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired		
 	},
+
 	render: function(){				
+		var uniqueKey = this.props.name;	
+		console.log('GRID-RENDER:'+uniqueKey);
 		return (
-			<div className="grid-layout">
+			<div className="grid-layout" key={"layout-for-"+uniqueKey}>
 			{this.props.rows.map(function(row, i){				
-				return renderRow.call(this, this.props.children, row, i);
+				return renderRow.call(this, this.props.children, row, i, uniqueKey);
 			}, this)}
 			</div>
 		);
