@@ -20,7 +20,7 @@
             'type' : 'field',
             'config' : {
               type : 'text',
-              name : 'test-text',
+              name : 'test-text-1',
               label : 'Test Text'
             }
           },
@@ -98,6 +98,11 @@
               type : 'multiselect',
               name : 'test-multiselect',
               label : 'Test MultiSelect',
+              dependency: {
+                'name':'test-text-1',
+                'value':'hi|hello|bye',
+                'initialState': 'hidden'
+              },
               options : {
                 'items' : [
                   {
@@ -167,50 +172,53 @@
         });
 
         var formFixture = {
-          'name' : 'Test Form One',
-          'model' : {},
-          'actions':[{
-              'type' : 'link',            
-              'config' : {
-                'name' : 'Test Link Action',
-                'url' : 'testURLHTTP'              
-              }
-            },{
-              'type' : 'button',            
-              'config' : {
-                'name' : 'Test Button Action',
-                'url' : 'testURLHTTP'              
-              }
-          }],
-          'rules': [],
-          'components' :[{
-            'type' : 'fieldset',
-            'config':{
-              'name' : 'Test Fieldset One',
-              'layout' : {
-                'type': "grid", 
-                'config': {
-                  'rows': [[{'md': '3'}]]
+          'type':'form',
+          'config' :{
+            'name' : 'Test Form One',
+            'model' : {},
+            'actions':[{
+                'type' : 'link',            
+                'config' : {
+                  'name' : 'Test Link Action',
+                  'url' : 'testURLHTTP'              
                 }
-              },              
-              'components' :[{
-                'type' :'field',
-                'config' : { 
-                  'type' : 'text',
-                  'name' : 'test-text-2',
-                  'label' : 'Test Text Field',
-                  'required' : false,
-                  'options' : { }
+              },{
+                'type' : 'button',            
+                'config' : {
+                  'name' : 'Test Button Action',
+                  'url' : 'testURLHTTP'              
                 }
-              }]
-            }  
-          }]  
+            }],
+            'rules': [],
+            'components' :[{
+              'type' : 'fieldset',
+              'config':{
+                'name' : 'Test Fieldset One',
+                'layout' : {
+                  'type': "grid", 
+                  'config': {
+                    'rows': [[{'md': '3'}]]
+                  }
+                },              
+                'components' :[{
+                  'type' :'field',
+                  'config' : { 
+                    'type' : 'text',
+                    'name' : 'test-text-2',
+                    'label' : 'Test Text Field',
+                    'required' : false,
+                    'options' : { }
+                  }
+                }]
+              }  
+            }]  
+          }
         };
 
-        formFixture.components.push(fieldsetFixture);
-        var config = {'type':'form','config':formFixture};
-        var Form = Components.factory(config);
+        formFixture.config.components.push(fieldsetFixture);
+        var Form = Components.factory(formFixture);
         React.render(Form,document.getElementById('test-form'));
+        
       </script>
   </body>
 </html>
