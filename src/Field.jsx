@@ -114,7 +114,7 @@ module.exports = React.createClass({
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
-      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} key={fieldKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} ref={fieldName} key={fieldKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
     });
     return fields;
   },
@@ -128,7 +128,7 @@ module.exports = React.createClass({
     var fieldKey = fieldName +'-fieldSelect';
     var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName} onChange={this.handleChange} onBlur={this.handleBlur} >
+        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName} ref={fieldName} onChange={this.handleChange} onBlur={this.handleBlur} >
           {this.props.options.items.map(function(item, i){
             return (<option value={item.value} key={i}>{item.label}</option>);
           })}
@@ -148,7 +148,7 @@ module.exports = React.createClass({
       labelKey = 'fieldLabelRequired';
     }
     if(this.isFieldGroup()){
-      return (<legend htmlFor={this.props.name} className="field-legend" key={labelKey}>{labelRequired}{this.props.label}</legend>)
+      return (<legend htmlFor={this.props.name} className="field-legend" key={labelKey} >{labelRequired}{this.props.label}</legend>)
     }else{
       return (<label htmlFor={this.props.name} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
     }
@@ -165,7 +165,7 @@ module.exports = React.createClass({
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name}  key="fieldTextarea" onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
+          field = (<textarea className="form-control"  id={this.props.name} ref={this.props.name} key="fieldTextarea" onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
           break;  
         case 'radio':  
         case 'checkbox':
@@ -176,7 +176,7 @@ module.exports = React.createClass({
           field = this.getSelect();
           break;     
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  placeholder="" onChange={this.handleChange} onBlur={this.handleBlur} />);                                                                                  
+          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  ref={this.props.name} placeholder="" onChange={this.handleChange} onBlur={this.handleBlur} />);                                                                                  
       }
       return field;
   },

@@ -1,20 +1,22 @@
-window.q = [];
-window.subs = {};
 var _ = require('underscore');
 
 module.exports = {
+	
+	q : [],
+
+	subs : {},
 
 	push: function(data){
-		q.push(data);
+		this.q.push(data);
 		this.notify();	
-		console.log('Push:'+JSON.stringify(data));
+		//console.log('Push:'+JSON.stringify(data));
 	},
 
 	notify: function(){
 		var key, ev;
-		if(q.length){
-			for(var i=0;i<q.length;i++){
-				ev = q.shift();
+		if(this.q.length){
+			for( var i=0 ; i<this.q.length ; i++ ){
+				ev = this.q.shift();
 				this.nofitySubscribers(ev.entityEvent,ev.data);	
 				this.nofitySubscribers('all',ev.data);				
 			}
@@ -22,13 +24,15 @@ module.exports = {
 	},
 
 	nofitySubscribers: function(entityEvent,data){
-		if(subs[entityEvent]){
-			var subscribers = Object.keys(subs[entityEvent]);
-			_.each(subscribers,function(cbId,i){			
-				setTimeout(function(){
+		if(this.subs[entityEvent]){
+			var subscribers = Object.keys(this.subs[entityEvent]);
+			var mySubs = this.subs;
+			_.each(subscribers,function(cbId,i){	
+				var callback = mySubs[entityEvent][cbId];		
+				//setTimeout(function(){
 					console.log('Notified:'+entityEvent+':'+cbId+':'+JSON.stringify(data));
-					subs[entityEvent][cbId](data);
-				},0);
+					callback(data);
+				//},0);
 			});
 		}
 	},
@@ -43,15 +47,15 @@ module.exports = {
 
 	addSubscriber: function(entityEvent,cbId,cb){
 		var isUnique = true;
-		if(!subs[entityEvent]){
-			subs[entityEvent] = {};
+		if(!this.subs[entityEvent]){
+			this.subs[entityEvent] = {};
 		}
-		subs[entityEvent][cbId] = cb;
+		this.subs[entityEvent][cbId] = cb;
 		console.log('Subscribed:'+entityEvent+':'+cbId);
 	},
 
 	unSubscribe: function(entityEvent,cbId){
-		delete subs[entityEvent][cbId];
+		delete this.subs[entityEvent][cbId];
 		console.log('Unsubscribed:'+entityEvent+':'+cbId);
 	}
 

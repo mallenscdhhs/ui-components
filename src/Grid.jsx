@@ -85,7 +85,6 @@ module.exports = React.createClass({
 
 	render: function(){				
 		var uniqueKey = this.props.name;	
-		console.log('GRID-RENDER:'+uniqueKey);
 		return (
 			<div className="grid-layout" key={"layout-for-"+uniqueKey}>
 			{this.props.rows.map(function(row, i){				
