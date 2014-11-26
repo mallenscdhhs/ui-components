@@ -22,17 +22,11 @@ describe('EventQueue', function(){
 
     beforeEach(function(done) {
       foo = {
-        setBar: function(value) {
-          console.log('DONE'+value)
-        }
+        setBar: function(value) {   }
       }
 
       spyOn(foo, 'setBar');
-
-      Q.subscribe('test:event','myId', function(data){
-        foo.setBar(data);
-      });      
-
+      Q.subscribe('test:event','myId',foo.setBar);      
       Q.push({ 'entityEvent' : 'test:event', 'data' : { 'bar' : 'baz'} });   
 
       setTimeout(function() {
