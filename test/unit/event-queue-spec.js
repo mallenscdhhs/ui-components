@@ -29,7 +29,7 @@ describe('EventQueue', function(){
       Q.subscribe('test:event','myId',foo.setBar);      
       Q.push({ 'entityEvent' : 'test:event', 'data' : { 'bar' : 'baz'} });   
 
-      // Wait for message to be pushed back onto the eventloop
+      // Wait for message to be pushed back onto the eventloop, and notifiy subscribers
       setTimeout(function() {
         done();
       }, 100);
