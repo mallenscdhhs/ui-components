@@ -2,14 +2,14 @@ describe('EventQueue', function(){
   var Q = require('../../src/EventQueue');
   
   describe('Subscribe', function(){
-    it('Add callback to selected event namespace with subscription ID', function(){
+    it('Add callback to selected event namespace with subscription Id', function(){
       Q.subscribe('test:event','myId',function(event){return event;});
       expect(Q.subs['test:event']['myId']).toBeDefined();
     });
   });
 
   describe('Unsubscribe', function(){
-    it('can deregister an event handler', function(){
+    it('Can deregister an event handler', function(){
       Q.subscribe('test:event','myId',function(event){return event;});
       expect(Q.subs['test:event']['myId']).toBeDefined();
       Q.unSubscribe('test:event','myId');
@@ -29,9 +29,10 @@ describe('EventQueue', function(){
       Q.subscribe('test:event','myId',foo.setBar);      
       Q.push({ 'entityEvent' : 'test:event', 'data' : { 'bar' : 'baz'} });   
 
+      // Wait for message to be pushed back onto the eventloop
       setTimeout(function() {
         done();
-      }, 1200);
+      }, 100);
     });
 
     it('Put message on the queue and notify subscribers', function(){
