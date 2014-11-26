@@ -23,6 +23,9 @@ module.exports = React.createClass({
     var flow = this.getWorkflowState(_.clone(this.props.items), this.props.items[this.props.lastSectionCompleted].next);
     var lastSection = flow[this.props.lastSectionCompleted];
     var currentSection = flow[lastSection.next];
+
+    // TODO: Load page for 'currentSection' ??
+
     return {
       currentPage: currentSection.pageId,
       previousPage: '',
@@ -48,10 +51,6 @@ module.exports = React.createClass({
   componentWillUnmount: function(){
     
   },
-
-  next: function(){},
-  prev: function(){},
-  cancel: function(){},
 
   getWorkflowState: function(list, id){
     var next = list[id].next;    
@@ -98,6 +97,8 @@ module.exports = React.createClass({
       items: this.buildTree(this.state.flow, this.state.flow[head], childrenGroups)
     };
   
+    console.log(this.state.currentPageProps);
+
     return (
       <Grid rows={[[{md: '4', indexRange: [0, 2]}, {md: '8'}]]}>
         <h4>{this.props.title}</h4>

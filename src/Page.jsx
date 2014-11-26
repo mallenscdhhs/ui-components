@@ -26,6 +26,7 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){    
+    console.log(this.props);
     return (
       <article>
         <header>

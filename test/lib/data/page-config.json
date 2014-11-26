@@ -16,7 +16,7 @@
               "next": "page2"
             },
             "page2": {
-              "title": "Page Two",
+              "title": "Page Two Title",
               "pageId": "page2",
               "next": "page3"
             },

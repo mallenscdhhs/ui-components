@@ -10,6 +10,8 @@ var _ = require('underscore');
  var level = 0;
  var iteration = 0;
 function componentFactory(schema){
+	//console.log('UPFRONT------------------');
+	//console.log(schema);
 	var element = elements[schema.type];
 	var factory = React.createFactory(element);
 	var config = _.clone(schema.config);
@@ -29,12 +31,13 @@ function componentFactory(schema){
 		children = config.components.map(componentFactory);	
 		//console.log('OUT:PARENT:'+config.name+':'+level+'::::::::::::::::::::');	
 	}else{
-		//level = 3
+		level = 3
 		//console.log('CHILD:'+config.name+':'+level+':');
 	}
 
-
-	//console.log('RENDERING::::'+config.name);
+	//console.log('BACKINGOUT------------------');
+	//console.log(schema);
+	//console.log('RENDERING::::'+config.name+'::'+schema.type);
 	return factory(config, children);
 }
 
@@ -46,5 +49,6 @@ function componentFactory(schema){
  */
 module.exports = {
 	elements: elements,
-	factory: componentFactory
+	factory: componentFactory,
+	underscore: _		// Remove when done testing workflow
 };

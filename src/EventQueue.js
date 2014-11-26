@@ -41,7 +41,7 @@ module.exports = {
 
 	/*
 	* Notifiy specified subscribers.
-	* Push each notification callback into back of eventLoop so we don't block. 
+	* Push each notification callback into next loop of eventLoop so we don't block. 
 	* @returns {void}
 	*/
 	nofitySubscribers: function(entityEvent,data){
@@ -51,7 +51,6 @@ module.exports = {
 			_.each(subscribers,function(cbId,i){	
 				var callback = mySubs[entityEvent][cbId];		
 				setTimeout(function(){
-					console.log('Notified:'+entityEvent+':'+cbId+':'+JSON.stringify(data));
 					callback(data);
 				},0);
 			});
@@ -84,7 +83,6 @@ module.exports = {
 			this.subs[entityEvent] = {};
 		}
 		this.subs[entityEvent][cbId] = cb;
-		console.log('Subscribed:'+entityEvent+':'+cbId);
 	},
 
 	/*
@@ -93,7 +91,6 @@ module.exports = {
 	*/
 	unSubscribe: function(entityEvent,cbId){
 		delete this.subs[entityEvent][cbId];
-		console.log('Unsubscribed:'+entityEvent+':'+cbId);
 	}
 
 

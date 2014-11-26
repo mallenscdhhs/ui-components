@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Components</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
+    <script src="Components.js"></script>
+    <style type="text/css">
+      .nav.nav-tree ul {
+        margin-left: 1em;
+      }
+      .nav.nav-tree ul li {
+        border-left: dotted 1px #ccc;
+        margin-left: 4px;
+      }
+      .nav.nav-tree .active > a,
+      .nav.nav-tree .active > a:hover {
+        background: #2a6496;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body style="padding: 2em">
+    <div id="page"></div>
+    <script>           
+      var React = require('react/addons');
+      var Components = require('Components');
+      var _ = Components.underscore; // Remove from Components when done testing.
+
+      // Load init Page
+      $.getJSON('lib/data/page-config.json').then(function(appPage){     
+
+        var lastPageId = appPage.config.components[0].config.lastSectionCompleted;
+        var currentPageId = appPage.config.components[0].config.items[lastPageId].next
+
+        // Load current page
+        $.getJSON('lib/data/components.json').then(function(workflowPage){
+
+          // Update actual JSON data
+          appPage.config.components[0].config.items[currentPageId] = _.extend( appPage.config.components[0].config.items[currentPageId] , workflowPage );
+          
+          // NOW, update for Components.factory to find data, in the config.components
+          appPage.config.components[0].config.components = [];
+          appPage.config.components[0].config.components.push(workflowPage);
+
+          console.log(appPage.config.components[0].config);
+
+          React.render(
+            Components.factory(appPage),
+            document.getElementById('page')
+          ); 
+
+        });
+
+      });
+    </script>
+  </body>
+</html>
