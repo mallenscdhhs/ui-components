@@ -2,14 +2,14 @@ describe('EventQueue', function(){
   var Q = require('../../src/EventQueue');
   
   describe('Subscribe', function(){
-    it('Add callback to selected event namespace with subscription Id', function(){
+    it('Add callback to selected event namespace with unique Id', function(){
       Q.subscribe('test:event','myId',function(event){return event;});
       expect(Q.subs['test:event']['myId']).toBeDefined();
     });
   });
 
   describe('Unsubscribe', function(){
-    it('Can deregister an event handler', function(){
+    it('Remove callback from selected event namespace based on unique Id', function(){
       Q.subscribe('test:event','myId',function(event){return event;});
       expect(Q.subs['test:event']['myId']).toBeDefined();
       Q.unSubscribe('test:event','myId');
