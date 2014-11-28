@@ -40,13 +40,15 @@
 
           // Update actual JSON data
           appPage.config.components[0].config.items[currentPageId] = _.extend( appPage.config.components[0].config.items[currentPageId] , workflowPage );
-          
+
           // NOW, update for Components.factory to find data, in the config.components
           appPage.config.components[0].config.components = [];
           appPage.config.components[0].config.components.push(workflowPage);
 
+          console.log('===================================');
           console.log(appPage.config.components[0].config);
-
+          console.log('===================================');
+          
           React.render(
             Components.factory(appPage),
             document.getElementById('page')
