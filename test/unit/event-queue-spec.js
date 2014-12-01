@@ -17,7 +17,7 @@ describe('EventQueue', function(){
     });
   });
   
-  describe('Messaging', function(){  
+  describe('Notify', function(){  
     var foo = null;
 
     beforeEach(function(done) {
