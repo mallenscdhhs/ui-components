@@ -153,15 +153,9 @@
         };
 
         var fieldsetFixture = {
-          'type' : 'fieldset',
-          'layout' : {
-            'type': "grid", 
-            'config': {
-              'rows': [[{'md': '8'}]]
-            }
-          },          
+          'type' : 'fieldset',         
           'config':{          
-            'name' : 'Test Fieldset With All Fields',
+            'name' : 'Test Fieldset With All Fields',             
             'components' :[]
           }
         };
@@ -207,11 +201,18 @@
                   'config' : { 
                     'type' : 'text',
                     'name' : 'test-text-2',
-                    'label' : 'Test Text Field',
+                    'label' : 'Test Text Field One',
                     'required' : false,
                     'options' : { }
                   }
-                }]
+                },{
+                'type' : 'field',
+                'config' : {            
+                  'type' : 'password',
+                  'name' : 'test-password-2',
+                  'label' : 'Test Password One'
+                }
+              }]
               }  
             }]  
           }
