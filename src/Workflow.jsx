@@ -95,16 +95,19 @@ module.exports = React.createClass({
 
     var treeProps = {
       items: this.buildTree(this.state.flow, this.state.flow[head], childrenGroups)
-    };
-  
-    console.log(this.state.currentPageProps);
+    }; 
 
     return (
-      <Grid rows={[[{md: '4', indexRange: [0, 2]}, {md: '8'}]]}>
-        <h4>{this.props.title}</h4>
-        <Tree {...treeProps} ref="outline" />
-        <Page {...this.state.currentPageProps}  ref="currentPage" />
-      </Grid>
+      <div className="row">
+        <article>
+          <div className="col-md-3">
+            <Tree {...treeProps} ref="outline" />
+          </div>
+          <div className="col-md-9">
+            {this.props.children}
+          </div>
+        </article>
+      </div>
     );
 	}
 });
