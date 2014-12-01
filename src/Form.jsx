@@ -14,17 +14,11 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function(){
-    Q.subscribe('button:next','form',function(data){
-      console.log('Form got event!'+JSON.stringify(data));
-      Q.unSubscribe('button:next','form');
-    });
-    Q.subscribe('all','form',function(data){
-      console.log('Form got ALL event!'+JSON.stringify(data));
-    });    
+  
   },
 
   componentWillUnmount: function(){
-    Q.unSubscribe('button:next','form');
+
   },
 
   /**

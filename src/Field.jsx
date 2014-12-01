@@ -64,7 +64,6 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleBlur: function(){
-    console.log('BLUR:'+this.props.name+':VALUE:'+this.state.value+':');
     Q.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
   },
 
@@ -74,8 +73,6 @@ module.exports = React.createClass({
    */
   handleChange: function(event) {
     this.setState({value: event.target.value});
-    //console.log('CHANGE:'+this.props.name+':VALUE:'+this.state.value+':');
-    //Q.push({'entityEvent':'field:change:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
   },  
 
   /**
