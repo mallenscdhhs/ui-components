@@ -3,7 +3,7 @@ var _ = require('underscore');
 var Q = require('./EventQueue');
 
 module.exports = React.createClass({
-
+  displayName: 'Action',
   /**
   * Return a string of classes
   * @return {String}
@@ -31,7 +31,7 @@ module.exports = React.createClass({
   handleClick: function(){
     console.log('CLICK:'+this.props.name);
     // TODO: update 'next' with actual 'verbs' for the actions
-    Q.push({'entityEvent':'action:next','data':{'page':1}});
+    Q.push({'entityEvent':'action:navigate','data':{'direction':this.props.event}});
   },
 
   /**

@@ -37,6 +37,8 @@ var renderTree = function(config){
  * @module Tree
  */
 module.exports = React.createClass({
+  displayName: 'Tree',
+
   mixins: [EventEmitter],
   
   propTypes: {

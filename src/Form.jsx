@@ -4,6 +4,7 @@ var Action = require('./Action');
 var Q = require('./EventQueue');
 
 module.exports = React.createClass({
+  displayName: 'Form',
 
   getDefaultProps: function(){
     return {

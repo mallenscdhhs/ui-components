@@ -79,6 +79,8 @@ var renderColumn = function(components, col, n, key){
  * @module Grid
  */
 module.exports = React.createClass({
+	displayName: 'Grid',
+
 	propTypes: {
 		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired		
 	},

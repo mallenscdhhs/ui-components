@@ -3,7 +3,7 @@ var _ = require('underscore');
 var Q = require('./EventQueue');
 
 module.exports = React.createClass({
-
+  displayName: 'Field',
   /**
    * Upon mounting, subscribe to any dependency that the field has, an monitor the field
    * for events that would require you to make a state change.
