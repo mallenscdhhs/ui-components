@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Components</title>
+    <title>Workflow</title>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
@@ -20,6 +20,7 @@
         background: #2a6496;
         color: #fff;
       }
+      .btn{margin:0 3px;}
     </style>
   </head>
   <body style="padding: 2em">
@@ -27,35 +28,49 @@
     <script>           
       var React = require('react/addons');
       var Components = require('Components');
+      var Q = Components.eventQueue;
+      var Cache = Components.cache;
       var _ = Components.underscore; // Remove from Components when done testing.
 
       // Load init Page
-      $.getJSON('lib/data/page-config.json').then(function(appPage){     
+      $.getJSON('lib/data/workflow-simple.json').then(function(workflow){             
 
-        var lastPageId = appPage.config.components[0].config.lastSectionCompleted;
-        var currentPageId = appPage.config.components[0].config.items[lastPageId].next
+        var lastPageId = workflow.config.lastSectionCompleted;
+        var currentPageId = workflow.config.items[lastPageId].next
 
         // Load current page
-        $.getJSON('lib/data/components.json').then(function(workflowPage){
+        $.getJSON('lib/data/components.json').then(function(page){
+
+          var cp = workflow.config.items[currentPageId];
 
           // Update actual JSON data
-          appPage.config.components[0].config.items[currentPageId] = _.extend( appPage.config.components[0].config.items[currentPageId] , workflowPage );
+          var populatedPage = _.extend( cp , page.config ); // {'pageId':cp.pageId,'next':cp.next}
 
           // NOW, update for Components.factory to find data, in the config.components
-          appPage.config.components[0].config.components = [];
-          appPage.config.components[0].config.components.push(workflowPage);
+          workflow.config.components = [];
+          workflow.config.components.push(page);
+          workflow.config.items[currentPageId] = populatedPage;
 
-          console.log('===================================');
-          console.log(appPage.config.components[0].config);
-          console.log('===================================');
-          
+          Cache.set('workflow',workflow);
+
           React.render(
-            Components.factory(appPage),
+            Components.factory(workflow),
             document.getElementById('page')
           ); 
 
         });
 
+      });
+
+      var clickCount = 0;
+      Q.subscribe('action:navigate','globalRouter',function(data){
+        var workflow = Cache.get('workflow');
+        clickCount++;
+        workflow.config.components[0].config.title = 'Page Change:=>' + data.direction+ '| '+clickCount+' Times';
+        React.render(
+          Components.factory(workflow),
+          document.getElementById('page')
+        );         
       });
     </script>
   </body>

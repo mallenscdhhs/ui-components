@@ -8,6 +8,21 @@
         "type": "form",
         "config": {
           "name": "test_form",
+          "actions":[{
+              "type" : "button",            
+              "config" : {
+                "name" : "Previous",
+                "url" : "testURLHTTP",
+                "event":"back"            
+              }            
+            },{
+              "type" : "button",            
+              "config" : {
+                "name" : "Next",
+                "url" : "testURLHTTP",
+                "event" : "next"
+              }
+          }],          
           "components": [
             {
               "type": "fieldset",
