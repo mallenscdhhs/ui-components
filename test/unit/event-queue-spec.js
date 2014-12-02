@@ -37,7 +37,7 @@ describe('EventQueue', function(){
 
     it('Put message on the queue and notify subscribers', function(){
       expect(foo.setBar.calls.count()).toEqual(1);
-      expect(foo.setBar).toHaveBeenCalledWith({bar:'baz'});
+      expect(foo.setBar).toHaveBeenCalledWith({bar:'baz'},'test:event');
     });    
   });
 

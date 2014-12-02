@@ -33,8 +33,8 @@ module.exports = {
 		if(this.queue.length){
 			while( this.queue.length ){
 				ev = this.queue.shift();
-				this.nofitySubscribers(ev.entityEvent,ev.data);	
-				this.nofitySubscribers('all',ev.data);				
+				this.nofitySubscribers(ev.entityEvent,ev.data,ev.entityEvent);	
+				this.nofitySubscribers('all',ev.data,ev.entityEvent);				
 			}
 		}
 	},
@@ -44,14 +44,14 @@ module.exports = {
 	* Push each notification callback into next loop of eventLoop so we don't block. 
 	* @returns {void}
 	*/
-	nofitySubscribers: function(entityEvent,data){
+	nofitySubscribers: function(entityEvent,data,eventName){
 		if(this.subscribers[entityEvent]){
 			var subscribers = Object.keys(this.subscribers[entityEvent]);
 			var mySubs = this.subscribers;
 			_.each(subscribers,function(cbId,i){	
 				var callback = mySubs[entityEvent][cbId];		
 				setTimeout(function(){
-					callback(data);
+					callback(data,eventName);
 				},0);
 			});
 		}
