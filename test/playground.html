@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
     <script src="Components.js"></script>
     <style type="text/css">
       .nav.nav-tree ul {
@@ -22,35 +23,48 @@
       }
       .btn{margin:3px;}
       html,body,article,.col-md-5{height:100%;}
+      #editor {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 60%;
+        box-shadow: -10px 4px 6px rgba(0,0,0, 0.5);
+      }
+      #render {
+        box-sizing: border-box;
+        padding-left: 1em;
+        position: absolute;
+        top: 0;
+        left: 40%;
+        right: 1em;        
+      }
     </style>
   </head>
-  <body style="padding: 2em">
-    <div class="row" style="height:100%;">
-      <article>
-        <div class="col-md-5">
-          <div style="height:6%;">
-            <button class="btn pull-right btn-success" id="render-json">Render</button>
-          </div>        
-          <div style="height:94%;">
-            <textarea class="form-control" style="height:100%;" id="page-json"></textarea>
-          </div>
-        </div>
-        <div class="col-md-7" id="page"></div>
-      </article>
-    </div>
+  <body>
+    <div id="editor"></div>
+    <div id="render"></div>    
     
     <script>           
       var React = require('react/addons');
       var Components = require('Components');
+      var editor = ace.edit("editor");
+      var _ = Components.underscore;
+      var renderWindow = document.getElementById('render');
+      
+      editor.setTheme("ace/theme/tomorrow_night_eighties");
+      editor.getSession().setMode("ace/mode/json");      
+      editor.setShowPrintMargin(false);
+      editor.getSession().setUseSoftTabs(true);
+      editor.getSession().setTabSize(2);
 
-      $('#render-json').on('click',function(){
-        var pageJSON = JSON.parse($('#page-json').val());
+      editor.getSession().on('change', _.debounce(function(e){
+        var config = JSON.parse(editor.getValue());
         React.render(
-          Components.factory(pageJSON),
-          document.getElementById('page')
-        ); 
-      });
-
+          Components.factory(config),
+          renderWindow
+        );
+      }, 300));
     </script>
   </body>
 </html>
