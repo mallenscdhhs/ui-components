@@ -71,7 +71,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleBlur: function(){
-    Queue.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
+    Queue.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value,'rules':this.props.rules}});
   },
 
   /**
