@@ -16,7 +16,6 @@
 
       <script>
         var Queue = Components.eventQueue;
-        var Cache = Components.cache;
         var fieldsFixture = {
           'text' : {
             'type' : 'field',
@@ -163,19 +162,19 @@
         formFixture.config.components.push(fieldsetFixture);
         var Form = Components.factory(formFixture);
         React.render(Form,document.getElementById('test-form'));
-        
+        var cache = {};
         // Application subscribing to all events.
         Queue.subscribe('all','globalRouter',function(data,eventType){
           // For Field blur events, validate and send results back to the field.
           if(eventType.indexOf('field:blur') >= 0){
             var hasError = true;
             var errorMessage = 'Input is not valid. Please select a new value.';
-            if(Cache.get(data.fieldName)){
+            if(cache[data.fieldName]){
               hasError= false;
               errorMessage = '';
-              Cache.set(data.fieldName,false);
+              cache[data.fieldName] = false;
             }else{
-              Cache.set(data.fieldName,true);
+              cache[data.fieldName] = true;
             }
             Queue.push({'entityEvent':'field:error:'+data.fieldName,'data':{'hasError':hasError,'errorMessage':errorMessage}});
           }

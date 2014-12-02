@@ -2,7 +2,6 @@ var React = require('react/addons');
 var elements = require('./index');
 var _ = require('underscore');
 var EventQueue = require('./EventQueue');
-var Cache = require('./Cache');
 
 /**
  * Recursively builds up a component hierarchy.
@@ -37,6 +36,5 @@ module.exports = {
 	elements: elements,
 	factory: componentFactory,
 	underscore: _,		// Remove when done testing workflow
-	eventQueue: EventQueue,
-	cache: Cache
+	eventQueue: EventQueue
 };

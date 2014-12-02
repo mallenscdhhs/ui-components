@@ -30,7 +30,7 @@
       var Components = require('Components');
       var Workflow = Components.elements.workflow;
       var Queue = Components.eventQueue;
-      var Cache = Components.cache;
+      var cache = {};
       var _ = Components.underscore; // Remove from Components when done testing.
 
       var wf = null; // Workflow Container (tree) [React element]
@@ -47,8 +47,8 @@
 
           page =  _.extend( page , workflow.config.items[currentPageId] );
 
-          Cache.set('workflow',workflow);
-          Cache.set('page',page);
+          cache['workflow'] = workflow;
+          cache['page'] = page;
 
           wf = React.render(Components.factory(workflow),document.getElementById('workflow-container')); 
           wp = React.render(Components.factory(page),document.getElementById('workflow-page'));
@@ -59,7 +59,7 @@
       
       var clickCount = 0;            
       Queue.subscribe('workflow:load:page','globalRouter',function(data){
-        var page = Cache.get('page');
+        var page = cache['page'];
 
         // TODO LOAD OTHER DATA
         // Get new page/update workflow.. etc. etc..
@@ -73,7 +73,7 @@
       });
 
       Queue.subscribe('workflow:save:application','globalRouter',function(data){
-        var page = Cache.get('page');
+        var page = cache['page'];
 
         // TODO LOAD OTHER DATA
         // Get new page/update workflow.. etc. etc..
