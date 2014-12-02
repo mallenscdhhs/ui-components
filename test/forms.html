@@ -155,9 +155,15 @@
         var fieldsetFixture = {
           'type' : 'fieldset',         
           'config':{          
-            'name' : 'Test Fieldset With All Fields',             
+            'name' : 'Test Fieldset With All Fields TEST TEST',             
             'components' :[]
-          }
+          },
+          'layout' : {
+            'type': "grid", 
+            'config': {
+              'rows': [[{'md': '3'}]]
+            }
+          }      
         };
 
         // Add fields to components
@@ -189,7 +195,7 @@
             'components' :[{
               'type' : 'fieldset',
               'config':{
-                'name' : 'Test Fieldset One',
+                'name' : 'Test Fieldset One Test',
                 'layout' : {
                   'type': "grid", 
                   'config': {

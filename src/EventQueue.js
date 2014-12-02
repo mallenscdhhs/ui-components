@@ -5,13 +5,13 @@ module.exports = {
 	/*
 	* List of event objects
 	*/
-	q : [],
+	queue : [],
 
 	/*
 	* List of subscribers. 
 	* ex. subs.['event:namespace']['subscriberUniqueId'] = callback()
 	*/
-	subs : {},
+	subscribers : {},
 
 	/*
 	* Push message onto queue.  
@@ -19,7 +19,7 @@ module.exports = {
 	* @returns {void}
 	*/
 	push: function(data){
-		this.q.push(data);
+		this.queue.push(data);
 		this.notify();
 	},
 
@@ -30,9 +30,9 @@ module.exports = {
 	*/
 	notify: function(){
 		var key, ev;
-		if(this.q.length){
-			for( var i=0 ; i<this.q.length ; i++ ){
-				ev = this.q.shift();
+		if(this.queue.length){
+			while( this.queue.length ){
+				ev = this.queue.shift();
 				this.nofitySubscribers(ev.entityEvent,ev.data);	
 				this.nofitySubscribers('all',ev.data);				
 			}
@@ -45,9 +45,9 @@ module.exports = {
 	* @returns {void}
 	*/
 	nofitySubscribers: function(entityEvent,data){
-		if(this.subs[entityEvent]){
-			var subscribers = Object.keys(this.subs[entityEvent]);
-			var mySubs = this.subs;
+		if(this.subscribers[entityEvent]){
+			var subscribers = Object.keys(this.subscribers[entityEvent]);
+			var mySubs = this.subscribers;
 			_.each(subscribers,function(cbId,i){	
 				var callback = mySubs[entityEvent][cbId];		
 				setTimeout(function(){
@@ -79,10 +79,10 @@ module.exports = {
 	*/
 	addSubscriber: function(entityEvent,cbId,cb){
 		var isUnique = true;
-		if(!this.subs[entityEvent]){
-			this.subs[entityEvent] = {};
+		if(!this.subscribers[entityEvent]){
+			this.subscribers[entityEvent] = {};
 		}
-		this.subs[entityEvent][cbId] = cb;
+		this.subscribers[entityEvent][cbId] = cb;
 	},
 
 	/*
@@ -90,7 +90,7 @@ module.exports = {
 	* @returns {void}
 	*/
 	unSubscribe: function(entityEvent,cbId){
-		delete this.subs[entityEvent][cbId];
+		delete this.subscribers[entityEvent][cbId];
 	}
 
 

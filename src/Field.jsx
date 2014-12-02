@@ -1,6 +1,6 @@
 var React = require('react/addons');
 var _ = require('underscore');
-var Q = require('./EventQueue');
+var Queue = require('./EventQueue');
 
 module.exports = React.createClass({
   displayName: 'Field',
@@ -15,7 +15,7 @@ module.exports = React.createClass({
       var initState = comp.props.dependency.initialState === 'hidden' ? false : true;
       var depName = comp.props.dependency.name;
       var depValues = comp.props.dependency.value.split('|'); // Array of 'actionable' values
-      Q.subscribe('field:blur:'+depName,'field:'+comp.props.name,function(data){
+      Queue.subscribe('field:blur:'+depName,'field:'+comp.props.name,function(data){
         // Verify field is correct and new value is in the 'actionable' array
         if(data.fieldName === depName && depValues.indexOf(data.fieldValue) >= 0){ 
           // Change from initial display state.
@@ -35,7 +35,7 @@ module.exports = React.createClass({
   componentWillUnmount: function(){
     if(this.hasDependency()){
       var depName = this.props.dependency.name;
-      Q.unSubscribe('field:blur:'+depName,'field:'+this.props.name);
+      Queue.unSubscribe('field:blur:'+depName,'field:'+this.props.name);
     }    
   },
 
@@ -44,7 +44,7 @@ module.exports = React.createClass({
    * @returns {boolean}
    */
   hasDependency: function(){
-    return this.props.dependency && this.props.dependency.name && this.props.dependency.value && this.props.dependency.initialState;
+    return !!this.props.dependency;
   },
 
   /**
@@ -64,7 +64,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleBlur: function(){
-    Q.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
+    Queue.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value}});
   },
 
   /**

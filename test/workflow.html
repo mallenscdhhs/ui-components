@@ -24,13 +24,17 @@
     </style>
   </head>
   <body style="padding: 2em">
-    <div id="page"></div>
+    <div id="workflow-container"></div>
     <script>           
       var React = require('react/addons');
       var Components = require('Components');
-      var Q = Components.eventQueue;
+      var Workflow = Components.elements.workflow;
+      var Queue = Components.eventQueue;
       var Cache = Components.cache;
       var _ = Components.underscore; // Remove from Components when done testing.
+
+      var wf = null; // Workflow Container (tree) [React element]
+      var wp = null; // Page (current) [React element]
 
       // Load init Page
       $.getJSON('lib/data/workflow-simple.json').then(function(workflow){             
@@ -41,36 +45,45 @@
         // Load current page
         $.getJSON('lib/data/components.json').then(function(page){
 
-          var cp = workflow.config.items[currentPageId];
-
-          // Update actual JSON data
-          var populatedPage = _.extend( cp , page.config ); // {'pageId':cp.pageId,'next':cp.next}
-
-          // NOW, update for Components.factory to find data, in the config.components
-          workflow.config.components = [];
-          workflow.config.components.push(page);
-          workflow.config.items[currentPageId] = populatedPage;
+          page =  _.extend( page , workflow.config.items[currentPageId] );
 
           Cache.set('workflow',workflow);
+          Cache.set('page',page);
 
-          React.render(
-            Components.factory(workflow),
-            document.getElementById('page')
-          ); 
+          wf = React.render(Components.factory(workflow),document.getElementById('workflow-container')); 
+          wp = React.render(Components.factory(page),document.getElementById('workflow-page'));
 
         });
 
       });
+      
+      var clickCount = 0;            
+      Queue.subscribe('workflow:load:page','globalRouter',function(data){
+        var page = Cache.get('page');
 
-      var clickCount = 0;
-      Q.subscribe('action:navigate','globalRouter',function(data){
-        var workflow = Cache.get('workflow');
+        // TODO LOAD OTHER DATA
+        // Get new page/update workflow.. etc. etc..
         clickCount++;
-        workflow.config.components[0].config.title = 'Page Change:=>' + data.direction+ '| '+clickCount+' Times';
-        React.render(
-          Components.factory(workflow),
-          document.getElementById('page')
-        );         
+        page.config.title = 'Navigation:'+data.page+':'+clickCount;
+        ////////////////////////////////////////////////
+
+        // Update Workflow & Page
+        wp = React.render(Components.factory(page),document.getElementById('workflow-page'));
+
+      });
+
+      Queue.subscribe('workflow:save:application','globalRouter',function(data){
+        var page = Cache.get('page');
+
+        // TODO LOAD OTHER DATA
+        // Get new page/update workflow.. etc. etc..
+        clickCount++;
+        page.config.title = 'Save Application:'+data.page+':'+clickCount;
+        ////////////////////////////////////////////////
+
+        // Update Workflow & Page
+        wp = React.render(Components.factory(page),document.getElementById('workflow-page'));
+
       });
     </script>
   </body>

@@ -1,19 +1,19 @@
 describe('EventQueue', function(){
-  var Q = require('../../src/EventQueue');
+  var Queue = require('../../src/EventQueue');
   
   describe('Subscribe', function(){
     it('Add callback to selected event namespace with unique Id', function(){
-      Q.subscribe('test:event','myId',function(event){return event;});
-      expect(Q.subs['test:event']['myId']).toBeDefined();
+      Queue.subscribe('test:event','myId',function(event){return event;});
+      expect(Queue.subscribers['test:event']['myId']).toBeDefined();
     });
   });
 
   describe('Unsubscribe', function(){
     it('Remove callback from selected event namespace based on unique Id', function(){
-      Q.subscribe('test:event','myId',function(event){return event;});
-      expect(Q.subs['test:event']['myId']).toBeDefined();
-      Q.unSubscribe('test:event','myId');
-      expect(Q.subs['test:event']['myId']).not.toBeDefined();
+      Queue.subscribe('test:event','myId',function(event){return event;});
+      expect(Queue.subscribers['test:event']['myId']).toBeDefined();
+      Queue.unSubscribe('test:event','myId');
+      expect(Queue.subscribers['test:event']['myId']).not.toBeDefined();
     });
   });
   
@@ -26,8 +26,8 @@ describe('EventQueue', function(){
       }
 
       spyOn(foo, 'setBar');
-      Q.subscribe('test:event','myId',foo.setBar);      
-      Q.push({ 'entityEvent' : 'test:event', 'data' : { 'bar' : 'baz'} });   
+      Queue.subscribe('test:event','myId',foo.setBar);      
+      Queue.push({ 'entityEvent' : 'test:event', 'data' : { 'bar' : 'baz'} });   
 
       // Wait for message to be pushed back onto the eventloop, and notifiy subscribers
       setTimeout(function() {
