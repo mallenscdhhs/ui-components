@@ -1,11 +1,7 @@
 {
   "type": "workflow",
   "config": {
-    "title": "Test workflow",
-    "name" : "workflow1"
-    "api": {
-      "get": "lib/data/pages/:pageId"
-    },
+    "title": "Test Workflow",
     "lastSectionCompleted": "page1",
     "items": {
       "page1": {
@@ -18,7 +14,7 @@
         "title": "Page Two Title",
         "pageId": "page2",
         "previous" : "page1",
-        "next": "page3"
+        "next": "page3"        
       },
       "page3": {
         "title": "Page Three",
@@ -35,4 +31,4 @@
       }
     }
   }
-}
+}    

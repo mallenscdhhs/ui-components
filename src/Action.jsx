@@ -1,7 +1,9 @@
 var React = require('react/addons');
 var _ = require('underscore');
+var Queue = require('./EventQueue');
 
 module.exports = React.createClass({
+  displayName: 'Action',
   /**
   * Return a string of classes
   * @return {String}
@@ -18,8 +20,17 @@ module.exports = React.createClass({
         classes.push('btn-'+cla);
       });
     }
-
     return classes.join(' ');
+  },
+
+  /**
+   * Event handler for onClick, that pushes a message to the queue, with the action is clicked.
+   * It's used with workflow to update page based on the action clicked.
+   * @returns {void}
+   */
+  handleClick: function(){
+    // TODO: update 'next' with actual 'verbs' for the actions
+    Queue.push({'entityEvent':'action:navigate','data':{'direction':this.props.event}});
   },
 
   /**
@@ -27,7 +38,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
-    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()}>{this.props.name}</a>);
+    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick}>{this.props.name}</a>);
   },
 
   /**
@@ -35,7 +46,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
-    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()}>{this.props.name}</button>);
+    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()} onClick={this.handleClick}>{this.props.name}</button>);
   },
 
   /**

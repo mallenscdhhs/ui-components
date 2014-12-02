@@ -1,12 +1,14 @@
 var React = require('react/addons');
 var elements = require('./index');
 var _ = require('underscore');
+var EventQueue = require('./EventQueue');
 
 /**
  * Recursively builds up a component hierarchy.
  * @param {object} schema - the parent component schema
  * @returns {function} a ReactElement factory function
  */
+
 function componentFactory(schema){
 	var element = elements[schema.type];
 	var factory = React.createFactory(element);
@@ -18,7 +20,7 @@ function componentFactory(schema){
 		layoutConfig.config.components = config.components;
 		children = componentFactory(layoutConfig);
 	} else if ( config.components ) {
-		children = config.components.map(componentFactory);
+		children = config.components.map(componentFactory);	
 	}
 
 	return factory(config, children);
@@ -32,5 +34,7 @@ function componentFactory(schema){
  */
 module.exports = {
 	elements: elements,
-	factory: componentFactory
+	factory: componentFactory,
+	underscore: _,		// Remove when done testing workflow
+	eventQueue: EventQueue
 };

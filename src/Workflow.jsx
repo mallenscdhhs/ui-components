@@ -3,6 +3,7 @@ var _ = require('underscore');
 var Page = require('./Page');
 var Tree = require('./Tree');
 var Grid = require('./Grid');
+var Queue = require('./EventQueue');
 
 module.exports = React.createClass({
   
@@ -20,41 +21,67 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getInitialState: function(){
-    var flow = this.getWorkflowState(_.clone(this.props.items), this.props.items[this.props.lastSectionCompleted].next);
-    var lastSection = flow[this.props.lastSectionCompleted];
-    var currentSection = flow[lastSection.next];
-    return {
-      currentPage: currentSection.pageId,
-      previousPage: '',
-      currentPageProps: currentSection,
-      flow: flow
-    };
+    var current = this.props.items[this.props.lastSectionCompleted].next;
+    return this.getFlow(current);
   },
   
+  getFlow:function(current){
+    var list = _.extend({},this.props.items);
+    var keys = Object.keys(list);
+    _.each(keys,function(k,v){
+      list[k].disabled = false; 
+    });    
+    var flow = this.getWorkflowState(list, list[current].pageId);
+    var currentPage = flow[current].pageId;
+    return {
+      'currentPage': currentPage,
+      'flow': flow
+    };    
+  },
+
   /**
    * Load the first page in the workflow. This method will first look for
    * a URL hash to specify the pageId, or else it will use the first item
    * in the tree nav.
    */
   componentDidMount: function(){
-    var startPageId = this.props.lastSectionCompleted? this.state.flow[this.props.lastSectionCompleted].next : this.refs.outline.items[0].pageId;
-    this.setState({currentPage: startPageId});      
-    this.refs.outline.selectItem(startPageId);
-  },  
+    var startPageId = this.props.lastSectionCompleted ? this.state.flow[this.props.lastSectionCompleted].next : (Object.keys(this.state.flow)[0].pageId);
+    var currentPage = this.props.currentPage ? this.props.currentPage : startPageId;
+    this.setState({'currentPage': currentPage});      
+    this.refs.outline.selectItem(currentPage);
+  },
 
   /**
    * Deregister event handlers, perform component cleanup.
    */
   componentWillUnmount: function(){
-    
+
   },
 
-  next: function(){},
-  prev: function(){},
-  cancel: function(){},
+  handleNext: function(){
+    var nextPage = this.state.flow[this.state.currentPage].next ? this.state.flow[this.state.currentPage].next :  this.state.currentPage;
+    if(nextPage !== this.state.currentPage){
+      this.replaceState(this.getFlow(nextPage));
+      this.forceUpdate();
+      Queue.push({'entityEvent':'workflow:load:page','data':{'page':nextPage}});    
+    }
+  },
 
-  getWorkflowState: function(list, id){
-    var next = list[id].next;    
+  handlePrevious: function(){
+    var previousPage = this.state.flow[this.state.currentPage].previous ? this.state.flow[this.state.currentPage].previous : this.state.currentPage;
+    if(previousPage !== this.state.currentPage){
+      this.replaceState(this.getFlow(previousPage));
+      this.forceUpdate();
+      Queue.push({'entityEvent':'workflow:load:page','data':{'page':previousPage}});
+    }
+  },
+
+  handleSave: function(){
+    Queue.push({'entityEvent':'workflow:save:application','data':{'page':this.state.currentPage}});
+  }, 
+
+  getWorkflowState: function(list, id){ 
+    var next = list[id].next; 
     if ( next ) {
       list[next].disabled = true;
       this.getWorkflowState(list, next);
@@ -96,13 +123,19 @@ module.exports = React.createClass({
 
     var treeProps = {
       items: this.buildTree(this.state.flow, this.state.flow[head], childrenGroups)
-    };
-  
+    }; 
+
     return (
-      <Grid rows={[[{md: '4', indexRange: [0, 2]}, {md: '8'}]]}>
+      <Grid rows={[[{md: '2', indexRange: [0, 2]}, {md: '10'}],[{md : '2'},{md:'10'}]]}>
         <h4>{this.props.title}</h4>
         <Tree {...treeProps} ref="outline" />
-        <Page {...this.state.currentPageProps}  ref="currentPage" />
+        <div id="workflow-page" ></div>
+        <div id="workflow-status"></div>
+        <div id="workflow-actions">
+          <button type="button" id="workflowActionNext" key="workflowActionNexxt" className="btn btn-success pull-right" onClick={this.handleNext}>Next</button>
+          <button type="button" id="workflowActionSave" key="workflowActionSave" className="btn btn-primary pull-right" onClick={this.handleSave}>Save</button>
+          <button type="button" id="workflowActionPrevious" key="workflowActionPrevious" className="btn btn-default pull-left" onClick={this.handlePrevious}>Previous</button>
+        </div>
       </Grid>
     );
 	}

@@ -2,12 +2,13 @@
   "type": "page",
   "config": {
     "title": "UI Components",
+    "name" : "page1",
     "content": "This is a test page for UI components. All UI elements are rendered from JSON.",
     "components": [
       {
         "type": "form",
         "config": {
-          "name": "test_form",
+          "name": "test_form",          
           "components": [
             {
               "type": "fieldset",

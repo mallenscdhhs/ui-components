@@ -25,7 +25,7 @@ module.exports = React.createClass({
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){    
+  render: function(){   
     return (
       <article>
         <header>

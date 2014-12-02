@@ -280,8 +280,7 @@ describe('Field component', function() {
 
   it('Renders required asterisk in label', function(){
     var field = tu.renderIntoDocument(Field(requiredFixture));
-    var errorAst = tu.findRenderedDOMComponentWithTag(field, 'span');
-    expect(errorAst.getDOMNode().className).toEqual('text-danger');
+    var errorAst = tu.findRenderedDOMComponentWithClass(field, 'text-danger');
     expect(errorAst.getDOMNode().textContent).toEqual('*');
   });  
 

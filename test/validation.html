@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Components</title>
+    <title>Validation</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
@@ -15,6 +15,7 @@
       <div id="test-form"></div>
 
       <script>
+        var Queue = Components.eventQueue;
         var fieldsFixture = {
           'text' : {
             'type' : 'field',
@@ -31,46 +32,6 @@
               name : 'test-textarea',
               label : 'Test Textarea'
             }
-          },
-          'checkbox' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'checkbox',
-              name : 'test-checkbox',
-              label : 'Test Checkbox',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Checkbox 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Checkbox 2',
-                    'value' : '2'
-                  }        
-                ]
-              }
-            }          
-          },
-          'radio' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'radio',
-              name : 'test-radio',
-              label : 'Test Radio',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Radio 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Radio 2',
-                    'value' : '2'
-                  }        
-                ]
-              }  
-            }          
           },
           'select' : {
             'type' : 'field',
@@ -130,7 +91,8 @@
             'config' : {            
               type : 'phone',
               name : 'test-phone',
-              label : 'Test Phone'
+              label : 'Test Phone',
+              rules : ['RM-1','RM-2','RM-3']
             }
           },
           'date' : {
@@ -147,7 +109,8 @@
             'config' : {            
               type : 'password',
               name : 'test-password',
-              label : 'Test Password'
+              label : 'Test Password',
+              helpText: 'Please enter a memorable password.'
             }
           }   
         };
@@ -155,7 +118,7 @@
         var fieldsetFixture = {
           'type' : 'fieldset',         
           'config':{          
-            'name' : 'Test Fieldset With All Fields TEST TEST',             
+            'name' : 'Validation Test',             
             'components' :[]
           },
           'layout' : {
@@ -174,7 +137,7 @@
         var formFixture = {
           'type':'form',
           'config' :{
-            'name' : 'Test Form One',
+            'name' : 'Validation Test Form',
             'model' : {},
             'actions':[{
                 'type' : 'link',            
@@ -192,42 +155,31 @@
                 }
             }],
             'rules': [],
-            'components' :[{
-              'type' : 'fieldset',
-              'config':{
-                'name' : 'Test Fieldset One Test',
-                'layout' : {
-                  'type': "grid", 
-                  'config': {
-                    'rows': [[{'md': '3'}]]
-                  }
-                },              
-                'components' :[{
-                  'type' :'field',
-                  'config' : { 
-                    'type' : 'text',
-                    'name' : 'test-text-2',
-                    'label' : 'Test Text Field One',
-                    'required' : false,
-                    'options' : { }
-                  }
-                },{
-                'type' : 'field',
-                'config' : {            
-                  'type' : 'password',
-                  'name' : 'test-password-2',
-                  'label' : 'Test Password One'
-                }
-              }]
-              }  
-            }]  
+            'components' :[]  
           }
         };
 
         formFixture.config.components.push(fieldsetFixture);
         var Form = Components.factory(formFixture);
         React.render(Form,document.getElementById('test-form'));
-        
+        var cache = {};
+        // Application subscribing to all events.
+        Queue.subscribe('all','globalRouter',function(data,eventType){
+          // For Field blur events, validate and send results back to the field.
+          if(eventType.indexOf('field:blur') >= 0){
+            var hasError = true;
+            var errorMessage = 'Input is not valid. Please select a new value.';
+            if(cache[data.fieldName]){
+              hasError= false;
+              errorMessage = '';
+              cache[data.fieldName] = false;
+            }else{
+              cache[data.fieldName] = true;
+            }
+            Queue.push({'entityEvent':'field:error:'+data.fieldName,'data':{'hasError':hasError,'errorMessage':errorMessage}});
+          }
+        });
+
       </script>
   </body>
 </html>

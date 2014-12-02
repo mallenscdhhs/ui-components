@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Components</title>
+    <title>Playground</title>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
@@ -20,19 +20,37 @@
         background: #2a6496;
         color: #fff;
       }
+      .btn{margin:3px;}
+      html,body,article,.col-md-5{height:100%;}
     </style>
   </head>
   <body style="padding: 2em">
-    <div id="page"></div>
+    <div class="row" style="height:100%;">
+      <article>
+        <div class="col-md-5">
+          <div style="height:6%;">
+            <button class="btn pull-right btn-success" id="render-json">Render</button>
+          </div>        
+          <div style="height:94%;">
+            <textarea class="form-control" style="height:100%;" id="page-json"></textarea>
+          </div>
+        </div>
+        <div class="col-md-7" id="page"></div>
+      </article>
+    </div>
+    
     <script>           
       var React = require('react/addons');
       var Components = require('Components');
-      $.getJSON('lib/data/components.json').then(function(res){        
+
+      $('#render-json').on('click',function(){
+        var pageJSON = JSON.parse($('#page-json').val());
         React.render(
-          Components.factory(res),
+          Components.factory(pageJSON),
           document.getElementById('page')
-        );    
+        ); 
       });
+
     </script>
   </body>
 </html>
