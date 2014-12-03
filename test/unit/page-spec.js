@@ -1,61 +1,33 @@
-var React = require('react/addons');
-var Page = require('../../src/Page.jsx');
-var request = require('superagent');
-var TestUtils = React.addons.TestUtils;
-
 describe('Page component', function() {
+  var TestUtils = React.addons.TestUtils;  
 
-  var fixture = {
-    title: 'Hello',
-    content: [
-      {
-        type: "p",
-        config: {
-          text: "hello, world"
-        }
-      }
-    ],
-    components: [
-      {
-        type: 'div',
-        config: {
-          textContent: 'hello'
-        }
-      }
-    ]
-  };
-
-  it('renders a page with a title', function(){
-    var page = TestUtils.renderIntoDocument(<Page title={fixture.title}/>);
+  it('renders a page with a title and content', function(){
+    var fixture = require('../fixtures/page-with-content.json');
+    var Page = Components.factory(fixture);
+    var page = TestUtils.renderIntoDocument(Page);
     var h2 = TestUtils.findRenderedDOMComponentWithTag(page, 'h2');
-    expect(h2.getDOMNode().textContent).toEqual(fixture.title);
+    var section = TestUtils.findRenderedDOMComponentWithTag(page, 'section');
+    expect(section.getDOMNode().childNodes[0].textContent).toEqual('I am some content.');
+    expect(section.getDOMNode().childNodes[0].childNodes[1].tagName).toEqual('STRONG');
+    expect(h2.getDOMNode().textContent).toEqual(fixture.config.title);
   });
 
-  it('renders a page with content', function(){
-    var page = TestUtils.renderIntoDocument(<Page title={fixture.title} content={fixture.content} />);
-    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'p');
-    expect(p.getDOMNode().textContent).toEqual(fixture.content[0].config.text);
+  it('renders a list of components', function(){
+    var config = require('../fixtures/page-with-layout.json');
+    var Page = Components.factory(config);
+    var p = TestUtils.renderIntoDocument(Page);
+    var cols = TestUtils.scryRenderedDOMComponentsWithClass(p, 'col-md-6');
+    expect(cols.length).toEqual(2);    
   });
-
-  it('will re-render itself if its state changes', function(){
-    var page = TestUtils.renderIntoDocument(<Page title={fixture.title} content={fixture.content} />);
-    var h2 = TestUtils.findRenderedDOMComponentWithTag(page, 'h2');
-    var p = TestUtils.findRenderedDOMComponentWithTag(page, 'p');
-    expect(h2.getDOMNode().textContent).toEqual(fixture.title);
-    expect(p.getDOMNode().textContent).toEqual(fixture.content[0].config.text);
-    page.setState({title: 'bye', content: [{type: 'p', config: { text: 'foo' }}]});
-    expect(p.getDOMNode().textContent).toEqual('foo');
-    expect(h2.getDOMNode().textContent).toEqual('bye');
-  });
-
-  it('renders a list of components');
-  it('can use a layout config to arrange its components');
-
-  it('can load its state from a server', function(){
-    spyOn(request, 'get');
-    var page = TestUtils.renderIntoDocument(<Page url="lib/data/page-config.json"/>);
-    expect(request.get.calls.count()).toEqual(1);
-    expect(request.get.calls.argsFor(0)[0]).toEqual('lib/data/page-config.json');
+  
+  it('can use a layout config to arrange its components', function(){   
+    var config = require('../fixtures/page-with-layout.json'); 
+    var Page = Components.factory(config);
+    var page = TestUtils.renderIntoDocument(Page);    
+    var gl = TestUtils.findRenderedDOMComponentWithClass(page, 'grid-layout');
+    var row = gl.getDOMNode().childNodes[0];  
+    expect(row.className).toEqual('row');
+    expect(row.childNodes.length).toEqual(2);
   });
 
 });

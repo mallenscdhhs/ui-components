@@ -1,0 +1,87 @@
+{
+  "type": "page",
+  "config": {
+    "title": "UI Components",
+    "name" : "page1",
+    "content": "This is a test page for UI components. All UI elements are rendered from JSON.",
+    "components": [
+      {
+        "type": "form",
+        "config": {
+          "name": "test_form",          
+          "components": [
+            {
+              "type": "fieldset",
+              "config": {
+                "name": "Profile",
+                "layout": {
+                  "type": "grid",
+                  "config": {
+                    "rows": [
+                      [{"md": "4"},{"md": "4"},{"md": "4"}],
+                      [{"md": "2"},{"md": "2"}]
+                    ]
+                  }
+                },
+                "components": [
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "firstName",
+                      "label": "First Name"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "middleName",
+                      "label": "Middle Name"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "lasstName",
+                      "label": "Last Name"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "select",
+                      "name": "title",
+                      "label": "Title",
+                      "options": {
+                        "items": [
+                          {"label": "Mr.", "value": "Mr."},
+                          {"label": "Mrs.", "value": "Mrs."}
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "radio",
+                      "name": "gender",
+                      "label": "Gender",
+                      "options": {
+                        "items": [
+                          {"label": "Male", "value": "M"},
+                          {"label": "Female", "value": "F"}
+                        ]
+                      }
+                    }
+                  }  
+                ]
+              }
+            }  
+          ]
+        }
+      }  
+    ]
+  }
+}

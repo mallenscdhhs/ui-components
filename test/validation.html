@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Validation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="Components.js"></script>
+    <script src="shim.js"></script>
+    <style>.btn{margin:0 3px;}</style>
+  </head>
+  <body style="padding: 2em;">
+
+      <div id="test-form"></div>
+
+      <script>
+        var Queue = Components.eventQueue;
+        var fieldsFixture = {
+          'text' : {
+            'type' : 'field',
+            'config' : {
+              type : 'text',
+              name : 'test-text-1',
+              label : 'Test Text'
+            }
+          },
+          'textarea' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'textarea',
+              name : 'test-textarea',
+              label : 'Test Textarea'
+            }
+          },
+          'select' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'select',
+              name : 'test-select',
+              label : 'Test Select',
+              options : {
+                'items' : [
+                  {
+                    'label' : 'Select 1',
+                    'value' : '1'
+                  },
+                  {
+                    'label' : 'Select 2',
+                    'value' : '2'
+                  }        
+                ]
+              }
+            }            
+          },
+          'multiselect' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'multiselect',
+              name : 'test-multiselect',
+              label : 'Test MultiSelect',
+              dependency: {
+                'name':'test-text-1',
+                'value':'hi|hello|bye',
+                'initialState': 'hidden'
+              },
+              options : {
+                'items' : [
+                  {
+                    'label' : 'MultiSelect 1',
+                    'value' : '1'
+                  },
+                  {
+                    'label' : 'MultiSelect 2',
+                    'value' : '2'
+                  }        
+                ]
+              } 
+            }           
+          },          
+          'email' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'email',
+              name : 'test-email',
+              label : 'Test Email'
+            }
+          },
+          'phone' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'phone',
+              name : 'test-phone',
+              label : 'Test Phone',
+              rules : ['RM-1','RM-2','RM-3']
+            }
+          },
+          'date' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'date',
+              name : 'test-date',
+              label : 'Test Date',
+              required : true
+            }
+          },
+          'password' : {
+            'type' : 'field',
+            'config' : {            
+              type : 'password',
+              name : 'test-password',
+              label : 'Test Password',
+              helpText: 'Please enter a memorable password.'
+            }
+          }   
+        };
+
+        var fieldsetFixture = {
+          'type' : 'fieldset',         
+          'config':{          
+            'name' : 'Validation Test',             
+            'components' :[]
+          },
+          'layout' : {
+            'type': "grid", 
+            'config': {
+              'rows': [[{'md': '3'}]]
+            }
+          }      
+        };
+
+        // Add fields to components
+        Object.keys(fieldsFixture).forEach(function(key,j){
+          fieldsetFixture.config.components.push(fieldsFixture[key]);
+        });
+
+        var formFixture = {
+          'type':'form',
+          'config' :{
+            'name' : 'Validation Test Form',
+            'model' : {},
+            'actions':[{
+                'type' : 'link',            
+                'config' : {
+                  'name' : 'Test Link Action',
+                  'url' : 'testURLHTTP',
+                  'event' : 'next'              
+                }
+              },{
+                'type' : 'button',            
+                'config' : {
+                  'name' : 'Test Button Action',
+                  'url' : 'testURLHTTP',
+                  'event' : 'back'
+                }
+            }],
+            'rules': [],
+            'components' :[]  
+          }
+        };
+
+        formFixture.config.components.push(fieldsetFixture);
+        var Form = Components.factory(formFixture);
+        React.render(Form,document.getElementById('test-form'));
+        var cache = {};
+        // Application subscribing to all events.
+        Queue.subscribe('all','globalRouter',function(data,eventType){
+          // For Field blur events, validate and send results back to the field.
+          if(eventType.indexOf('field:blur') >= 0){
+            var hasError = true;
+            var errorMessage = 'Input is not valid. Please select a new value.';
+            if(cache[data.fieldName]){
+              hasError= false;
+              errorMessage = '';
+              cache[data.fieldName] = false;
+            }else{
+              cache[data.fieldName] = true;
+            }
+            Queue.push({'entityEvent':'field:error:'+data.fieldName,'data':{'hasError':hasError,'errorMessage':errorMessage}});
+          }
+        });
+
+      </script>
+  </body>
+</html>

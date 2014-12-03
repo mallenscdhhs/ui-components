@@ -1,38 +1,39 @@
 var React = require('react/addons');
-var _ = require('underscore');
-var ConfigLoader = require('./ConfigLoader');
+var marked = require('marked');
 
-var Page = React.createClass({
-  mixins: [ConfigLoader],
+marked.setOptions({  
+  sanitize: true,
+  smartLists: true
+});
+
+module.exports = React.createClass({
+
+  displayName: 'Page',
+  
   /**
-   * Load the initial state of the component from any passed-in props, and
-   * set defaults for any props that were not set.
+   * Set default props.
    * @returns {object}
    */
-  getInitialState: function(){
-    var state = _.extend({ title: '', content: [], components: [], layout: {} }, this.props);
-    return state;
+  getDefaultProps: function(){
+    return {
+      content: '',
+      title: ''
+    };
   },
 
   /**
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){
-    return(
+  render: function(){   
+    return (
       <article>
         <header>
-          <h2>{this.state.title}</h2>
+          <h2>{this.props.title}</h2>
         </header>
-        <section>
-          {this.state.content.map(function(item, i){
-            item.config.key = 'content-item-'+i;
-            return React.createElement(item.type, item.config, item.config.text);
-          })}
-        </section>
+        <section dangerouslySetInnerHTML={{__html: marked(this.props.content)}}></section>       
+        {this.props.children}
       </article>
     );
   }
 });
-
-module.exports = Page;

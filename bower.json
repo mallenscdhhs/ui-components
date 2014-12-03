@@ -1,9 +1,14 @@
 {
   "name": "ui-components",
   "version": "1.0.0",
-  "ignore": ["node_modules", "test", "src"],
-  "main": "dist/ui-components.js",
+  "ignore": [
+    "node_modules",
+    "test",
+    "src"
+  ],
+  "main": "dist/Components.js",
   "dependencies": {
-    "react": "~0.12.0"
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.3.1"
   }
 }

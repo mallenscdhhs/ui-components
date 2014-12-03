@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Workflow</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
+    <script src="Components.js"></script>
+    <style type="text/css">
+      .nav.nav-tree ul {margin-left: 1em;}
+      .nav.nav-tree ul li {border-left: dotted 1px #ccc; margin-left: 4px; }
+      .nav.nav-tree .active > a,
+      .nav.nav-tree .active > a:hover {background: #2a6496;color: #fff;}
+      .btn{margin:0 3px;}
+    </style>
+  </head>
+  <body style="padding: 2em">
+    <div id="workflow-container"></div>
+    <script>    
+
+      var React = require('react/addons');
+      var Components = require('Components');
+      var Workflow = Components.elements.workflow;
+      var Queue = Components.eventQueue;
+
+      // Load init Page
+      $.getJSON('lib/data/workflow/flow.json').then(function(workflow){             
+
+        var lastPageId = workflow.config.lastSectionCompleted;
+        var currentPageId = 'page1';
+        if(lastPageId){
+          currentPageId = workflow.config.items[lastPageId].next
+        }
+
+        // Load page
+        $.getJSON('lib/data/workflow/'+currentPageId+'.json').then(function(page){
+          React.render(Components.factory(workflow),document.getElementById('workflow-container')); 
+          React.render(Components.factory(page),document.getElementById('workflow-page'));
+        });
+
+      });
+          
+      Queue.subscribe('workflow:load:page','globalRouter',function(data){
+
+        $.getJSON('lib/data/workflow/'+data.page+'.json').then(function(page){
+          React.render(Components.factory(page),document.getElementById('workflow-page'));
+        });
+      
+      });
+
+      Queue.subscribe('workflow:save:application','globalRouter',function(data){
+
+        confirm('Save Application and Exit?');
+      
+      });
+
+    </script>
+  </body>
+</html>

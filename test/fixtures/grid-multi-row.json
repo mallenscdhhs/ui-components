@@ -1,0 +1,51 @@
+{
+	"type": "grid",
+	"config": { 
+		"components": [
+			{
+				"type": "field",
+				"config": {
+					"type": "text",
+					"name": "testone",
+					"label": "Test one"
+				}
+			},
+			{
+				"type": "field",
+				"config": {
+					"type": "text",
+					"name": "testtwo",
+					"label": "Test two"
+				}
+			},
+			{
+				"type": "field",
+				"config": {
+					"type": "text",
+					"name": "testthree",
+					"label": "Test three"
+				}
+			},
+			{
+				"type": "field",
+				"config": {
+					"type": "text",
+					"name": "testfour",
+					"label": "Test four"
+				}
+			},
+			{
+				"type": "field",
+				"config": {
+					"type": "text",
+					"name": "testfive",
+					"label": "Test five"
+				}
+			}									
+		],
+		"rows": [
+			[{"md": "6", "sm": "4"}, {"md": "12", "sm": "12", "xs": "12"}],
+			[{"md": "4"}, {"md": "4"}]
+		]
+	}
+}
