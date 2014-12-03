@@ -25,11 +25,10 @@
       html,body,article,.col-md-5{height:100%;}
       #editor {
         position: absolute;
-        top: 0;
+        top: 40px;
         left: 0;
-        bottom: 0;
+        bottom: 40px;
         right: 60%;
-        box-shadow: -10px 4px 6px rgba(0,0,0, 0.5);
       }
       #render {
         box-sizing: border-box;
@@ -39,10 +38,36 @@
         left: 40%;
         right: 1em;        
       }
+      .editor-menu{
+        background:#2D2D2D;
+        color:#fff;
+        line-height:40px;
+        color:#eee;
+        font-size:12px;
+        text-align:right;
+        box-sizing:border-box;
+        padding:0 15px;
+      }
+      #top-menu{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height:40px;
+        right: 60%; 
+      }
+      #bottom-menu{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height:40px;
+        right: 60%; 
+      }
     </style>
   </head>
   <body>
+    <div id="top-menu" class="editor-menu"></div>
     <div id="editor"></div>
+    <div id="bottom-menu" class="editor-menu"></div>
     <div id="render"></div>    
     
     <script>           
@@ -51,6 +76,8 @@
       var editor = ace.edit("editor");
       var _ = Components.underscore;
       var renderWindow = document.getElementById('render');
+      var topMenu = $('#top-menu');
+      var bottomMenu = $('#bottom-menu');
       
       editor.setTheme("ace/theme/tomorrow_night_eighties");
       editor.getSession().setMode("ace/mode/json");      
@@ -67,8 +94,10 @@
             Components.factory(config),
             renderWindow
           );
+          bottomMenu.text('Rendered successfully.');
         }catch(err){
-          // Maybe update a status somewhere?
+          // Maybe update a status somewhere
+          bottomMenu.text('Not properly formatted markup.');
         }
       }, 10));
     </script>
