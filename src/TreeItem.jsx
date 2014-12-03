@@ -17,8 +17,8 @@ module.exports = React.createClass({
 			disabled: this.props.disabled
 		});
 		return (
-		      <li className={liClassNames} role="presentation" onClick={this.handleClick}>
-		        <a href={"#"+this.props.pageId} data-disabled={this.props.disabled}>{this.props.title}</a>
+		      <li className={liClassNames} role="presentation">
+		        <a href={"#"+this.props.pageId} data-disabled={this.props.disabled}  onClick={this.handleClick}>{this.props.title}</a>
 		        {this.props.children}
 		      </li>
 		);
