@@ -1,7 +1,7 @@
 {
   "type": "workflow",
   "config": {
-    "title": "Test Workflow",
+    "title": "Provider Enrollment",
     "lastSectionCompleted": null,
     "items": {
       "page1": {
