@@ -21,10 +21,33 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getInitialState: function(){
-    var current = this.props.items[this.props.lastSectionCompleted].next;
+    var current = this.getFirstPage(this.props.items);
+    if(this.props.lastSectionCompleted){
+      current = this.props.items[this.props.lastSectionCompleted].next;
+    }
     return this.getFlow(current);
   },
+
+  /**
+  * Determine the page item that does not have a 'previous' link, set that as the
+  * first page.  This allows pages to be in non-linear order in the JSON, but still work properly.
+  */
+  getFirstPage: function(list){
+    var firstPage = null;
+    var keys = Object.keys(list);
+    _.each(keys,function(k,v){
+      var item = list[k];
+      if(item.previous === null ){
+        firstPage = item.pageId;
+      }
+    });
+    return firstPage;
+  },
   
+  /**
+  * Build flow (items list with disabled and active state information) to 
+  * pass to Tree/TreeItem for rendering.
+  */
   getFlow:function(current){
     var list = _.extend({},this.props.items);
     var keys = Object.keys(list);
@@ -42,12 +65,10 @@ module.exports = React.createClass({
   },
 
   /**
-   * Load the first page in the workflow. This method will first look for
-   * a URL hash to specify the pageId, or else it will use the first item
-   * in the tree nav.
+   * Set the currentPage, and subscribe to tree events.
    */
   componentDidMount: function(){
-    var startPageId = this.props.lastSectionCompleted ? this.state.flow[this.props.lastSectionCompleted].next : (Object.keys(this.state.flow)[0].pageId);
+    var startPageId = this.props.lastSectionCompleted ? this.state.flow[this.props.lastSectionCompleted].next : this.getFirstPage(this.state.flow);
     var currentPage = this.props.currentPage ? this.props.currentPage : startPageId;
     this.setState({'currentPage': currentPage});     
     var component = this;
@@ -56,16 +77,26 @@ module.exports = React.createClass({
     });
   },
 
+  /**
+  * Unsubscribe from tree events.
+  */
   componentWillUnmount: function(){
     Queue.unSubscribe('tree:load:page','workflowRouter');
   },
 
+  /**
+  * Force update workflow state to passed in page, and rerender. Also push notification 
+  * to the app, to rerender the page as well.
+  */
   handleDirect: function(page){
       this.replaceState(this.getFlow(page));
       this.forceUpdate();
       Queue.push({'entityEvent':'workflow:load:page','data':{'page':page}}); 
   },
 
+  /**
+  * Get the next page, if available, and update workflow.  Also, push event to update the page.
+  */
   handleNext: function(){
     var nextPage = this.state.flow[this.state.currentPage].next ? this.state.flow[this.state.currentPage].next :  this.state.currentPage;
     if(nextPage !== this.state.currentPage){
@@ -75,6 +106,9 @@ module.exports = React.createClass({
     }
   },
 
+  /**
+  * Get the previous page, if available, and update workflow.  Also, push event to update the page.
+  */
   handlePrevious: function(){
     var previousPage = this.state.flow[this.state.currentPage].previous ? this.state.flow[this.state.currentPage].previous : this.state.currentPage;
     if(previousPage !== this.state.currentPage){
@@ -84,10 +118,16 @@ module.exports = React.createClass({
     }
   },
 
+  /**
+  * Grab currentPage id, for use when saving a page.
+  */
   handleSave: function(){
     Queue.push({'entityEvent':'workflow:save:application','data':{'page':this.state.currentPage}});
   }, 
 
+  /**
+  * Update flow based on passed in pageId
+  */
   getWorkflowState: function(list, id){ 
     var next = list[id].next; 
     if ( next ) {
@@ -98,6 +138,9 @@ module.exports = React.createClass({
     return list;
   },
 
+  /**
+  * Build tree JSON for Tree/TreeItem rendering. 
+  */
   buildTree: function(source, head, children){ 
     var tree = [];
     while(head){
@@ -113,7 +156,6 @@ module.exports = React.createClass({
   },
 	
   /**
-   * 
    * @returns {React}
    */
   render: function(){
