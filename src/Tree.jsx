@@ -11,7 +11,6 @@ var TreeItem = require('./TreeItem');
  */
 var renderItems = function(config){  
   return config.items.map(function(item, n){
-    item.active = this.state.selectedItem === item.pageId;
     return (
       <TreeItem {...item} ref={item.pageId} key={item.pageId}>
         {renderTree.call(this, item)}
@@ -27,7 +26,7 @@ var renderItems = function(config){
  */
 var renderTree = function(config){  
   return (config && config.items? 
-    <ul className="nav nav-tree" onClick={this.handleClick}>
+    <ul className="nav nav-tree">
       {renderItems.call(this, config)}
     </ul> : null);
 };
@@ -44,35 +43,6 @@ module.exports = React.createClass({
   propTypes: {
     items: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     startOn: React.PropTypes.string
-  },
-  
-  getInitialState: function(){    
-    return {
-      selectedItem: ''
-    };
-  },
-
-  handleClick: function(e){
-    if ( e.target.dataset.disabled !== 'true' ) {
-      var pageId = e.target.hash.slice(1);     
-      e.preventDefault();
-      e.stopPropagation(); 
-      this.setState({selectedItem: pageId});
-      this.refs[pageId].setState({
-        active: true,
-        disabled: false
-      });
-      if ( this.state.selectedItem && this.state.selectedItem !== pageId ) {
-        this.refs[this.state.selectedItem].setState({
-          active: false
-        });        
-      } 
-      this.triggerEvent('item:select', pageId);
-    }    
-  },
-  
-  selectItem: function(pageId){    
-    this.refs[pageId].getDOMNode().childNodes[0].click();
   },
   
   render: function(){

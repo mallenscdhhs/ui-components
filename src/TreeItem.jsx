@@ -1,26 +1,26 @@
 var React = require('react/addons');
+var Queue = require('./EventQueue');
 
 module.exports = React.createClass({
 
 	displayName: 'TreeItem',	
 
-	getInitialState: function(){
-		return {
-			active: !!this.props.active,
-			disabled: !!this.props.disabled
-		};
+	handleClick: function(){
+		if(!this.props.disabled){
+			Queue.push({'entityEvent':'tree:load:page','data':{'pageId':this.props.pageId}}); 
+		}
 	},
 
 	render: function(){
 		var liClassNames = React.addons.classSet({
-			active: this.state.active,
-			disabled: this.state.disabled
+			active: this.props.active,
+			disabled: this.props.disabled
 		});
 		return (
-      <li className={liClassNames} role="presentation">
-        <a href={"#"+this.props.pageId} data-disabled={this.state.disabled}>{this.props.title}</a>
-        {this.props.children}
-      </li>
+		      <li className={liClassNames} role="presentation" onClick={this.handleClick}>
+		        <a href={"#"+this.props.pageId} data-disabled={this.props.disabled}>{this.props.title}</a>
+		        {this.props.children}
+		      </li>
 		);
 	}
 });

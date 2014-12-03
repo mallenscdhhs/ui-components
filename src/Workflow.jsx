@@ -28,11 +28,13 @@ module.exports = React.createClass({
   getFlow:function(current){
     var list = _.extend({},this.props.items);
     var keys = Object.keys(list);
-    _.each(keys,function(k,v){
+    _.each(keys,function(k){
       list[k].disabled = false; 
+      list[k].active = false; 
     });    
     var flow = this.getWorkflowState(list, list[current].pageId);
     var currentPage = flow[current].pageId;
+    flow[current].active = true;
     return {
       'currentPage': currentPage,
       'flow': flow
@@ -47,15 +49,21 @@ module.exports = React.createClass({
   componentDidMount: function(){
     var startPageId = this.props.lastSectionCompleted ? this.state.flow[this.props.lastSectionCompleted].next : (Object.keys(this.state.flow)[0].pageId);
     var currentPage = this.props.currentPage ? this.props.currentPage : startPageId;
-    this.setState({'currentPage': currentPage});      
-    this.refs.outline.selectItem(currentPage);
+    this.setState({'currentPage': currentPage});     
+    var component = this;
+    Queue.subscribe('tree:load:page','workflowRouter',function(data){
+      component.handleDirect(data.pageId);
+    });
   },
 
-  /**
-   * Deregister event handlers, perform component cleanup.
-   */
   componentWillUnmount: function(){
+    Queue.unSubscribe('tree:load:page','workflowRouter');
+  },
 
+  handleDirect: function(page){
+      this.replaceState(this.getFlow(page));
+      this.forceUpdate();
+      Queue.push({'entityEvent':'workflow:load:page','data':{'page':page}}); 
   },
 
   handleNext: function(){
@@ -84,6 +92,7 @@ module.exports = React.createClass({
     var next = list[id].next; 
     if ( next ) {
       list[next].disabled = true;
+      list[next].active = false;
       this.getWorkflowState(list, next);
     }
     return list;
