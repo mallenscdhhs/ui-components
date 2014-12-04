@@ -223,6 +223,8 @@
 
       openFile.on('change',function(){
         editor.setValue('');
+        options.workflowDirectory = null;
+        options.type = null;
         loadFile(this);
       });
 
