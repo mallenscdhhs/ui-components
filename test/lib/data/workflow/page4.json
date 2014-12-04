@@ -1,0 +1,50 @@
+{
+  "type": "page",
+  "config": {
+    "title": "Specialities",
+    "name" : "page4",
+    "content": "Describe your specialities.",
+    "components": [
+      {
+        "type": "form",
+        "config": {
+          "name": "test_form",          
+          "components": [
+            {
+              "type": "fieldset",
+              "config": {
+                "name": "List Speciality Areas",
+                "components": [
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "firstName",
+                      "label": "Specialities within your field."
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "middleName",
+                      "label": "Specialities in other areas."
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "textarea",
+                      "name": "lasstName",
+                      "label": "Describe experience with each speciality."
+                    }
+                  } 
+                ]
+              }
+            }  
+          ]
+        }
+      }  
+    ]
+  }
+}

@@ -59,12 +59,18 @@
       editor.getSession().setTabSize(2);
 
       editor.getSession().on('change', _.debounce(function(e){
-        var config = JSON.parse(editor.getValue());
-        React.render(
-          Components.factory(config),
-          renderWindow
-        );
-      }, 500));
+        // While editing, if there's a JSON parse error, do not render anything.
+        // Catch the error and move on.  Allows us to rerender more frequently.
+        try{
+          var config = JSON.parse(editor.getValue());
+          React.render(
+            Components.factory(config),
+            renderWindow
+          );
+        }catch(err){
+          // Maybe update a status somewhere?
+        }
+      }, 10));
     </script>
   </body>
 </html>
