@@ -5,6 +5,7 @@
     <title>Playground</title>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>  
     <script src="lib/file/filesaver.min.js"></script>    
     <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
@@ -37,7 +38,7 @@
         position: absolute;
         top: 0;
         left: 40%;
-        right: 1em;        
+        right: 3em;        
       }
       .editor-menu{
         background:#272727;
@@ -64,32 +65,120 @@
         line-height:22px;
         right: 60%; 
       }
+      #toggle-editor{
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        z-index:99999; 
+      }
       #open-file{
-        margin-left:32px;
+        margin-left:42px;
         width:65%;
       }
+      #show-slide{
+        box-sizing: border-box;
+        position: absolute;
+        width:55px;
+        top: 0;
+        bottom:0;
+        left: 0;
+        display:none;
+        background:#272727;
+        box-shadow: 3px 0px 10px 2px rgba(170,170,170,1);
+      }      
+
+      .full-screen-render{
+        width:100% !important;
+        left:0 !important;
+        padding-left:65px !important;
+        padding-right:15px !important;
+      }
+      .hide-editor-and-menus{
+        display:none !important;
+      }
+
     </style>
   </head>
   <body>
-    <div id="top-menu" class="editor-menu">
+    <button class="btn btn-info" id="toggle-editor">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" style="top:2px;"></span>      
+    </button>
+    <div id="show-slide"></div>
+    <div id="top-menu" class="editor-menu will-hide">
       <input type="file" class="btn btn-default pull-left" id="open-file" value="Open File" />
       <button class="btn btn-success pull-right" id="save-file">Save</button>
+      <button class="btn btn-default pull-right" id="toggle-options">
+        <span class="glyphicon glyphicon-cog" aria-hidden="true" style="top:2px;"></span>      
+      </button>
     </div>
-    <div id="editor"></div>
-    <div id="bottom-menu" class="editor-menu"></div>
+    <div id="editor" class="will-hide"></div>
+    <div id="bottom-menu" class="editor-menu will-hide"></div>
     <div id="render"></div>    
-    
+    <div class="modal fade" id="workingDirModal" tabindex="-1" role="dialog" aria-labelledby="workingDirectoryModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">Workflow Page Directory</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="recipient-name" class="control-label">Directory</label>
+              <input type="text" class="form-control" id="working-dir-loc">
+              <span  class="help-block text-primary">Relative to current HTML page, location of referenced page files. <br> Format: "lib/data/workflow/" with trailing "/".</span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary pull-right" id="update-workflow-directory">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">Options</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="recipient-name" class="control-label">Field Validation</label>
+              <select class="form-control" id="field-validation-option"><option value="false">No</option><option value="true">Yes</option></select>
+              <span  class="help-block text-primary">Turn on and off field level validation during tests.</span>
+            </div>
+            <div class="form-group hidden" id="options-workflow-directory">
+              <label for="recipient-name" class="control-label">Workflow Page Directory</label>
+              <input type="text" class="form-control" id="options-working-dir-loc">
+              <span  class="help-block text-primary">Relative to current HTML page, location of referenced page files. <br> Format: "lib/data/workflow/" with trailing "/".</span>
+            </div>            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary pull-right" id="update-options">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>        
     <script>           
       var React = require('react/addons');
       var Components = require('Components');
-      var editor = ace.edit("editor");
       var _ = Components.underscore;
+      var Queue = Components.eventQueue;      
+      var editor = ace.edit("editor");
       var renderWindow = document.getElementById('render');
       var topMenu = $('#top-menu');
       var bottomMenu = $('#bottom-menu');
       var openFile = $('#open-file');
       var saveFile = $('#save-file');
+      var toggleEditor = $('#toggle-editor');
       var currentFileName = '';
+      var options = {
+        'pageType' : null,
+        'workflowDirectory' : null,
+        'fieldValidation' : false
+      }
       
       editor.setTheme("ace/theme/tomorrow_night_eighties");
       editor.getSession().setMode("ace/mode/json");      
@@ -106,31 +195,36 @@
             Components.factory(config),
             renderWindow
           );
+          options.type = config.type;
           bottomMenu.text('Rendered successfully.');
         }catch(err){
           // Maybe update a status somewhere
           bottomMenu.text('Not properly formatted markup.');
         }
+
+        if(options.type === 'workflow' && options.workflowDirectory === null){
+          initWorkflow(config);
+        }        
+
       }, 10));
 
       function loadFile(input) {
           if (input.files && input.files[0]) {
-
               var file = input.files[0];
               currentFileName = file.name;
-
               var reader = new FileReader();
               reader.onload = function (e) {
                   editor.setValue(e.target.result);
                   editor.blur();
               }
-
               reader.readAsText(file);
           }
       }
 
       openFile.on('change',function(){
         editor.setValue('');
+        options.workflowDirectory = null;
+        options.type = null;
         loadFile(this);
       });
 
@@ -138,6 +232,104 @@
         var blob = new Blob([editor.getValue()], {type: "application/json;charset=utf-8"});
         saveAs(blob, currentFileName);
       });
+
+      var editorOpen = true;
+      toggleEditor.on('click',function(){
+        var button = $(this);
+        $('.will-hide').toggleClass('hide-editor-and-menus');
+        $('#render').toggleClass('full-screen-render');
+        $('#show-slide').toggle();
+        if(editorOpen){
+          $('span',button).removeClass('glyphicon-chevron-left').addClass('glyphicon-chevron-right');
+          editorOpen = false;
+        }else{
+          $('span',button).removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-left');
+          editorOpen = true;
+        }
+      });
+
+      $('body').on('click','#toggle-options',function(){
+        if(options.type === 'workflow'){
+          $('#options-workflow-directory').removeClass('hidden');
+        }else{
+          $('#options-workflow-directory').addClass('hidden');
+        }
+
+        $('#field-validation-option').val(options.fieldValidation+'');
+        $('#options-working-dir-loc').val(options.workflowDirectory);
+
+        $('#optionsModal').modal('show');
+      });
+
+      $('body').on('click','#update-options',function(){
+        options.fieldValidation = $('#field-validation-option').val()==='true';
+        if(options.type === 'workflow'){
+          options.workflowDirectory = $('#options-working-dir-loc').val()
+        }
+        $('#optionsModal').modal('hide');
+      });
+
+      /** APP LEVEL CODE BELOW **/
+
+
+
+
+      // Workflow @ APP level 
+      var initWorkflow = function(flow){     
+        options.workflowDirectory = null;
+        var firstPage = null; var list = flow.config.items; var keys = Object.keys(list);
+        _.each(keys,function(k,v){var item = list[k];if(item.previous === null ){firstPage = item.pageId;}});
+
+        // Ask for workflowDirectory where page.json files that are referenced in the workflow are located, relative to the current HTML page.
+        $('#workingDirModal').modal('show').on('hidden.bs.modal', function (e) {
+          if(options.workflowDirectory && firstPage){
+            $.getJSON(options.workflowDirectory+firstPage+'.json').then(function(page){
+              React.render(Components.factory(page),document.getElementById('workflow-page'));
+            });
+          }
+        });
+      }
+
+      $('body').on('click','#update-workflow-directory',function(){
+        options.workflowDirectory = $('#working-dir-loc').val();
+        $('#workingDirModal').modal('hide')
+      });
+         
+      Queue.subscribe('workflow:load:page','globalRouter',function(data){
+        if(options.workflowDirectory && data.page){
+          $.getJSON(options.workflowDirectory+data.page+'.json').then(function(page){
+            React.render(Components.factory(page),document.getElementById('workflow-page'));
+          });
+        }
+      });
+
+      Queue.subscribe('workflow:save:application','globalRouter',function(data){
+        confirm('Save Application and Exit?');
+      });   
+
+      // Field Validation @ APP level 
+      var cache = {};
+      Queue.subscribe('all','globalRouter',function(data,eventType){
+        if(options.fieldValidation){
+          if(eventType.indexOf('field:blur') >= 0){
+            var hasError = true;
+            var errorMessage = 'Input is not valid. Please select a new value.';
+            if(cache[data.fieldName]){
+              hasError= false;
+              errorMessage = '';
+              cache[data.fieldName] = false;
+            }else{
+              cache[data.fieldName] = true;
+            }
+            Queue.push({'entityEvent':'field:error:'+data.fieldName,'data':{'hasError':hasError,'errorMessage':errorMessage}});
+          }
+        }
+      });
+
+
+
+
+
 
     </script>
   </body>
