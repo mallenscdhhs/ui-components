@@ -8,83 +8,53 @@
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
     <script src="Components.js"></script>
     <style type="text/css">
-      .nav.nav-tree ul {
-        margin-left: 1em;
-      }
-      .nav.nav-tree ul li {
-        border-left: dotted 1px #ccc;
-        margin-left: 4px;
-      }
+      .nav.nav-tree ul {margin-left: 1em;}
+      .nav.nav-tree ul li {border-left: dotted 1px #ccc; margin-left: 4px; }
       .nav.nav-tree .active > a,
-      .nav.nav-tree .active > a:hover {
-        background: #2a6496;
-        color: #fff;
-      }
+      .nav.nav-tree .active > a:hover {background: #2a6496;color: #fff;}
       .btn{margin:0 3px;}
     </style>
   </head>
   <body style="padding: 2em">
     <div id="workflow-container"></div>
-    <script>           
+    <script>    
+
       var React = require('react/addons');
       var Components = require('Components');
       var Workflow = Components.elements.workflow;
       var Queue = Components.eventQueue;
-      var cache = {};
-      var _ = Components.underscore; // Remove from Components when done testing.
-
-      var wf = null; // Workflow Container (tree) [React element]
-      var wp = null; // Page (current) [React element]
 
       // Load init Page
-      $.getJSON('lib/data/workflow-simple.json').then(function(workflow){             
+      $.getJSON('lib/data/workflow/flow.json').then(function(workflow){             
 
         var lastPageId = workflow.config.lastSectionCompleted;
-        var currentPageId = workflow.config.items[lastPageId].next
+        var currentPageId = 'page1';
+        if(lastPageId){
+          currentPageId = workflow.config.items[lastPageId].next
+        }
 
-        // Load current page
-        $.getJSON('lib/data/components.json').then(function(page){
-
-          page =  _.extend( page , workflow.config.items[currentPageId] );
-
-          cache['workflow'] = workflow;
-          cache['page'] = page;
-
-          wf = React.render(Components.factory(workflow),document.getElementById('workflow-container')); 
-          wp = React.render(Components.factory(page),document.getElementById('workflow-page'));
-
+        // Load page
+        $.getJSON('lib/data/workflow/'+currentPageId+'.json').then(function(page){
+          React.render(Components.factory(workflow),document.getElementById('workflow-container')); 
+          React.render(Components.factory(page),document.getElementById('workflow-page'));
         });
 
       });
-      
-      var clickCount = 0;            
+          
       Queue.subscribe('workflow:load:page','globalRouter',function(data){
-        var page = cache['page'];
 
-        // TODO LOAD OTHER DATA
-        // Get new page/update workflow.. etc. etc..
-        clickCount++;
-        page.config.title = 'Navigation:'+data.page+':'+clickCount;
-        ////////////////////////////////////////////////
-
-        // Update Workflow & Page
-        wp = React.render(Components.factory(page),document.getElementById('workflow-page'));
-
+        $.getJSON('lib/data/workflow/'+data.page+'.json').then(function(page){
+          React.render(Components.factory(page),document.getElementById('workflow-page'));
+        });
+      
       });
 
       Queue.subscribe('workflow:save:application','globalRouter',function(data){
-        var page = cache['page'];
 
-        // TODO LOAD OTHER DATA
-        // Get new page/update workflow.. etc. etc..
-        clickCount++;
-        page.config.title = 'Save Application:'+data.page+':'+clickCount;
-        ////////////////////////////////////////////////
-
-        // Update Workflow & Page
-        wp = React.render(Components.factory(page),document.getElementById('workflow-page'));
-
+        confirm('Save Application and Exit?');
+      
       });
+
     </script>
   </body>
 </html>

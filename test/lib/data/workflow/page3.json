@@ -1,0 +1,53 @@
+{
+  "type": "page",
+  "config": {
+    "title": "Patient Information",
+    "name" : "page3",
+    "content": "Tell us about your interaction with patients.",
+    "components": [
+      {
+        "type": "form",
+        "config": {
+          "name": "test_form",          
+          "components": [
+            {
+              "type": "fieldset",
+              "config": {
+                "name": "Interaction Data",
+                "components": [
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "firstName",
+                      "label": "Average number of patients you see a day.",
+                      "helpText":"This does not have to be exact.  Estimation is acceptable."
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "middleName",
+                      "label": "Most patients you've seen during a single day, over the last month.",
+                      "helpText":"This does not have to be exact.  Estimation is acceptable."
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {
+                      "type": "text",
+                      "name": "lasstName",
+                      "label": "How long do you spend, on average, with each patient.",
+                      "helpText":"This does not have to be exact.  Estimation is acceptable."
+                    }
+                  } 
+                ]
+              }
+            }  
+          ]
+        }
+      }  
+    ]
+  }
+}

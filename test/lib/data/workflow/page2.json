@@ -1,0 +1,75 @@
+{
+  "type": "page",
+  "config": {
+    "title": "Office Information",
+    "name" : "page2",
+    "content": "Tell us about where you work.",
+    "components": [
+      {
+        "type": "form",
+        "config": {
+          "name": "test_form",          
+          "components": [
+            {
+              "type": "fieldset",
+              "config": {
+                "name": "Office",
+                "components": [
+                  {
+                    "type": "field",
+                    "config": {
+                      "type" : "select",
+                      "name" : "test-select",
+                      "label" : "Do you see patients at more than one office?",
+                      "options" : {
+                        "items" : [
+                          {
+                            "label" : "No",
+                            "value" : "1"
+                          },
+                          {
+                            "label" : "Yes",
+                            "value" : "2"
+                          }        
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "config": {            
+                      "type" : "multiselect",
+                      "name" : "test-multiselect",
+                      "label" : "Locations you see patients.",
+                      "dependency": {
+                        "name":"test-select",
+                        "value":"2",
+                        "initialState": "hidden"
+                      },
+                      "options" : {
+                        "items" : [
+                          {
+                            "label" : "Hospital",
+                            "value" : "1"
+                          },
+                          {
+                            "label" : "Small Office",
+                            "value" : "2"
+                          },
+                          {
+                            "label" : "Other Location",
+                            "value" : "3"
+                          }        
+                        ]
+                      } 
+                    }
+                  } 
+                ]
+              }
+            }  
+          ]
+        }
+      }  
+    ]
+  }
+}
