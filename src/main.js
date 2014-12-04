@@ -35,6 +35,5 @@ function componentFactory(schema){
 module.exports = {
 	elements: elements,
 	factory: componentFactory,
-	underscore: _,		// Remove when done testing workflow
 	eventQueue: EventQueue
 };

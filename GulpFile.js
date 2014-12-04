@@ -17,7 +17,9 @@ gulp.task('clean', function(done){
 
 
 gulp.task('hint', function(){
-  return gulp.src(['./src/**/*.js', './src/**/*.jsx', './test/**/*.js']).pipe(jsHint());
+  return gulp.src(['./src/**/*.js'])
+    .pipe(jsHint())
+    .pipe(jsHint.reporter('default'));
 });
 
 
@@ -36,11 +38,16 @@ gulp.task('transpile', ['clean'], function(){
 
 
 gulp.task('build:Components', ['transpile'], function(){
-  return browserify(['./dist/build/main.js']) 
+  var underscorePath = require.resolve('underscore');
+  var reactPath = require.resolve('react/addons');
+  var markedPath = require.resolve('marked');
+  return browserify(['./dist/build/main.js'])    
     .require([
-      {file: './dist/build/main.js', expose: 'Components'},
-      {file: './node_modules/react/addons.js', expose: 'react/addons'}
-    ])   
+      { file: './dist/build/main.js', expose: 'Components'},
+      { file: underscorePath, expose: 'underscore'},
+      { file: reactPath, expose: 'react/addons'},
+      { file: markedPath, expose: 'marked'}
+    ])
     .transform(reactify)    
     .bundle()
     .pipe(source('Components.js'))
@@ -60,6 +67,7 @@ gulp.task('specs', ['hint', 'build'], function(){
   fs.readdir('./test/unit', function(err, files){
     browserify(files.map(function(file){ return './test/unit/'+file; }))
       .transform(reactify)
+      .exclude('Components')
       .bundle()
       .pipe(source('specs.js'))
       .pipe(gulp.dest('./test/lib'));
