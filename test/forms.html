@@ -8,7 +8,32 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="Components.js"></script>
     <script src="shim.js"></script>
-    <style>.btn{margin:0 3px;}</style>
+    <style>
+      *{position:relative;}
+      .btn{margin:0 3px;}
+      .config-editor{
+        width:auto;
+        height:2.4em;
+        line-height:1.2em;
+        position:absolute;
+        top:0;
+        right:0;
+        display:none;
+        box-sizing:border-box;
+        padding: .7em 2em;
+        cursor:pointer;
+        z-index:9999;
+      }
+      .editable-component:hover{
+        box-sizing:border-box;
+        border: 1px solid #337ab7;
+      }
+      .editable-component:hover > .config-editor,
+      .config-editor:hover{
+        display:block;
+      }
+
+    </style>
   </head>
   <body style="padding: 2em;">
 

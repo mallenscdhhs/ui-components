@@ -4,6 +4,20 @@ var Queue = require('./EventQueue');
 
 module.exports = React.createClass({
   displayName: 'Field',
+
+  handleConfigEdit: function(){
+    console.log(this.props);
+    // PUSH this.props to QUEUE
+  },
+
+  getDisplayName: function(){
+    return 'Field'
+  },
+
+  getEditController: function(){
+    return <div className="config-editor bg-primary label label-primary" onClick={this.handleConfigEdit}>{this.getDisplayName()} Edit</div>;
+  },
+
   /**
    * Upon mounting, subscribe to any dependency that the field has, an monitor the field
    * for events that would require you to make a state change.
@@ -89,6 +103,7 @@ module.exports = React.createClass({
   getRenderViewClasses: function(){
     var classes = {
       'form-group' : true,
+      'editable-component' : true,
       'hidden' : !this.state.display,
       'has-error' : this.state.hasError
     } 
@@ -216,6 +231,7 @@ module.exports = React.createClass({
 
     return  (
       <fieldset className={React.addons.classSet(this.getRenderViewClasses())} key="fieldGroup">
+        {this.getEditController()}
         {label}
         <div className={React.addons.classSet(classes)} key="fieldGroupContent">
           {field}
@@ -232,6 +248,7 @@ module.exports = React.createClass({
   renderFieldWithLabel : function(label,field,helpText){
     return  (
       <div className={React.addons.classSet(this.getRenderViewClasses())} key="fieldDefaultGroup">
+        {this.getEditController()}
         {label}
         {field}
         {helpText}

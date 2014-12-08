@@ -20,6 +20,19 @@ module.exports = React.createClass({
 
   },
 
+  handleConfigEdit: function(){
+    console.log(this.props);
+    // PUSH this.props to QUEUE
+  },
+
+  getDisplayName: function(){
+    return 'Form'
+  },
+
+  getEditController: function(){
+    return <div className="config-editor bg-primary label label-primary" onClick={this.handleConfigEdit}>{this.getDisplayName()} Edit</div>;
+  },
+
   /**
    * Create actions component template
    * @returns {JSX Template} 
@@ -41,7 +54,8 @@ module.exports = React.createClass({
   render: function(){ 
     var formName = this.props.name ? (this.props.name).replace(/ /g,'_') : '';
     return (
-      <form name={formName} key={"formWithComponentsKey"+formName}>
+      <form name={formName} key={"formWithComponentsKey"+formName} className="editable-component">
+        {this.getEditController()}
         {this.props.children}
         <Container classes="form-group" key={"containerActions"+formName}>{this.getActions()}</Container>
       </form>
