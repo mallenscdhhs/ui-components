@@ -5,7 +5,7 @@ module.exports = React.createClass({
 
 	displayName: 'TreeItem',	
 
-	handleClick: function(){
+	handleClick: function(e){
 		if(!this.props.disabled){
 			Queue.push({'entityEvent':'tree:load:page','data':{'pageId':this.props.pageId}}); 
 		}
@@ -17,10 +17,10 @@ module.exports = React.createClass({
 			disabled: this.props.disabled
 		});
 		return (
-		      <li className={liClassNames} role="presentation">
-		        <a href={"#"+this.props.pageId} data-disabled={this.props.disabled}  onClick={this.handleClick}>{this.props.title}</a>
-		        {this.props.children}
-		      </li>
+			<li className={liClassNames} role="presentation">
+				<a href="javascript:void(0)" data-disabled={this.props.disabled}  onClick={this.handleClick}>{this.props.title}</a>
+				{this.props.children}
+			</li>
 		);
 	}
 });
