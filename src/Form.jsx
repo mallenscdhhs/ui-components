@@ -1,36 +1,18 @@
 var React = require('react/addons');
 var Container = require('./Container');
 var Action = require('./Action');
+var EditorMixin = require('./EditorMixin');
 
 module.exports = React.createClass({
   displayName: 'Form',
+
+  mixins: [EditorMixin],
 
   getDefaultProps: function(){
     return {
       name: '',
       actions: []
     };
-  },
-
-  componentDidMount: function(){
-  
-  },
-
-  componentWillUnmount: function(){
-
-  },
-
-  handleConfigEdit: function(){
-    console.log(this.props);
-    // PUSH this.props to QUEUE
-  },
-
-  getDisplayName: function(){
-    return 'Form'
-  },
-
-  getEditController: function(){
-    return <div className="config-editor bg-primary label label-primary" onClick={this.handleConfigEdit}>{this.getDisplayName()} Edit</div>;
   },
 
   /**
@@ -55,7 +37,7 @@ module.exports = React.createClass({
     var formName = this.props.name ? (this.props.name).replace(/ /g,'_') : '';
     return (
       <form name={formName} key={"formWithComponentsKey"+formName} className="editable-component">
-        {this.getEditController()}
+        {this.getEditController("Form")}
         {this.props.children}
         <Container classes="form-group" key={"containerActions"+formName}>{this.getActions()}</Container>
       </form>

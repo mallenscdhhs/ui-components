@@ -1,22 +1,12 @@
 var React = require('react/addons');
 var _ = require('underscore');
 var Queue = require('./EventQueue');
+var EditorMixin = require('./EditorMixin');
 
 module.exports = React.createClass({
   displayName: 'Field',
 
-  handleConfigEdit: function(){
-    console.log(this.props);
-    // PUSH this.props to QUEUE
-  },
-
-  getDisplayName: function(){
-    return 'Field'
-  },
-
-  getEditController: function(){
-    return <div className="config-editor bg-primary label label-primary" onClick={this.handleConfigEdit}>{this.getDisplayName()} Edit</div>;
-  },
+  mixins: [EditorMixin],
 
   /**
    * Upon mounting, subscribe to any dependency that the field has, an monitor the field
@@ -101,13 +91,18 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getRenderViewClasses: function(){
-    var classes = {
+    var fieldClasses = {
       'form-group' : true,
       'editable-component' : true,
       'hidden' : !this.state.display,
       'has-error' : this.state.hasError
-    } 
-    return classes;
+    }
+    if(this.props.classes){
+      _.each(this.props.classes,function(cla,i){
+        fieldClasses[cla] =  true;
+      });
+    }
+    return fieldClasses;
   },  
 
   /**
@@ -131,13 +126,28 @@ module.exports = React.createClass({
     var fieldType = (this.props.type).toLowerCase();
     var fieldKey = 'option';
     var labelKey = fieldType + 'Label'  
-    var helpKey = 'field'+this.props.name+'HelpText';  
+    var helpKey = 'field'+this.props.name+'HelpText';
+    var field = this;
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
-      return (<label key={labelKey}><input type={fieldType} id={fieldName} name={fieldName} value={item.value} ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} value={field.state.value} id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
     });
     return fields;
+  },
+
+  /**
+   * Build list of select options
+   * @returns {JSX template}
+   */
+  getSelectOptions: function(){
+    var options = null;
+    if(this.props.options && this.props.options.items){
+      options = this.props.options.items.map(function(item, i){
+        return (<option value={item.value} key={i}>{item.label}</option>);
+      });
+    }
+    return options;
   },
 
   /**
@@ -150,10 +160,8 @@ module.exports = React.createClass({
     var helpKey = 'field'+this.props.name+'HelpText';
     var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select multiple={isMultiSelect} className="form-control" key={fieldKey} id={fieldName} ref={fieldName} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} >
-          {this.props.options.items.map(function(item, i){
-            return (<option value={item.value} key={i}>{item.label}</option>);
-          })}
+        <select multiple={isMultiSelect} className="form-control" value={this.state.value} key={fieldKey} id={fieldName} ref={fieldName} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} >
+          {this.getSelectOptions()}
         </select>
       );
   },    
@@ -188,7 +196,7 @@ module.exports = React.createClass({
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name} ref={this.props.name} key="fieldTextarea"  aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
+          field = (<textarea className="form-control"  id={this.props.name} value={this.state.value} ref={this.props.name} key="fieldTextarea"  aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
           break;  
         case 'radio':  
         case 'checkbox':
@@ -199,7 +207,7 @@ module.exports = React.createClass({
           field = this.getSelect();
           break;     
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control" key={fieldKey}  ref={this.props.name} placeholder="" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} />);                                                                                  
+          field = (<input type={fieldType} id={this.props.name} className="form-control" value={this.state.value} key={fieldKey}  ref={this.props.name} placeholder="" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} />);
       }
       return field;
   },
@@ -231,7 +239,7 @@ module.exports = React.createClass({
 
     return  (
       <fieldset className={React.addons.classSet(this.getRenderViewClasses())} key="fieldGroup">
-        {this.getEditController()}
+        {this.getEditController("Field")}
         {label}
         <div className={React.addons.classSet(classes)} key="fieldGroupContent">
           {field}
@@ -248,7 +256,7 @@ module.exports = React.createClass({
   renderFieldWithLabel : function(label,field,helpText){
     return  (
       <div className={React.addons.classSet(this.getRenderViewClasses())} key="fieldDefaultGroup">
-        {this.getEditController()}
+        {this.getEditController("Field")}
         {label}
         {field}
         {helpText}

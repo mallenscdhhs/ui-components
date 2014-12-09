@@ -13,31 +13,31 @@
       .btn{margin:0 3px;}
       .config-editor{
         width:auto;
-        height:2.4em;
-        line-height:1.2em;
+        height:25px;
+        line-height:25px;
         position:absolute;
         top:0;
-        right:0;
+        right:4px;
         display:none;
         box-sizing:border-box;
-        padding: .7em 2em;
+        padding: 0;
         cursor:pointer;
         z-index:9999;
+        color:#999;
       }
-      .editable-component:hover{
-        box-sizing:border-box;
-        border: 1px solid #337ab7;
-      }
-      .editable-component:hover > .config-editor,
-      .config-editor:hover{
+      .enable-component-editor .editable-component:hover > .config-editor,
+      .enable-component-editor .config-editor:hover{
         display:block;
+      }
+      .enable-component-editor .editable-component:hover > .config-editor:hover {
+        color: #337ab7;
       }
 
     </style>
   </head>
   <body style="padding: 2em;">
 
-      <div id="test-form"></div>
+      <div id="component-page" class="enable-component-editor"></div>
 
       <script>
         var fieldsFixture = {
@@ -46,7 +46,8 @@
             'config' : {
               type : 'text',
               name : 'test-text-1',
-              label : 'Test Text'
+              label : 'Test Text',
+              helpText: 'This is Help Text.'
             }
           },
           'textarea' : {
@@ -181,14 +182,19 @@
           'type' : 'fieldset',         
           'config':{          
             'name' : 'Test Fieldset With All Fields TEST TEST',             
-            'components' :[]
-          },
-          'layout' : {
-            'type': "grid", 
-            'config': {
-              'rows': [[{'md': '3'}]]
+            'components' :[],
+            'layout' : {
+              'type': "grid",
+              'config': {
+                'rows': [
+                         [{'md': '3'},{'md': '3'},{'md': '3'}],
+                         [{'md': '3'},{'md': '3'}],
+                         [{'md': '3'},{'md': '3'},{'md': '3'}],
+                         [{'md': '3'},{'md': '3'}]
+                        ]
+              }
             }
-          }      
+          }
         };
 
         // Add fields to components
@@ -220,39 +226,330 @@
             'components' :[{
               'type' : 'fieldset',
               'config':{
-                'name' : 'Test Fieldset One Test',
+                'name' : '',
                 'layout' : {
-                  'type': "grid", 
+                  'type': "grid",
                   'config': {
-                    'rows': [[{'md': '3'}]]
+                    'rows': [[{'md': '3'},{'md': '3'}],
+                             [{'md': '3'}],
+                             [{'md': '3'},{'md': '3'}]]
                   }
-                },              
+                },
                 'components' :[{
                   'type' :'field',
                   'config' : { 
                     'type' : 'text',
+                    'value' : 'test value here folks!',
                     'name' : 'test-text-2',
-                    'label' : 'Test Text Field One',
-                    'required' : false,
-                    'options' : { }
+                    'label' : 'Test Text Field One'
                   }
                 },{
-                'type' : 'field',
-                'config' : {            
-                  'type' : 'password',
-                  'name' : 'test-password-2',
-                  'label' : 'Test Password One'
-                }
-              }]
+                  'type' : 'field',
+                  'config' : {
+                    'type' : 'password',
+                    'name' : 'test-password-231234123',
+                    'label' : 'Test Password One'
+                  }
+                },{
+                  'type' : 'field',
+                  'config' : {
+                    'type' : 'text',
+                    'name' : 'test-password-23qwerqwer',
+                    'label' : 'Test Text Two'
+                  }
+                },{
+                  'type' : 'field',
+                  'config' : {
+                    'type' : 'date',
+                    'name' : 'test-password-23asdfasdf',
+                    'label' : 'Test Date Three'
+                  }
+                },{
+                  'type' : 'field',
+                  'config' : {
+                    'type' : 'email',
+                    'name' : 'test-password-23retwertwert',
+                    'label' : 'Test Email Four'
+                  }
+                }]
               }  
             }]  
           }
         };
 
+        console.log(formFixture);
         formFixture.config.components.push(fieldsetFixture);
         var Form = Components.factory(formFixture);
-        React.render(Form,document.getElementById('test-form'));
-        
+        React.render(Form,document.getElementById('component-page'));
+
+        var _ = require('underscore');
+        var Queue = Components.eventQueue;
+
+
+        var fieldSetBasic = {
+          'type': 'fieldset',
+          'config': {
+            'name': '',
+            'layout': {
+              'type': "grid",
+              'config': {
+                'rows': [ [{'md': '6'}, {'md': '6'}],
+                          [{'md': '6'}, {'md': '6'}],
+                          [{'md': '6'}, {'md': '6'}],
+                          [{'md': '12'}]]
+              }
+            },
+            'components': [{
+              'type': 'field',
+              'config': {
+                'type': 'text',
+                'name': 'name',
+                'label': 'Name',
+                'helpText': 'Select a unique field name, one word & no spaces or special chars except "-" or "_".',
+                'required': true,
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'select',
+                'name': 'type',
+                'label': 'Type',
+                'helpText': 'Select field type.',
+                'required': true,
+                'options': {
+                  'items': [
+                    {'label': 'Text', 'value': 'text'},
+                    {'label': 'Textarea', 'value': 'textarea'},
+                    {'label': 'Select', 'value': 'select'},
+                    {'label': 'Multiselect', 'value': 'multiselect'},
+                    {'label': 'Radio', 'value': 'radio'},
+                    {'label': 'Checkbox', 'value': 'checkbox'},
+                    {'label': 'Password', 'value': 'password'},
+                    {'label': 'Email', 'value': 'email'},
+                    {'label': 'Phone', 'value': 'tel'},
+                    {'label': 'Number', 'value': 'number'},
+                    {'label': 'Date', 'value': 'date'},
+                    {'label': 'Time', 'value': 'time'}
+                  ]
+                }
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'text',
+                'name': 'label',
+                'label': 'Label',
+                'helpText': 'Top line field label.',
+                'required': true,
+                'options': {}
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'select',
+                'name': 'required',
+                'label': 'Required',
+                'helpText': 'Is the field required.',
+                'required': false,
+                'options': {
+                  'items': [
+                    {'label': 'Yes', 'value': 'true'},
+                    {'label': 'No', 'value': 'false'}
+                  ]
+                }
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'text',
+                'name': 'helpText',
+                'label': 'Help Text',
+                'helpText': 'Below the field help text.',
+                'required': false
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'select',
+                'name': 'session',
+                'label': 'Session Value',
+                'helpText': 'Session values will be persisted throughout the application.',
+                'required': false,
+                'options': {
+                  'items': [
+                    {'label': 'Yes', 'value': 'true'},
+                    {'label': 'No', 'value': 'false'}
+                  ]
+                }
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'text',
+                'name': 'rules',
+                'label': 'Business Rules',
+                'helpText': '',
+                'required': false
+              }
+            }]
+          }
+        };
+
+        var fieldSetDependency = {
+          'type': 'fieldset',
+          'config': {
+            'name': 'Dependency',
+            'layout': {
+              'type': "grid",
+              'config': {
+                'rows': [ [{'md': '6'}, {'md': '6'}],
+                          [{'md': '6'}] ]
+              }
+            },
+            'components': [ {
+              'type': 'field',
+              'config': {
+                'type': 'select',
+                'name': 'dependency-field',
+                'label': 'Depends On',
+                'helpText': 'The name of the field whose value determines this field\'s visibility.".',
+                'required': false
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'text',
+                'name': 'dependency-values',
+                'label': 'Values',
+                'helpText': 'A pipe-delimited list of values that will trigger this fields visibility.',
+                'required': false
+              }
+            },{
+              'type': 'field',
+              'config': {
+                'type': 'select',
+                'name': 'dependency-initial-state',
+                'label': 'Initial State',
+                'helpText': '',
+                'required': false
+              }
+            }]
+          }
+        };
+
+        var fieldSetOptions = {
+          'type': 'fieldset',
+          'config': {
+            'name': 'Options',
+            'layout': {
+              'type': "grid",
+              'config': {
+                'rows': [[{'md': '6'}, {'md': '6'}]]
+              }
+            },
+            'components': [ {
+              'type': 'field',
+              'config': {
+                'type': 'text',
+                'name': 'dependency',
+                'label': 'Service',
+                'helpText': 'Service at which this field\'s options can be located.',
+                'required': false
+              }
+            }, {
+              'type': 'field',
+              'config': {
+                'type': 'text',
+                'name': 'options',
+                'label': 'Depends On',
+                'helpText': 'The name of the field whose value will determine this field\'s options.',
+                'required': false
+              }
+            }]
+          }
+        };
+
+        /**   Field  **/
+        var editField = {
+          'type':'form',
+          'config' :{
+            'name' : '',
+            'model' : {},
+            'actions':[],
+            'rules': [],
+            'layout' : {
+              'type': "grid",
+              'config': {
+                'rows': [ [{'md': '12'}],
+                          [{'md': '12'}],
+                          [{'md': '12'}] ]
+              }
+            },
+            'components' :[fieldSetBasic,fieldSetDependency,fieldSetOptions]
+          }
+        };
+
+        /**   Empty  **/
+        var editEmpty = {
+          'type':'form',
+          'config' :{
+            'name' : '',
+            'model' : {},
+            'actions':[],
+            'rules': [],
+            'components' :[]
+          }
+        };
+
+
+
+
+        var forms = {
+          'field' : editField,
+          'fieldset' : editEmpty,
+          'action' : editEmpty,
+          'container' : editEmpty,
+          'form' : editEmpty,
+          'page' : editEmpty
+        };
+
+        Queue.subscribe('all','globalEditor',function(data,eventType){
+          if(eventType.indexOf('component:edit') >= 0){
+
+
+            var editForm = forms[data.type]; // Get correct Component Form for editing.
+
+            _.each(editForm.config.components,function(fieldSet,i) {
+              _.each(fieldSet.config.components, function (conf, i) {
+                fieldSet.config.components[i].config.value = data.props[conf.config.name]; // set the value of the field.  // TODO make less tricky for objects
+              });
+            });
+
+            var Editor = Components.factory(editForm);
+            document.getElementById('editComponentModalLabel').innerText = data.type.toUpperCase() + ' Component Editor'
+            var container = document.getElementById('edit-modal-container');
+            container.innerHTML = '';
+            React.render(Editor,container);
+
+            $('#editComponentModal').modal('show');
+
+          }
+        });
+
       </script>
+      <div class="modal fade" id="editComponentModal" tabindex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="editComponentModalLabel">Component Editor</h4>
+            </div>
+            <div class="modal-body" id="edit-modal-container"></div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary pull-right" id="update-field">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
   </body>
 </html>

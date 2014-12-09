@@ -1,15 +1,19 @@
 var React = require('react/addons');
 var _ = require('underscore');
 var Queue = require('./EventQueue');
+var EditorMixin = require('./EditorMixin');
 
 module.exports = React.createClass({
   displayName: 'Action',
+
+  mixins: [EditorMixin],
+
   /**
   * Return a string of classes
   * @return {String}
   */
   getClasses: function(){
-    var classes = ['btn'];
+    var classes = ['btn','editable-component'];
     // Add default link-type for action links
     if(this.props.type==='link'){
       classes.push('btn-link');
@@ -38,7 +42,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
-    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick}>{this.props.name}</a>);
+    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick}>{this.getEditController("Action")}{this.props.name}</a>);
   },
 
   /**
@@ -46,7 +50,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
-    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()} onClick={this.handleClick}>{this.props.name}</button>);
+    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()} onClick={this.handleClick}>{this.getEditController("Action")}{this.props.name}</button>);
   },
 
   /**
