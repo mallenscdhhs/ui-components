@@ -23,11 +23,8 @@ var getColumnClassNames = function(col){
  * @returns {number}
  */
 var getComponentIndex = function(rowNum, colNum, rangeOffset){
-	var indx = colNum + rangeOffset;
-	if ( rowNum > 0 ) {
-		indx = this.props.rows[rowNum-1].length + (colNum +1) + rangeOffset;
-	}
-	return indx;
+	this.lastIndex = this.lastIndex + (rangeOffset ? rangeOffset : 1);
+	return this.lastIndex;
 };
 
 /**
@@ -86,7 +83,8 @@ module.exports = React.createClass({
 	},
 
 	render: function(){				
-		var uniqueKey = this.props.name;	
+		var uniqueKey = this.props.name;
+		this.lastIndex = -1;
 		return (
 			<div className="grid-layout" key={"layout-for-"+uniqueKey}>
 			{this.props.rows.map(function(row, i){				
