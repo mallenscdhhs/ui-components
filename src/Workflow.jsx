@@ -78,12 +78,12 @@ module.exports = React.createClass({
 
   displayName: 'Workflow',
 
-	propTypes: {
-		title: React.PropTypes.string,
-		items: React.PropTypes.object.isRequired,
+  propTypes: {
+    title: React.PropTypes.string,
+    items: React.PropTypes.object.isRequired,
     lastSectionCompleted: React.PropTypes.string,
     editMode: React.PropTypes.bool
-	},
+  },
 
   /**
    * Used for unit testing.
@@ -198,5 +198,5 @@ module.exports = React.createClass({
         </div>
       </Grid>
     );
-	}
+  }
 });
