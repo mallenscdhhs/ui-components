@@ -3,191 +3,200 @@ var _ = require('underscore');
 var Page = require('./Page');
 var Tree = require('./Tree');
 var Grid = require('./Grid');
+var Action = require('./Action');
 var Queue = require('./EventQueue');
 
+/**
+ * Build nested data structure for rendering a Tree.
+ * @param {object} state - a component state object
+ * @returns {array}
+ */
+function buildTree(state){
+  var tree = [];
+  var head = state.flow[state.firstPage];
+  var children = _.groupBy(_.filter(_.values(state.flow), function(item){
+    return !!item.parentId;
+  }), 'parentId');
+
+  while(head){
+    var branches = children[head.pageId];
+    var next = state.flow[head.next];
+    if ( !!branches ) {
+      head.items = children[head.pageId];
+    }
+    head.active = ( head.pageId === state.currentPage );
+    tree.push(head);
+    head = ( next && branches )? state.flow[next.next] : next;
+  }
+  return tree;
+}
+
+/**
+ * Return a the pageId of the item that whose "key" does not exist. Useful
+ * for finding the first/last page in a linked list.
+ * @param {array} items
+ * @param {string} key
+ * @returns {string}
+ */
+function getPageByKeyExistence(items, key){
+  return _.reduce(items, function(result, current, i){
+    return current[key]? result : current.pageId;
+  }, '');
+}
+
+/**
+ * Sets flow item state(disabled) based on passed in pageId. All pages
+ * below the passed in pageId will be disabled.
+ * @param {object} list - a linked list representing flow data
+ * @param {string} pageId - a starting point
+ */
+function setFlowState(list, pageId){
+  var next = list[pageId].next;
+  if ( next ) {
+    list[next].disabled = true;
+    setFlowState(list, next);
+  }
+}
+
+/**
+ * Determine which actions to show based on the current state of the workflow.
+ * @param {array} actions
+ * @param {object} state
+ * @returns {array}
+ */
+function getCurrentActionButtons(actions, state){
+  return _.filter(actions, function(action){
+    return ! (
+         (action.id === 'workflow-previous-btn' && !state.previousPage )
+      || (action.id === 'workflow-exit-btn' && !state.nextPage )
+    );
+  });
+}
+
+
 module.exports = React.createClass({
-  
+
   displayName: 'Workflow',
 
-	propTypes: {
-		title: React.PropTypes.string,
-		items: React.PropTypes.object.isRequired,
-    lastSectionCompleted: React.PropTypes.string
-	},
+  propTypes: {
+    title: React.PropTypes.string,
+    items: React.PropTypes.object.isRequired,
+    lastSectionCompleted: React.PropTypes.string,
+    editMode: React.PropTypes.bool
+  },
 
   /**
-   * Load the initial state of the component from any passed-in props, and
-   * set defaults for any props that were not set.
+   * Used for unit testing.
+   */
+  statics: {
+    buildTree: buildTree,
+    getPageByKeyExistence: getPageByKeyExistence,
+    setFlowState: setFlowState,
+    getCurrentActionButtons: getCurrentActionButtons
+  },
+
+  /**
+   * Determine the current state of the workflow by analyzing the passed in prop data.
    * @returns {object}
    */
   getInitialState: function(){
-    var current = this.getFirstPage(this.props.items);
-    if(this.props.lastSectionCompleted){
-      current = this.props.items[this.props.lastSectionCompleted].next;
+    var pageObjs = _.values(this.props.items);
+    var firstPage = getPageByKeyExistence(pageObjs, 'previous');
+    var lastPage = getPageByKeyExistence(pageObjs, 'next');
+    var current = (this.props.lastSectionCompleted)?  this.props.items[this.props.lastSectionCompleted].next : firstPage;
+    var flow = this.props.items;
+
+    if ( !this.props.editMode ) {
+      setFlowState(flow, current);
     }
-    return this.getFlow(current);
-  },
 
-  /**
-  * Determine the page item that does not have a 'previous' link, set that as the
-  * first page.  This allows pages to be in non-linear order in the JSON, but still work properly.
-  */
-  getFirstPage: function(list){
-    var firstPage = null;
-    var keys = Object.keys(list);
-    _.each(keys,function(k,v){
-      var item = list[k];
-      if(item.previous === null ){
-        firstPage = item.pageId;
-      }
-    });
-    return firstPage;
-  },
-  
-  /**
-  * Build flow (items list with disabled and active state information) to 
-  * pass to Tree/TreeItem for rendering.
-  */
-  getFlow:function(current){
-    var list = _.extend({},this.props.items);
-    var keys = Object.keys(list);
-    _.each(keys,function(k){
-      list[k].disabled = false; 
-      list[k].active = false; 
-    });    
-    var flow = this.getWorkflowState(list, list[current].pageId);
-    var currentPage = flow[current].pageId;
-    flow[current].active = true;
     return {
-      'currentPage': currentPage,
-      'flow': flow
-    };    
+      lastPage: lastPage,
+      firstPage: firstPage,
+      currentPage: current,
+      previousPage: current.previous,
+      nextPage: current.next,
+      flow: flow
+    };
   },
 
   /**
-   * Set the currentPage, and subscribe to tree events.
+   * Subscribe to workflow events.
    */
   componentDidMount: function(){
-    var startPageId = this.props.lastSectionCompleted ? this.state.flow[this.props.lastSectionCompleted].next : this.getFirstPage(this.state.flow);
-    var currentPage = this.props.currentPage ? this.props.currentPage : startPageId;
-    this.setState({'currentPage': currentPage});     
-    var component = this;
-    Queue.subscribe('tree:load:page','workflowRouter',function(data){
-      component.handleDirect(data.pageId);
-    });
+    Queue.subscribe('tree:load:page', 'workflowRouter', function(data){
+      this.handleDirect(data.pageId);
+    }.bind(this));
+    Queue.subscribe('workflow:previous:page', 'workflowRouter', this.handlePrevious);
+    Queue.subscribe('workflow:next:page', 'workflowRouter', this.handleNext);
   },
 
   /**
-  * Unsubscribe from tree events.
+  * Unsubscribe from all events.
   */
   componentWillUnmount: function(){
     Queue.unSubscribe('tree:load:page','workflowRouter');
+    Queue.unSubscribe('workflow:previous:page', 'workflowRouter');
+    Queue.unSubscribe('workflow:next:page', 'workflowRouter');
   },
 
   /**
-  * Force update workflow state to passed in page, and rerender. Also push notification 
-  * to the app, to rerender the page as well.
-  */
-  handleDirect: function(page){
-      this.replaceState(this.getFlow(page));
-      this.forceUpdate();
-      Queue.push({'entityEvent':'workflow:load:page','data':{'page':page}}); 
+   * Update workflow state to passed in page, and rerender.
+   * Also push notification to the app.
+   * @fires workflow:load:page
+   * @param {string} pageId
+   */
+  handleDirect: function(pageId){
+    this.setState({
+      currentPage: pageId,
+      nextPage: this.state.flow[pageId].next,
+      previousPage: this.state.flow[pageId].previous
+    });
+    Queue.push({'entityEvent':'workflow:load:page','data':{'page':pageId}});
   },
 
   /**
-  * Get the next page, if available, and update workflow.  Also, push event to update the page.
-  */
+   * Get the next page, if available, and update workflow.
+   * @fires workflow:load:page
+   */
   handleNext: function(){
-    var nextPage = this.state.flow[this.state.currentPage].next ? this.state.flow[this.state.currentPage].next :  this.state.currentPage;
-    if(nextPage !== this.state.currentPage){
-      this.replaceState(this.getFlow(nextPage));
-      this.forceUpdate();
-      Queue.push({'entityEvent':'workflow:load:page','data':{'page':nextPage}});    
+    var pageId = this.state.flow[this.state.currentPage].next ? this.state.flow[this.state.currentPage].next :  this.state.currentPage;
+    if(pageId !== this.state.currentPage){
+      this.handleDirect(pageId);
     }
   },
 
   /**
-  * Get the previous page, if available, and update workflow.  Also, push event to update the page.
-  */
+   * Get the previous page, if available, and update workflow.
+   * @fires workflow:load:page
+   */
   handlePrevious: function(){
-    var previousPage = this.state.flow[this.state.currentPage].previous ? this.state.flow[this.state.currentPage].previous : this.state.currentPage;
-    if(previousPage !== this.state.currentPage){
-      this.replaceState(this.getFlow(previousPage));
-      this.forceUpdate();
-      Queue.push({'entityEvent':'workflow:load:page','data':{'page':previousPage}});
+    var pageId = this.state.flow[this.state.currentPage].previous ? this.state.flow[this.state.currentPage].previous : this.state.currentPage;
+    if(pageId !== this.state.currentPage){
+      this.handleDirect(pageId);
     }
   },
 
-  /**
-  * Grab currentPage id, for use when saving a page.
-  */
-  handleSave: function(){
-    Queue.push({'entityEvent':'workflow:save:application','data':{'page':this.state.currentPage}});
-  }, 
-
-  /**
-  * Update flow based on passed in pageId
-  */
-  getWorkflowState: function(list, id){ 
-    var next = list[id].next; 
-    if ( next ) {
-      list[next].disabled = true;
-      list[next].active = false;
-      this.getWorkflowState(list, next);
-    }
-    return list;
-  },
-
-  /**
-  * Build tree JSON for Tree/TreeItem rendering. 
-  */
-  buildTree: function(source, head, children){ 
-    var tree = [];
-    while(head){
-      var branches = children[head.pageId];   
-      var next = source[head.next];
-      if ( !!branches ) {
-        head.items = children[head.pageId];   
-      }
-      tree.push(head);    
-      head = ( next && branches )? source[next.next] : next;
-    }
-    return tree;
-  },
-	
   /**
    * @returns {React}
    */
   render: function(){
-    // list of page configs
-    var values = _.values(this.state.flow);
-    // list of all "next" pageId's
-    var nexts = _.map(values, function(item, i){
-      return item.next;
-    });
-    // the first item in the linked list
-    var head = _.difference(Object.keys(this.state.flow), nexts)[0];
-    // hash of all pages with sub items
-    var childrenGroups = _.groupBy(_.filter(values, function(item){
-      return !!item.parentId;
-    }), 'parentId');
-
+    var actions = getCurrentActionButtons(this.props.actions, this.state);
     var treeProps = {
-      items: this.buildTree(this.state.flow, this.state.flow[head], childrenGroups)
-    }; 
-
+      items: buildTree(this.state, this.props)
+    };
     return (
       <Grid rows={[[{md: '2', indexRange: [0, 2]}, {md: '10'}],[{md : '2'},{md:'10'}]]}>
         <h4>{this.props.title}</h4>
         <Tree {...treeProps} ref="outline" />
-        <div id="workflow-page" ></div>
+        <div id="workflow-page"></div>
         <div id="workflow-status"></div>
-        <div id="workflow-actions">
-          <button type="button" id="workflowActionNext" key="workflowActionNexxt" className="btn btn-success pull-right" onClick={this.handleNext}>Next</button>
-          <button type="button" id="workflowActionSave" key="workflowActionSave" className="btn btn-primary pull-right" onClick={this.handleSave}>Save</button>
-          <button type="button" id="workflowActionPrevious" key="workflowActionPrevious" className="btn btn-default pull-left" onClick={this.handlePrevious}>Previous</button>
+        <div id="workflow-actions" className="text-right">
+          {_.map(actions, function(action){
+            return <Action {...action}/>;
+          })}
         </div>
       </Grid>
     );
-	}
+  }
 });
