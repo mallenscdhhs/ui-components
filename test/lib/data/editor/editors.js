@@ -114,20 +114,10 @@ var fieldOptions = {
     'layout': {
       'type': "grid",
       'config': {
-        'rows': [ [{'md': '12'}],
-          [{'md': '6'}, {'md': '6'}]]
+        'rows': [ [{'md': '6'}, {'md': '6'}]]
       }
     },
-    'components': [ {
-      'type': 'field',
-      'config': {
-        'type': 'text',
-        'name': 'options',
-        'label': 'Option Values',
-        'helpText': 'A pipe-delimited list of possible field values.',
-        'required': false
-      }
-    },{
+    'components': [{
       'type': 'field',
       'config': {
         'type': 'text',
