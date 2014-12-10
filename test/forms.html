@@ -50,6 +50,7 @@
           if(eventType.indexOf('component:edit') >= 0){
 
             var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
+            var editFormFieldNames = EditorConfig.getFieldNames(editForm);
 
             // Setup Editor
             var EditorForm = Components.factory(editForm);
