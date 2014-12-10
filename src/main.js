@@ -2,6 +2,7 @@ var React = require('react/addons');
 var elements = require('./index');
 var _ = require('underscore');
 var EventQueue = require('./EventQueue');
+var EditorConfig = require('./EditorConfig');
 
 /**
  * Recursively builds up a component hierarchy.
@@ -35,5 +36,6 @@ function componentFactory(schema){
 module.exports = {
 	elements: elements,
 	factory: componentFactory,
-	eventQueue: EventQueue
+	eventQueue: EventQueue,
+	editorConfig : EditorConfig
 };
