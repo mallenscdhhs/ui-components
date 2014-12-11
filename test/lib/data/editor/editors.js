@@ -237,6 +237,32 @@ var fieldForm = {
   }
 };
 
+var fieldSetBasic = {
+  'type'  : 'fieldset',
+  'config': {
+    'name'      : '',
+    'layout'    : {
+      'type'  : "grid",
+      'config': {
+        'rows': [[{'md': '12'}]]
+      }
+    },
+    'components': [{
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'name',
+        'label': 'Name',
+        'helpText': '',
+        'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
+      }
+    }]
+  }
+}
+
 var fieldSetForm = {
   'type':'form',
   'config' :{
@@ -247,12 +273,91 @@ var fieldSetForm = {
     'layout' : {
       'type': "grid",
       'config': {
-        'rows': [ [{'md': '12'}],
-                  [{'md': '12'}],
-                  [{'md': '12'}] ]
+        'rows': [ [{'md': '12'}] ]
       }
     },
-    'components' :[]
+    'components' :[fieldSetBasic]
+  }
+};
+
+var actionBasic = {
+  'type': 'fieldset',
+  'config': {
+    'name': '',
+    'layout': {
+      'type': "grid",
+      'config': {
+        'rows': [ [{'md': '6'}, {'md': '6'}],
+                  [{'md': '6'}, {'md': '6'}],
+                  [{'md': '6'} ] ]
+      }
+    },
+    'components': [{
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'name',
+        'label': 'Name',
+        'helpText': '',
+        'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
+      }
+    }, {
+      'type': 'field',
+      'config': {
+        'type': 'select',
+        'name': 'type',
+        'label': 'Type',
+        'helpText': '',
+        'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options': {
+          'items': [
+            {'label': 'Button', 'value': 'button'},
+            {'label': 'Link', 'value': 'link'}
+          ]
+        }
+      }
+    }, {
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'id',
+        'label': 'Id',
+        'helpText': '',
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
+      }
+    }, {
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'event',
+        'label': 'Event',
+        'helpText': '',
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options': null
+      }
+    }, {
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'classNames',
+        'label': 'Class Names',
+        'helpText': '',
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
+      }
+    }]
   }
 };
 
@@ -271,9 +376,35 @@ var actionForm = {
                   [{'md': '12'}] ]
       }
     },
-    'components' :[]
+    'components' :[actionBasic]
   }
 };
+
+var containerBasic = {
+  'type'  : 'fieldset',
+  'config': {
+    'name'      : '',
+    'layout'    : {
+      'type'  : "grid",
+      'config': {
+        'rows': [[{'md': '12'}]]
+      }
+    },
+    'components': [{
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'classes',
+        'label': 'Class Names',
+        'helpText': '',
+        'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
+      }
+    }]
+  }
+}
 
 var containerForm = {
   'type':'form',
@@ -285,14 +416,38 @@ var containerForm = {
     'layout' : {
       'type': "grid",
       'config': {
-        'rows': [ [{'md': '12'}],
-                  [{'md': '12'}],
-                  [{'md': '12'}] ]
+        'rows': [ [{'md': '12'}] ]
       }
     },
-    'components' :[]
+    'components' :[containerBasic]
   }
 };
+
+var formBasic = {
+  'type'  : 'fieldset',
+  'config': {
+    'name'      : '',
+    'layout'    : {
+      'type'  : "grid",
+      'config': {
+        'rows': [[{'md': '12'}]]
+      }
+    },
+    'components': [{
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'name',
+        'label': 'Name',
+        'helpText': '',
+        'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
+      }
+    }]
+  }
+}
 
 var formForm = {
   'type':'form',
@@ -304,14 +459,51 @@ var formForm = {
     'layout' : {
       'type': "grid",
       'config': {
-        'rows': [ [{'md': '12'}],
-                  [{'md': '12'}],
-                  [{'md': '12'}] ]
+        'rows': [ [{'md': '12'}] ]
       }
     },
-    'components' :[]
+    'components' :[formBasic]
   }
 };
+
+var pageBasic = {
+  'type'  : 'fieldset',
+  'config': {
+    'name'      : '',
+    'layout'    : {
+      'type'  : "grid",
+      'config': {
+        'rows': [ [{'md' : '12'}],
+                  [{'md' : '12'}] ]
+      }
+    },
+    'components': [{
+      'type': 'field',
+      'config': {
+        'type': 'text',
+        'name': 'title',
+        'label': 'title',
+        'helpText': '',
+        'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
+      }
+    },{
+      'type': 'field',
+      'config': {
+        'type': 'textarea',
+        'name': 'content',
+        'label': 'Content',
+        'helpText': '',
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
+      }
+    }]
+  }
+}
 
 var pageForm = {
   'type':'form',
@@ -328,6 +520,6 @@ var pageForm = {
                   [{'md': '12'}] ]
       }
     },
-    'components' :[]
+    'components' :[pageBasic]
   }
 };

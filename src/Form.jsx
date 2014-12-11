@@ -10,8 +10,7 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      name: '',
-      actions: []
+      name: ''
     };
   },
 
@@ -39,7 +38,6 @@ module.exports = React.createClass({
       <form name={formName} id={formName} key={"formWithComponentsKey"+formName} className="editable-component">
         {this.getEditController("Form")}
         {this.props.children}
-        <Container classes="form-group" key={"containerActions"+formName}>{this.getActions()}</Container>
       </form>
     );
   }

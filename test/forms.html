@@ -41,6 +41,7 @@
 
 
         // Forms cache, load only once, after the first use, then cache
+        // These forms are located in lib/data/editor/editors.js
         var forms = {
           'field' : fieldForm,
           'fieldset' : fieldSetForm,
@@ -56,7 +57,7 @@
           // Merge Form data and Component Data to get merged FORM
           var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
 
-          // Send Component and Form Id/Type to Build Modal
+          // Render Modal - Send Component and Form Id/Type to Build Modal
           var componentDataForModal = {
             "event": "component:update",
             "type" : data.type ,
@@ -65,13 +66,15 @@
           }
           var modalConfig = EditorConfig.buildComponentModalConfig(componentDataForModal);
           var Modal = Components.factory(modalConfig);
-          React.render(Modal,document.getElementById('modalContainer'));
-
-          // Setup Editor
-          var EditorForm = Components.factory(editForm);
-          var container = document.getElementById('edit-modal-container');
+          var container = document.getElementById('modalContainer');
           container.innerHTML = '';
-          React.render(EditorForm,container);
+          React.render(Modal,container);
+
+          // Render Editor
+          var EditorForm = Components.factory(addForm);
+          React.render(EditorForm,document.getElementById('edit-modal-container'));
+
+          // Show Modal
           $('#editComponentModal').modal('show');
 
         }
@@ -85,8 +88,10 @@
             'name' : data.componentName,
             'values' :formValues
           }
-          $('#editComponentModal').modal('hide');
           console.log(saveObject);
+
+          // Hide Modal
+          $('#editComponentModal').modal('hide');
         }
 
         var addNewComponentAction = function(data){
@@ -95,6 +100,10 @@
 
         var saveNewComponentAction = function(data){
           console.log('component:add:save')
+        }
+
+        var removeComponentAction = function(data){
+          console.log('component:remove')
         }
 
 
@@ -108,6 +117,8 @@
             addNewComponentAction(data);
           }else if(eventType.indexOf('component:add:save') >= 0){
             saveNewComponentAction(data);
+          }else if(eventType.indexOf('component:remove') >= 0){
+            removeComponentAction(data);
           }
         });
 

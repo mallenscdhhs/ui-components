@@ -144,7 +144,7 @@ module.exports = React.createClass({
         'getFieldNames' : getFieldNames,
         'mergeFormAndData' : mergeFormAndData,
         'getFieldValuesFromForm' : getFieldValuesFromForm,
-        'buildEditComponentModalConfig' : buildEditComponentModalConfig
+        'buildComponentModalConfig' : buildComponentModalConfig
     },
 
     render: function() {
