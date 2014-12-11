@@ -516,10 +516,55 @@ var pageForm = {
       'type': "grid",
       'config': {
         'rows': [ [{'md': '12'}],
-                  [{'md': '12'}],
-                  [{'md': '12'}] ]
+          [{'md': '12'}],
+          [{'md': '12'}] ]
       }
     },
     'components' :[pageBasic]
+  }
+};
+
+var addBasic = {
+  'type'  : 'fieldset',
+  'config': {
+    'name'      : '',
+    'layout'    : {
+      'type'  : "grid",
+      'config': {
+        'rows': [ [{'md' : '12'}] ]
+      }
+    },
+    'components': [{
+      'type': 'field',
+      'config': {
+        'type': 'select',
+        'name': 'type',
+        'label': 'Add New Component Type',
+        'helpText': '',
+        'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options': {
+          'items': []
+        }
+      }
+    }]
+  }
+}
+
+var addForm = {
+  'type':'form',
+  'config' :{
+    'name' : 'add-component-form',
+    'model' : {},
+    'actions':[],
+    'rules': [],
+    'layout' : {
+      'type': "grid",
+      'config': {
+        'rows': [ [{'md': '12'}] ]
+      }
+    },
+    'components' :[addBasic]
   }
 };

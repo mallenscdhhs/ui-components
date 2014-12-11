@@ -116,6 +116,32 @@ var getFieldValuesFromForm = function(formId){
     return fieldValues;
 }
 
+var getComponentsToAddList = function(type){
+    var items;
+    switch(type){
+        case 'page':
+            items = [{'label':'Form','value':'form'},{'label':'Container','value':'container'},{'label':'Action','value':'action'}];
+            break;
+        case 'form':
+            items = [{'label':'FieldSet','value':'fieldset'},{'label':'Container','value':'container'},{'label':'Action','value':'action'}];
+            break;
+        case 'fieldset':
+            items = [{'label':'Field','value':'field'},{'label':'Action','value':'action'}];
+            break;
+        case 'container':
+            items = [{'label':'Action','value':'action'}];
+            break;
+        default:
+            items = [{'label':'Form','value':'form'}];
+    }
+    return items;
+}
+
+var createAddConfig = function(form, type){
+    form.config.components[0].config.components[0].config.options.items = getComponentsToAddList(type);
+    return form;
+}
+
 var buildComponentModalConfig = function(componentInfo){
     var config = {
         'type' : 'editorConfig',
@@ -124,7 +150,7 @@ var buildComponentModalConfig = function(componentInfo){
             'actions':[
                 {
                     "id": "save-update-modal-button",
-                    "name": "Update",
+                    "name": "Save",
                     "type": "button",
                     "classNames": ["btn-primary pull-right"],
                     "event":          componentInfo.event,
@@ -144,7 +170,8 @@ module.exports = React.createClass({
         'getFieldNames' : getFieldNames,
         'mergeFormAndData' : mergeFormAndData,
         'getFieldValuesFromForm' : getFieldValuesFromForm,
-        'buildComponentModalConfig' : buildComponentModalConfig
+        'buildComponentModalConfig' : buildComponentModalConfig,
+        'createAddConfig' : createAddConfig
     },
 
     render: function() {

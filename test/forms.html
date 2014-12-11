@@ -48,21 +48,18 @@
           'action' : actionForm,
           'container' : containerForm,
           'form' : formForm,
-          'page' : pageForm
+          'page' : pageForm,
+          'add' : addForm
         };
 
-        // Edit Component Action
-        var editComponentAction = function(data){
-
-          // Merge Form data and Component Data to get merged FORM
-          var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
-
+        var renderModal = function(form,data,event){
           // Render Modal - Send Component and Form Id/Type to Build Modal
+          // Event is the event that will be pushed when clicking action button in the modal
           var componentDataForModal = {
-            "event": "component:update",
-            "type" : data.type ,
-            "name" : data.props.name ,
-            "formId" : editForm.config.name
+            "event"   : event,
+            "type"    : data.type ,
+            "name"    : data.props.name ,
+            "formId"  : form.config.name
           }
           var modalConfig = EditorConfig.buildComponentModalConfig(componentDataForModal);
           var Modal = Components.factory(modalConfig);
@@ -71,35 +68,58 @@
           React.render(Modal,container);
 
           // Render Editor
-          var EditorForm = Components.factory(addForm);
+          var EditorForm = Components.factory(form);
           React.render(EditorForm,document.getElementById('edit-modal-container'));
+        }
 
-          // Show Modal
+        // Edit Component Action
+        var editComponentAction = function(data){
+          // Merge Form data and Component Data to get merged FORM
+          var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
+
+          renderModal(editForm,data,'component:update');
+
           $('#editComponentModal').modal('show');
-
         }
 
         // From Edit Component Modal, save the data.
         var updateComponentAction = function(data){
           console.log('component:update');
+
           var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
           var saveObject = {
             'type' : data.componentType,
             'name' : data.componentName,
             'values' :formValues
           }
+
           console.log(saveObject);
 
-          // Hide Modal
           $('#editComponentModal').modal('hide');
         }
 
         var addNewComponentAction = function(data){
-          console.log('component:add:new')
+          // Merge Form data and Component Data to get merged FORM
+          var addForm = EditorConfig.createAddConfig(forms['add'],data.type);
+
+          renderModal(addForm,data,'component:add:save');
+
+          $('#editComponentModal').modal('show');
         }
 
         var saveNewComponentAction = function(data){
-          console.log('component:add:save')
+          console.log('component:add:save');
+
+          var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
+          var saveObject = {
+            'type' : data.componentType,
+            'name' : data.componentName,
+            'values' :formValues
+          }
+
+          console.log(saveObject);
+
+          $('#editComponentModal').modal('hide');
         }
 
         var removeComponentAction = function(data){
