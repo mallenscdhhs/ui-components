@@ -59,6 +59,14 @@ module.exports = React.createClass({
   },
 
   /**
+   * Return Field's Value
+   * @returns {*}
+   */
+  getValue: function(){
+    return this.state.value;
+  },
+
+  /**
    * Init Field state, including if the field is viewable based on a dependency
    * @returns {object}
    */
@@ -131,7 +139,7 @@ module.exports = React.createClass({
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
-      return (<label key={labelKey}><input type={fieldType} value={field.state.value} id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} value={field.state.value} className="field" id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
     });
     return fields;
   },
@@ -160,7 +168,7 @@ module.exports = React.createClass({
     var helpKey = 'field'+this.props.name+'HelpText';
     var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select multiple={isMultiSelect} className="form-control" value={this.state.value} key={fieldKey} id={fieldName} ref={fieldName} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} >
+        <select multiple={isMultiSelect} className="form-control field" value={this.state.value} key={fieldKey} id={fieldName} name={fieldName} ref={fieldName} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} >
           {this.getSelectOptions()}
         </select>
       );
@@ -196,7 +204,7 @@ module.exports = React.createClass({
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control"  id={this.props.name} value={this.state.value} ref={this.props.name} key="fieldTextarea"  aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
+          field = (<textarea className="form-control field"  id={this.props.name} name={this.props.name} value={this.state.value} ref={this.props.name} key="fieldTextarea"  aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
           break;  
         case 'radio':  
         case 'checkbox':
@@ -207,7 +215,7 @@ module.exports = React.createClass({
           field = this.getSelect();
           break;     
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control" value={this.state.value} key={fieldKey}  ref={this.props.name} placeholder="" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} />);
+          field = (<input type={fieldType} id={this.props.name} className="form-control field" name={this.props.name} value={this.state.value} key={fieldKey}  ref={this.props.name} placeholder="" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} />);
       }
       return field;
   },

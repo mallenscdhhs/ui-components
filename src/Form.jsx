@@ -36,7 +36,7 @@ module.exports = React.createClass({
   render: function(){ 
     var formName = this.props.name ? (this.props.name).replace(/ /g,'_') : '';
     return (
-      <form name={formName} key={"formWithComponentsKey"+formName} className="editable-component">
+      <form name={formName} id={formName} key={"formWithComponentsKey"+formName} className="editable-component">
         {this.getEditController("Form")}
         {this.props.children}
         <Container classes="form-group" key={"containerActions"+formName}>{this.getActions()}</Container>

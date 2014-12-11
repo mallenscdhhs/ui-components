@@ -19,6 +19,9 @@ var fieldBasic = {
         'label': 'Name',
         'helpText': '',
         'required': true,
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
       }
     }, {
       'type': 'field',
@@ -28,6 +31,8 @@ var fieldBasic = {
         'label': 'Type',
         'helpText': '',
         'required': true,
+        'rules':'',
+        'dependency' : null,
         'options': {
           'items': [
             {'label': 'Text', 'value': 'text'},
@@ -53,7 +58,9 @@ var fieldBasic = {
         'label': 'Label',
         'helpText': '',
         'required': true,
-        'options': {}
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
       }
     }, {
       'type': 'field',
@@ -63,6 +70,8 @@ var fieldBasic = {
         'label': 'Required',
         'helpText': '',
         'required': false,
+        'rules':'',
+        'dependency' : null,
         'options': {
           'items': [
             {'label': 'Yes', 'value': 'true'},
@@ -77,7 +86,10 @@ var fieldBasic = {
         'name': 'helpText',
         'label': 'Help Text',
         'helpText': '',
-        'required': false
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
       }
     }, {
       'type': 'field',
@@ -87,6 +99,8 @@ var fieldBasic = {
         'label': 'Session Value',
         'helpText': 'Session values will be persisted throughout the application.',
         'required': false,
+        'rules':'',
+        'dependency' : null,
         'options': {
           'items': [
             {'label': 'Yes', 'value': 'true'},
@@ -101,7 +115,10 @@ var fieldBasic = {
         'name': 'rules',
         'label': 'Business Rules',
         'helpText': '',
-        'required': false
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
       }
     }]
   }
@@ -124,7 +141,10 @@ var fieldOptions = {
         'name': 'options-service',
         'label': 'Service',
         'helpText': 'Service at which this field\'s options can be located.',
-        'required': false
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
       }
     }, {
       'type': 'field',
@@ -133,7 +153,10 @@ var fieldOptions = {
         'name': 'options-dependency',
         'label': 'Depends On',
         'helpText': 'The name of the field whose value will determine this field\'s options.',
-        'required': false
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
       }
     }]
   }
@@ -157,7 +180,10 @@ var fieldDependency = {
         'name': 'dependency-field',
         'label': 'Depends On',
         'helpText': 'The name of the field whose value determines this field\'s visibility.',
-        'required': false
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : {}
       }
     }, {
       'type': 'field',
@@ -166,7 +192,10 @@ var fieldDependency = {
         'name': 'dependency-values',
         'label': 'Values',
         'helpText': 'A pipe-delimited list of values that will trigger this fields visibility.',
-        'required': false
+        'required': false,
+        'rules':'',
+        'dependency' : null,
+        'options' : null
       }
     },{
       'type': 'field',
@@ -176,6 +205,8 @@ var fieldDependency = {
         'label': 'Initial State',
         'helpText': '',
         'required': false,
+        'rules':'',
+        'dependency' : null,
         'options': {
           'items': [
             {'label': 'Hidden', 'value': 'hidden'},
@@ -190,7 +221,7 @@ var fieldDependency = {
 var fieldForm = {
   'type':'form',
   'config' :{
-    'name' : '',
+    'name' : 'field-edit-form',
     'model' : {},
     'actions':[],
     'rules': [],
@@ -203,5 +234,100 @@ var fieldForm = {
       }
     },
     'components' :[fieldBasic,fieldOptions,fieldDependency]
+  }
+};
+
+var fieldSetForm = {
+  'type':'form',
+  'config' :{
+    'name' : 'fieldset-edit-form',
+    'model' : {},
+    'actions':[],
+    'rules': [],
+    'layout' : {
+      'type': "grid",
+      'config': {
+        'rows': [ [{'md': '12'}],
+                  [{'md': '12'}],
+                  [{'md': '12'}] ]
+      }
+    },
+    'components' :[]
+  }
+};
+
+var actionForm = {
+  'type':'form',
+  'config' :{
+    'name' : 'action-edit-form',
+    'model' : {},
+    'actions':[],
+    'rules': [],
+    'layout' : {
+      'type': "grid",
+      'config': {
+        'rows': [ [{'md': '12'}],
+                  [{'md': '12'}],
+                  [{'md': '12'}] ]
+      }
+    },
+    'components' :[]
+  }
+};
+
+var containerForm = {
+  'type':'form',
+  'config' :{
+    'name' : 'container-edit-form',
+    'model' : {},
+    'actions':[],
+    'rules': [],
+    'layout' : {
+      'type': "grid",
+      'config': {
+        'rows': [ [{'md': '12'}],
+                  [{'md': '12'}],
+                  [{'md': '12'}] ]
+      }
+    },
+    'components' :[]
+  }
+};
+
+var formForm = {
+  'type':'form',
+  'config' :{
+    'name' : 'form-edit-form',
+    'model' : {},
+    'actions':[],
+    'rules': [],
+    'layout' : {
+      'type': "grid",
+      'config': {
+        'rows': [ [{'md': '12'}],
+                  [{'md': '12'}],
+                  [{'md': '12'}] ]
+      }
+    },
+    'components' :[]
+  }
+};
+
+var pageForm = {
+  'type':'form',
+  'config' :{
+    'name' : 'page-edit-form',
+    'model' : {},
+    'actions':[],
+    'rules': [],
+    'layout' : {
+      'type': "grid",
+      'config': {
+        'rows': [ [{'md': '12'}],
+                  [{'md': '12'}],
+                  [{'md': '12'}] ]
+      }
+    },
+    'components' :[]
   }
 };

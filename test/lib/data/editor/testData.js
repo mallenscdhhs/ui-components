@@ -2,27 +2,42 @@ var fieldsFixture = {
     'text' : {
         'type' : 'field',
         'config' : {
-            type : 'text',
-            name : 'test-text-1',
-            label : 'Test Text',
-            helpText: 'This is Help Text.'
+            'type' : 'text',
+            'name' : 'test-text-1',
+            'label' : 'Test Text',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : null,
+            'session' : false
         }
     },
     'textarea' : {
         'type' : 'field',
         'config' : {
-            type : 'textarea',
-            name : 'test-textarea',
-            label : 'Test Textarea'
+            'type' : 'textarea',
+            'name' : 'test-textarea',
+            'label' : 'Test Textarea',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : null,
+            'session' : false
         }
     },
     'checkbox' : {
         'type' : 'field',
         'config' : {
-            type : 'checkbox',
-            name : 'test-checkbox',
-            label : 'Test Checkbox',
-            options : {
+            'type' : 'checkbox',
+            'name' : 'test-checkbox',
+            'label' : 'Test Checkbox',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : {
                 'items' : [
                     {
                         'label' : 'Checkbox 1',
@@ -33,16 +48,21 @@ var fieldsFixture = {
                         'value' : '2'
                     }
                 ]
-            }
+            },
+            'session' : false
         }
     },
     'radio' : {
         'type' : 'field',
         'config' : {
-            type : 'radio',
-            name : 'test-radio',
-            label : 'Test Radio',
-            options : {
+            'type' : 'radio',
+            'name' : 'test-radio',
+            'label' : 'Test Radio',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : {
                 'items' : [
                     {
                         'label' : 'Radio 1',
@@ -53,16 +73,21 @@ var fieldsFixture = {
                         'value' : '2'
                     }
                 ]
-            }
+            },
+            'session' : false
         }
     },
     'select' : {
         'type' : 'field',
         'config' : {
-            type : 'select',
-            name : 'test-select',
-            label : 'Test Select',
-            options : {
+            'type' : 'select',
+            'name' : 'test-select',
+            'label' : 'Test Select',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : {
                 'items' : [
                     {
                         'label' : 'Select 1',
@@ -73,21 +98,25 @@ var fieldsFixture = {
                         'value' : '2'
                     }
                 ]
-            }
+            },
+            'session' : false
         }
     },
     'multiselect' : {
         'type' : 'field',
         'config' : {
-            type : 'multiselect',
-            name : 'test-multiselect',
-            label : 'Test MultiSelect',
-            dependency: {
+            'type' : 'multiselect',
+            'name' : 'test-multiselect',
+            'label' : 'Test MultiSelect',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':['BR-123','BSR-4543','BR-45'],
+            'dependency': {
                 'name':'test-text-1',
                 'value':'hi|hello|bye',
-                'initialState': 'hidden'
+                'initialState': 'visable'
             },
-            options : {
+            'options' : {
                 'items' : [
                     {
                         'label' : 'MultiSelect 1',
@@ -97,41 +126,70 @@ var fieldsFixture = {
                         'label' : 'MultiSelect 2',
                         'value' : '2'
                     }
-                ]
-            }
+                ],
+                'url' : 'testURL',
+                'resource' : 'Vendor',
+                'dependency' : {
+                    'name': 'test-email'
+                }
+            },
+            'session' : false
         }
     },
     'email' : {
         'type' : 'field',
         'config' : {
-            type : 'email',
-            name : 'test-email',
-            label : 'Test Email'
+            'type' : 'email',
+            'name' : 'test-email',
+            'label' : 'Test Email',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : null,
+            'session' : false
         }
     },
     'phone' : {
         'type' : 'field',
         'config' : {
-            type : 'phone',
-            name : 'test-phone',
-            label : 'Test Phone'
+            'type' : 'phone',
+            'name' : 'test-phone',
+            'label' : 'Test Phone',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : null,
+            'session' : false
         }
     },
     'date' : {
         'type' : 'field',
         'config' : {
-            type : 'date',
-            name : 'test-date',
-            label : 'Test Date',
-            required : true
+            'type' : 'date',
+            'name' : 'test-date',
+            'label' : 'Test Date',
+            'helpText': 'This is Help Text.',
+            'required': true,
+            'rules':[],
+            'dependency' : null,
+            'options' : null,
+            'session' : false
         }
     },
     'password' : {
         'type' : 'field',
         'config' : {
-            type : 'password',
-            name : 'test-password',
-            label : 'Test Password'
+            'type' : 'password',
+            'name' : 'test-password',
+            'label' : 'Test Password',
+            'helpText': 'This is Help Text.',
+            'required': false,
+            'rules':[],
+            'dependency' : null,
+            'options' : null,
+            'session' : false
         }
     }
 };
@@ -199,35 +257,65 @@ var formFixture = {
                         'type' : 'text',
                         'value' : 'test value here folks!',
                         'name' : 'test-text-2',
-                        'label' : 'Test Text Field One'
+                        'label' : 'Test Text Field One',
+                        'helpText': 'This is Help Text.',
+                        'required': false,
+                        'rules':['BR-123','BR-324','BST-234'],
+                        'dependency' : null,
+                        'options' : null,
+                        'session' : false
                     }
                 },{
                     'type' : 'field',
                     'config' : {
                         'type' : 'password',
                         'name' : 'test-password-231234123',
-                        'label' : 'Test Password One'
+                        'label' : 'Test Password One',
+                        'helpText': 'This is Help Text.',
+                        'required': false,
+                        'rules':[],
+                        'dependency' : null,
+                        'options' : null,
+                        'session' : false
                     }
                 },{
                     'type' : 'field',
                     'config' : {
                         'type' : 'text',
                         'name' : 'test-password-23qwerqwer',
-                        'label' : 'Test Text Two'
+                        'label' : 'Test Text Two',
+                        'helpText': 'This is Help Text.',
+                        'required': false,
+                        'rules':[],
+                        'dependency' : null,
+                        'options' : null,
+                        'session' : false
                     }
                 },{
                     'type' : 'field',
                     'config' : {
                         'type' : 'date',
                         'name' : 'test-password-23asdfasdf',
-                        'label' : 'Test Date Three'
+                        'label' : 'Test Date Three',
+                        'helpText': 'This is Help Text.',
+                        'required': false,
+                        'rules':[],
+                        'dependency' : null,
+                        'options' : null,
+                        'session' : false
                     }
                 },{
                     'type' : 'field',
                     'config' : {
                         'type' : 'email',
                         'name' : 'test-password-23retwertwert',
-                        'label' : 'Test Email Four'
+                        'label' : 'Test Email Four',
+                        'helpText': 'This is Help Text.',
+                        'required': false,
+                        'rules':[],
+                        'dependency' : null,
+                        'options' : null,
+                        'session' : false
                     }
                 }]
             }

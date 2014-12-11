@@ -26,6 +26,7 @@
   <body style="padding: 2em;">
 
       <div id="component-page" class="enable-component-editor"></div>
+      <div id="modalContainer"></div>
 
       <script>
         var _ = require('underscore');
@@ -34,50 +35,57 @@
 
         var Form = Components.factory(formFixture);
         React.render(Form,document.getElementById('component-page'));
+        React.render(React.createElement(EditorConfig),document.getElementById('modalContainer'));
 
         // Forms cache, load only once, after the first use, then cache
         var forms = {
           'field' : fieldForm,
-          'fieldset' : null,
-          'action' : null,
-          'container' : null,
-          'form' : null,
-          'page' : null
+          'fieldset' : fieldSetForm,
+          'action' : actionForm,
+          'container' : containerForm,
+          'form' : formForm,
+          'page' : pageForm
         };
 
+        // Edit Component Action
+        var editComponentAction = function(data){
+          var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
+          var editFormFieldNames = EditorConfig.getFieldNames(editForm);
+          // Setup Editor
+          var EditorForm = Components.factory(editForm);
+          var container = document.getElementById('edit-modal-container');
+          container.innerHTML = '';
+          React.render(EditorForm,container);
+          $('#editComponentModal').modal('show');
+        }
 
+        var updateComponentAction = function(data){
+          console.log('component:update');
+          $('#editComponentModal').modal('hide');
+        }
+
+        var addNewComponentAction = function(data){
+          console.log('component:add:new')
+        }
+
+        var saveNewComponentAction = function(data){
+          console.log('component:add:save')
+        }
+
+
+        // Global Event Router
         Queue.subscribe('all','globalEditor',function(data,eventType){
           if(eventType.indexOf('component:edit') >= 0){
-
-            var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
-            var editFormFieldNames = EditorConfig.getFieldNames(editForm);
-
-            // Setup Editor
-            var EditorForm = Components.factory(editForm);
-            document.getElementById('editComponentModalLabel').innerText = data.type.toUpperCase() + ' Component Editor'
-            var container = document.getElementById('edit-modal-container');
-            container.innerHTML = '';
-            React.render(EditorForm,container);
-
-            $('#editComponentModal').modal('show');
-
+            editComponentAction(data);
+          }else if(eventType.indexOf('component:update') >= 0){
+            updateComponentAction(data);
+          }else if(eventType.indexOf('component:add:new') >= 0){
+            addNewComponentAction(data);
+          }else if(eventType.indexOf('component:add:save') >= 0){
+            saveNewComponentAction(data);
           }
         });
 
       </script>
-      <div class="modal fade" id="editComponentModal" tabindex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="editComponentModalLabel">Component Editor</h4>
-            </div>
-            <div class="modal-body" id="edit-modal-container"></div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary pull-right" id="update-field">Update</button>
-            </div>
-          </div>
-        </div>
-      </div>
   </body>
 </html>
