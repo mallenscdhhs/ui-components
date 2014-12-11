@@ -1,5 +1,4 @@
 var React = require('react/addons');
-var EventEmitter = require('./EventEmitter');
 var _ = require('underscore');
 var TreeItem = require('./TreeItem');
 
@@ -9,12 +8,12 @@ var TreeItem = require('./TreeItem');
  * @param {object} config
  * @returns {array}
  */
-var renderItems = function(config){  
+var renderItems = function(config){
   return config.items.map(function(item, n){
     return (
       <TreeItem {...item} ref={item.pageId} key={item.pageId}>
         {renderTree.call(this, item)}
-      </TreeItem>      
+      </TreeItem>
     );
   }, this);
 };
@@ -24,8 +23,8 @@ var renderItems = function(config){
  * @param {object} config
  * @returns {React.DOM.ul}
  */
-var renderTree = function(config){  
-  return (config && config.items? 
+var renderTree = function(config){
+  return (config && config.items?
     <ul className="nav nav-tree">
       {renderItems.call(this, config)}
     </ul> : null);
@@ -38,13 +37,11 @@ var renderTree = function(config){
 module.exports = React.createClass({
   displayName: 'Tree',
 
-  mixins: [EventEmitter],
-  
   propTypes: {
     items: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     startOn: React.PropTypes.string
   },
-  
+
   render: function(){
     return renderTree.call(this, this.props);
   }
