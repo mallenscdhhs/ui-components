@@ -19,10 +19,8 @@ module.exports = React.createClass({
       classes.push('btn-link');
     }
     // Add all passed in classes
-    if(this.props.classes){
-      _.each(this.props.classes,function(cla,i){
-        classes.push('btn-'+cla);
-      });
+    if(this.props.classNames){
+      classes = classes.concat(this.props.classNames);      
     }
     return classes.join(' ');
   },
@@ -34,7 +32,10 @@ module.exports = React.createClass({
    */
   handleClick: function(){
     // TODO: update 'next' with actual 'verbs' for the actions
-    Queue.push({'entityEvent':'action:navigate','data':{'direction':this.props.event}});
+    Queue.push({
+      entityEvent: this.props.event,
+      data: this.props
+    });
   },
 
   /**
