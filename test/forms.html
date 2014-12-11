@@ -17,10 +17,13 @@
     <style>
       .btn{margin:0 3px;}
       .config-editor{ width:auto; height:25px; line-height:25px; position:absolute; top:0; right:4px; display:none; box-sizing:border-box; padding: 0; cursor:pointer; z-index:9999; color:#999; }
+      .config-editor .add-component{ margin-right:5px; }
       *{ position:relative; }
       .enable-component-editor .editable-component:hover > .config-editor,
       .enable-component-editor .config-editor:hover{ display:block; }
-      .enable-component-editor .editable-component:hover > .config-editor:hover { color: #337ab7; }
+      .enable-component-editor .editable-component:hover > .config-editor .add-component:hover,
+      .enable-component-editor .editable-component:hover > .config-editor .edit-component:hover{ color: #337ab7; }
+      .modal-title { text-transform:capitalize; }
     </style>
   </head>
   <body style="padding: 2em;">
@@ -33,9 +36,9 @@
         var Queue = Components.eventQueue;
         var EditorConfig = Components.editorConfig;
 
-        var Form = Components.factory(formFixture);
-        React.render(Form,document.getElementById('component-page'));
-        React.render(React.createElement(EditorConfig),document.getElementById('modalContainer'));
+        var Page = Components.factory(formFixture);
+        React.render(Page,document.getElementById('component-page'));
+
 
         // Forms cache, load only once, after the first use, then cache
         var forms = {
@@ -49,19 +52,41 @@
 
         // Edit Component Action
         var editComponentAction = function(data){
+
+          // Merge Form data and Component Data to get merged FORM
           var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
-          var editFormFieldNames = EditorConfig.getFieldNames(editForm);
+
+          // Send Component and Form Id/Type to Build Modal
+          var componentDataForModal = {
+            "event": "component:update",
+            "type" : data.type ,
+            "name" : data.props.name ,
+            "formId" : editForm.config.name
+          }
+          var modalConfig = EditorConfig.buildComponentModalConfig(componentDataForModal);
+          var Modal = Components.factory(modalConfig);
+          React.render(Modal,document.getElementById('modalContainer'));
+
           // Setup Editor
           var EditorForm = Components.factory(editForm);
           var container = document.getElementById('edit-modal-container');
           container.innerHTML = '';
           React.render(EditorForm,container);
           $('#editComponentModal').modal('show');
+
         }
 
+        // From Edit Component Modal, save the data.
         var updateComponentAction = function(data){
           console.log('component:update');
+          var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
+          var saveObject = {
+            'type' : data.componentType,
+            'name' : data.componentName,
+            'values' :formValues
+          }
           $('#editComponentModal').modal('hide');
+          console.log(saveObject);
         }
 
         var addNewComponentAction = function(data){

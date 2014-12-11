@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var Action = require('./Action');
 
 /**
  * Iterate over passed in element, and return a list of field names
@@ -115,27 +116,49 @@ var getFieldValuesFromForm = function(formId){
     return fieldValues;
 }
 
+var buildComponentModalConfig = function(componentInfo){
+    var config = {
+        'type' : 'editorConfig',
+        'config':{
+            'componentType' : componentInfo.type,
+            'actions':[
+                {
+                    "id": "save-update-modal-button",
+                    "name": "Update",
+                    "type": "button",
+                    "classNames": ["btn-primary pull-right"],
+                    "event":          componentInfo.event,
+                    "componentType" : componentInfo.type,
+                    "componentName" : componentInfo.name,
+                    "formId"        : componentInfo.formId
+                }
+            ]
+        }
+    }
+    return config;
+}
 
 module.exports = React.createClass({
 
     statics: {
         'getFieldNames' : getFieldNames,
         'mergeFormAndData' : mergeFormAndData,
-        'getFieldValuesFromForm' : getFieldValuesFromForm
+        'getFieldValuesFromForm' : getFieldValuesFromForm,
+        'buildEditComponentModalConfig' : buildEditComponentModalConfig
     },
 
     render: function() {
         return (
-        <div className="modal fade" id="editComponentModal" ref="editModal" tabindex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
+        <div className="modal fade" id="editComponentModal" ref="editComponentModal" tabindex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
             <div className="modal-dialog">
                 <div className="modal-content">
-                    <div className="modal-header">
-                        <h4 className="modal-title" id="editComponentModalLabel">Component Editor</h4>
-                    </div>
+                    <div className="modal-header"><h4 className="modal-title" id="edit-modal-container-label">{this.props.componentType} Component Editor</h4></div>
                     <div className="modal-body" id="edit-modal-container"></div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary pull-right" id="update-field">Update</button>
+                        {_.map(this.props.actions, function(action){
+                          return <Action {...action}/>;
+                        })}
                     </div>
                 </div>
             </div>
