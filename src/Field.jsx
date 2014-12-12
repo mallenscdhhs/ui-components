@@ -1,5 +1,6 @@
+'use-strict';
 var React = require('react/addons');
-var _ = require('underscore');
+var _ = require('lodash');
 var Queue = require('./EventQueue');
 
 module.exports = React.createClass({
