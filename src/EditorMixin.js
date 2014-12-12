@@ -9,7 +9,7 @@ module.exports = {
     handleConfigEdit: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        Queue.push({'entityEvent':'component:edit:'+this.props.name,'data':{'name':this.props.name,'props':this.props,'type':this.props.ComponentType}});
+        Queue.push({'entityEvent':'component:edit:'+this.props.name,'data':{'id': this.props.id,'name':this.props.name,'props':this.props,'type':this.props.ComponentType}});
     },
 
     /**
@@ -19,7 +19,7 @@ module.exports = {
     handleConfigAdd: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        Queue.push({'entityEvent':'component:add:new:'+this.props.name,'data':{'name':this.props.name,'props':this.props,'type':this.props.ComponentType}});
+        Queue.push({'entityEvent':'component:add:new:'+this.props.name,'data':{'id': this.props.id,'name':this.props.name,'props':this.props,'type':this.props.ComponentType}});
     },
 
     getAddButton: function(){

@@ -7,7 +7,7 @@ var Queue = require('./EventQueue');
  * @param element
  * @returns {Array}
  */
- var getFieldNames =  function (element) {
+var getFieldNames =  function (element) {
     var fieldNames = [];
     if (element.config.components) {
         _.each(element.config.components, function (comp, j) {
@@ -21,6 +21,49 @@ var Queue = require('./EventQueue');
     return fieldNames;
 };
 
+/**
+ * Iterate over passed in element, and return a list of field ids
+ * @param element
+ * @returns {Array}
+ */
+var getFieldIds =  function (element) {
+    var fieldIds = [];
+    if (element.config.components) {
+        _.each(element.config.components, function (comp, j) {
+            fieldIds = fieldIds.concat(getFieldIds(comp));
+        });
+    } else {
+        if(element.type === 'field') {
+            fieldIds.push(element.config.id);
+        }
+    }
+    return fieldIds;
+};
+
+/**
+ * Set field data based on passed in ID
+ * Return list of updated values, both old and new
+ * @param element
+ * @param id
+ * @param data
+ * @returns {Array}
+ */
+var setFieldData =  function (element,id,data) {
+    var updated = [];
+    if (element.config.components) {
+        _.each(element.config.components, function (comp, j) {
+            updated = updated.concat(setFieldData(comp,id,data));
+        });
+    } else {
+        if(element.type === 'field' && element.config.id === id) {
+            var updateStatus = {'old':element.config};
+            element.config = data;
+            updateStatus.new = element.config;
+            updated.push(updateStatus);
+        }
+    }
+    return updated;
+};
 /**
  * Pull Dependency Data
  * @param data
@@ -93,7 +136,6 @@ var extractData = function(data,config){
 var mergeFormAndData = function(form,data) {
     _.each(form.config.components, function (fieldSet, i) {
         _.each(fieldSet.config.components, function (conf, i) {
-            // set the value of the field
             fieldSet.config.components[i].config.value = extractData(data,conf.config);
         });
     });
