@@ -1,24 +1,34 @@
 { 
+	"id": "grid_test",
 	"type": "grid",
 	"config": {
-		"rows": [[{"md": "6", "sm": "4"}, {"md": "12", "sm": "12", "xs": "12"}]],
-		"components": [
-			{
-				"type": "field",
-				"config": {
-					"type": "text",
-					"name": "testone",
-					"label": "Test one"
-				}
-			},
-			{
-				"type": "field",
-				"config": {
-					"type": "text",
-					"name": "testtwo",
-					"label": "Test two"
-				}
-			}
+		"rows": [
+			[
+				{"md": "6", "sm": "4"}, 
+				{"md": "12", "sm": "12", "xs": "12"}
+			]
 		]
+	},
+	"componentHead": "field_1",
+	"components": {
+		"field_1": {
+			"id": "field_1",
+			"next": "field_2",
+			"type": "field",
+			"config": {
+				"type": "text",
+				"name": "testone",
+				"label": "Test one"
+			}
+		},
+		"field_2": {
+			"id": "field_2",
+			"type": "field",
+			"config": {
+				"type": "text",
+				"name": "testtwo",
+				"label": "Test two"
+			}
+		}
 	}
 }

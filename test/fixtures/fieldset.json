@@ -1,0 +1,27 @@
+{
+  "id": "test_fieldset",
+  "type": "fieldset",
+  "config": {
+    "name" : "Test Legend",
+    "layout" : {
+      "type": "grid", 
+      "config": {
+        "rows": [[{"md": "4", "sm": "2"}]]
+      }
+    }
+  },
+  "componentHead": "test_field",
+  "components": {
+    "test_field": {
+      "id": "test_field",
+      "type" :"field",
+      "config" : { 
+        "type" : "text",
+        "name" : "test-text",
+        "label" : "Test Text",
+        "required" : false,
+        "options" : { }
+      }
+    }
+  }
+}

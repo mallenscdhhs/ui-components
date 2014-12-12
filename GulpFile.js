@@ -65,7 +65,7 @@ gulp.task('build', ['clean:build']);
 
 gulp.task('specs', ['hint', 'build'], function(){
   fs.readdir('./test/unit', function(err, files){
-    browserify(files.map(function(file){ return './test/unit/'+file; }))
+    browserify(files.map(function(file){ return './test/unit/'+file; }), {extensions: ['.jsx']})
       .transform(reactify)
       .exclude('Components')
       .bundle()

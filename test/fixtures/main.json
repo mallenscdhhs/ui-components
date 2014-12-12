@@ -1,0 +1,65 @@
+{
+  "id": "pi",
+  "type": "page",
+  "config": {
+    "title": "Provider Information",
+    "content": "I am some content"
+  },
+  "componentHead": "test_form",
+  "components": {
+    "test_form": {
+      "id": "test_form",
+      "next": "test_fieldset",     
+      "type": "form",
+      "config": {
+        "name": "test_form",
+      }
+    },    
+    "test_fieldset": {
+      "id": "test_fieldset",
+      "parentId": "test_form",
+      "next": "test_field_1",
+      "type": "fieldset",
+      "config": {
+        "name": "Fieldset one",
+      }
+    },
+    "test_field_1": {        
+      "id": "test_field_1",
+      "parentId": "test_fieldset",
+      "next": "test_field_2",
+      "type": "field",
+      "config": {                      
+        "type": "text",
+        "name": "test_4",
+        "label": "Test Four"
+      }
+    },
+    "action_1": {
+      "id": "action_1",
+      "next": "action_2",
+      "type": "action",
+      "config": {
+        "name": "My Button"
+      }
+    },
+    "action_2": {
+      "id": "action_2",
+      "type": "action",
+      "config": {
+        "name": "My second button"
+      }
+    },
+    "test_field_2": {
+      "id": "test_field_2",
+      "parentId": "test_fieldset",
+      "next": "action_1",
+      "type": "field",
+      "config": {          
+        "type": "text",
+        "name": "test_2",
+        "label": "Test Two"
+      }
+    }
+  }
+}

@@ -2,8 +2,8 @@ describe('Grid Layout component', function(){
 	var TestUtils = React.addons.TestUtils;
 
 	it('can render a Bootstrap 3 grid', function(){
-		var config = require('../fixtures/grid-two-col.json');
-		var Grid = Components.factory(config);
+		var schema = require('../fixtures/grid-two-col.json');		
+		var Grid = Components.factory(schema);
 		var grid = TestUtils.renderIntoDocument(Grid);		
 		var row = grid.getDOMNode().childNodes[0];
 		var cols = row.childNodes;		
@@ -16,19 +16,20 @@ describe('Grid Layout component', function(){
 	});
 
 	it('can render multiple rows', function(){
-		var config = require('../fixtures/grid-multi-row.json');
-		var Grid = Components.factory(config);
-		var grid = TestUtils.renderIntoDocument(Grid);		
+		var schema = require('../fixtures/grid-multi-row.json');		
+		var Grid = Components.factory(schema);
+		var grid = TestUtils.renderIntoDocument(Grid);	
 		expect(grid.getDOMNode().childNodes.length).toEqual(2);
 	});
 	
 	it('can render a range of components in one column', function(){
-		var config = require('../fixtures/grid-col-range.json');
-		var Grid = Components.factory(config);
-		var grid = TestUtils.renderIntoDocument(Grid);		
+		var schema = require('../fixtures/grid-col-range.json');
+		var Grid = Components.factory(schema);
+		var grid = TestUtils.renderIntoDocument(Grid);	
 		var row = grid.getDOMNode().childNodes[0];
 		var cols = row.childNodes;		
 		expect(cols.length).toEqual(2);
+		console.log(cols[0]);
 		expect(cols[0].childNodes.length).toEqual(2);
 		expect(cols[1].childNodes.length).toEqual(1);
 	});

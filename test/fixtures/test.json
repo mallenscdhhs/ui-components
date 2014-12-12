@@ -1,0 +1,24 @@
+{
+  "type": "page",
+  "config": {
+    "title": "Foo",
+    "components": [
+      {        
+        "type": "field",
+        "config": {
+          "type": "text",
+          "name": "test",
+          "label": "Test"
+        }
+      },
+      {        
+        "type": "field",
+        "config": {
+          "type": "text",
+          "name": "test_2",
+          "label": "Test Two"
+        }
+      }
+    ]
+  }
+}
