@@ -147,6 +147,7 @@ var buildComponentModalConfig = function(componentInfo){
         'type' : 'editorConfig',
         'config':{
             'componentType' : componentInfo.type,
+            'subs' : componentInfo.subs,
             'actions':[
                 {
                     "id": "save-update-modal-button",
@@ -180,7 +181,14 @@ module.exports = React.createClass({
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header"><h4 className="modal-title" id="edit-modal-container-label">{this.props.componentType} Component Editor</h4></div>
-                    <div className="modal-body" id="edit-modal-container"></div>
+                    <div className="modal-body">
+                        <div id="edit-modal-container"></div>
+                        <div id="edit-modal-subs">
+                        {_.map(this.props.subs, function(sub){
+                            return <div>{sub.type} - {sub.config.type} - {sub.config.name}</div>;
+                        })}
+                        </div>
+                    </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
                         {_.map(this.props.actions, function(action){
