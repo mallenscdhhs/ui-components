@@ -1,0 +1,60 @@
+{
+  "id": "test_form",
+  "type": "form",
+  "config": {
+    "name" : "Test Form",
+    "model" : {},
+    "actions":[
+      {
+        "type" : "link",            
+        "config" : {
+          "name" : "Test Action",
+          "url" : "testURLHTTP"              
+        }
+      },
+      {
+        "type" : "button",            
+        "config" : {
+          "name" : "Test Action",
+          "url" : "testURLHTTP"              
+        }
+      }
+    ],
+    "rules": [],
+    "layout" : {
+      "type": "grid", 
+      "config": {
+        "rows": [[{"md": "6"}]]
+      }
+    }
+  },
+  "componentHead": "test_fieldset",
+  "components": {
+    "test_fieldset": {
+      "id": "test_fieldset",
+      "next": "test_field",
+      "type": "fieldset",
+      "config": {
+        "name" : "Test Fieldset",
+        "layout" : {
+          "type": "grid", 
+          "config": {
+            "rows": [[{"md": "4", "sm": "2"}]]
+          }
+        }
+      }      
+    },
+    "test_field": {
+      "id": "test_field",
+      "parentId": "test_fieldset",
+      "type": "field",
+      "config": {
+        "type" : "text",
+        "name" : "test-text",
+        "label" : "Test Text",
+        "required" : false,
+        "options" : { }
+      }
+    }
+  }
+}

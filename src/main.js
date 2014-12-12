@@ -12,18 +12,43 @@ var EventQueue = require('./EventQueue');
 function componentFactory(schema){
 	var element = elements[schema.type];
 	var factory = React.createFactory(element);
-	var config = _.clone(schema.config);
 	var children = null;
-	var layoutConfig = config.layout;
+	var layoutConfig = schema.config.layout;
 
-	if ( layoutConfig ) {
-		layoutConfig.config.components = config.components;
-		children = componentFactory(layoutConfig);
-	} else if ( config.components ) {
-		children = config.components.map(componentFactory);
+	if ( ! schema.config.component_id ) {
+		schema.config.component_id = schema.id;
 	}
 
-	return factory(config, children);
+	if ( layoutConfig ) {
+		layoutConfig.components = schema.components;
+		children = componentFactory(layoutConfig);
+	} else if ( schema.components ) {
+		children = schema.components.map(componentFactory);
+	}
+
+	return factory(schema.config, children);
+}
+
+/**
+ * Take a linked list and build a nested tree structure from it.
+ * @param {object} list - the linked list
+ * @param {object} head - the first item in the list
+ * @returns {array}
+ */
+function buildComponentTree(list, head){
+  var tree = [];
+  while(head){        
+    var next = list[head.next];
+    // is head a parent of next?
+    if ( next && next.parentId && next.parentId === head.id ) {
+      head.components = buildComponentTree(list, next);
+      next = list[head.components.slice(-1)[0].next];
+    }
+    tree.push(head);
+    // is head a child and is next a sibling?
+    head = ( head.parentId && next && head.parentId !== next.parentId )? null : next;
+  }
+  return tree;
 }
 
 /**
@@ -34,6 +59,16 @@ function componentFactory(schema){
  */
 module.exports = {
 	elements: elements,
-	factory: componentFactory,
-	eventQueue: EventQueue
+	eventQueue: EventQueue,
+	buildComponentTree: buildComponentTree,
+	factory: function(data){
+		var schema = _.cloneDeep(data);
+    if ( schema.components ){
+      if ( !schema.componentHead ) throw new TypeError('You must supply a "componentHead".');
+      schema.components = buildComponentTree(
+        schema.components, 
+        schema.components[schema.componentHead]);    
+    }	
+		return componentFactory(schema);
+	}
 };
