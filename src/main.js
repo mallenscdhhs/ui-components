@@ -10,23 +10,23 @@ var EventQueue = require('./EventQueue');
  * @returns {function} a ReactElement factory function
  */
 function componentFactory(schema){
-	var element = elements[schema.type];
-	var factory = React.createFactory(element);
-	var children = null;
-	var layoutConfig = schema.config.layout;
+  var element = elements[schema.type];
+  var factory = React.createFactory(element);
+  var children = null;
+  var layoutConfig = schema.config.layout;
 
-	if ( ! schema.config.component_id ) {
-		schema.config.component_id = schema.id;
-	}
+  if ( ! schema.config.component_id ) {
+    schema.config.component_id = schema.id;
+  }
 
-	if ( layoutConfig ) {
-		layoutConfig.components = schema.components;
-		children = componentFactory(layoutConfig);
-	} else if ( schema.components ) {
-		children = schema.components.map(componentFactory);
-	}
+  if ( layoutConfig ) {
+    layoutConfig.components = schema.components;
+    children = componentFactory(layoutConfig);
+  } else if ( schema.components ) {
+    children = schema.components.map(componentFactory);
+  }
 
-	return factory(schema.config, children);
+  return factory(schema.config, children);
 }
 
 /**
@@ -58,17 +58,17 @@ function buildComponentTree(list, head){
  * @module Components
  */
 module.exports = {
-	elements: elements,
-	eventQueue: EventQueue,
-	buildComponentTree: buildComponentTree,
-	factory: function(data){
-		var schema = _.cloneDeep(data);
+  elements: elements,
+  eventQueue: EventQueue,
+  buildComponentTree: buildComponentTree,
+  factory: function(data){
+    var schema = _.cloneDeep(data);
     if ( schema.components ){
       if ( !schema.componentHead ) throw new TypeError('You must supply a "componentHead".');
       schema.components = buildComponentTree(
         schema.components, 
         schema.components[schema.componentHead]);    
-    }	
-		return componentFactory(schema);
-	}
+    } 
+    return componentFactory(schema);
+  }
 };
