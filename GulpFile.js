@@ -38,13 +38,13 @@ gulp.task('transpile', ['clean'], function(){
 
 
 gulp.task('build:Components', ['transpile'], function(){
-  var underscorePath = require.resolve('underscore');
+  var underscorePath = require.resolve('lodash');
   var reactPath = require.resolve('react/addons');
   var markedPath = require.resolve('marked');
   return browserify(['./dist/build/main.js'])    
     .require([
       { file: './dist/build/main.js', expose: 'Components'},
-      { file: underscorePath, expose: 'underscore'},
+      { file: underscorePath, expose: 'lodash'},
       { file: reactPath, expose: 'react/addons'},
       { file: markedPath, expose: 'marked'}
     ])
