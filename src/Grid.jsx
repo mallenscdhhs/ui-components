@@ -1,5 +1,5 @@
 var React = require('react/addons');
-var _ = require('underscore');
+var _ = require('lodash');
 
 /**
  * Returns a string of column size class names(from bootstrap 3).

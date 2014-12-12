@@ -1,7 +1,7 @@
 describe('Tree component', function(){	
 	var Tree = Components.elements.tree;
 	var TestUtils = React.addons.TestUtils;
-	var _ = require('underscore');
+	var _ = require('lodash');
 
 	var fixture = {
 		title: 'test tree',

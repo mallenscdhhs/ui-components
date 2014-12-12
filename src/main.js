@@ -1,6 +1,6 @@
 var React = require('react/addons');
 var elements = require('./index');
-var _ = require('underscore');
+var _ = require('lodash');
 var EventQueue = require('./EventQueue');
 
 /**
