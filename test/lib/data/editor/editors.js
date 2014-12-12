@@ -539,7 +539,7 @@ var addBasic = {
       'config': {
         'type': 'select',
         'name': 'type',
-        'label': 'Add New Component Type',
+        'label': 'Add New Component',
         'helpText': '',
         'required': true,
         'rules':'',

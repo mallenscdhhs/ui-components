@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var Action = require('./Action');
+var Queue = require('./EventQueue');
 
 /**
  * Iterate over passed in element, and return a list of field names
@@ -147,7 +148,7 @@ var buildComponentModalConfig = function(componentInfo){
         'type' : 'editorConfig',
         'config':{
             'componentType' : componentInfo.type,
-            'subs' : componentInfo.subs,
+            'subs' : componentInfo.showSubs ? componentInfo.subs : null,
             'actions':[
                 {
                     "id": "save-update-modal-button",
@@ -164,6 +165,20 @@ var buildComponentModalConfig = function(componentInfo){
     }
     return config;
 }
+
+var RemoveComponent = React.createClass({
+
+    handleClick: function(){
+        Queue.push({'entityEvent':'component:remove:'+this.props.config.name,'data':{'type':this.props.type,'name':this.props.config.name}});
+    },
+
+    render: function() {
+        return (<span className="glyphicon glyphicon-remove pull-left" onClick={this.handleClick}></span>)
+    }
+
+});
+
+
 
 module.exports = React.createClass({
 
@@ -185,7 +200,7 @@ module.exports = React.createClass({
                         <div id="edit-modal-container"></div>
                         <div id="edit-modal-subs">
                         {_.map(this.props.subs, function(sub){
-                            return <div>{sub.type} - {sub.config.type} - {sub.config.name}</div>;
+                            return <div className="component-subs-list-item"><RemoveComponent {...sub} />{sub.type} - {sub.config.name}</div>;
                         })}
                         </div>
                     </div>

@@ -39,9 +39,9 @@ module.exports = {
     getEditController: function (componentType) {
         this.props.ComponentType = componentType.toLowerCase();
         return <div className="config-editor">
-                {this.getAddButton()}
-                <span onClick={this.handleConfigEdit}  className="edit-component"><span className="glyphicon glyphicon-cog"></span></span>
-        </div>;
+                    {this.getAddButton()}
+                    <span onClick={this.handleConfigEdit}  className="edit-component"><span className="glyphicon glyphicon-cog"></span></span>
+                </div>;
     }
 
 }

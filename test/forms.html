@@ -15,9 +15,12 @@
     <!-- Meta service for dropdown values TODO: REMOVE-->
     <script src="lib/data/editor/services.js"></script>
     <style>
-      .btn{margin:0 3px;}
+      .btn{ margin:0 3px; }
       .config-editor{ width:auto; height:25px; line-height:25px; position:absolute; top:0; right:4px; display:none; box-sizing:border-box; padding: 0; cursor:pointer; z-index:9999; color:#999; }
       .config-editor .add-component{ margin-right:5px; }
+      .component-subs-list-item { text-transform:capitalize; padding:.3em 0;color:#777;}
+      .component-subs-list-item .glyphicon{ margin: 2px 5px 0 0; cursor:pointer;}
+      .component-subs-list-item .glyphicon:hover { color:#333; }
       *{ position:relative; }
       .enable-component-editor .editable-component:hover > .config-editor,
       .enable-component-editor .config-editor:hover{ display:block; }
@@ -52,14 +55,22 @@
           'add' : addForm
         };
 
+        /**
+         * Common Modal Window Code
+         * Build a modal, with correct 'Action' properties for 'save' events
+         * Subs are children components, displayed with ability to delete
+         * Other data is sent in the created Event when the 'Action' is run.
+         */
         var renderModal = function(form,data,event){
           // Render Modal - Send Component and Form Id/Type to Build Modal
           // Event is the event that will be pushed when clicking action button in the modal
+          var showSubs = !(event.lastIndexOf('add') >= 0);
           var componentDataForModal = {
             "event"   : event,
             "type"    : data.type ,
             "name"    : data.props.name ,
             "subs"    : data.props.components,
+            "showSubs": showSubs,
             "formId"  : form.config.name
           }
           var modalConfig = EditorConfig.buildComponentModalConfig(componentDataForModal);
@@ -73,62 +84,70 @@
           React.render(EditorForm,document.getElementById('edit-modal-container'));
         }
 
-        // Edit Component Action
+        /**
+         * Open Edit Dialog for a Component
+         */
         var editComponentAction = function(data){
           // Merge Form data and Component Data to get merged FORM
           var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
-
           renderModal(editForm,data,'component:update');
-
           $('#editComponentModal').modal('show');
         }
 
-        // From Edit Component Modal, save the data.
+        /**
+         * Save Component after Editing
+         */
         var updateComponentAction = function(data){
           console.log('component:update');
-
           var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
           var saveObject = {
             'type' : data.componentType,
             'name' : data.componentName,
             'values' :formValues
           }
-
           console.log(saveObject);
-
           $('#editComponentModal').modal('hide');
         }
 
+        /**
+         * Open Dialog to Add New Component
+         */
         var addNewComponentAction = function(data){
           // Merge Form data and Component Data to get merged FORM
           var addForm = EditorConfig.createAddConfig(forms['add'],data.type);
-
           renderModal(addForm,data,'component:add:save');
-
           $('#editComponentModal').modal('show');
         }
 
+        /**
+         * Save New Component
+         */
         var saveNewComponentAction = function(data){
           console.log('component:add:save');
-
           var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
           var saveObject = {
             'type' : data.componentType,
             'name' : data.componentName,
             'values' :formValues
           }
-
           console.log(saveObject);
-
           $('#editComponentModal').modal('hide');
         }
 
+        /**
+         * Remove Component
+         * @param data
+         */
         var removeComponentAction = function(data){
           console.log('component:remove')
+          console.log(data)
+          $('#editComponentModal').modal('hide');
         }
 
-
-        // Global Event Router
+        /**
+         * App Level Global Event Router
+         * Could get more specific, using switches, or other routing tools
+         */
         Queue.subscribe('all','globalEditor',function(data,eventType){
           if(eventType.indexOf('component:edit') >= 0){
             editComponentAction(data);

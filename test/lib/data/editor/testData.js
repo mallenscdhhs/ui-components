@@ -36,16 +36,13 @@ var fieldsFixture = {
             'helpText': 'This is Help Text.',
             'required': false,
             'rules':[],
+            'value': '1',
             'dependency' : null,
             'options' : {
                 'items' : [
                     {
                         'label' : 'Checkbox 1',
                         'value' : '1'
-                    },
-                    {
-                        'label' : 'Checkbox 2',
-                        'value' : '2'
                     }
                 ]
             },
@@ -61,6 +58,7 @@ var fieldsFixture = {
             'helpText': 'This is Help Text.',
             'required': false,
             'rules':[],
+            'value' : '2',
             'dependency' : null,
             'options' : {
                 'items' : [
