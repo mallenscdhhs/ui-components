@@ -29,7 +29,6 @@ describe('Grid Layout component', function(){
 		var row = grid.getDOMNode().childNodes[0];
 		var cols = row.childNodes;		
 		expect(cols.length).toEqual(2);
-		console.log(cols[0]);
 		expect(cols[0].childNodes.length).toEqual(2);
 		expect(cols[1].childNodes.length).toEqual(1);
 	});

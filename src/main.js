@@ -39,10 +39,13 @@ function buildComponentTree(list, head){
   var tree = [];
   while(head){        
     var next = list[head.next];
+    var nextRoot;
     // is head a parent of next?
     if ( next && next.parentId && next.parentId === head.id ) {
-      head.components = buildComponentTree(list, next);
-      next = list[head.components.slice(-1)[0].next];
+      head.components = buildComponentTree(list, next);      
+      nextRoot = list[head.components.slice(-1)[0].next];
+      // are we at the end of the parent branch recursion?
+      next = ( nextRoot && (head.id === nextRoot.parentId) )? null : nextRoot;
     }
     tree.push(head);
     // is head a child and is next a sibling?
