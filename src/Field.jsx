@@ -14,7 +14,8 @@ module.exports = React.createClass({
    * @returns {void}
    */
   componentDidMount: function(){
-    var component = this; 
+    var component = this;
+
     // Listen for changes to other fields that I'm dependent on
     if(this.hasDependency()){      
       var initState = component.props.dependency.initialState === 'hidden' ? false : true;
@@ -30,12 +31,23 @@ module.exports = React.createClass({
           component.setState({display: initState})
         }
       });
-    }  
+    }
+
     // Listen for validation errors from application
     Queue.subscribe('field:error:'+component.props.name,'field:'+component.props.name,function(data){
       // Change from initial display state.
       component.setState({'hasError': data.hasError,'errorMessage':data.errorMessage}); 
-    });       
+    });
+
+    // If component uses options, subscribe to options event
+    if(this.props.type === 'select' || this.props.type === 'multiselect') {
+      Queue.subscribe( 'field:options:'+component.props.name , 'field:'+component.props.name , function(data){
+        component.setState({'options': data});
+      });
+      // Ask for select options
+      Queue.push({'entityEvent': 'field:mount:' + this.props.name, 'data' : {'id': this.props.id , 'fieldName' : this.props.name }});
+    }
+
   },
 
   /**
@@ -46,8 +58,14 @@ module.exports = React.createClass({
     if(this.hasDependency()){
       var depName = this.props.dependency.name;
       Queue.unSubscribe('field:blur:'+depName,'field:'+this.props.name);
-    }   
-    Queue.unSubscribe('field:error:'+this.props.name,'field:'+this.props.name); 
+    }
+
+    Queue.unSubscribe('field:error:'+this.props.name,'field:'+this.props.name);
+
+    //If component uses options, unsubscribe to options events
+    if(this.props.type === 'select' || this.props.type === 'multiselect') {
+      Queue.unSubscribe('field:options:'+component.props.name,'field:'+component.props.name);
+    }
   },
 
   /**
@@ -75,7 +93,7 @@ module.exports = React.createClass({
     if(this.hasDependency() && this.props.dependency.initialState && this.props.dependency.initialState ==='hidden'){
       viewableState = false;
     }
-    return {'value': this.props.value, 'display': viewableState, 'hasError':false, 'errorMessage':''};
+    return { 'value' : this.props.value, 'display' : viewableState, 'hasError' : false , 'errorMessage' : '' , 'options' : this.props.options };
   },
 
   /**
@@ -83,7 +101,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleBlur: function(){
-    Queue.push({'entityEvent':'field:blur:'+this.props.name,'data':{'fieldName':this.props.name,'fieldValue':this.state.value,'rules':this.props.rules}});
+    Queue.push({'entityEvent':'field:blur:'+this.props.name,'data':{'id': this.props.id,'fieldName':this.props.name,'fieldValue':this.state.value,'rules':this.props.rules}});
   },
 
   /**
@@ -139,7 +157,8 @@ module.exports = React.createClass({
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
-      return (<label key={labelKey}><input type={fieldType} value={field.state.value} className="field" id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
+      var isChecked = item.value === field.state.value;
+      return (<label key={labelKey}><input type={fieldType} value={item.value} checked={isChecked} className="field" id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
     });
     return fields;
   },
@@ -150,8 +169,8 @@ module.exports = React.createClass({
    */
   getSelectOptions: function(){
     var options = null;
-    if(this.props.options && this.props.options.items){
-      options = this.props.options.items.map(function(item, i){
+    if(this.state.options && this.state.options.items){
+      options = this.state.options.items.map(function(item, i){
         return (<option value={item.value} key={i}>{item.label}</option>);
       });
     }

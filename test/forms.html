@@ -39,8 +39,7 @@
         var Queue = Components.eventQueue;
         var EditorConfig = Components.editorConfig;
 
-        var Page = Components.factory(formFixture);
-        React.render(Page,document.getElementById('component-page'));
+
 
 
         // Forms cache, load only once, after the first use, then cache
@@ -144,6 +143,24 @@
           $('#editComponentModal').modal('hide');
         }
 
+        var updateFieldOptions = function(data){
+          console.log(data);
+          var newOptions = {
+            'items' : [
+              {
+                'label' : 'Updated Val 3',
+                'value' : '3'
+              },
+              {
+                'label' : 'Updated Val 4',
+                'value' : '4'
+              }
+            ]
+          };
+          if(data.fieldName.lastIndexOf('test') >=0 ) {
+            Queue.push({'entityEvent': 'field:options:' + data.fieldName, 'data': newOptions});
+          }
+        }
         /**
          * App Level Global Event Router
          * Could get more specific, using switches, or other routing tools
@@ -159,8 +176,14 @@
             saveNewComponentAction(data);
           }else if(eventType.indexOf('component:remove') >= 0){
             removeComponentAction(data);
+          }else if(eventType.indexOf('field:mount') >= 0){
+            updateFieldOptions(data);
           }
         });
+
+
+        var Page = Components.factory(formFixture);
+        React.render(Page,document.getElementById('component-page'));
 
       </script>
   </body>

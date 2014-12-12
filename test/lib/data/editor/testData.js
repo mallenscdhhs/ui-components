@@ -84,6 +84,7 @@ var fieldsFixture = {
             'helpText': 'This is Help Text.',
             'required': false,
             'rules':[],
+            'value' : '4',
             'dependency' : null,
             'options' : {
                 'items' : [
@@ -114,6 +115,7 @@ var fieldsFixture = {
                 'value':'hi|hello|bye',
                 'initialState': 'visable'
             },
+            'value': ['4'],
             'options' : {
                 'items' : [
                     {
