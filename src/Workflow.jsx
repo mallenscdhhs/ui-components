@@ -193,9 +193,9 @@ module.exports = React.createClass({
         <div id="workflow-page"></div>
         <div id="workflow-status"></div>
         <div id="workflow-actions" className="text-right">
-          {_.map(actions, function(action){
-            return <Action {...action}/>;
-          })}
+          {_.map(actions, function(action, i){
+            return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
+          }, this)}
         </div>
       </Grid>
     );
