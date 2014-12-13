@@ -32,7 +32,7 @@
   "components": {
     "test_fieldset": {
       "id": "test_fieldset",
-      "next": "test_field",
+      "child": "test_field",
       "type": "fieldset",
       "config": {
         "name" : "Test Fieldset",
@@ -45,8 +45,7 @@
       }      
     },
     "test_field": {
-      "id": "test_field",
-      "parentId": "test_fieldset",
+      "id": "test_field",      
       "type": "field",
       "config": {
         "type" : "text",

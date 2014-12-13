@@ -30,17 +30,16 @@ describe('main component', function(){
       var fixture = require('../fixtures/main.json');      
       var tree = Components.buildComponentTree(
         fixture.components, 
-        fixture.components[fixture.componentHead
-      ]);      
-      expect(tree.length).toEqual(3);
+        fixture.components[fixture.componentHead]
+      );   
+      expect(tree.length).toEqual(2);
       expect(tree[0].components.length).toEqual(1);
       expect(tree[0].id).toEqual('test_form');
       expect(tree[0].components[0].components.length).toEqual(2);
       expect(tree[0].components[0].id).toEqual('test_fieldset');
       expect(tree[0].components[0].components[0].id).toEqual('test_field_1');
       expect(tree[0].components[0].components[1].id).toEqual('test_field_2');      
-      expect(tree[1].components).not.toBeDefined();
-      expect(tree[2].components).not.toBeDefined();
+      expect(tree[1].id).toEqual('action_1');
     });
   });
 });
