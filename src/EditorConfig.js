@@ -64,6 +64,7 @@ var setFieldData =  function (element,id,data) {
     }
     return updated;
 };
+
 /**
  * Pull Dependency Data
  * @param data
@@ -149,11 +150,15 @@ var mergeFormAndData = function(form,data) {
  */
 var getFieldValuesFromForm = function(formId){
     var fieldValues = {};
-    var fields = document.getElementById(formId).getElementsByClassName('field');
+    var form = document.getElementById(formId);
+    var fields = form.getElementsByClassName('field');
     _.each(fields,function(field,i){
-        fieldValues[field.name] = field.value;
         if(field.type === 'checkbox' || field.type === 'radio'){
-            fieldValues[field.name] = 'checked';
+           if(field.checked === true) {
+               fieldValues[field.name] = field.value;
+           }
+        }else{
+            fieldValues[field.name] = field.value;
         }
     });
     return fieldValues;

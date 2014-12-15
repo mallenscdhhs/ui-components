@@ -40,7 +40,8 @@ module.exports = React.createClass({
     });
 
     // If component uses options, subscribe to options event
-    if(this.props.type === 'select' || this.props.type === 'multiselect') {
+    if(this.props.type === 'select' || this.props.type === 'multiselect' ||
+        this.props.type === 'checkbox' || this.props.type === 'radio') {
       Queue.subscribe( 'field:options:'+component.props.name , 'field:'+component.props.name , function(data){
         component.setState({'options': data});
       });
@@ -63,7 +64,8 @@ module.exports = React.createClass({
     Queue.unSubscribe('field:error:'+this.props.name,'field:'+this.props.name);
 
     //If component uses options, unsubscribe to options events
-    if(this.props.type === 'select' || this.props.type === 'multiselect') {
+    if(this.props.type === 'select' || this.props.type === 'multiselect' ||
+        this.props.type === 'checkbox' || this.props.type === 'radio') {
       Queue.unSubscribe('field:options:'+component.props.name,'field:'+component.props.name);
     }
   },
@@ -158,7 +160,7 @@ module.exports = React.createClass({
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
       var isChecked = item.value === field.state.value;
-      return (<label key={labelKey}><input type={fieldType} value={item.value} checked={isChecked} className="field" id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} value={item.value} defaultChecked={isChecked} className="field" id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
     });
     return fields;
   },
