@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require('lodash');
 var TestUtils = React.addons.TestUtils;
 var Workflow = require('../../src/Workflow');
 var EQ = Components.eventQueue;

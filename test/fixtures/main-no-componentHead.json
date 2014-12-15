@@ -1,0 +1,10 @@
+{
+  "id": "test",
+  "type": "page",
+  "components": {
+    "action1": {
+      "type": "action",
+      "config": {}
+    }
+  }
+}

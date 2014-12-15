@@ -1,3 +1,4 @@
+'use-strict';
 var React = require('react/addons');
 var marked = require('marked');
 var EditorMixin = require('./EditorMixin');

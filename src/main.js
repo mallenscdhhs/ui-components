@@ -1,6 +1,7 @@
+'use-strict';
 var React = require('react/addons');
 var elements = require('./index');
-var _ = require('underscore');
+var _ = require('lodash');
 var EventQueue = require('./EventQueue');
 var EditorConfig = require('./EditorConfig');
 
@@ -10,20 +11,43 @@ var EditorConfig = require('./EditorConfig');
  * @returns {function} a ReactElement factory function
  */
 function componentFactory(schema){
-	var element = elements[schema.type];
-	var factory = React.createFactory(element);
-	var config = _.clone(schema.config);
-	var children = null;
-	var layoutConfig = config.layout;
+  var element = elements[schema.type];
+  var factory = React.createFactory(element);
+  var children = null;
+  var layoutConfig = schema.config.layout;
 
-	if ( layoutConfig ) {
-		layoutConfig.config.components = config.components;
-		children = componentFactory(layoutConfig);
-	} else if ( config.components ) {
-		children = config.components.map(componentFactory);
-	}
+  if ( ! schema.config.component_id ) {
+    schema.config.component_id = schema.id;    
+  }
 
-	return factory(config, children);
+  schema.config.key = schema.config.component_id;
+
+  if ( layoutConfig ) {
+    layoutConfig.components = schema.components;
+    children = componentFactory(layoutConfig);
+  } else if ( schema.components ) {
+    children = schema.components.map(componentFactory);
+  }
+
+  return factory(schema.config, children);
+}
+
+/**
+ * Take a linked list and build a nested tree structure from it.
+ * @param {object} list - the linked list
+ * @param {object} head - the first item in the list
+ * @returns {array}
+ */
+function buildComponentTree(list, head){
+  var tree = [];
+  while(head){
+    if ( head.child ) {
+      head.components = buildComponentTree(list, list[head.child]);
+    }
+    tree.push(head);
+    head = list[head.next];
+  }
+  return tree;
 }
 
 /**
@@ -33,8 +57,18 @@ function componentFactory(schema){
  * @module Components
  */
 module.exports = {
-	elements    : elements,
-	factory     : componentFactory,
-	eventQueue  : EventQueue,
-	editorConfig: EditorConfig
-}
+  elements: elements,
+  eventQueue: EventQueue,
+  editorConfig: EditorConfig,
+  buildComponentTree: buildComponentTree,
+  factory: function(data){
+    var schema = _.cloneDeep(data);
+    if ( schema.components ){
+      if ( !schema.componentHead ) throw new TypeError('You must supply a "componentHead".');
+      schema.components = buildComponentTree(
+        schema.components, 
+        schema.components[schema.componentHead]);    
+    } 
+    return componentFactory(schema);
+  }
+};

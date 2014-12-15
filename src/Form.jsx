@@ -1,4 +1,6 @@
+'use-strict';
 var React = require('react/addons');
+var _ = require('lodash');
 var Container = require('./Container');
 var Action = require('./Action');
 var EditorMixin = require('./EditorMixin');
@@ -21,9 +23,9 @@ module.exports = React.createClass({
   getActions: function(){
     var actions;
     if(this.props.actions){
-      actions = this.props.actions.map(function(action,i){
-        return <Action type={action.type} {...action.config} key={"actionKey"+i} />
-      });       
+      actions = _.map(this.props.actions, function(action,i){
+        return <Action type={action.type} {...action.config} key={"action"+i} />
+      }, this);       
     }
     return actions;
   },

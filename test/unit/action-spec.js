@@ -9,8 +9,8 @@ describe('Action component', function() {
   };
 
   it('Renders action', function(){
-    var Action = Components.factory(actionFixture);
-    var action = tu.renderIntoDocument(Action);
+    var Action = Components.elements['action'];
+    var action = tu.renderIntoDocument(<Action {...actionFixture.config}/>);
     var inputText = tu.scryRenderedDOMComponentsWithTag(action, 'a');
     expect(inputText.length).toEqual(1);    
   });
