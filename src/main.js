@@ -16,8 +16,10 @@ function componentFactory(schema){
   var layoutConfig = schema.config.layout;
 
   if ( ! schema.config.component_id ) {
-    schema.config.component_id = schema.id;
+    schema.config.component_id = schema.id;    
   }
+
+  schema.config.key = schema.config.component_id;
 
   if ( layoutConfig ) {
     layoutConfig.components = schema.components;
@@ -37,16 +39,12 @@ function componentFactory(schema){
  */
 function buildComponentTree(list, head){
   var tree = [];
-  while(head){        
-    var next = list[head.next];
-    // is head a parent of next?
-    if ( next && next.parentId && next.parentId === head.id ) {
-      head.components = buildComponentTree(list, next);
-      next = list[head.components.slice(-1)[0].next];
+  while(head){
+    if ( head.child ) {
+      head.components = buildComponentTree(list, list[head.child]);
     }
     tree.push(head);
-    // is head a child and is next a sibling?
-    head = ( head.parentId && next && head.parentId !== next.parentId )? null : next;
+    head = list[head.next];
   }
   return tree;
 }
