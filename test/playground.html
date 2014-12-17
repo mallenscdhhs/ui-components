@@ -10,6 +10,17 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>    
     <script src="Components.js"></script>
     <style type="text/css">
+      .config-editor{ width:auto; height:25px; line-height:25px; position:absolute; top:0; right:4px; display:none; box-sizing:border-box; padding: 0; cursor:pointer; z-index:9999; color:#999; }
+      .config-editor .add-component{ margin-right:5px; }
+      .component-subs-list-item { text-transform:capitalize; padding:.3em 0;color:#777;}
+      .component-subs-list-item .glyphicon{ margin: 2px 5px 0 0; cursor:pointer;}
+      .component-subs-list-item .glyphicon:hover { color:#333; }
+      *{ position:relative; }
+      .enable-component-editor .editable-component:hover > .config-editor,
+      .enable-component-editor .config-editor:hover{ display:block; }
+      .enable-component-editor .editable-component:hover > .config-editor .add-component:hover,
+      .enable-component-editor .editable-component:hover > .config-editor .edit-component:hover{ color: #337ab7; }
+      .modal-title { text-transform:capitalize; }
       .nav.nav-tree ul {
         margin-left: 1em;
       }
@@ -316,14 +327,14 @@
           if(eventType.indexOf('field:blur') >= 0){
             var hasError = true;
             var errorMessage = 'Input is not valid. Please select a new value.';
-            if(cache[data.fieldName]){
+            if(cache[data.id]){
               hasError= false;
               errorMessage = '';
-              cache[data.fieldName] = false;
+              cache[data.id] = false;
             }else{
-              cache[data.fieldName] = true;
+              cache[data.id] = true;
             }
-            Queue.push({'entityEvent':'field:error:'+data.fieldName,'data':{'hasError':hasError,'errorMessage':errorMessage}});
+            Queue.push({'entityEvent':'field:error:'+data.id,'data':{'hasError':hasError,'errorMessage':errorMessage}});
           }
         }
       });

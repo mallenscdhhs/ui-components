@@ -20,9 +20,9 @@ module.exports = React.createClass({
     // Listen for changes to other fields that I'm dependent on
     if(this.hasDependency()){      
       var initState = component.props.dependency.initialState === 'hidden' ? false : true;
-      var depName = component.props.dependency.name;
+      var depName = component.props.dependency.id;
       var depValues = component.props.dependency.value.split('|'); // Array of 'actionable' values
-      Queue.subscribe('field:blur:'+depName,'field:'+component.props.name,function(data){
+      Queue.subscribe('field:blur:'+depName,'field:'+component.props.id,function(data){
         // Verify field is correct and new value is in the 'actionable' array
         if(data.fieldName === depName && depValues.indexOf(data.fieldValue) >= 0){ 
           // Change from initial display state.
@@ -35,7 +35,7 @@ module.exports = React.createClass({
     }
 
     // Listen for validation errors from application
-    Queue.subscribe('field:error:'+component.props.name,'field:'+component.props.name,function(data){
+    Queue.subscribe('field:error:'+component.props.id,'field:'+component.props.id,function(data){
       // Change from initial display state.
       component.setState({'hasError': data.hasError,'errorMessage':data.errorMessage}); 
     });
@@ -43,11 +43,11 @@ module.exports = React.createClass({
     // If component uses options, subscribe to options event
     if(this.props.type === 'select' || this.props.type === 'multiselect' ||
         this.props.type === 'checkbox' || this.props.type === 'radio') {
-      Queue.subscribe( 'field:options:'+component.props.name , 'field:'+component.props.name , function(data){
+      Queue.subscribe( 'field:options:'+component.props.id , 'field:'+component.props.id , function(data){
         component.setState({'options': data});
       });
       // Ask for select options
-      Queue.push({'entityEvent': 'field:mount:' + this.props.name, 'data' : {'id': this.props.id , 'fieldName' : this.props.name }});
+      Queue.push({'entityEvent': 'field:mount:' + this.props.id, 'data' : {'id': this.props.id , 'fieldName' : this.props.name, 'props': this.props }});
     }
 
   },
@@ -58,16 +58,16 @@ module.exports = React.createClass({
    */
   componentWillUnmount: function(){
     if(this.hasDependency()){
-      var depName = this.props.dependency.name;
-      Queue.unSubscribe('field:blur:'+depName,'field:'+this.props.name);
+      var depName = this.props.dependency.id;
+      Queue.unSubscribe('field:blur:'+depName,'field:'+this.props.id);
     }
 
-    Queue.unSubscribe('field:error:'+this.props.name,'field:'+this.props.name);
+    Queue.unSubscribe('field:error:'+this.props.id,'field:'+this.props.id);
 
     //If component uses options, unsubscribe to options events
     if(this.props.type === 'select' || this.props.type === 'multiselect' ||
         this.props.type === 'checkbox' || this.props.type === 'radio') {
-      Queue.unSubscribe('field:options:'+component.props.name,'field:'+component.props.name);
+      Queue.unSubscribe('field:options:'+component.props.id,'field:'+component.props.id);
     }
   },
 
@@ -104,7 +104,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleBlur: function(){
-    Queue.push({'entityEvent':'field:blur:'+this.props.name,'data':{'id': this.props.id,'fieldName':this.props.name,'fieldValue':this.state.value,'rules':this.props.rules}});
+    Queue.push({'entityEvent':'field:blur:'+this.props.id,'data':{'id': this.props.id,'fieldName':this.props.name,'fieldValue':this.state.value,'rules':this.props.rules}});
   },
 
   /**
@@ -151,17 +151,17 @@ module.exports = React.createClass({
    * @returns {JSX template}
    */
   getCheckboxOrRadio : function(){
-    var fieldName = this.props.name;
+    var fieldId = this.props.id;
     var fieldType = (this.props.type).toLowerCase();
     var fieldKey = 'option';
     var labelKey = fieldType + 'Label'  
-    var helpKey = 'field'+this.props.name+'HelpText';
+    var helpKey = 'field'+this.props.id+'HelpText';
     var field = this;
     var fields = this.props.options.items.map(function(item, i){
       fieldKey = fieldType + 'Option' + i;
       labelKey = fieldType + 'Label' + i;
       var isChecked = item.value === field.state.value;
-      return (<label key={labelKey}><input type={fieldType} value={item.value} defaultChecked={isChecked} className="field" id={fieldName} name={fieldName}  ref={fieldName}  key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
+      return (<label key={labelKey}><input type={fieldType} value={item.value} defaultChecked={isChecked} className="field" id={fieldId} name={fieldId} ref={fieldId} key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
     });
     return fields;
   },
@@ -185,12 +185,12 @@ module.exports = React.createClass({
    * @returns {JSX template}
    */
   getSelect : function(){
-    var fieldName = this.props.name;
-    var fieldKey = fieldName +'-fieldSelect';
-    var helpKey = 'field'+this.props.name+'HelpText';
+    var fieldId = this.props.id;
+    var fieldKey = fieldId +'-fieldSelect';
+    var helpKey = 'field'+fieldId+'HelpText';
     var isMultiSelect = this.props.type == 'multiselect';
     return (
-        <select multiple={isMultiSelect} className="form-control field" value={this.state.value} key={fieldKey} id={fieldName} name={fieldName} ref={fieldName} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} >
+        <select multiple={isMultiSelect} className="form-control field" value={this.state.value} key={fieldKey} id={fieldId} name={fieldId} ref={fieldId} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} >
           {this.getSelectOptions()}
         </select>
       );
@@ -208,9 +208,9 @@ module.exports = React.createClass({
       labelKey = 'fieldLabelRequired';
     }
     if(this.isFieldGroup()){
-      return (<legend htmlFor={this.props.name} className="field-legend" key={labelKey} >{labelRequired}{this.props.label}</legend>)
+      return (<legend htmlFor={this.props.id} className="field-legend" key={labelKey} >{labelRequired}{this.props.label}</legend>)
     }else{
-      return (<label htmlFor={this.props.name} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
+      return (<label htmlFor={this.props.id} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
     }
   },
 
@@ -219,14 +219,15 @@ module.exports = React.createClass({
    * @returns {JSX template}
    */
   getField : function(){
+      var fieldId = this.props.id;
       var fieldType = this.props.type;
       var fieldKey = 'field'+fieldType;
-      var helpKey = 'field'+this.props.name+'HelpText';
+      var helpKey = 'field'+fieldId+'HelpText';
       var field = null;
 
       switch(fieldType){
         case 'textarea':
-          field = (<textarea className="form-control field"  id={this.props.name} name={this.props.name} value={this.state.value} ref={this.props.name} key="fieldTextarea"  aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
+          field = (<textarea className="form-control field"  id={fieldId} name={fieldId} value={this.state.value} ref={fieldId} key="fieldTextarea" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
           break;  
         case 'radio':  
         case 'checkbox':
@@ -237,7 +238,7 @@ module.exports = React.createClass({
           field = this.getSelect();
           break;     
         default:
-          field = (<input type={fieldType} id={this.props.name} className="form-control field" name={this.props.name} value={this.state.value} key={fieldKey}  ref={this.props.name} placeholder="" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} />);
+          field = (<input type={fieldType} id={fieldId} className="form-control field" name={fieldId} value={this.state.value} key={fieldKey} ref={fieldId} placeholder="" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} />);
       }
       return field;
   },
@@ -247,7 +248,7 @@ module.exports = React.createClass({
    * @returns {JSX template}
    */
   getHelpText: function(){
-    var helpKey = 'field'+this.props.name+'HelpText';
+    var helpKey = 'field'+this.props.id+'HelpText';
     var helpText = this.props.helpText ? this.props.helpText : '';
     if(this.state.hasError){
       helpText = this.state.errorMessage;

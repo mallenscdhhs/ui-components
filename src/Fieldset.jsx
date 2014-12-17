@@ -20,9 +20,8 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
-    var fsKey = this.props.name ? (this.props.name).replace(/ /g,'_') : '';
     return (
-      <fieldset key={"fieldSetWithComponentsKey"+fsKey} className="editable-component">
+      <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className="editable-component">
         {this.getEditController("Fieldset")}
         {this.getLabel()}
         {this.props.children}

@@ -3,6 +3,7 @@ describe('Field component', function() {
   var tu = React.addons.TestUtils;
 
   var textFixture = {
+    id : 'test-text',
     type : 'text',
     name : 'test-text',
     label : 'Test Text',
@@ -23,6 +24,7 @@ describe('Field component', function() {
   });
 
   var textareaFixture = {
+    id : 'test-textarea',
     type : 'textarea',
     name : 'test-textarea',
     label : 'Test Textarea',
@@ -43,6 +45,7 @@ describe('Field component', function() {
   });  
 
   var checkboxFixture = {
+    id : 'test-checkbox',
     type : 'checkbox',
     name : 'test-checkbox',
     label : 'Test Checkbox',
@@ -56,7 +59,7 @@ describe('Field component', function() {
         {
           'label' : 'Checkbox 2',
           'value' : '2'
-        }        
+        }
       ]
     }
   };
@@ -83,9 +86,21 @@ describe('Field component', function() {
     inputLabels.forEach(function(label,i){
       expect(label.getDOMNode().textContent).toEqual(checkboxFixture.options.items[i].label);     
     });    
-  }); 
+  });
+
+  it('Can get value of Checkbox', function(){
+    document.body.innerHTML = '<div id="test-page"></div>';
+    React.render(Field(checkboxFixture),document.getElementById('test-page'));
+    expect(document.getElementsByClassName('field').length).toEqual(2);
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
+    (document.getElementsByClassName('field')[0]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(true);
+    (document.getElementsByClassName('field')[0]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
+  });
 
   var radioFixture = {
+    id : 'test-radio',
     type : 'radio',
     name : 'test-radio',
     label : 'Test Radio',
@@ -120,15 +135,27 @@ describe('Field component', function() {
     var field = tu.renderIntoDocument(Field(radioFixture));
     // Check that each input count and item count match
     var inputs = tu.scryRenderedDOMComponentsWithTag(field, 'input');
-    expect(inputs.length).toEqual(radioFixture.options.items.length); 
+    expect(inputs.length).toEqual(radioFixture.options.items.length);
     // Each input should have it's own label
     var inputLabels = tu.scryRenderedDOMComponentsWithTag(field, 'label');
     inputLabels.forEach(function(label,i){
-      expect(label.getDOMNode().textContent).toEqual(radioFixture.options.items[i].label);     
-    });    
+      expect(label.getDOMNode().textContent).toEqual(radioFixture.options.items[i].label);
+    });
+  });
+
+  it('Can get value of Radio', function(){
+    document.body.innerHTML = '<div id="test-page"></div>';
+    React.render(Field(radioFixture),document.getElementById('test-page'));
+    expect(document.getElementsByClassName('field').length).toEqual(2);
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
+    (document.getElementsByClassName('field')[0]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(true);
+    (document.getElementsByClassName('field')[1]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
   });
 
   var selectFixture = {
+    id : 'test-select',
     type : 'select',
     name : 'test-select',
     label : 'Test Select',
@@ -157,9 +184,10 @@ describe('Field component', function() {
     var field = tu.renderIntoDocument(Field(selectFixture));
     var inputSelect = tu.findRenderedDOMComponentWithTag(field, 'select');
     expect(inputSelect.getDOMNode().value).toEqual(selectFixture.options.items[0].value);   // Defaults to first value, so compare first values
-  });   
+  });
 
   var multiselectFixture = {
+    id : 'test-multiselect',
     type : 'multiselect',
     name : 'test-multiselect',
     label : 'Test Multi-Select',
@@ -191,6 +219,7 @@ describe('Field component', function() {
   });    
 
   var emailFixture = {
+    id : 'test-email',
     type : 'email',
     name : 'test-email',
     label : 'Test Email',
@@ -211,6 +240,7 @@ describe('Field component', function() {
   }); 
 
   var phoneFixture = {
+    id : 'test-phone',
     type : 'tel',
     name : 'test-phone',
     label : 'Test Phone',
@@ -231,6 +261,7 @@ describe('Field component', function() {
   });  
 
   var dateFixture = {
+    id : 'test-date',
     type : 'date',
     name : 'test-date',
     label : 'Test Date',
@@ -251,6 +282,7 @@ describe('Field component', function() {
   });  
 
   var passwordFixture = {
+    id : 'test-password',
     type : 'password',
     name : 'test-password',
     label : 'Test Password',
@@ -271,6 +303,7 @@ describe('Field component', function() {
   }); 
 
   var requiredFixture = {
+    id : 'test-required',
     type : 'text',
     name : 'test-required',
     label : 'Required Text',

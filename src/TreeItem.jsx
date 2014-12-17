@@ -19,7 +19,7 @@ module.exports = React.createClass({
 		});
 		return (
 			<li className={liClassNames} role="presentation">
-				<a href="javascript:void(0)" data-disabled={this.props.disabled}  onClick={this.handleClick}>{this.props.title}</a>
+				<a href="javascript:void(0)" data-disabled={this.props.disabled} id={this.props.id} onClick={this.handleClick}>{this.props.title}</a>
 				{this.props.children}
 			</li>
 		);

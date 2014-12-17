@@ -35,11 +35,9 @@
       <div id="modalContainer"></div>
 
       <script>
-        var _ = require('underscore');
+        var _ = require('lodash');
         var Queue = Components.eventQueue;
         var EditorConfig = Components.editorConfig;
-
-
 
 
         // Forms cache, load only once, after the first use, then cache
@@ -67,10 +65,10 @@
           var componentDataForModal = {
             "event"   : event,
             "type"    : data.type ,
-            "name"    : data.props.name ,
+            "id"      : data.props.id ,
             "subs"    : data.props.components,
             "showSubs": showSubs,
-            "formId"  : form.config.name
+            "formId"  : form.config.id
           }
           var modalConfig = EditorConfig.buildComponentModalConfig(componentDataForModal);
           var Modal = Components.factory(modalConfig);
@@ -100,9 +98,9 @@
           console.log('component:update');
           var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
           var saveObject = {
-            'type' : data.componentType,
-            'name' : data.componentName,
-            'values' :formValues
+            'type'   : data.componentType,
+            'id'     : data.componentId,
+            'values' : formValues
           }
           console.log(saveObject);
           $('#editComponentModal').modal('hide');
@@ -113,9 +111,10 @@
          */
         var addNewComponentAction = function(data){
           // Merge Form data and Component Data to get merged FORM
-          var addForm = EditorConfig.createAddConfig(forms['add'],data.type);
+          var addForm = forms['add'];
           renderModal(addForm,data,'component:add:save');
           $('#editComponentModal').modal('show');
+          Queue.push({ 'entityEvent' : 'field:options:new-component-type' , 'data' : { 'items' : EditorConfig.getComponentsToAddList(data.props.ComponentType) } });
         }
 
         /**
@@ -125,9 +124,9 @@
           console.log('component:add:save');
           var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
           var saveObject = {
-            'type' : data.componentType,
-            'name' : data.componentName,
-            'values' :formValues
+            'type'   : data.componentType,
+            'id'     : data.componentId,
+            'values' : formValues
           }
           console.log(saveObject);
           $('#editComponentModal').modal('hide');
@@ -158,7 +157,7 @@
             ]
           };
           if(data.fieldName.lastIndexOf('test') >=0 ) {
-            Queue.push({'entityEvent': 'field:options:' + data.fieldName, 'data': newOptions});
+            Queue.push({'entityEvent': 'field:options:' + data.id, 'data': newOptions});
           }
         }
         /**

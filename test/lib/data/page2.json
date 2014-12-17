@@ -7,9 +7,10 @@
     	{
     		"type": "field",
     		"config": {
-    			"type": "text",
-    			"name": "test",
-    			"label": "Test"
+						"id": "test",
+						"type": "text",
+						"name": "test",
+						"label": "Test"
     		}
     	}
     ]

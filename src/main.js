@@ -16,17 +16,15 @@ function componentFactory(schema){
   var children = null;
   var layoutConfig = schema.config.layout;
 
-  if ( ! schema.config.component_id ) {
-    schema.config.component_id = schema.id;    
-  }
-
-  schema.config.key = schema.config.component_id;
+  schema.config.key = schema.config.id;
 
   if ( layoutConfig ) {
-    layoutConfig.components = schema.components;
+    layoutConfig.components = schema.components ? schema.components : schema.config.components ;
     children = componentFactory(layoutConfig);
   } else if ( schema.components ) {
     children = schema.components.map(componentFactory);
+  } else if ( schema.config.components ) {
+    children = schema.config.components.map(componentFactory);
   }
 
   return factory(schema.config, children);
@@ -50,6 +48,17 @@ function buildComponentTree(list, head){
   return tree;
 }
 
+function factory(data){
+  var schema = _.cloneDeep(data);
+  if ( schema.components && !!schema.componentHead){
+    if ( !schema.componentHead ) throw new TypeError('You must supply a "componentHead".');
+    schema.components = buildComponentTree(
+        schema.components,
+        schema.components[schema.componentHead]);
+  }
+  return componentFactory(schema);
+}
+
 /**
  * This is the main API for the component library. You can use
  * any of the elements in a JSX environment, or you can generate
@@ -57,18 +66,9 @@ function buildComponentTree(list, head){
  * @module Components
  */
 module.exports = {
-  elements: elements,
-  eventQueue: EventQueue,
-  editorConfig: EditorConfig,
-  buildComponentTree: buildComponentTree,
-  factory: function(data){
-    var schema = _.cloneDeep(data);
-    if ( schema.components ){
-      if ( !schema.componentHead ) throw new TypeError('You must supply a "componentHead".');
-      schema.components = buildComponentTree(
-        schema.components, 
-        schema.components[schema.componentHead]);    
-    } 
-    return componentFactory(schema);
-  }
+  'elements': elements,
+  'eventQueue': EventQueue,
+  'editorConfig': EditorConfig,
+  'buildComponentTree': buildComponentTree,
+  'factory':factory
 };

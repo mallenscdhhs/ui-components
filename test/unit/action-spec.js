@@ -4,7 +4,8 @@ describe('Action component', function() {
     type: 'action',
     config: {
       'name' : 'Test Form',
-      'url' : 'testing.html'
+      'url' : 'testing.html',
+      'id' : 'action-test-1'
     }    
   };
 

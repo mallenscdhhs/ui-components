@@ -44,7 +44,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
-    return (<a href={this.props.url} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick}>{this.getEditController("Action")}{this.props.name}</a>);
+    return (<a href={this.props.url} id={this.props.id} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick}>{this.getEditController("Action")}{this.props.name}</a>);
   },
 
   /**

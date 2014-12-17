@@ -2,6 +2,7 @@ var fieldsFixture = {
     'text' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-text-1',
             'type' : 'text',
             'name' : 'test-text-1',
             'label' : 'Test Text',
@@ -16,6 +17,7 @@ var fieldsFixture = {
     'textarea' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-textarea',
             'type' : 'textarea',
             'name' : 'test-textarea',
             'label' : 'Test Textarea',
@@ -30,6 +32,7 @@ var fieldsFixture = {
     'checkbox' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-checkbox',
             'type' : 'checkbox',
             'name' : 'test-checkbox',
             'label' : 'Test Checkbox',
@@ -52,6 +55,7 @@ var fieldsFixture = {
     'radio' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-radio',
             'type' : 'radio',
             'name' : 'test-radio',
             'label' : 'Test Radio',
@@ -78,6 +82,7 @@ var fieldsFixture = {
     'select' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-select',
             'type' : 'select',
             'name' : 'test-select',
             'label' : 'Test Select',
@@ -104,6 +109,7 @@ var fieldsFixture = {
     'multiselect' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-multiselect',
             'type' : 'multiselect',
             'name' : 'test-multiselect',
             'label' : 'Test MultiSelect',
@@ -111,7 +117,7 @@ var fieldsFixture = {
             'required': false,
             'rules':['BR-123','BSR-4543','BR-45'],
             'dependency': {
-                'name':'test-text-1',
+                'id':'test-text-1',
                 'value':'hi|hello|bye',
                 'initialState': 'visable'
             },
@@ -130,7 +136,7 @@ var fieldsFixture = {
                 'url' : 'testURL',
                 'resource' : 'Vendor',
                 'dependency' : {
-                    'name': 'test-email'
+                    'id': 'test-email'
                 }
             },
             'session' : false
@@ -139,6 +145,7 @@ var fieldsFixture = {
     'email' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-email',
             'type' : 'email',
             'name' : 'test-email',
             'label' : 'Test Email',
@@ -153,6 +160,7 @@ var fieldsFixture = {
     'phone' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-phone',
             'type' : 'phone',
             'name' : 'test-phone',
             'label' : 'Test Phone',
@@ -167,6 +175,7 @@ var fieldsFixture = {
     'date' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-date',
             'type' : 'date',
             'name' : 'test-date',
             'label' : 'Test Date',
@@ -181,6 +190,7 @@ var fieldsFixture = {
     'password' : {
         'type' : 'field',
         'config' : {
+            'id' : 'test-password',
             'type' : 'password',
             'name' : 'test-password',
             'label' : 'Test Password',
@@ -197,6 +207,7 @@ var fieldsFixture = {
 var fieldsetFixture = {
     'type' : 'fieldset',
     'config':{
+        'id' : 'fieldset-test-3',
         'name' : 'Test Fieldset With All Fields TEST TEST',
         'components' :[],
         'layout' : {
@@ -221,11 +232,13 @@ Object.keys(fieldsFixture).forEach(function(key,j){
 var formFixture = {
     'type':'form',
     'config' :{
+        'id' : 'test-form-one',
         'name' : 'Test Form One',
         'model' : {},
         'actions':[{
             'type' : 'link',
             'config' : {
+                'id' : 'action-1',
                 'name' : 'Test Link Action',
                 'url' : 'testURLHTTP',
                 'event' : 'next'
@@ -233,6 +246,7 @@ var formFixture = {
         },{
             'type' : 'button',
             'config' : {
+                'id' : 'action-2',
                 'name' : 'Test Button Action',
                 'url' : 'testURLHTTP',
                 'event' : 'back'
@@ -242,6 +256,7 @@ var formFixture = {
         'components' :[{
             'type' : 'fieldset',
             'config':{
+                'id' : 'fieldset-7',
                 'name' : 'First Fieldset',
                 'layout' : {
                     'type': "grid",
@@ -254,6 +269,7 @@ var formFixture = {
                 'components' :[{
                     'type' :'field',
                     'config' : {
+                        'id' : 'test-text-2',
                         'type' : 'text',
                         'value' : 'test value here folks!',
                         'name' : 'test-text-2',
@@ -268,8 +284,9 @@ var formFixture = {
                 },{
                     'type' : 'field',
                     'config' : {
+                        'id' : 'test-password-3',
                         'type' : 'password',
-                        'name' : 'test-password-231234123',
+                        'name' : 'test-password-3',
                         'label' : 'Test Password One',
                         'helpText': 'This is Help Text.',
                         'required': false,
@@ -281,8 +298,9 @@ var formFixture = {
                 },{
                     'type' : 'field',
                     'config' : {
+                        'id' : 'test-text-7',
                         'type' : 'text',
-                        'name' : 'test-password-23qwerqwer',
+                        'name' : 'test-text-7',
                         'label' : 'Test Text Two',
                         'helpText': 'This is Help Text.',
                         'required': false,
@@ -294,8 +312,9 @@ var formFixture = {
                 },{
                     'type' : 'field',
                     'config' : {
+                        'id' : 'test-text-8',
                         'type' : 'date',
-                        'name' : 'test-password-23asdfasdf',
+                        'name' : 'test-text-8',
                         'label' : 'Test Date Three',
                         'helpText': 'This is Help Text.',
                         'required': false,
@@ -307,8 +326,9 @@ var formFixture = {
                 },{
                     'type' : 'field',
                     'config' : {
+                        'id' : 'test-email-4',
                         'type' : 'email',
-                        'name' : 'test-password-23retwertwert',
+                        'name' : 'test-email-4',
                         'label' : 'Test Email Four',
                         'helpText': 'This is Help Text.',
                         'required': false,

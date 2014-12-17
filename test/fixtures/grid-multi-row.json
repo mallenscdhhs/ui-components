@@ -10,49 +10,49 @@
 	"componentHead": "field_1",
 	"components": {
 		"field_1": {
-			"id": "field_1",
 			"next": "field_2",
 			"type": "field",
 			"config": {
+				"id": "field_1",
 				"type": "text",
 				"name": "testone",
 				"label": "Test one"
 			}
 		},
 		"field_2": {
-			"id": "field_2",
 			"next": "field_3",
 			"type": "field",
 			"config": {
+				"id": "field_2",
 				"type": "text",
 				"name": "testtwo",
 				"label": "Test two"
 			}
 		},
 		"field_3": {
-			"id": "field_3",
 			"next": "field_4",
 			"type": "field",
 			"config": {
+				"id": "field_3",
 				"type": "text",
 				"name": "testthree",
 				"label": "Test three"
 			}
 		},
 		"field_4": {
-			"id": "field_4",
 			"next": "field_5",
 			"type": "field",
 			"config": {
+				"id": "field_4",
 				"type": "text",
 				"name": "testfour",
 				"label": "Test four"
 			}
 		},
 		"field_5": {
-			"id": "field_5",
 			"type": "field",
 			"config": {
+				"id": "field_5",
 				"type": "text",
 				"name": "testfive",
 				"label": "Test five"

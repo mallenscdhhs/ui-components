@@ -14,6 +14,7 @@ var fieldBasic = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'name',
         'type': 'text',
         'name': 'name',
         'label': 'Name',
@@ -26,6 +27,7 @@ var fieldBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'type',
         'type': 'select',
         'name': 'type',
         'label': 'Type',
@@ -53,6 +55,7 @@ var fieldBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'label',
         'type': 'text',
         'name': 'label',
         'label': 'Label',
@@ -65,6 +68,7 @@ var fieldBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'required',
         'type': 'select',
         'name': 'required',
         'label': 'Required',
@@ -82,6 +86,7 @@ var fieldBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'helpText',
         'type': 'text',
         'name': 'helpText',
         'label': 'Help Text',
@@ -94,6 +99,7 @@ var fieldBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'session',
         'type': 'select',
         'name': 'session',
         'label': 'Session Value',
@@ -111,6 +117,7 @@ var fieldBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'rules',
         'type': 'text',
         'name': 'rules',
         'label': 'Business Rules',
@@ -127,6 +134,7 @@ var fieldBasic = {
 var fieldOptions = {
   'type': 'fieldset',
   'config': {
+    'id': 'options-1',
     'name': 'Options',
     'layout': {
       'type': "grid",
@@ -137,6 +145,7 @@ var fieldOptions = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'options-service',
         'type': 'text',
         'name': 'options-service',
         'label': 'Service',
@@ -149,6 +158,7 @@ var fieldOptions = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'options-dependency',
         'type': 'text',
         'name': 'options-dependency',
         'label': 'Depends On',
@@ -165,6 +175,7 @@ var fieldOptions = {
 var fieldDependency = {
   'type': 'fieldset',
   'config': {
+    'id': 'dependency-1',
     'name': 'Dependency',
     'layout': {
       'type': "grid",
@@ -176,6 +187,7 @@ var fieldDependency = {
     'components': [ {
       'type': 'field',
       'config': {
+        'id': 'dependency-field',
         'type': 'text',
         'name': 'dependency-field',
         'label': 'Depends On',
@@ -188,6 +200,7 @@ var fieldDependency = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'dependency-values',
         'type': 'text',
         'name': 'dependency-values',
         'label': 'Values',
@@ -200,6 +213,7 @@ var fieldDependency = {
     },{
       'type': 'field',
       'config': {
+        'id': 'dependency-initial-state',
         'type': 'select',
         'name': 'dependency-initial-state',
         'label': 'Initial State',
@@ -221,6 +235,7 @@ var fieldDependency = {
 var fieldForm = {
   'type':'form',
   'config' :{
+    'id' : 'field-edit-form',
     'name' : 'field-edit-form',
     'model' : {},
     'actions':[],
@@ -240,7 +255,8 @@ var fieldForm = {
 var fieldSetBasic = {
   'type'  : 'fieldset',
   'config': {
-    'name'      : '',
+    'id'      : 'fieldset-2',
+    'name'      : 'fieldset-2',
     'layout'    : {
       'type'  : "grid",
       'config': {
@@ -250,6 +266,7 @@ var fieldSetBasic = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'name',
         'type': 'text',
         'name': 'name',
         'label': 'Name',
@@ -266,6 +283,7 @@ var fieldSetBasic = {
 var fieldSetForm = {
   'type':'form',
   'config' :{
+    'id' : 'fieldset-edit-form',
     'name' : 'fieldset-edit-form',
     'model' : {},
     'actions':[],
@@ -283,7 +301,8 @@ var fieldSetForm = {
 var actionBasic = {
   'type': 'fieldset',
   'config': {
-    'name': '',
+    'id': 'fieldset-3',
+    'name': 'fieldset-3',
     'layout': {
       'type': "grid",
       'config': {
@@ -295,6 +314,7 @@ var actionBasic = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'name',
         'type': 'text',
         'name': 'name',
         'label': 'Name',
@@ -307,6 +327,7 @@ var actionBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'type',
         'type': 'select',
         'name': 'type',
         'label': 'Type',
@@ -324,6 +345,7 @@ var actionBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'id',
         'type': 'text',
         'name': 'id',
         'label': 'Id',
@@ -336,6 +358,7 @@ var actionBasic = {
     }, {
       'type': 'field',
       'config': {
+        'id': 'event',
         'type': 'text',
         'name': 'event',
         'label': 'Event',
@@ -348,6 +371,7 @@ var actionBasic = {
     }, {
       'type': 'field',
       'config': {
+        'name': 'classNames',
         'type': 'text',
         'name': 'classNames',
         'label': 'Class Names',
@@ -364,6 +388,7 @@ var actionBasic = {
 var actionForm = {
   'type':'form',
   'config' :{
+    'id' : 'action-edit-form',
     'name' : 'action-edit-form',
     'model' : {},
     'actions':[],
@@ -383,7 +408,8 @@ var actionForm = {
 var containerBasic = {
   'type'  : 'fieldset',
   'config': {
-    'name'      : '',
+    'id'      : 'fieldset-4',
+    'name'      : 'fieldset-4',
     'layout'    : {
       'type'  : "grid",
       'config': {
@@ -393,6 +419,7 @@ var containerBasic = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'classes',
         'type': 'text',
         'name': 'classes',
         'label': 'Class Names',
@@ -409,6 +436,7 @@ var containerBasic = {
 var containerForm = {
   'type':'form',
   'config' :{
+    'id' : 'container-edit-form',
     'name' : 'container-edit-form',
     'model' : {},
     'actions':[],
@@ -426,7 +454,8 @@ var containerForm = {
 var formBasic = {
   'type'  : 'fieldset',
   'config': {
-    'name'      : '',
+    'id'      : 'fielset-5',
+    'name'      : 'fieldset-5',
     'layout'    : {
       'type'  : "grid",
       'config': {
@@ -436,6 +465,7 @@ var formBasic = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'name',
         'type': 'text',
         'name': 'name',
         'label': 'Name',
@@ -452,6 +482,7 @@ var formBasic = {
 var formForm = {
   'type':'form',
   'config' :{
+    'id' : 'form-edit-form',
     'name' : 'form-edit-form',
     'model' : {},
     'actions':[],
@@ -469,7 +500,8 @@ var formForm = {
 var pageBasic = {
   'type'  : 'fieldset',
   'config': {
-    'name'      : '',
+    'id'      : 'fieldset-6',
+    'name'      : 'fieldset-6',
     'layout'    : {
       'type'  : "grid",
       'config': {
@@ -480,6 +512,7 @@ var pageBasic = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'title',
         'type': 'text',
         'name': 'title',
         'label': 'title',
@@ -492,6 +525,7 @@ var pageBasic = {
     },{
       'type': 'field',
       'config': {
+        'id': 'content',
         'type': 'textarea',
         'name': 'content',
         'label': 'Content',
@@ -508,6 +542,7 @@ var pageBasic = {
 var pageForm = {
   'type':'form',
   'config' :{
+    'id' : 'page-edit-form',
     'name' : 'page-edit-form',
     'model' : {},
     'actions':[],
@@ -527,7 +562,8 @@ var pageForm = {
 var addBasic = {
   'type'  : 'fieldset',
   'config': {
-    'name'      : '',
+    'id'      : 'fieldset-7',
+    'name'      : 'fieldset-7',
     'layout'    : {
       'type'  : "grid",
       'config': {
@@ -537,8 +573,9 @@ var addBasic = {
     'components': [{
       'type': 'field',
       'config': {
+        'id': 'new-component-type',
         'type': 'select',
-        'name': 'type',
+        'name': 'new-component-type',
         'label': 'Add New Component',
         'helpText': '',
         'required': true,
@@ -555,6 +592,7 @@ var addBasic = {
 var addForm = {
   'type':'form',
   'config' :{
+    'id' : 'add-component-form',
     'name' : 'add-component-form',
     'model' : {},
     'actions':[],

@@ -12,7 +12,7 @@ module.exports = React.createClass({
 	* @returns {JSX}
 	*/
 	render: function(){ 
-		return (<div className={this.props.classes+' editable-component'}>{this.getEditController("Container")}{this.props.children}</div>);
+		return (<div id={this.props.id} className={this.props.classes+' editable-component'}>{this.getEditController("Container")}{this.props.children}</div>);
 	}
 
 });

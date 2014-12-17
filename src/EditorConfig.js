@@ -41,31 +41,6 @@ var getFieldIds =  function (element) {
 };
 
 /**
- * Set field data based on passed in ID
- * Return list of updated values, both old and new
- * @param element
- * @param id
- * @param data
- * @returns {Array}
- */
-var setFieldData =  function (element,id,data) {
-    var updated = [];
-    if (element.config.components) {
-        _.each(element.config.components, function (comp, j) {
-            updated = updated.concat(setFieldData(comp,id,data));
-        });
-    } else {
-        if(element.type === 'field' && element.config.id === id) {
-            var updateStatus = {'old':element.config};
-            element.config = data;
-            updateStatus.new = element.config;
-            updated.push(updateStatus);
-        }
-    }
-    return updated;
-};
-
-/**
  * Pull Dependency Data
  * @param data
  * @param config
@@ -81,7 +56,7 @@ var extractDependency = function(data,config){
             value = data.value;
             break;
         default:
-            value = data.name;
+            value = data.id;
     }
     return value;
 }
@@ -97,7 +72,7 @@ var extractOptions = function(data,config){
     if(config.name === 'options-service'){
         value = data.url ? data.url : '';
     }else if(config.name === 'options-dependency'){
-        value = data.dependency && data.dependency.name ? data.dependency.name : '';
+        value = data.dependency && data.dependency.id ? data.dependency.id : '';
     }
     return value;
 }
@@ -155,10 +130,10 @@ var getFieldValuesFromForm = function(formId){
     _.each(fields,function(field,i){
         if(field.type === 'checkbox' || field.type === 'radio'){
            if(field.checked === true) {
-               fieldValues[field.name] = field.value;
+               fieldValues[field.id] = field.value;
            }
         }else{
-            fieldValues[field.name] = field.value;
+            fieldValues[field.id] = field.value;
         }
     });
     return fieldValues;
@@ -185,11 +160,11 @@ var getComponentsToAddList = function(type){
     return items;
 }
 
-var createAddConfig = function(form, type){
-    form.config.components[0].config.components[0].config.options.items = getComponentsToAddList(type);
-    return form;
-}
-
+/**
+ * Helper func that builds proper edit dialog JSON config
+ * @param componentInfo
+ * @returns {{type: string, config: {componentType: *, subs: (*|componentDataForModal.subs|exports.subs|config.subs), actions: {id: string, name: string, type: string, classNames: string[], event: *, componentType: *, componentName: *, formId: (*|componentDataForModal.formId|config.formId)}[]}}}
+ */
 var buildComponentModalConfig = function(componentInfo){
     var config = {
         'type' : 'editorConfig',
@@ -204,7 +179,7 @@ var buildComponentModalConfig = function(componentInfo){
                     "classNames": ["btn-primary pull-right"],
                     "event":          componentInfo.event,
                     "componentType" : componentInfo.type,
-                    "componentName" : componentInfo.name,
+                    "componentId"   : componentInfo.id,
                     "formId"        : componentInfo.formId
                 }
             ]
@@ -213,10 +188,14 @@ var buildComponentModalConfig = function(componentInfo){
     return config;
 }
 
+/**
+ * Remove Child Component
+ * List item in Edit Modal, for a child component.
+ */
 var RemoveComponent = React.createClass({
 
     handleClick: function(){
-        Queue.push({'entityEvent':'component:remove:'+this.props.config.name,'data':{'type':this.props.type,'name':this.props.config.name}});
+        Queue.push({'entityEvent':'component:remove:'+this.props.config.id,'data':{'type':this.props.type,'id':this.props.config.id}});
     },
 
     render: function() {
@@ -225,8 +204,9 @@ var RemoveComponent = React.createClass({
 
 });
 
-
-
+/**
+ * Creates Modal for Editing Components
+ */
 module.exports = React.createClass({
 
     statics: {
@@ -234,7 +214,7 @@ module.exports = React.createClass({
         'mergeFormAndData' : mergeFormAndData,
         'getFieldValuesFromForm' : getFieldValuesFromForm,
         'buildComponentModalConfig' : buildComponentModalConfig,
-        'createAddConfig' : createAddConfig
+        'getComponentsToAddList' : getComponentsToAddList
     },
 
     render: function() {
