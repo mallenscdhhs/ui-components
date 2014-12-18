@@ -1,0 +1,8 @@
+{
+  "id" : "test-required",
+  "type" : "text",
+  "name" : "test-required",
+  "label" : "Required Text",
+  "required" : true,
+  "options" : { }  
+}

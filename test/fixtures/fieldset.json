@@ -10,7 +10,7 @@
       }
     }
   },
-  "componentHead": "test_field",
+  "child": "test_field",
   "components": {
     "test_field": {
       "type" :"field",

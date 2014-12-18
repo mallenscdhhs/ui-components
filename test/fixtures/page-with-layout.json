@@ -10,7 +10,7 @@
       }
     }
   },
-  "componentHead": "field_1",
+  "child": "field_1",
   "components": {
     "field_1": {
       "next": "field_2",

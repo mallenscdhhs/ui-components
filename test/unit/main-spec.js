@@ -21,18 +21,23 @@ describe('main component', function(){
   describe('#buildComponentTree', function(){
     it('can build a nested data structure for rendering Component tree', function(){
       var fixture = require('../fixtures/main.json');      
-      var tree = Components.buildComponentTree(
-        fixture.components, 
-        fixture.components[fixture.componentHead]
-      );   
-      expect(tree.length).toEqual(2);
-      expect(tree[0].components.length).toEqual(1);
-      expect(tree[0].config.id).toEqual('test_form');
-      expect(tree[0].components[0].components.length).toEqual(2);
-      expect(tree[0].components[0].config.id).toEqual('test_fieldset');
-      expect(tree[0].components[0].components[0].config.id).toEqual('test_field_1');
-      expect(tree[0].components[0].components[1].config.id).toEqual('test_field_2');
-      expect(tree[1].config.id).toEqual('action_1');
+      var page = Components.buildComponentTree(fixture, fixture)[0]._store.props;
+      expect(page.children.length).toEqual(2);
+      var form = page.children[0]._store.props;
+      expect(form.children.length).toEqual(1);
+      var fieldset = form.children[0]._store.props;      
+      expect(fieldset.children.length).toEqual(1);
+      var fieldsetLayout = fieldset.children[0]._store.props;
+      expect(fieldsetLayout.children.length).toEqual(2);
+      var field1 = fieldsetLayout.children[0]._store.props;
+      var field2 = fieldsetLayout.children[1]._store.props;
+      var action = page.children[1]._store.props;
+       
+      expect(form.id).toEqual('test_form');
+      expect(fieldset.id).toEqual('test_fieldset');
+      expect(field1.id).toEqual('test_field_1');
+      expect(field2.id).toEqual('test_field_2');
+      expect(action.id).toEqual('action_1');
     });
   });
 });

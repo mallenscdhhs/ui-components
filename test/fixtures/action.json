@@ -1,0 +1,8 @@
+{
+  "type": "action",
+  "config": {
+    "name" : "Test Form",
+    "url" : "testing.html",
+    "id" : "action-test-1"
+  }
+}

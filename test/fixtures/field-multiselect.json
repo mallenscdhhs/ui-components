@@ -1,0 +1,19 @@
+{
+  "id" : "test-multiselect",
+  "type" : "multiselect",
+  "name" : "test-multiselect",
+  "label" : "Test Multi-Select",
+  "required" : false,
+  "options" : {
+    "items" : [
+      {
+        "label" : "Multi-Select 1",
+        "value" : "1"
+      },
+      {
+        "label" : "Multi-Select 2",
+        "value" : "2"
+      }        
+    ]
+  }    
+}

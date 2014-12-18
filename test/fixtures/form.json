@@ -30,7 +30,7 @@
       }
     }
   },
-  "componentHead": "test_fieldset",
+  "child": "test_fieldset",
   "components": {
     "test_fieldset": {
       "child": "test_field",

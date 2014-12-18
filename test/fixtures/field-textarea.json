@@ -1,0 +1,8 @@
+{
+  "id" : "test-textarea",
+  "type" : "textarea",
+  "name" : "test-textarea",
+  "label" : "Test Textarea",
+  "required" : false,
+  "options" : { }    
+}

@@ -1,11 +1,12 @@
 {
-  "id": "pi",
+  "pageId": "pi",
   "type": "page",
   "config": {
     "title": "Provider Information",
-    "content": "Please tell us about **yourself**."
+    "content": "Please tell us about **yourself**.",
+    "id": "pi"
   },
-  "componentHead": "test_form",
+  "child": "test_form",
   "components": {
     "test_form": {
       "next": "action_1",

@@ -17,7 +17,7 @@ module.exports = function(config) {
 		'node_modules/es5-shim/es5-shim.js',		
 		'dist/Components.js',
 		'test/shim.js',
-		'test/unit/**/*.js'
+		'test/unit/**/*-spec.js'
 	],
 
 
