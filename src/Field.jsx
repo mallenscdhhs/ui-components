@@ -96,7 +96,13 @@ module.exports = React.createClass({
     if(this.hasDependency() && this.props.dependency.initialState && this.props.dependency.initialState ==='hidden'){
       viewableState = false;
     }
-    return { 'value' : this.props.value, 'display' : viewableState, 'hasError' : false , 'errorMessage' : '' , 'options' : this.props.options };
+    return { 
+      value: this.props.value, 
+      display: viewableState, 
+      hasError: false, 
+      errorMessage: '', 
+      options: this.props.options 
+    };
   },
 
   /**
@@ -108,11 +114,20 @@ module.exports = React.createClass({
   },
 
   /**
-   * Event handler for onChange, that updates the field's state with the new value
-   * @returns {void}
+   * Event handler for onChange, that updates the field's state with the new value.
+   * @fires field:value:change
+   * @param {object} event
    */
   handleChange: function(event) {
     this.setState({value: event.target.value});
+    Queue.push({
+      entityEvent: 'field:value:change', 
+      data: {
+        id: this.props.id,
+        name: this.props.name,
+        value: event.target.value
+      }
+    });
   },  
 
   /**
