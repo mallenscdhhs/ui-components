@@ -4,24 +4,26 @@ module.exports = {
 
   /**
    * Stop event prop and push event to Queue, enabling global app to open the config editor window.
-   * We only need to send the component's "id" property to the config tool since it will already
-   * have the component config data.
+   * Publishes the component's props.
+   * @fires component:edit
    * @param {object} e - Event object
    */
   handleConfigEdit: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Queue.push({entityEvent: 'component:edit', data: this.props.id});
+    Queue.push({ entityEvent: 'component:edit', data: this.props });
   },
 
   /**
    * Stop even prop and push event to Queue, enabling global app to open the config editor window.
+   * Publishes the component's props.
+   * @fires component:add:new
    * @param e Event
    */
   handleConfigAdd: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Queue.push({entityEvent:'component:add:new', data: this.props.id});
+    Queue.push({ entityEvent:'component:add:new', data: this.props });
   },
 
   /**
@@ -40,14 +42,13 @@ module.exports = {
   },
 
   /**
-   * Create edit component html handler.
-   * @param {string} 
+   * Create edit component HTML and handle click events.
    * @returns {JSX Template}
    */
-  getEditController: function() {    
+  getEditController: function() {
     return (
       <div className="config-editor">
-        {this.getAddButton(this.props.type.toLowerCase())}
+        {this.getAddButton(this.props.componentType.toLowerCase())}
         <span onClick={this.handleConfigEdit} className="edit-component">
           <span className="glyphicon glyphicon-cog"></span>
         </span>

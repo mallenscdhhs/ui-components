@@ -3,60 +3,54 @@ var React = require('react/addons');
 var elements = require('./index');
 var _ = require('lodash');
 var EventQueue = require('./EventQueue');
-var EditorConfig = require('./EditorConfig');
 
 /**
  * Recursively builds up a component hierarchy.
  * @param {object} schema - the parent component schema
  * @returns {function} a ReactElement factory function
  */
-function componentFactory(schema){
-  var element = elements[schema.type];
-  var factory = React.createFactory(element);
-  var children = null;
-  var layoutConfig = schema.config.layout;
-
-  schema.config.key = schema.config.id;
-
-  if ( layoutConfig ) {
-    layoutConfig.components = schema.components ? schema.components : schema.config.components ;
-    children = componentFactory(layoutConfig);
-  } else if ( schema.components ) {
-    children = schema.components.map(componentFactory);
-  } else if ( schema.config.components ) {
-    children = schema.config.components.map(componentFactory);
-  }
-
-  return factory(schema.config, children);
+function componentFactory(data){
+  if ( data.components && !data.child ) throw new TypeError('You must provide a "child" property.');
+  var schema = _.cloneDeep(data);
+  return buildComponentTree(schema, schema)[0];
 }
 
 /**
- * Take a linked list and build a nested tree structure from it.
- * @param {object} list - the linked list
+ * Take a binary tree and build a nested tree structure from it.
+ * @param {object} schema - the top-level component schema
  * @param {object} head - the first item in the list
  * @returns {array}
  */
-function buildComponentTree(list, head){
+function buildComponentTree(schema, head){
   var tree = [];
+  var list = schema.components || {};
+  var children = null;
+  var element, factory;
   while(head){
-    if ( head.child ) {
-      head.components = buildComponentTree(list, list[head.child]);
+    children = null;
+    // if there is a layout config then we need to insert
+    // the layout into the binary tree to be rendered
+    if ( head.config.layout ) {
+      head.config.layout.child = head.child;
+      head.config.layout.id = head.config.id + '-layout';      
+      children = buildComponentTree(schema, head.config.layout);
+    } else if ( head.child ) {
+      children = buildComponentTree(schema, list[head.child]);
     }
-    tree.push(head);
+    
+    if ( head.type === 'field' && _.has(schema.model, head.config.name) ) {
+      head.config.value = schema.model[head.config.name];
+    }
+
+    head.config.key = head.config.id;
+    head.config.componentType = head.type;
+
+    element = elements[head.type];
+    factory = React.createFactory(element);
+    tree.push(factory(head.config, children));
     head = list[head.next];
   }
   return tree;
-}
-
-function factory(data){
-  var schema = _.cloneDeep(data);
-  if ( schema.components && !!schema.componentHead){
-    if ( !schema.componentHead ) throw new TypeError('You must supply a "componentHead".');
-    schema.components = buildComponentTree(
-        schema.components,
-        schema.components[schema.componentHead]);
-  }
-  return componentFactory(schema);
 }
 
 /**
@@ -68,7 +62,6 @@ function factory(data){
 module.exports = {
   'elements': elements,
   'eventQueue': EventQueue,
-  'editorConfig': EditorConfig,
   'buildComponentTree': buildComponentTree,
-  'factory':factory
+  'factory': componentFactory
 };
