@@ -43,6 +43,12 @@ module.exports = React.createClass({
     startOn: React.PropTypes.string
   },
 
+  getDefaultProps: function(){
+    return {
+      componentType: 'tree'
+    };
+  },  
+
   render: function(){
     return renderTree.call(this, this.props);
   }

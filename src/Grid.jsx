@@ -83,6 +83,12 @@ module.exports = React.createClass({
 		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired		
 	},
 
+	getDefaultProps: function(){
+    return {
+      componentType: 'layout'
+    };
+  },
+
 	render: function(){
 		var uniqueKey = this.props.id
 		this.lastIndex = -1;

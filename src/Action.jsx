@@ -9,6 +9,12 @@ module.exports = React.createClass({
 
   mixins: [EditorMixin],
 
+  getDefaultProps: function(){
+    return {
+      componentType: 'action'
+    };
+  },
+
   /**
   * Return a string of classes
   * @return {String}

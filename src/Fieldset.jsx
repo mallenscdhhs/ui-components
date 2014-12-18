@@ -7,6 +7,12 @@ module.exports = React.createClass({
 
   mixins: [EditorMixin],
 
+  getDefaultProps: function(){
+    return {
+      componentType: 'fieldset'
+    };
+  },
+
   getLabel: function(){
     var fieldSetLabel = null;
     if(this.props.name){

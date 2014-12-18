@@ -21,7 +21,8 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       content: '',
-      title: ''
+      title: '',
+      componentType: 'page'
     };
   },
 

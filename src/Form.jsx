@@ -12,7 +12,8 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      name: ''
+      name: '',
+      componentType: 'form'
     };
   },
 

@@ -96,6 +96,12 @@ module.exports = React.createClass({
     getCurrentActionButtons: getCurrentActionButtons
   },
 
+  getDefaultProps: function(){
+    return {
+      componentType: 'workflow'
+    };
+  },
+
   /**
    * Determine the current state of the workflow by analyzing the passed in prop data.
    * @returns {object}

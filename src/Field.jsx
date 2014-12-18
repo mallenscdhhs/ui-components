@@ -9,6 +9,12 @@ module.exports = React.createClass({
 
   mixins: [EditorMixin],
 
+  getDefaultProps: function(){
+    return {
+      componentType: 'field'
+    };
+  },
+
   /**
    * Upon mounting, subscribe to any dependency that the field has, an monitor the field
    * for events that would require you to make a state change.
