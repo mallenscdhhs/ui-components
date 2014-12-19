@@ -23,7 +23,7 @@ module.exports = {
   handleConfigAdd: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Queue.push({ entityEvent:'component:add:new', data: this.props });
+    Queue.push({ entityEvent:'component:add', data: this.props });
   },
 
   /**
@@ -43,9 +43,9 @@ module.exports = {
 
   /**
    * Create edit component HTML and handle click events.
-   * @returns {JSX Template}
+   * @returns {JSX}
    */
-  getEditController: function() {
+  getEditTemplate: function() {
     return (
       <div className="config-editor">
         {this.getAddButton(this.props.componentType.toLowerCase())}

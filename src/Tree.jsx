@@ -11,8 +11,9 @@ var TreeItem = require('./TreeItem');
  */
 var renderItems = function(config){
   return config.items.map(function(item, n){
+    var key = 'tree-item-'+item.id;
     return (
-      <TreeItem {...item} ref={item.pageId} key={item.pageId}>
+      <TreeItem {...item} ref={key} key={key}>
         {renderTree.call(this, item)}
       </TreeItem>
     );

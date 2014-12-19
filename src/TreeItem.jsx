@@ -4,11 +4,25 @@ var Queue = require('./EventQueue');
 
 module.exports = React.createClass({
 
-	displayName: 'TreeItem',	
+	displayName: 'TreeItem',
+
+	propTypes: {
+		id: React.PropTypes.string.isRequired,
+		title: React.PropTypes.string.isRequired,
+		active: React.PropTypes.bool,
+		disabled: React.PropTypes.bool
+	},
+
+	getDefaultProps: function(){
+		return {
+			active: false,
+			disabled: false
+		};
+	},
 
 	handleClick: function(e){
 		if(!this.props.disabled){
-			Queue.push({'entityEvent':'tree:load:page','data':{'pageId':this.props.pageId}}); 
+			Queue.push({ entityEvent:'tree:load:page', data: this.props.id }); 
 		}
 	},
 
@@ -19,7 +33,7 @@ module.exports = React.createClass({
 		});
 		return (
 			<li className={liClassNames} role="presentation">
-				<a href="javascript:void(0)" data-disabled={this.props.disabled} id={this.props.id} onClick={this.handleClick}>{this.props.title}</a>
+				<a href="javascript:void(0)" data-disabled={this.props.disabled} onClick={this.handleClick}>{this.props.title}</a>
 				{this.props.children}
 			</li>
 		);

@@ -9,6 +9,15 @@ module.exports = React.createClass({
 
   mixins: [EditorMixin],
 
+  propTypes: {
+    id: React.PropTypes.string.isRequired,
+    type: React.PropTypes.string.isRequired,
+    event: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string.isRequired,
+    url: React.PropTypes.string,
+    classNames: React.PropTypes.arrayOf(React.PropTypes.string)    
+  },
+
   getDefaultProps: function(){
     return {
       componentType: 'action'
@@ -20,7 +29,7 @@ module.exports = React.createClass({
   * @return {String}
   */
   getClasses: function(){
-    var classes = ['btn','editable-component'];
+    var classes = ['btn', 'editable-component'];
     // Add default link-type for action links
     if(this.props.type==='link'){
       classes.push('btn-link');
@@ -38,7 +47,6 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleClick: function(){
-    // TODO: update 'next' with actual 'verbs' for the actions
     Queue.push({
       entityEvent: this.props.event,
       data: this.props
@@ -50,27 +58,33 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
-    return (<a href={this.props.url} id={this.props.id} key="actionLinkKey" className={this.getClasses()} onClick={this.handleClick}>{this.getEditController("Action")}{this.props.name}</a>);
+    return (
+      <a 
+        href={this.props.url} 
+        id={this.props.id} 
+        key={this.props.id+"-action"} 
+        className={this.getClasses()} 
+        onClick={this.handleClick}>
+          {this.getEditTemplate()}{this.props.name}
+      </a>
+    );
   },
 
   /**
-  * Return a Button template
+  * Return a <button> template
   * @return {JSX Template}
   */
   getButton: function(){
-    return (<button type="button" id={this.props.id} key="actionButtonKey" className={this.getClasses()} onClick={this.handleClick}>{this.getEditController("Action")}{this.props.name}</button>);
-  },
-
-  /**
-  * Determine what action template to return
-  * @returns {JSX Template}
-  */
-  getAction: function(){
-    if(this.props.type === 'button'){
-      return this.getButton();
-    }else{
-      return this.getLink();
-    }
+    return (
+      <button 
+        type="button" 
+        id={this.props.id} 
+        key={this.props.id+"-action"} 
+        className={this.getClasses()} 
+        onClick={this.handleClick}>
+          {this.getEditTemplate()}{this.props.name}
+      </button>
+    );
   },
 
   /**
@@ -78,7 +92,7 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){ 
-    return ( this.getAction() );
+    return (this.props.type === 'button')? this.getButton() : this.getLink();
   }
 
 });

@@ -16,7 +16,7 @@ module.exports = React.createClass({
   getLabel: function(){
     var fieldSetLabel = null;
     if(this.props.name){
-      fieldSetLabel = <legend className="field-label" key="legendKey">{this.props.name}</legend>;
+      fieldSetLabel = <legend className="field-label" key={this.props.name+"legend"}>{this.props.name}</legend>;
     }
     return fieldSetLabel;
   },
@@ -28,7 +28,7 @@ module.exports = React.createClass({
   render: function(){
     return (
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className="editable-component">
-        {this.getEditController("Fieldset")}
+        {this.getEditTemplate()}
         {this.getLabel()}
         {this.props.children}
       </fieldset>

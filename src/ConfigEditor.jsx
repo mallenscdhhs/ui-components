@@ -30,6 +30,7 @@ var RemoveComponent = React.createClass({
 
 /**
  * Creates Modal for Editing Components
+ * @module ConfigEditor
  */
 module.exports = React.createClass({
 
@@ -40,10 +41,19 @@ module.exports = React.createClass({
       componentChildren: React.PropTypes.arrayOf(React.PropTypes.object)
     },
 
+    /**
+     * Returns the current state of the the thing being edited.
+     * This method would be called by the parent application.
+     * @returns {object}
+     */
     getState: function(){
       return this.state;
     },
 
+    /**
+     * Subscribe to value changes from the editor form fields and update the
+     * internal state of the component config.
+     */
     componentDidMount: function(){
       Queue.subscribe('field:value:change', 'configeditor', function(data){        
         var state = {};
@@ -52,6 +62,9 @@ module.exports = React.createClass({
       });
     },
 
+    /**
+     * Destroy event listeners.
+     */
     componentWillUnmount: function(){
       Queue.unSubscribe('field:value:change', 'configeditor');
     },    
@@ -64,6 +77,7 @@ module.exports = React.createClass({
           </div>
           <div id="edit-modal-subs">
             {_.map(this.props.componentChildren, function(child){
+              child.key = child.config.name + '-remove';
               return <RemoveComponent {...child} />;
             })}
           </div>

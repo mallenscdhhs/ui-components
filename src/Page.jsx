@@ -33,7 +33,7 @@ module.exports = React.createClass({
   render: function(){   
     return (
       <article className="editable-component">
-        {this.getEditController("Page")}
+        {this.getEditTemplate()}
         <header>
           <h2>{this.props.title}</h2>
         </header>

@@ -42,7 +42,7 @@ function buildComponentTree(schema, head){
       head.config.value = schema.model[head.config.name];
     }
 
-    head.config.key = head.config.id;
+    head.config.key = head.config.id+'-'+head.type;
     head.config.componentType = head.type;
 
     element = elements[head.type];

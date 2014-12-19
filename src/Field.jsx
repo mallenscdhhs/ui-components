@@ -291,7 +291,7 @@ module.exports = React.createClass({
 
     return  (
       <fieldset className={React.addons.classSet(this.getRenderViewClasses())} key="fieldGroup">
-        {this.getEditController("Field")}
+        {this.getEditTemplate()}
         {label}
         <div className={React.addons.classSet(classes)} key="fieldGroupContent">
           {field}
@@ -308,7 +308,7 @@ module.exports = React.createClass({
   renderFieldWithLabel : function(label,field,helpText){
     return  (
       <div className={React.addons.classSet(this.getRenderViewClasses())} key="fieldDefaultGroup">
-        {this.getEditController("Field")}
+        {this.getEditTemplate()}
         {label}
         {field}
         {helpText}
