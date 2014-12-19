@@ -13,5 +13,15 @@ describe('ConfigEditor', function(){
     var fields  = TestUtils.scryRenderedDOMComponentsWithTag(form, 'input');
     expect(fields.length).toEqual(1);
     expect(fields[0].getDOMNode().value).toEqual('bar');
-  });  
+  });
+  it('maintains the changed state of the component config it is editing', function(done){
+    var form = TestUtils.findRenderedDOMComponentWithTag(this.component, 'form');
+    var fields  = TestUtils.scryRenderedDOMComponentsWithTag(form, 'input');
+    var input = fields[0].getDOMNode();
+    TestUtils.Simulate.change(input, {target:{value: 'fubu'}});
+    setTimeout(function(){
+      expect(this.component.getState().label).toEqual('fubu');
+      done();
+    }.bind(this), 200);    
+  });
 });

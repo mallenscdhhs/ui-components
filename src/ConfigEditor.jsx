@@ -41,6 +41,10 @@ module.exports = React.createClass({
       componentChildren: React.PropTypes.arrayOf(React.PropTypes.object)
     },
 
+    getInitialState: function(){
+      return {};
+    },
+
     /**
      * Returns the current state of the the thing being edited.
      * This method would be called by the parent application.
@@ -59,7 +63,7 @@ module.exports = React.createClass({
         var state = {};
         state[data.name] = data.value;
         this.setState(state);
-      });
+      }.bind(this));
     },
 
     /**
