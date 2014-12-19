@@ -63,6 +63,13 @@ gulp.task('clean:build', ['build:Components'], function(done){
 gulp.task('build', ['clean:build']);
 
 
+gulp.task('release', ['test'], function(){
+  var src = './dist/Components.js';
+  var dest = './dist/release/'+pkg.version;
+  return gulp.src(src).pipe(gulp.dest(dest));
+});
+
+
 gulp.task('specs', ['hint', 'build'], function(){
   fs.readdir('./test/unit', function(err, files){
     browserify(files.map(function(file){ return './test/unit/'+file; }), {extensions: ['.jsx']})
