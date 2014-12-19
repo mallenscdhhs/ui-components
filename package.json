@@ -4,9 +4,10 @@
   "description": "A UI component library for Twitter Bootstrap written with Reactjs.",
   "main": "src/main.js",
   "scripts": {
-    "test": "./node_modules/.bin/gulp build && ./node_modules/.bin/gulp specs && ./node_modules/.bin/gulp test",
+    "test": "./node_modules/.bin/gulp test",
     "start": "node test/server",
     "build": "gulp build",
+    "release": "./node_modules/.bin/gulp release",
     "postinstall": "npm run build"
   },
   "repository": {
