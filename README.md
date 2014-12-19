@@ -1,5 +1,6 @@
 # UI Components
 [ ![Codeship Status for scdhhs/ui-component-library](https://codeship.com/projects/bc98cc50-690e-0132-45b4-265187a17dc6/status?branch=master)](https://codeship.com/projects/53475)
+
 UI component library for producing HTML output from JSON configuration. This library uses [Facebook's React](http://facebook.github.io/react/).
 
 ## Getting Started
