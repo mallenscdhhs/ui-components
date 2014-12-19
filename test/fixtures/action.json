@@ -3,6 +3,8 @@
   "config": {
     "name" : "Test Form",
     "url" : "testing.html",
-    "id" : "action-test-1"
+    "id" : "action-test-1",
+    "type": "link",
+    "event": "test:event"
   }
 }

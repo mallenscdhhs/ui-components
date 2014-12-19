@@ -1,0 +1,24 @@
+{
+  "title": "test tree",
+  "api": {},
+  "items": [
+    {
+      "title": "One",
+      "id": "page1",
+      "items": [
+        {
+          "title": "One b",
+          "id": "page1b"
+        },
+        {
+          "title": "One a",
+          "id": "page1a"
+        }
+      ]
+    },
+    {
+      "title": "Two",
+      "id": "page2"
+    }
+  ]
+}

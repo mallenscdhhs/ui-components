@@ -4,20 +4,20 @@
     "title": "Simple Workflow",
     "items": {
       "page1": {
-        "pageId": "page1",
+        "id": "page1",
         "next": "page2",
         "previous": null,
         "title": "Page One"
       },
       "page2": {
         "parentId": "page1",
-        "pageId": "page2",
+        "id": "page2",
         "next": "page3",
         "previous": "page1",
         "title": "Page Two"
       },
       "page3": {
-        "pageId": "page3",
+        "id": "page3",
         "next": null,
         "previous": "page2",
         "title": "Page Three"

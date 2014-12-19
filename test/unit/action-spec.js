@@ -8,5 +8,4 @@ describe('Action component', function() {
     var inputText = tu.scryRenderedDOMComponentsWithTag(action, 'a');
     expect(inputText.length).toEqual(1);    
   });
-
 });

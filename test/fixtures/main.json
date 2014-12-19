@@ -58,7 +58,8 @@
         "id": "action_1",
         "type": "button",
         "classNames": ["btn-primary"],
-        "name": "Action one"
+        "name": "Action one",
+        "event": "some:event"
       }
     }
   }

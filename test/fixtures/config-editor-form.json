@@ -3,7 +3,12 @@
   "config": {
     "id": "tester",
     "title": "Test Config Editor",
-    "actions": [{}]
+    "actions": [{
+      "type": "button",
+      "id": "test-btn",
+      "name": "Test",
+      "event": "test:event"
+    }]
   },
   "child": "test_form",
   "components": {
