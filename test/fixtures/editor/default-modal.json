@@ -1,0 +1,33 @@
+{
+    'type' : 'editorConfig',
+    'config':{
+        'componentType' : 'fieldset',
+        'subs' : [{
+            'type' : 'field',
+            'config' : {
+                'id' : 'test-sub',
+                'type' : 'textarea',
+                'name' : 'test-textarea',
+                'label' : 'Test Textarea',
+                'helpText': 'This is Help Text.',
+                'required': false,
+                'rules':[],
+                'dependency' : null,
+                'options' : null,
+                'session' : false
+            }
+        }],
+        'actions':[
+            {
+                "id": "save-update-modal-button",
+                "name": "Save",
+                "type": "button",
+                "classNames": ["btn-primary pull-right"],
+                "event":          'test:event',
+                "componentType" : 'fieldset',
+                "componentName" : 'testFieldset',
+                "formId"        : 'testForm'
+            }
+        ]
+    }
+}

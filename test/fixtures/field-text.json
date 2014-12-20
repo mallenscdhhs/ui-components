@@ -1,0 +1,8 @@
+{
+  "id" : "test-text",
+  "type" : "text",
+  "name" : "test-text",
+  "label" : "Test Text",
+  "required" : false,
+  "options" : { }    
+}

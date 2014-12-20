@@ -3,41 +3,34 @@ var React = require('react/addons');
 var _ = require('lodash');
 var Container = require('./Container');
 var Action = require('./Action');
+var EditorMixin = require('./EditorMixin');
 
 module.exports = React.createClass({
   displayName: 'Form',
 
+  mixins: [EditorMixin],
+
+  propTypes: {
+    id: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string
+  },
+
   getDefaultProps: function(){
     return {
       name: '',
-      actions: []
+      componentType: 'form'
     };
-  },
-
-  /**
-   * Create actions component template
-   * @returns {JSX Template} 
-   */
-  getActions: function(){
-    var actions;
-    if(this.props.actions){
-      actions = _.map(this.props.actions, function(action,i){
-        return <Action type={action.type} {...action.config} key={"action"+i} />
-      }, this);       
-    }
-    return actions;
   },
 
   /**
    * Render a Form component.
    * @returns {JSX} 
    */
-  render: function(){ 
-    var formName = this.props.name ? (this.props.name).replace(/ /g,'_') : '';
+  render: function(){
     return (
-      <form name={formName} key={"formWithComponentsKey"+formName}>
+      <form name={this.props.name} id={this.props.id} key={this.props.id+"-form"} className="editable-component">
+        {this.getEditTemplate()}
         {this.props.children}
-        <Container classes="form-group" key={"containerActions"+formName}>{this.getActions()}</Container>
       </form>
     );
   }

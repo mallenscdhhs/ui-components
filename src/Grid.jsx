@@ -24,11 +24,8 @@ var getColumnClassNames = function(col){
  * @returns {number}
  */
 var getComponentIndex = function(rowNum, colNum, rangeOffset){
-	var indx = colNum + rangeOffset;
-	if ( rowNum > 0 ) {
-		indx = this.props.rows[rowNum-1].length + (colNum +1) + rangeOffset;
-	}
-	return indx;
+	this.lastIndex = this.lastIndex + (rangeOffset ? rangeOffset : 1);
+	return this.lastIndex;
 };
 
 /**
@@ -41,11 +38,11 @@ var getComponentIndex = function(rowNum, colNum, rangeOffset){
  * @param {number} i - the current row index
  * @returns {React.DOM.div}
  */
-var renderRow = function(components, row, i, key){
+var renderRow = function(components, row, i){
 	var componentIndexRange = 0;
 	var componentList;
 	return (
-		<div className="row" key={"row-"+i+"-"+key}>
+		<div className="row" key={"row-"+i}>
 			{row.map(function(col, n){
 				if ( col.indexRange ) {
 					componentIndexRange += (col.indexRange[1] - 1);
@@ -53,7 +50,7 @@ var renderRow = function(components, row, i, key){
 				}	else {
 					componentList = components[getComponentIndex.call(this, i, n, componentIndexRange)];
 				}
-				return renderColumn(componentList, col, n, key);
+				return renderColumn(componentList, col, n);
 			}, this)}
 		</div>
 	);
@@ -66,9 +63,9 @@ var renderRow = function(components, row, i, key){
  * @param {number} n - the current column index
  * @returns {React.DOM.div}
  */
-var renderColumn = function(components, col, n, key){
+var renderColumn = function(components, col, n){
 	return (
-		<div className={getColumnClassNames(col)} key={"col-"+n+"-"+key}>
+		<div className={getColumnClassNames(col)} key={"col-"+n}>
 			{components}
 		</div>
 	);
@@ -86,13 +83,20 @@ module.exports = React.createClass({
 		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired		
 	},
 
-	render: function(){				
-		var uniqueKey = this.props.name;	
+	getDefaultProps: function(){
+    return {
+      componentType: 'layout'
+    };
+  },
+
+	render: function(){
+		var uniqueKey = this.props.id
+		this.lastIndex = -1;
 		return (
-			<div className="grid-layout" key={"layout-for-"+uniqueKey}>
-			{this.props.rows.map(function(row, i){				
-				return renderRow.call(this, this.props.children, row, i, uniqueKey);
-			}, this)}
+			<div className="grid-layout" key={uniqueKey}>
+				{this.props.rows.map(function(row, i){
+					return renderRow.call(this, this.props.children, row, i);
+				}, this)}
 			</div>
 		);
 	}

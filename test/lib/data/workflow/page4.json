@@ -1,6 +1,7 @@
 {
   "type": "page",
   "config": {
+    "id" : "page4",
     "title": "Specialities",
     "name" : "page4",
     "content": "Describe your specialities.",
@@ -8,16 +9,19 @@
       {
         "type": "form",
         "config": {
+          "id": "test_form",
           "name": "test_form",          
           "components": [
             {
               "type": "fieldset",
               "config": {
+                "id": "fieldset-6",
                 "name": "List Speciality Areas",
                 "components": [
                   {
                     "type": "field",
                     "config": {
+                      "id": "firstName",
                       "type": "text",
                       "name": "firstName",
                       "label": "Specialities within your field."
@@ -26,6 +30,7 @@
                   {
                     "type": "field",
                     "config": {
+                      "id": "middleName",
                       "type": "text",
                       "name": "middleName",
                       "label": "Specialities in other areas."
@@ -34,8 +39,9 @@
                   {
                     "type": "field",
                     "config": {
+                      "id": "lastName",
                       "type": "textarea",
-                      "name": "lasstName",
+                      "name": "lastName",
                       "label": "Describe experience with each speciality."
                     }
                   } 

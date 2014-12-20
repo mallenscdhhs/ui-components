@@ -1,6 +1,7 @@
 {
   "type": "page",
   "config": {
+    "id" : "page2",
     "title": "Office Information",
     "name" : "page2",
     "content": "Tell us about where you work.",
@@ -8,16 +9,19 @@
       {
         "type": "form",
         "config": {
+          "id": "test_form",
           "name": "test_form",          
           "components": [
             {
               "type": "fieldset",
               "config": {
+                "id": "fieldset-1",
                 "name": "Office",
                 "components": [
                   {
                     "type": "field",
                     "config": {
+                      "id" : "test-select",
                       "type" : "select",
                       "name" : "test-select",
                       "label" : "Do you see patients at more than one office?",
@@ -37,7 +41,8 @@
                   },
                   {
                     "type": "field",
-                    "config": {            
+                    "config": {
+                      "id" : "test-multiselect",
                       "type" : "multiselect",
                       "name" : "test-multiselect",
                       "label" : "Locations you see patients.",

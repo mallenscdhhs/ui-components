@@ -10,22 +10,22 @@
       }
     }
   },
-  "componentHead": "field_1",
+  "child": "field_1",
   "components": {
     "field_1": {
-      "id": "field_1",
       "next": "field_2",
       "type": "field",
       "config": {
+        "id": "field_1",
         "type": "text",
         "name": "testone",
         "label": "Test one"
       }
     },
     "field_2": {
-      "id": "field_2",
       "type": "field",
       "config": {
+        "id": "field_2",
         "type": "text",
         "name": "testtwo",
         "label": "Test two"

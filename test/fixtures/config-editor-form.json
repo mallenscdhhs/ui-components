@@ -1,0 +1,47 @@
+{
+  "type": "configEditor",
+  "config": {
+    "id": "tester",
+    "title": "Test Config Editor",
+    "actions": [{
+      "type": "button",
+      "id": "test-btn",
+      "name": "Test",
+      "event": "test:event"
+    }]
+  },
+  "child": "test_form",
+  "components": {
+    "test_form": {
+      "type": "form",
+      "child": "test_fieldset",
+      "config": {
+        "id": "test_form",
+        "name": "test-form"
+      }
+    },
+    "test_fieldset": {
+      "type": "fieldset",
+      "child": "label_field",
+      "config": {
+        "id": "test_fieldset",
+        "name": "Test"
+      }
+    },
+    "label_field": {
+      "type": "field",
+      "config": {
+        "id": "label_field",
+        "type": "text",
+        "label": "Label",
+        "name": "label"
+      }
+    }
+  },
+  "model": {
+    "type": "text",
+    "name": "bar_field",
+    "label": "bar",
+    "id": "bar_field"
+  }
+}

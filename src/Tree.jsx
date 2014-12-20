@@ -11,8 +11,9 @@ var TreeItem = require('./TreeItem');
  */
 var renderItems = function(config){
   return config.items.map(function(item, n){
+    var key = 'tree-item-'+item.id;
     return (
-      <TreeItem {...item} ref={item.pageId} key={item.pageId}>
+      <TreeItem {...item} ref={key} key={key}>
         {renderTree.call(this, item)}
       </TreeItem>
     );
@@ -42,6 +43,12 @@ module.exports = React.createClass({
     items: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     startOn: React.PropTypes.string
   },
+
+  getDefaultProps: function(){
+    return {
+      componentType: 'tree'
+    };
+  },  
 
   render: function(){
     return renderTree.call(this, this.props);
