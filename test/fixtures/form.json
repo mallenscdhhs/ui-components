@@ -1,13 +1,14 @@
 {
-  "id": "test_form",
   "type": "form",
   "config": {
+    "id": "test_form",
     "name" : "Test Form",
     "model" : {},
     "actions":[
       {
         "type" : "link",            
         "config" : {
+          "id" : "test-action-1",
           "name" : "Test Action",
           "url" : "testURLHTTP"              
         }
@@ -15,6 +16,7 @@
       {
         "type" : "button",            
         "config" : {
+          "id" : "test-action-2",
           "name" : "Test Action",
           "url" : "testURLHTTP"              
         }
@@ -28,13 +30,13 @@
       }
     }
   },
-  "componentHead": "test_fieldset",
+  "child": "test_fieldset",
   "components": {
     "test_fieldset": {
-      "id": "test_fieldset",
       "child": "test_field",
       "type": "fieldset",
       "config": {
+        "id": "test_fieldset",
         "name" : "Test Fieldset",
         "layout" : {
           "type": "grid", 
@@ -45,9 +47,9 @@
       }      
     },
     "test_field": {
-      "id": "test_field",      
       "type": "field",
       "config": {
+        "id": "test_field",
         "type" : "text",
         "name" : "test-text",
         "label" : "Test Text",

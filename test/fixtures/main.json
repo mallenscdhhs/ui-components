@@ -1,26 +1,27 @@
 {
-  "id": "pi",
+  "pageId": "pi",
   "type": "page",
   "config": {
     "title": "Provider Information",
-    "content": "Please tell us about **yourself**."
+    "content": "Please tell us about **yourself**.",
+    "id": "pi"
   },
-  "componentHead": "test_form",
+  "child": "test_form",
   "components": {
     "test_form": {
-      "id": "test_form",
       "next": "action_1",
       "child": "test_fieldset",     
       "type": "form",
       "config": {
+        "id": "test_form",
         "name": "test_form"
       }
     },    
     "test_fieldset": {
-      "id": "test_fieldset",      
       "child": "test_field_1",
       "type": "fieldset",
       "config": {
+        "id": "test_fieldset",
         "name": "Provider Name",
         "layout": {
           "type": "grid",
@@ -32,32 +33,33 @@
         }
       }
     },
-    "test_field_1": {        
-      "id": "test_field_1",      
+    "test_field_1": {
       "next": "test_field_2",
       "type": "field",
-      "config": {                      
+      "config": {
+        "id": "test_field_1",
         "type": "text",
         "name": "test_4",
         "label": "First Name"
       }
     },
     "test_field_2": {
-      "id": "test_field_2",
       "type": "field",
-      "config": {          
+      "config": {
+        "id": "test_field_2",
         "type": "text",
         "name": "test_2",
         "label": "Last Name"
       }
     },
     "action_1": {
-      "id": "action_1",
       "type": "action",
       "config": {
+        "id": "action_1",
         "type": "button",
         "classNames": ["btn-primary"],
-        "name": "Action one"
+        "name": "Action one",
+        "event": "some:event"
       }
     }
   }

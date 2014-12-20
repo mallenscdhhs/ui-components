@@ -1,35 +1,35 @@
 {
-	"id": "grid_test", 
+	"id": "grid_test",
 	"type": "grid",
 	"config": {
 		"rows": [[{"md": "4", "indexRange": [0,2] }, { "md": "8" }]]
 	},
-	"componentHead": "field_1",
+	"child": "field_1",
 	"components": {
 		"field_1": {
-			"id": "field_1",
 			"next": "field_2",
 			"type": "field",
 			"config": {
+				"id": "field_1",
 				"type": "text",
 				"name": "testone",
 				"label": "Test one"
 			}
 		},
 		"field_2": {
-			"id": "field_2",
 			"next": "field_3",
 			"type": "field",
 			"config": {
+				"id": "field_2",
 				"type": "text",
 				"name": "testtwo",
 				"label": "Test two"
 			}
 		},
 		"field_3": {
-			"id": "field_3",
 			"type": "field",
 			"config": {
+				"id": "field_3",
 				"type": "text",
 				"name": "testthree",
 				"label": "Test three"

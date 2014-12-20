@@ -1,7 +1,7 @@
 {
-  "id": "test_fieldset",
   "type": "fieldset",
   "config": {
+    "id": "test_fieldset",
     "name" : "Test Legend",
     "layout" : {
       "type": "grid", 
@@ -10,12 +10,12 @@
       }
     }
   },
-  "componentHead": "test_field",
+  "child": "test_field",
   "components": {
     "test_field": {
-      "id": "test_field",
       "type" :"field",
-      "config" : { 
+      "config" : {
+        "id": "test_field",
         "type" : "text",
         "name" : "test-text",
         "label" : "Test Text",

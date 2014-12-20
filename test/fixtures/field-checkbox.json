@@ -1,0 +1,19 @@
+{
+  "id" : "test-checkbox",
+  "type" : "checkbox",
+  "name" : "test-checkbox",
+  "label" : "Test Checkbox",
+  "required" : false,
+  "options" : {
+    "items" : [
+      {
+        "label" : "Checkbox 1",
+        "value" : "1"
+      },
+      {
+        "label" : "Checkbox 2",
+        "value" : "2"
+      }
+    ]
+  }
+}

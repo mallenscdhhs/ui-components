@@ -24,7 +24,7 @@ gulp.task('hint', function(){
 
 
 gulp.task('test', ['hint', 'clean:build'], function(done){
-  karma.start({
+  return karma.start({
     configFile: __dirname + '/karma.conf.js'
   }, done);
 });
@@ -63,7 +63,7 @@ gulp.task('clean:build', ['build:Components'], function(done){
 gulp.task('build', ['clean:build']);
 
 
-gulp.task('release', ['test'], function(){
+gulp.task('release', ['build'], function(){
   var src = './dist/Components.js';
   var dest = './dist/release/'+pkg.version;
   return gulp.src(src).pipe(gulp.dest(dest));

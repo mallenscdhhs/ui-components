@@ -1,0 +1,19 @@
+{
+  "id" : "test-radio",
+  "type" : "radio",
+  "name" : "test-radio",
+  "label" : "Test Radio",
+  "required" : false,
+  "options" : {
+    "items" : [
+      {
+        "label" : "Radio 1",
+        "value" : "1"
+      },
+      {
+        "label" : "Radio 2",
+        "value" : "2"
+      }        
+    ]
+  }    
+}

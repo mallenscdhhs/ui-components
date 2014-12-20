@@ -14,7 +14,7 @@ describe('Workflow component', function(){
 
   it('can progress to the next section', function(done){    
     expect(this.workflow.state.currentPage).toEqual('page1');
-    EQ.push({entityEvent: 'workflow:next:page', data: {}});
+    EQ.push({entityEvent: 'workflow:next:page', data: ''});
     setTimeout(function(){
       expect(this.workflow.state.currentPage).toEqual('page2');
       expect(this.workflow.state.previousPage).toEqual('page1');
@@ -56,9 +56,9 @@ describe('Workflow#buildTree', function(){
     };   
     var tree = Workflow.buildTree(state, {});
     expect(tree.length).toEqual(2);
-    expect(tree[0].pageId).toEqual('page1');
-    expect(tree[0].items[0].pageId).toEqual('page2');
-    expect(tree[1].pageId).toEqual('page3');
+    expect(tree[0].id).toEqual('page1');
+    expect(tree[0].items[0].id).toEqual('page2');
+    expect(tree[1].id).toEqual('page3');
   });
 });
 
@@ -80,9 +80,9 @@ describe('Workflow#getPageByKeyExistence', function(){
 describe('Workflow#setFlowState', function(){
   it('can set the tree data state', function(){
     var items = {
-      'a': {pageId: 'a', next: 'b', previous: null},
-      'b': {pageId: 'b', next: 'c', previous: 'a', parentId: 'a'},
-      'c': {pageId: 'c', next: null, previous: 'b'}
+      'a': {id: 'a', next: 'b', previous: null},
+      'b': {id: 'b', next: 'c', previous: 'a', parentId: 'a'},
+      'c': {id: 'c', next: null, previous: 'b'}
     };
     expect(items.a['disabled']).not.toBeDefined();
     expect(items.b['disabled']).not.toBeDefined();

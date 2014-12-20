@@ -1,0 +1,8 @@
+{
+  "id" : "test-date",
+  "type" : "date",
+  "name" : "test-date",
+  "label" : "Test Date",
+  "required" : false,
+  "options" : { }  
+}

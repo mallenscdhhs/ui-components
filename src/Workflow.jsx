@@ -20,12 +20,12 @@ function buildTree(state){
   }), 'parentId');
 
   while(head){
-    var branches = children[head.pageId];
+    var branches = children[head.id];
     var next = state.flow[head.next];
     if ( !!branches ) {
-      head.items = children[head.pageId];
+      head.items = children[head.id];
     }
-    head.active = ( head.pageId === state.currentPage );
+    head.active = ( head.id === state.currentPage );
     tree.push(head);
     head = ( next && branches )? state.flow[next.next] : next;
   }
@@ -41,7 +41,7 @@ function buildTree(state){
  */
 function getPageByKeyExistence(items, key){
   return _.reduce(items, function(result, current, i){
-    return current[key]? result : current.pageId;
+    return current[key]? result : current.id;
   }, '');
 }
 
@@ -96,6 +96,12 @@ module.exports = React.createClass({
     getCurrentActionButtons: getCurrentActionButtons
   },
 
+  getDefaultProps: function(){
+    return {
+      componentType: 'workflow'
+    };
+  },
+
   /**
    * Determine the current state of the workflow by analyzing the passed in prop data.
    * @returns {object}
@@ -125,9 +131,7 @@ module.exports = React.createClass({
    * Subscribe to workflow events.
    */
   componentDidMount: function(){
-    Queue.subscribe('tree:load:page', 'workflowRouter', function(data){
-      this.handleDirect(data.pageId);
-    }.bind(this));
+    Queue.subscribe('tree:load:page', 'workflowRouter', this.handleDirect);
     Queue.subscribe('workflow:previous:page', 'workflowRouter', this.handlePrevious);
     Queue.subscribe('workflow:next:page', 'workflowRouter', this.handleNext);
   },

@@ -8,226 +8,182 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="Components.js"></script>
     <script src="shim.js"></script>
-    <style>.btn{margin:0 3px;}</style>
+    <!-- Demo Form -->
+    <script src="lib/data/editor/testData.js"></script>
+    <!-- Load editors data async or live TODO: REMOVE make ASYNC-->
+    <script src="lib/data/editor/editors.js"></script>
+    <!-- Meta service for dropdown values TODO: REMOVE-->
+    <script src="lib/data/editor/services.js"></script>
+    <style>
+      .btn{ margin:0 3px; }
+      .config-editor{ width:auto; height:25px; line-height:25px; position:absolute; top:0; right:4px; display:none; box-sizing:border-box; padding: 0; cursor:pointer; z-index:9999; color:#999; }
+      .config-editor .add-component{ margin-right:5px; }
+      .component-subs-list-item { text-transform:capitalize; padding:.3em 0;color:#777;}
+      .component-subs-list-item .glyphicon{ margin: 2px 5px 0 0; cursor:pointer;}
+      .component-subs-list-item .glyphicon:hover { color:#333; }
+      *{ position:relative; }
+      .enable-component-editor .editable-component:hover > .config-editor,
+      .enable-component-editor .config-editor:hover{ display:block; }
+      .enable-component-editor .editable-component:hover > .config-editor .add-component:hover,
+      .enable-component-editor .editable-component:hover > .config-editor .edit-component:hover{ color: #337ab7; }
+      .modal-title { text-transform:capitalize; }
+    </style>
   </head>
   <body style="padding: 2em;">
 
-      <div id="test-form"></div>
+      <div id="component-page" class="enable-component-editor"></div>
+      <div id="modalContainer"></div>
 
       <script>
-        var fieldsFixture = {
-          'text' : {
-            'type' : 'field',
-            'config' : {
-              type : 'text',
-              name : 'test-text-1',
-              label : 'Test Text'
-            }
-          },
-          'textarea' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'textarea',
-              name : 'test-textarea',
-              label : 'Test Textarea'
-            }
-          },
-          'checkbox' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'checkbox',
-              name : 'test-checkbox',
-              label : 'Test Checkbox',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Checkbox 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Checkbox 2',
-                    'value' : '2'
-                  }        
-                ]
-              }
-            }          
-          },
-          'radio' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'radio',
-              name : 'test-radio',
-              label : 'Test Radio',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Radio 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Radio 2',
-                    'value' : '2'
-                  }        
-                ]
-              }  
-            }          
-          },
-          'select' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'select',
-              name : 'test-select',
-              label : 'Test Select',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Select 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Select 2',
-                    'value' : '2'
-                  }        
-                ]
-              }
-            }            
-          },
-          'multiselect' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'multiselect',
-              name : 'test-multiselect',
-              label : 'Test MultiSelect',
-              dependency: {
-                'name':'test-text-1',
-                'value':'hi|hello|bye',
-                'initialState': 'hidden'
+        var _ = require('lodash');
+        var Queue = Components.eventQueue;
+        var EditorConfig = Components.editorConfig;
+
+
+        // Forms cache, load only once, after the first use, then cache
+        // These forms are located in lib/data/editor/editors.js
+        var forms = {
+          'field' : fieldForm,
+          'fieldset' : fieldSetForm,
+          'action' : actionForm,
+          'container' : containerForm,
+          'form' : formForm,
+          'page' : pageForm,
+          'add' : addForm
+        };
+
+        /**
+         * Common Modal Window Code
+         * Build a modal, with correct 'Action' properties for 'save' events
+         * Subs are children components, displayed with ability to delete
+         * Other data is sent in the created Event when the 'Action' is run.
+         */
+        var renderModal = function(form,data,event){
+          // Render Modal - Send Component and Form Id/Type to Build Modal
+          // Event is the event that will be pushed when clicking action button in the modal
+          var showSubs = !(event.lastIndexOf('add') >= 0);
+          var componentDataForModal = {
+            "event"   : event,
+            "type"    : data.type ,
+            "id"      : data.props.id ,
+            "subs"    : data.props.components,
+            "showSubs": showSubs,
+            "formId"  : form.config.id
+          }
+          var modalConfig = EditorConfig.buildComponentModalConfig(componentDataForModal);
+          var Modal = Components.factory(modalConfig);
+          var container = document.getElementById('modalContainer');
+          container.innerHTML = '';
+          React.render(Modal,container);
+
+          // Render Editor
+          var EditorForm = Components.factory(form);
+          React.render(EditorForm,document.getElementById('edit-modal-container'));
+        }
+
+        /**
+         * Open Edit Dialog for a Component
+         */
+        var editComponentAction = function(data){
+          // Merge Form data and Component Data to get merged FORM
+          var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
+          renderModal(editForm,data,'component:update');
+          $('#editComponentModal').modal('show');
+        }
+
+        /**
+         * Save Component after Editing
+         */
+        var updateComponentAction = function(data){
+          console.log('component:update');
+          var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
+          var saveObject = {
+            'type'   : data.componentType,
+            'id'     : data.componentId,
+            'values' : formValues
+          }
+          console.log(saveObject);
+          $('#editComponentModal').modal('hide');
+        }
+
+        /**
+         * Open Dialog to Add New Component
+         */
+        var addNewComponentAction = function(data){
+          // Merge Form data and Component Data to get merged FORM
+          var addForm = forms['add'];
+          renderModal(addForm,data,'component:add:save');
+          $('#editComponentModal').modal('show');
+          Queue.push({ 'entityEvent' : 'field:options:new-component-type' , 'data' : { 'items' : EditorConfig.getComponentsToAddList(data.props.ComponentType) } });
+        }
+
+        /**
+         * Save New Component
+         */
+        var saveNewComponentAction = function(data){
+          console.log('component:add:save');
+          var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
+          var saveObject = {
+            'type'   : data.componentType,
+            'id'     : data.componentId,
+            'values' : formValues
+          }
+          console.log(saveObject);
+          $('#editComponentModal').modal('hide');
+        }
+
+        /**
+         * Remove Component
+         * @param data
+         */
+        var removeComponentAction = function(data){
+          console.log('component:remove')
+          console.log(data)
+          $('#editComponentModal').modal('hide');
+        }
+
+        var updateFieldOptions = function(data){
+          console.log(data);
+          var newOptions = {
+            'items' : [
+              {
+                'label' : 'Updated Val 3',
+                'value' : '3'
               },
-              options : {
-                'items' : [
-                  {
-                    'label' : 'MultiSelect 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'MultiSelect 2',
-                    'value' : '2'
-                  }        
-                ]
-              } 
-            }           
-          },          
-          'email' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'email',
-              name : 'test-email',
-              label : 'Test Email'
-            }
-          },
-          'phone' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'phone',
-              name : 'test-phone',
-              label : 'Test Phone'
-            }
-          },
-          'date' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'date',
-              name : 'test-date',
-              label : 'Test Date',
-              required : true
-            }
-          },
-          'password' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'password',
-              name : 'test-password',
-              label : 'Test Password'
-            }
-          }   
-        };
-
-        var fieldsetFixture = {
-          'type' : 'fieldset',         
-          'config':{          
-            'name' : 'Test Fieldset With All Fields TEST TEST',             
-            'components' :[]
-          },
-          'layout' : {
-            'type': "grid", 
-            'config': {
-              'rows': [[{'md': '3'}]]
-            }
-          }      
-        };
-
-        // Add fields to components
-        Object.keys(fieldsFixture).forEach(function(key,j){
-          fieldsetFixture.config.components.push(fieldsFixture[key]);
+              {
+                'label' : 'Updated Val 4',
+                'value' : '4'
+              }
+            ]
+          };
+          if(data.fieldName.lastIndexOf('test') >=0 ) {
+            Queue.push({'entityEvent': 'field:options:' + data.id, 'data': newOptions});
+          }
+        }
+        /**
+         * App Level Global Event Router
+         * Could get more specific, using switches, or other routing tools
+         */
+        Queue.subscribe('all','globalEditor',function(data,eventType){
+          if(eventType.indexOf('component:edit') >= 0){
+            editComponentAction(data);
+          }else if(eventType.indexOf('component:update') >= 0){
+            updateComponentAction(data);
+          }else if(eventType.indexOf('component:add:new') >= 0){
+            addNewComponentAction(data);
+          }else if(eventType.indexOf('component:add:save') >= 0){
+            saveNewComponentAction(data);
+          }else if(eventType.indexOf('component:remove') >= 0){
+            removeComponentAction(data);
+          }else if(eventType.indexOf('field:mount') >= 0){
+            updateFieldOptions(data);
+          }
         });
 
-        var formFixture = {
-          'type':'form',
-          'config' :{
-            'name' : 'Test Form One',
-            'model' : {},
-            'actions':[{
-                'type' : 'link',            
-                'config' : {
-                  'name' : 'Test Link Action',
-                  'url' : 'testURLHTTP',
-                  'event' : 'next'              
-                }
-              },{
-                'type' : 'button',            
-                'config' : {
-                  'name' : 'Test Button Action',
-                  'url' : 'testURLHTTP',
-                  'event' : 'back'
-                }
-            }],
-            'rules': [],
-            'components' :[{
-              'type' : 'fieldset',
-              'config':{
-                'name' : 'Test Fieldset One Test',
-                'layout' : {
-                  'type': "grid", 
-                  'config': {
-                    'rows': [[{'md': '3'}]]
-                  }
-                },              
-                'components' :[{
-                  'type' :'field',
-                  'config' : { 
-                    'type' : 'text',
-                    'name' : 'test-text-2',
-                    'label' : 'Test Text Field One',
-                    'required' : false,
-                    'options' : { }
-                  }
-                },{
-                'type' : 'field',
-                'config' : {            
-                  'type' : 'password',
-                  'name' : 'test-password-2',
-                  'label' : 'Test Password One'
-                }
-              }]
-              }  
-            }]  
-          }
-        };
 
-        formFixture.config.components.push(fieldsetFixture);
-        var Form = Components.factory(formFixture);
-        React.render(Form,document.getElementById('test-form'));
-        
+        var Page = Components.factory(formFixture);
+        React.render(Page,document.getElementById('component-page'));
+
       </script>
   </body>
 </html>

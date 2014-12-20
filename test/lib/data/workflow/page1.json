@@ -1,6 +1,7 @@
 {
   "type": "page",
   "config": {
+    "id" : "page1",
     "title": "Personal Information",
     "name" : "page1",
     "content": "Your basic information.",
@@ -8,11 +9,13 @@
       {
         "type": "form",
         "config": {
+          "id": "test_form",
           "name": "test_form",          
           "components": [
             {
               "type": "fieldset",
               "config": {
+                "id": "fieldset-1",
                 "name": "Name",
                 "layout": {
                   "type": "grid",
@@ -27,6 +30,7 @@
                   {
                     "type": "field",
                     "config": {
+                      "id": "firstName",
                       "type": "text",
                       "name": "firstName",
                       "label": "First Name"
@@ -35,6 +39,7 @@
                   {
                     "type": "field",
                     "config": {
+                      "id": "middleName",
                       "type": "text",
                       "name": "middleName",
                       "label": "Middle Name"
@@ -43,14 +48,16 @@
                   {
                     "type": "field",
                     "config": {
+                      "id": "lastName",
                       "type": "text",
-                      "name": "lasstName",
+                      "name": "lastName",
                       "label": "Last Name"
                     }
                   },
                   {
                     "type": "field",
                     "config": {
+                      "id": "title",
                       "type": "select",
                       "name": "title",
                       "label": "Title",
@@ -65,6 +72,7 @@
                   {
                     "type": "field",
                     "config": {
+                      "id": "gender",
                       "type": "radio",
                       "name": "gender",
                       "label": "Gender",

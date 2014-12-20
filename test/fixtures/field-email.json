@@ -1,0 +1,8 @@
+{
+  "id" : "test-email",
+  "type" : "email",
+  "name" : "test-email",
+  "label" : "Test Email",
+  "required" : false,
+  "options" : { }  
+}

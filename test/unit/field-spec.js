@@ -2,13 +2,7 @@ describe('Field component', function() {
   var Field = React.createFactory(Components.elements.field);
   var tu = React.addons.TestUtils;
 
-  var textFixture = {
-    type : 'text',
-    name : 'test-text',
-    label : 'Test Text',
-    required : false,
-    options : { }
-  };
+  var textFixture = require('../fixtures/field-text.json');
 
   it('Renders text label', function(){
     var field = tu.renderIntoDocument(Field(textFixture));
@@ -22,13 +16,7 @@ describe('Field component', function() {
     expect(inputText.getDOMNode().type).toEqual(textFixture.type);
   });
 
-  var textareaFixture = {
-    type : 'textarea',
-    name : 'test-textarea',
-    label : 'Test Textarea',
-    required : false,
-    options : { }
-  };
+  var textareaFixture = require('../fixtures/field-textarea.json');
 
   it('Renders textarea label', function(){
     var field = tu.renderIntoDocument(Field(textareaFixture));
@@ -42,24 +30,7 @@ describe('Field component', function() {
     expect(inputTextarea.getDOMNode().type).toEqual(textareaFixture.type);
   });  
 
-  var checkboxFixture = {
-    type : 'checkbox',
-    name : 'test-checkbox',
-    label : 'Test Checkbox',
-    required : false,
-    options : {
-      'items' : [
-        {
-          'label' : 'Checkbox 1',
-          'value' : '1'
-        },
-        {
-          'label' : 'Checkbox 2',
-          'value' : '2'
-        }        
-      ]
-    }
-  };
+  var checkboxFixture = require('../fixtures/field-checkbox.json');
 
   it('Renders checkbox field wrapped in a fieldset', function(){
     var field = tu.renderIntoDocument(Field(checkboxFixture));
@@ -83,26 +54,20 @@ describe('Field component', function() {
     inputLabels.forEach(function(label,i){
       expect(label.getDOMNode().textContent).toEqual(checkboxFixture.options.items[i].label);     
     });    
-  }); 
+  });
 
-  var radioFixture = {
-    type : 'radio',
-    name : 'test-radio',
-    label : 'Test Radio',
-    required : false,
-    options : {
-      'items' : [
-        {
-          'label' : 'Radio 1',
-          'value' : '1'
-        },
-        {
-          'label' : 'Radio 2',
-          'value' : '2'
-        }        
-      ]
-    }
-  };
+  it('Can get value of Checkbox', function(){
+    document.body.innerHTML = '<div id="test-page"></div>';
+    React.render(Field(checkboxFixture),document.getElementById('test-page'));
+    expect(document.getElementsByClassName('field').length).toEqual(2);
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
+    (document.getElementsByClassName('field')[0]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(true);
+    (document.getElementsByClassName('field')[0]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
+  });
+
+  var radioFixture = require('../fixtures/field-radio.json');
 
   it('Renders radio field wrapped in a fieldset', function(){
     var field = tu.renderIntoDocument(Field(radioFixture));
@@ -120,32 +85,26 @@ describe('Field component', function() {
     var field = tu.renderIntoDocument(Field(radioFixture));
     // Check that each input count and item count match
     var inputs = tu.scryRenderedDOMComponentsWithTag(field, 'input');
-    expect(inputs.length).toEqual(radioFixture.options.items.length); 
+    expect(inputs.length).toEqual(radioFixture.options.items.length);
     // Each input should have it's own label
     var inputLabels = tu.scryRenderedDOMComponentsWithTag(field, 'label');
     inputLabels.forEach(function(label,i){
-      expect(label.getDOMNode().textContent).toEqual(radioFixture.options.items[i].label);     
-    });    
+      expect(label.getDOMNode().textContent).toEqual(radioFixture.options.items[i].label);
+    });
   });
 
-  var selectFixture = {
-    type : 'select',
-    name : 'test-select',
-    label : 'Test Select',
-    required : false,
-    options : {
-      'items' : [
-        {
-          'label' : 'Select 1',
-          'value' : '1'
-        },
-        {
-          'label' : 'Select 2',
-          'value' : '2'
-        }        
-      ]
-    }
-  };
+  it('Can get value of Radio', function(){
+    document.body.innerHTML = '<div id="test-page"></div>';
+    React.render(Field(radioFixture),document.getElementById('test-page'));
+    expect(document.getElementsByClassName('field').length).toEqual(2);
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
+    (document.getElementsByClassName('field')[0]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(true);
+    (document.getElementsByClassName('field')[1]).click();
+    expect((document.getElementsByClassName('field')[0]).checked).toEqual(false);
+  });
+
+  var selectFixture = require('../fixtures/field-select.json');
 
   it('Renders select label', function(){
     var field = tu.renderIntoDocument(Field(selectFixture));
@@ -157,26 +116,9 @@ describe('Field component', function() {
     var field = tu.renderIntoDocument(Field(selectFixture));
     var inputSelect = tu.findRenderedDOMComponentWithTag(field, 'select');
     expect(inputSelect.getDOMNode().value).toEqual(selectFixture.options.items[0].value);   // Defaults to first value, so compare first values
-  });   
+  });
 
-  var multiselectFixture = {
-    type : 'multiselect',
-    name : 'test-multiselect',
-    label : 'Test Multi-Select',
-    required : false,
-    options : {
-      'items' : [
-        {
-          'label' : 'Multi-Select 1',
-          'value' : '1'
-        },
-        {
-          'label' : 'Multi-Select 2',
-          'value' : '2'
-        }        
-      ]
-    }
-  };
+  var multiselectFixture = require('../fixtures/field-multiselect.json');
 
   it('Renders multiselect label', function(){
     var field = tu.renderIntoDocument(Field(multiselectFixture));
@@ -190,13 +132,7 @@ describe('Field component', function() {
     expect(inputSelect.getDOMNode().multiple).toEqual(true);   // Defaults to first value, so compare first values
   });    
 
-  var emailFixture = {
-    type : 'email',
-    name : 'test-email',
-    label : 'Test Email',
-    required : false,
-    options : { }
-  };
+  var emailFixture = require('../fixtures/field-email.json');
 
   it('Renders email label', function(){
     var field = tu.renderIntoDocument(Field(emailFixture));
@@ -210,13 +146,7 @@ describe('Field component', function() {
     expect(inputText.getDOMNode().type).toEqual(emailFixture.type);
   }); 
 
-  var phoneFixture = {
-    type : 'tel',
-    name : 'test-phone',
-    label : 'Test Phone',
-    required : false,
-    options : { }
-  };
+  var phoneFixture = require('../fixtures/field-phone.json');
 
   it('Renders phone label', function(){
     var field = tu.renderIntoDocument(Field(phoneFixture));
@@ -230,13 +160,7 @@ describe('Field component', function() {
     expect(inputText.getDOMNode().type).toEqual(phoneFixture.type); 
   });  
 
-  var dateFixture = {
-    type : 'date',
-    name : 'test-date',
-    label : 'Test Date',
-    required : false,
-    options : { }
-  };
+  var dateFixture = require('../fixtures/field-date.json');
 
   it('Renders date label', function(){
     var field = tu.renderIntoDocument(Field(dateFixture));
@@ -250,13 +174,7 @@ describe('Field component', function() {
     expect(inputText.getDOMNode().type).toEqual(dateFixture.type);
   });  
 
-  var passwordFixture = {
-    type : 'password',
-    name : 'test-password',
-    label : 'Test Password',
-    required : false,
-    options : { }
-  };
+  var passwordFixture = require('../fixtures/field-password.json');
 
   it('Renders password label', function(){
     var field = tu.renderIntoDocument(Field(passwordFixture));
@@ -270,13 +188,7 @@ describe('Field component', function() {
     expect(inputText.getDOMNode().type).toEqual(passwordFixture.type);
   }); 
 
-  var requiredFixture = {
-    type : 'text',
-    name : 'test-required',
-    label : 'Required Text',
-    required : true,
-    options : { }
-  };
+  var requiredFixture = require('../fixtures/field-required.json');
 
   it('Renders required asterisk in label', function(){
     var field = tu.renderIntoDocument(Field(requiredFixture));
