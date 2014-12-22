@@ -3,6 +3,7 @@ var React = require('react/addons');
 var elements = require('./index');
 var _ = require('lodash');
 var EventQueue = require('./EventQueue');
+var update = React.addons.update;
 
 /**
  * Recursively builds up a component hierarchy.
@@ -11,8 +12,7 @@ var EventQueue = require('./EventQueue');
  */
 function componentFactory(data){
   if ( data.components && !data.child ) throw new TypeError('You must provide a "child" property.');
-  var schema = _.cloneDeep(data);
-  return buildComponentTree(schema, schema)[0];
+  return buildComponentTree(data, data)[0];
 }
 
 /**
@@ -26,29 +26,37 @@ function buildComponentTree(schema, head){
   var list = schema.components || {};
   var children = null;
   var element, factory;
+  var props;
   while(head){
     children = null;
+    props = update(head, { config: {
+      key: {$set: head.config.id+ '-' +head.type},
+      componentType: {$set: head.type}
+    }});
     // if there is a layout config then we need to insert
     // the layout into the binary tree to be rendered
-    if ( head.config.layout ) {
-      head.config.layout.child = head.child;
-      head.config.layout.id = head.config.id + '-layout';      
-      children = buildComponentTree(schema, head.config.layout);
-    } else if ( head.child ) {
-      children = buildComponentTree(schema, list[head.child]);
+    if ( props.config.layout ) {
+      props = update(props, { config: {
+        layout: {
+          child: {$set: head.child},
+          id: {$set: head.config.id + '-layout'}
+        }
+      }});
+      children = buildComponentTree(schema, props.config.layout);
+    } else if ( props.child ) {
+      children = buildComponentTree(schema, list[props.child]);
     }
     
-    if ( head.type === 'field' && _.has(schema.model, head.config.name) ) {
-      head.config.value = schema.model[head.config.name];
+    if ( props.type === 'field' && _.has(schema.model, props.config.name) ) {
+      props = update(props, { config: {
+        value: {$set: schema.model[props.config.name]}
+      }});
     }
 
-    head.config.key = head.config.id+'-'+head.type;
-    head.config.componentType = head.type;
-
-    element = elements[head.type];
+    element = elements[props.type];
     factory = React.createFactory(element);
-    tree.push(factory(head.config, children));
-    head = list[head.next];
+    tree.push(factory(props.config, children));
+    head = list[props.next];
   }
   return tree;
 }
