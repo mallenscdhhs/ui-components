@@ -54,6 +54,17 @@ gulp.task('build:Components', ['transpile'], function(){
     .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('standalone', ['transpile'], function(){
+  var lodashPath = require.resolve('lodash');
+  var reactPath = require.resolve('react/addons');
+  return browserify(['./dist/build/main.js'],{'standalone': 'Components'})
+    .exclude(lodashPath)
+    .exclude(reactPath)
+    .transform(reactify)
+    .bundle()
+    .pipe(source('Components-standalone.js'))
+    .pipe(gulp.dest('./dist'));
+});
 
 gulp.task('clean:build', ['build:Components'], function(done){
   return del(['dist/build'], done);
