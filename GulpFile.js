@@ -10,11 +10,9 @@ var karma = require('karma').server;
 var pkg = require('./package.json');
 var copy = require('gulp-copy');
 
-
 gulp.task('clean', function(done){
   return del(['dist/'], done);
 });
-
 
 gulp.task('hint', function(){
   return gulp.src(['./src/**/*.js'])
@@ -22,20 +20,17 @@ gulp.task('hint', function(){
     .pipe(jsHint.reporter('default'));
 });
 
-
 gulp.task('test', ['hint', 'clean:build'], function(done){
   return karma.start({
     configFile: __dirname + '/karma.conf.js'
   }, done);
 });
 
-
 gulp.task('transpile', ['clean'], function(){
   return gulp.src(['./src/**/*.jsx', './src/*.js'])
     .pipe(react())
     .pipe(gulp.dest('./dist/build'));
 });
-
 
 gulp.task('build:Components', ['transpile'], function(){
   var underscorePath = require.resolve('lodash');
@@ -54,7 +49,7 @@ gulp.task('build:Components', ['transpile'], function(){
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('standalone', ['transpile'], function(){
+gulp.task('build:standalone', ['transpile'], function(){
   var lodashPath = require.resolve('lodash');
   var reactPath = require.resolve('react/addons');
   return browserify(['./dist/build/main.js'],{'standalone': 'Components'})
@@ -62,24 +57,25 @@ gulp.task('standalone', ['transpile'], function(){
     .exclude(reactPath)
     .transform(reactify)
     .bundle()
-    .pipe(source('Components-standalone.js'))
+    .pipe(source('Components.js'))
     .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('standalone', ['build:standalone'], function(done){
+  return del(['dist/build'], done);
 });
 
 gulp.task('clean:build', ['build:Components'], function(done){
   return del(['dist/build'], done);
 });
 
-
 gulp.task('build', ['clean:build']);
-
 
 gulp.task('release', ['build'], function(){
   var src = './dist/Components.js';
   var dest = './dist/release/'+pkg.version;
   return gulp.src(src).pipe(gulp.dest(dest));
 });
-
 
 gulp.task('specs', ['hint', 'build'], function(){
   fs.readdir('./test/unit', function(err, files){
@@ -91,7 +87,6 @@ gulp.task('specs', ['hint', 'build'], function(){
       .pipe(gulp.dest('./test/lib'));
   });
 });
-
 
 gulp.task('watch', function(){
   gulp.watch(['src/*', 'test/unit/*', 'test/fixtures/*'], ['specs']);
