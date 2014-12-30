@@ -2,12 +2,10 @@
 var React = require('react/addons');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
-var EditorMixin = require('./EditorMixin');
+var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
   displayName: 'Action',
-
-  mixins: [EditorMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -65,7 +63,8 @@ module.exports = React.createClass({
         key={this.props.id+"-action"} 
         className={this.getClasses()} 
         onClick={this.handleClick}>
-          {this.getEditTemplate()}{this.props.name}
+        <EditorToggle {...this.props}/>
+        {this.props.name}
       </a>
     );
   },
@@ -82,7 +81,8 @@ module.exports = React.createClass({
         key={this.props.id+"-action"} 
         className={this.getClasses()} 
         onClick={this.handleClick}>
-          {this.getEditTemplate()}{this.props.name}
+        <EditorToggle {...this.props}/>
+        {this.props.name}
       </button>
     );
   },
