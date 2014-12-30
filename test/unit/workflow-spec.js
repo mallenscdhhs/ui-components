@@ -1,3 +1,5 @@
+var React = require('react/addons');
+var Components = require('../../src/main');
 var _ = require('lodash');
 var TestUtils = React.addons.TestUtils;
 var Workflow = require('../../src/Workflow');

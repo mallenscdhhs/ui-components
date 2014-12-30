@@ -32,7 +32,7 @@ function buildComponentTree(schema, head){
     props = update(head, { config: {
       key: {$set: head.config.id+ '-' +head.type},
       componentType: {$set: head.type}
-    }});
+    }});    
     // if there is a layout config then we need to insert
     // the layout into the binary tree to be rendered
     if ( props.config.layout ) {
@@ -47,9 +47,9 @@ function buildComponentTree(schema, head){
       children = buildComponentTree(schema, list[props.child]);
     }
     
-    if ( props.type === 'field' && _.has(schema.model, props.config.name) ) {
+    if ( props.type === 'field' && _.has(schema.model, props.config.id) ) {
       props = update(props, { config: {
-        value: {$set: schema.model[props.config.name]}
+        value: {$set: schema.model[props.config.id]}
       }});
     }
 

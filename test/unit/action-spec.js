@@ -1,11 +1,14 @@
-describe('Action component', function() {    
-  var tu = React.addons.TestUtils;	
-  var fixture = require('../fixtures/action.json');
+var React = require('react/addons');
+var Action = require('../../src/Action');
+var TestUtils = React.addons.TestUtils;  
+var fixture = require('../fixtures/action.json');
 
-  it('Renders action', function(){
-    var Action = Components.elements['action'];
-    var action = tu.renderIntoDocument(<Action {...fixture.config}/>);
-    var inputText = tu.scryRenderedDOMComponentsWithTag(action, 'a');
+describe('Action component', function() {    
+
+  it('Renders action', function(){    
+    var action = TestUtils.renderIntoDocument(<Action {...fixture.config}/>);
+    var inputText = TestUtils.scryRenderedDOMComponentsWithTag(action, 'a');
     expect(inputText.length).toEqual(1);    
   });
+
 });
