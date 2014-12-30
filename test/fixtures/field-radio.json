@@ -4,6 +4,7 @@
   "name" : "test-radio",
   "label" : "Test Radio",
   "required" : false,
+  "key": "test_radio",
   "options" : {
     "items" : [
       {
