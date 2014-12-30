@@ -1,0 +1,47 @@
+{
+  "type": "configEditor",
+  "config": {
+    "id": "page-config-editor",
+    "title": "Edit Page",
+    "actions": [],
+    "autoShow": true
+  },
+  "child": "edit_form",
+  "components": {
+    "edit_form": {
+      "type": "form",
+      "child": "edit_fieldset",
+      "config": {
+        "id": "edit_fieldset"
+      }
+    },
+    "edit_fieldset": {
+      "type": "fieldset",
+      "child": "title",
+      "config": {
+        "id": "edit_fieldset",
+        "name": "Default Properties"
+      }
+    },
+    "title": {
+      "type": "field",
+      "next": "content",
+      "config": {
+        "type": "text",
+        "id": "title",
+        "name": "title",
+        "label": "Title",
+        "required": true
+      }
+    },
+    "content": {
+      "type": "field",
+      "config": {
+        "type": "textarea",
+        "id": "content",
+        "name": "content",
+        "label": "Content"
+      }
+    }
+  }
+}
