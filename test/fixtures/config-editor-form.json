@@ -31,7 +31,7 @@
     "label_field": {
       "type": "field",
       "config": {
-        "id": "label_field",
+        "id": "label",
         "type": "text",
         "label": "Label",
         "name": "label"

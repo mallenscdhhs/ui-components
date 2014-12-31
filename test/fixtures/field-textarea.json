@@ -3,6 +3,5 @@
   "type" : "textarea",
   "name" : "test-textarea",
   "label" : "Test Textarea",
-  "required" : false,
-  "options" : { }    
+  "value": "Some text content"
 }

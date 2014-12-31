@@ -1,9 +1,11 @@
-describe('Tree component', function(){	
-	var Tree = Components.elements.tree;
-	var TestUtils = React.addons.TestUtils;
-	var _ = require('lodash');
+var React = require('react/addons');
+var Components = require('../../src/main');
+var Tree = Components.elements.tree;
+var TestUtils = React.addons.TestUtils;
+var _ = require('lodash');
+var fixture = require('../fixtures/tree.json');
 
-	var fixture = require('../fixtures/tree.json');
+describe('Tree component', function(){	
 	it('can render a nested list structure', function(){
 		var tree = TestUtils.renderIntoDocument(<Tree {...fixture}/>).getDOMNode();
 		var firstLeaf = tree.childNodes[0];

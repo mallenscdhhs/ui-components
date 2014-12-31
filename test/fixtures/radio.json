@@ -1,0 +1,10 @@
+{
+  "type": "field",
+  "config": {
+    "type": "radio",
+    "id": "foo",
+    "name": "foo",
+    "value": "bar",
+    "label": "Foo?"
+  }
+}

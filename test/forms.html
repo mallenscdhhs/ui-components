@@ -8,182 +8,133 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="Components.js"></script>
     <script src="shim.js"></script>
-    <!-- Demo Form -->
-    <script src="lib/data/editor/testData.js"></script>
     <!-- Load editors data async or live TODO: REMOVE make ASYNC-->
     <script src="lib/data/editor/editors.js"></script>
-    <!-- Meta service for dropdown values TODO: REMOVE-->
-    <script src="lib/data/editor/services.js"></script>
     <style>
       .btn{ margin:0 3px; }
-      .config-editor{ width:auto; height:25px; line-height:25px; position:absolute; top:0; right:4px; display:none; box-sizing:border-box; padding: 0; cursor:pointer; z-index:9999; color:#999; }
-      .config-editor .add-component{ margin-right:5px; }
+      .config-editor{         
+        background: #337ab7;
+        color: #fff;
+        line-height:25px; 
+        position:absolute; top:0; right:0px; 
+        display:none; 
+        box-sizing:border-box; 
+        padding: 0; 
+        cursor:pointer; 
+      }
+      .config-editor span {
+        margin: 3px 0 3px 4px;
+      }
+      .config-editor span:last-child {
+        margin-right: 4px;
+      }
+      .config-editor .add-component{ }
       .component-subs-list-item { text-transform:capitalize; padding:.3em 0;color:#777;}
       .component-subs-list-item .glyphicon{ margin: 2px 5px 0 0; cursor:pointer;}
       .component-subs-list-item .glyphicon:hover { color:#333; }
-      *{ position:relative; }
+      
+      .enable-component-editor .editable-component {
+        position: relative;  
+        box-sizing: border-box;      
+      }
+      .enable-component-editor .editable-component:hover {
+        outline: solid #337ab7 1px;
+        padding: 2px;      
+      }
+      .enable-component-editor .editable-component form.editable-component:hover {
+        padding-top: 27px;
+      }
+
       .enable-component-editor .editable-component:hover > .config-editor,
       .enable-component-editor .config-editor:hover{ display:block; }
       .enable-component-editor .editable-component:hover > .config-editor .add-component:hover,
-      .enable-component-editor .editable-component:hover > .config-editor .edit-component:hover{ color: #337ab7; }
+      .enable-component-editor .editable-component:hover > .config-editor .edit-component:hover{ color: #ccc; }
       .modal-title { text-transform:capitalize; }
     </style>
   </head>
-  <body style="padding: 2em;">
-
-      <div id="component-page" class="enable-component-editor"></div>
-      <div id="modalContainer"></div>
-
-      <script>
-        var _ = require('lodash');
-        var Queue = Components.eventQueue;
-        var EditorConfig = Components.editorConfig;
-
-
-        // Forms cache, load only once, after the first use, then cache
-        // These forms are located in lib/data/editor/editors.js
-        var forms = {
-          'field' : fieldForm,
-          'fieldset' : fieldSetForm,
-          'action' : actionForm,
-          'container' : containerForm,
-          'form' : formForm,
-          'page' : pageForm,
-          'add' : addForm
-        };
-
-        /**
-         * Common Modal Window Code
-         * Build a modal, with correct 'Action' properties for 'save' events
-         * Subs are children components, displayed with ability to delete
-         * Other data is sent in the created Event when the 'Action' is run.
-         */
-        var renderModal = function(form,data,event){
-          // Render Modal - Send Component and Form Id/Type to Build Modal
-          // Event is the event that will be pushed when clicking action button in the modal
-          var showSubs = !(event.lastIndexOf('add') >= 0);
-          var componentDataForModal = {
-            "event"   : event,
-            "type"    : data.type ,
-            "id"      : data.props.id ,
-            "subs"    : data.props.components,
-            "showSubs": showSubs,
-            "formId"  : form.config.id
-          }
-          var modalConfig = EditorConfig.buildComponentModalConfig(componentDataForModal);
-          var Modal = Components.factory(modalConfig);
-          var container = document.getElementById('modalContainer');
-          container.innerHTML = '';
-          React.render(Modal,container);
-
-          // Render Editor
-          var EditorForm = Components.factory(form);
-          React.render(EditorForm,document.getElementById('edit-modal-container'));
-        }
-
-        /**
-         * Open Edit Dialog for a Component
-         */
-        var editComponentAction = function(data){
-          // Merge Form data and Component Data to get merged FORM
-          var editForm = EditorConfig.mergeFormAndData(forms[data.type],data);
-          renderModal(editForm,data,'component:update');
-          $('#editComponentModal').modal('show');
-        }
-
-        /**
-         * Save Component after Editing
-         */
-        var updateComponentAction = function(data){
-          console.log('component:update');
-          var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
-          var saveObject = {
-            'type'   : data.componentType,
-            'id'     : data.componentId,
-            'values' : formValues
-          }
-          console.log(saveObject);
-          $('#editComponentModal').modal('hide');
-        }
-
-        /**
-         * Open Dialog to Add New Component
-         */
-        var addNewComponentAction = function(data){
-          // Merge Form data and Component Data to get merged FORM
-          var addForm = forms['add'];
-          renderModal(addForm,data,'component:add:save');
-          $('#editComponentModal').modal('show');
-          Queue.push({ 'entityEvent' : 'field:options:new-component-type' , 'data' : { 'items' : EditorConfig.getComponentsToAddList(data.props.ComponentType) } });
-        }
-
-        /**
-         * Save New Component
-         */
-        var saveNewComponentAction = function(data){
-          console.log('component:add:save');
-          var formValues = EditorConfig.getFieldValuesFromForm(data.formId);
-          var saveObject = {
-            'type'   : data.componentType,
-            'id'     : data.componentId,
-            'values' : formValues
-          }
-          console.log(saveObject);
-          $('#editComponentModal').modal('hide');
-        }
-
-        /**
-         * Remove Component
-         * @param data
-         */
-        var removeComponentAction = function(data){
-          console.log('component:remove')
-          console.log(data)
-          $('#editComponentModal').modal('hide');
-        }
-
-        var updateFieldOptions = function(data){
-          console.log(data);
-          var newOptions = {
-            'items' : [
-              {
-                'label' : 'Updated Val 3',
-                'value' : '3'
-              },
-              {
-                'label' : 'Updated Val 4',
-                'value' : '4'
+  <body>
+    
+    <div id="modalContainer"></div>
+    
+    <div id="component-page" class="enable-component-editor container"></div>
+      
+    <script>
+      var _ = require('lodash');
+      var Queue = Components.eventQueue;   
+      var container = document.getElementById('modalContainer');           
+      var PageConfig = {
+        type: 'page',
+        config: {
+          title: 'Config editor test page',
+          content: 'Some content.'
+        },
+        child: 'form_1',
+        components: {
+          'form_1': {
+            type: 'form',
+            child: 'fieldset_1',
+            config: {
+              id: 'form_1',
+              name: 'form_1'
+            }
+          },
+          'fieldset_1': {
+            type: 'fieldset',
+            child: 'field_1',
+            config: {
+              id: 'fieldset_1',
+              name: 'Test fieldset',
+              layout: {
+                type: 'grid',
+                config: {
+                  rows: [[{md: '6'}, {md:'6'}]]
+                }
               }
-            ]
-          };
-          if(data.fieldName.lastIndexOf('test') >=0 ) {
-            Queue.push({'entityEvent': 'field:options:' + data.id, 'data': newOptions});
+            }
+          },
+          'field_1': {
+            type: 'field',
+            next: 'field_2',
+            config: {
+              id: 'field_1',
+              type: 'text',
+              name: 'field_1',
+              label: 'Field One'
+            }
+          },
+          'field_2': {
+            type: 'field',
+            config: {
+              id: 'field_2',
+              type: 'text',
+              name: 'field_2',
+              label: 'Field Two'
+            }
           }
         }
-        /**
-         * App Level Global Event Router
-         * Could get more specific, using switches, or other routing tools
-         */
-        Queue.subscribe('all','globalEditor',function(data,eventType){
-          if(eventType.indexOf('component:edit') >= 0){
-            editComponentAction(data);
-          }else if(eventType.indexOf('component:update') >= 0){
-            updateComponentAction(data);
-          }else if(eventType.indexOf('component:add:new') >= 0){
-            addNewComponentAction(data);
-          }else if(eventType.indexOf('component:add:save') >= 0){
-            saveNewComponentAction(data);
-          }else if(eventType.indexOf('component:remove') >= 0){
-            removeComponentAction(data);
-          }else if(eventType.indexOf('field:mount') >= 0){
-            updateFieldOptions(data);
-          }
-        });
+      };
+      var Page = Components.factory(PageConfig);
+      
+      /**
+       * Common Modal Window Code
+       * Build a modal, with correct 'Action' properties for 'save' events
+       * Subs are children components, displayed with ability to delete
+       * Other data is sent in the created Event when the 'Action' is run.
+       */
+      var renderModal = function(props){
+        var component = PageConfig.components[props.id] || PageConfig;         
+        $.getJSON('/fixtures/editor/'+component.type+'-editor.json')
+          .then(function(config){
+            config.model = component.config;
+            React.render(Components.factory(config),container); 
+          });        
+      };
 
+      Queue.subscribe('component:edit', 'editor:test', renderModal);
+      Queue.subscribe('component:add', 'editor:test', renderModal);
 
-        var Page = Components.factory(formFixture);
-        React.render(Page,document.getElementById('component-page'));
+      React.render(Page,document.getElementById('component-page'));
 
-      </script>
+    </script>
   </body>
 </html>

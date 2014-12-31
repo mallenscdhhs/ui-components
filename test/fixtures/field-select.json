@@ -2,8 +2,6 @@
   "id" : "test-select",
   "type" : "select",
   "name" : "test-select",
-  "label" : "Test Select",
-  "required" : false,
   "options" : {
     "items" : [
       {
