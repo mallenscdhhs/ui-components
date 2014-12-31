@@ -2,12 +2,39 @@
 var React = require('react/addons');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
-var EditorMixin = require('./EditorMixin');
+var EditorToggle = require('./EditorToggle');
+var FieldMixin = require('./FieldMixin');
+var FieldGroup = require('./FieldGroup');
+var DependencyMixin = require('./DependencyMixin');
+var Checkable = require('./Checkable');
+var Select = require('./Select');
+var Input = require('./Input');
+var Textarea = require('./Textarea');
 
 module.exports = React.createClass({
+  
   displayName: 'Field',
 
-  mixins: [EditorMixin],
+  mixins: [FieldMixin, DependencyMixin],
+
+  propTypes: {
+    id: React.PropTypes.string.isRequired,
+    type: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string.isRequired,
+    label: React.PropTypes.string.isRequired,
+    required: React.PropTypes.bool,
+    helpText: React.PropTypes.string,
+    persistInSession: React.PropTypes.bool,
+    dependency: React.PropTypes.shape({
+      id: React.PropTypes.string.isRequired,
+      value: React.PropTypes.string.isRequired,
+      initialState: React.PropTypes.oneOf(['hidden', 'visible']).isRequired
+    }),
+    options: React.PropTypes.shape({
+      items: React.PropTypes.arrayOf(React.PropTypes.object),
+      name: React.PropTypes.string
+    })
+  },
 
   getDefaultProps: function(){
     return {
@@ -21,41 +48,11 @@ module.exports = React.createClass({
    * @returns {void}
    */
   componentDidMount: function(){
-    var component = this;
-
-    // Listen for changes to other fields that I'm dependent on
-    if(this.hasDependency()){      
-      var initState = component.props.dependency.initialState === 'hidden' ? false : true;
-      var depName = component.props.dependency.id;
-      var depValues = component.props.dependency.value.split('|'); // Array of 'actionable' values
-      Queue.subscribe('field:blur:'+depName,'field:'+component.props.id,function(data){
-        // Verify field is correct and new value is in the 'actionable' array
-        if(data.fieldName === depName && depValues.indexOf(data.fieldValue) >= 0){ 
-          // Change from initial display state.
-          component.setState({display: !initState}); 
-        }else{
-          // Otherwise, revert to (or stay at) initState
-          component.setState({display: initState})
-        }
-      });
-    }
-
     // Listen for validation errors from application
-    Queue.subscribe('field:error:'+component.props.id,'field:'+component.props.id,function(data){
+    Queue.subscribe('field:error:'+this.props.id,'field:'+this.props.id,function(data){
       // Change from initial display state.
-      component.setState({'hasError': data.hasError,'errorMessage':data.errorMessage}); 
-    });
-
-    // If component uses options, subscribe to options event
-    if(this.props.type === 'select' || this.props.type === 'multiselect' ||
-        this.props.type === 'checkbox' || this.props.type === 'radio') {
-      Queue.subscribe( 'field:options:'+component.props.id , 'field:'+component.props.id , function(data){
-        component.setState({'options': data});
-      });
-      // Ask for select options
-      Queue.push({'entityEvent': 'field:mount:' + this.props.id, 'data' : {'id': this.props.id , 'fieldName' : this.props.name, 'props': this.props }});
-    }
-
+      this.setState({'hasError': data.hasError,'errorMessage':data.errorMessage}); 
+    }.bind(this));
   },
 
   /**
@@ -63,34 +60,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   componentWillUnmount: function(){
-    if(this.hasDependency()){
-      var depName = this.props.dependency.id;
-      Queue.unSubscribe('field:blur:'+depName,'field:'+this.props.id);
-    }
-
     Queue.unSubscribe('field:error:'+this.props.id,'field:'+this.props.id);
-
-    //If component uses options, unsubscribe to options events
-    if(this.props.type === 'select' || this.props.type === 'multiselect' ||
-        this.props.type === 'checkbox' || this.props.type === 'radio') {
-      Queue.unSubscribe('field:options:'+component.props.id,'field:'+component.props.id);
-    }
-  },
-
-  /**
-   * Check if the field has a dependency, which requires name, value and initialState to be set
-   * @returns {boolean}
-   */
-  hasDependency: function(){
-    return !!this.props.dependency;
-  },
-
-  /**
-   * Return Field's Value
-   * @returns {*}
-   */
-  getValue: function(){
-    return this.state.value;
   },
 
   /**
@@ -98,62 +68,28 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getInitialState: function() {
-    var viewableState = true; // default is 'visible'
-    if(this.hasDependency() && this.props.dependency.initialState && this.props.dependency.initialState ==='hidden'){
-      viewableState = false;
-    }
     return { 
-      value: this.props.value, 
-      display: viewableState, 
+      display: (!this.hasDependency() || this.props.dependency.initialState !=='hidden'), 
       hasError: false, 
-      errorMessage: '', 
-      options: this.props.options 
+      errorMessage: ''
     };
   },
 
   /**
-   * Event handler for onBlur, that pushes a message to the queue, with the field's name and value.
-   * @returns {void}
+   * Wrap a field control in the default Bootstrap markup.
+   * @param {JSX} field
+   * @returns {JSX}
    */
-  handleBlur: function(){
-    Queue.push({'entityEvent':'field:blur:'+this.props.id,'data':{'id': this.props.id,'fieldName':this.props.name,'fieldValue':this.state.value,'rules':this.props.rules}});
+  getDefaultFieldContainer: function(field){
+    return (
+      <div className={this.getFieldClassNames()}>
+        <EditorToggle {...this.props}/>
+        <label htmlFor={this.props.id}>{this.props.label}{this.getRequiredIndicator()}</label>
+        {field}
+        {this.getHelpBlock()}
+      </div>
+    );
   },
-
-  /**
-   * Event handler for onChange, that updates the field's state with the new value.
-   * @fires field:value:change
-   * @param {object} event
-   */
-  handleChange: function(event) {
-    this.setState({value: event.target.value});
-    Queue.push({
-      entityEvent: 'field:value:change', 
-      data: {
-        id: this.props.id,
-        name: this.props.name,
-        value: event.target.value
-      }
-    });
-  },  
-
-  /**
-   * Based on display state, return group of classes for the form group container
-   * @returns {object}
-   */
-  getRenderViewClasses: function(){
-    var fieldClasses = {
-      'form-group' : true,
-      'editable-component' : true,
-      'hidden' : !this.state.display,
-      'has-error' : this.state.hasError
-    }
-    if(this.props.classes){
-      _.each(this.props.classes,function(cla,i){
-        fieldClasses[cla] =  true;
-      });
-    }
-    return fieldClasses;
-  },  
 
   /**
    * Boolean helper if type is radio or checkbox.  Used to determine if we 
@@ -162,77 +98,7 @@ module.exports = React.createClass({
    * @returns {object}
    */
   isFieldGroup: function () {
-    var checkType = this.props.type === 'radio' || this.props.type === 'checkbox';
-    var checkItems = this.props.options && this.props.options.items && this.props.options.items.length;
-    return checkType && checkItems;
-  },
-
-  /**
-   * Build Checkbox or Radio template based on type.
-   * @returns {JSX template}
-   */
-  getCheckboxOrRadio : function(){
-    var fieldId = this.props.id;
-    var fieldType = (this.props.type).toLowerCase();
-    var fieldKey = 'option';
-    var labelKey = fieldType + 'Label'  
-    var helpKey = 'field'+this.props.id+'HelpText';
-    var field = this;
-    var fields = this.props.options.items.map(function(item, i){
-      fieldKey = fieldType + 'Option' + i;
-      labelKey = fieldType + 'Label' + i;
-      var isChecked = item.value === field.state.value;
-      return (<label key={labelKey}><input type={fieldType} value={item.value} defaultChecked={isChecked} className="field" id={fieldId} name={fieldId} ref={fieldId} key={fieldKey} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur}/>{item.label}</label>);
-    });
-    return fields;
-  },
-
-  /**
-   * Build list of select options
-   * @returns {JSX template}
-   */
-  getSelectOptions: function(){
-    var options = null;
-    if(this.state.options && this.state.options.items){
-      options = this.state.options.items.map(function(item, i){
-        return (<option value={item.value} key={i}>{item.label}</option>);
-      });
-    }
-    return options;
-  },
-
-  /**
-   * Build Select template
-   * @returns {JSX template}
-   */
-  getSelect : function(){
-    var fieldId = this.props.id;
-    var fieldKey = fieldId +'-fieldSelect';
-    var helpKey = 'field'+fieldId+'HelpText';
-    var isMultiSelect = this.props.type == 'multiselect';
-    return (
-        <select multiple={isMultiSelect} className="form-control field" value={this.state.value} key={fieldKey} id={fieldId} name={fieldId} ref={fieldId} aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} >
-          {this.getSelectOptions()}
-        </select>
-      );
-  },    
-
-  /**
-   * Wraps label and returns template
-   * @returns {JSX template}
-   */
-  getLabel : function(){
-    var labelRequired = ''; 
-    var labelKey = 'fieldLabel';
-    if(this.props.required){
-      labelRequired = <span className="text-danger" key="requiredField">*</span>;
-      labelKey = 'fieldLabelRequired';
-    }
-    if(this.isFieldGroup()){
-      return (<legend htmlFor={this.props.id} className="field-legend" key={labelKey} >{labelRequired}{this.props.label}</legend>)
-    }else{
-      return (<label htmlFor={this.props.id} className="field-label" key={labelKey}>{labelRequired}{this.props.label}</label>)
-    }
+    return this.props.options && this.props.type !== 'select';
   },
 
   /**
@@ -240,80 +106,20 @@ module.exports = React.createClass({
    * @returns {JSX template}
    */
   getField : function(){
-      var fieldId = this.props.id;
-      var fieldType = this.props.type;
-      var fieldKey = 'field'+fieldType;
-      var helpKey = 'field'+fieldId+'HelpText';
-      var field = null;
-
-      switch(fieldType){
-        case 'textarea':
-          field = (<textarea className="form-control field"  id={fieldId} name={fieldId} value={this.state.value} ref={fieldId} key="fieldTextarea" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} ></textarea>);
-          break;  
-        case 'radio':  
-        case 'checkbox':
-          field = this.getCheckboxOrRadio();
-          break;      
-        case 'select':
-        case 'multiselect':
-          field = this.getSelect();
-          break;     
-        default:
-          field = (<input type={fieldType} id={fieldId} className="form-control field" name={fieldId} value={this.state.value} key={fieldKey} ref={fieldId} placeholder="" aria-describedby={helpKey} onChange={this.handleChange} onBlur={this.handleBlur} />);
-      }
-      return field;
-  },
-
-  /**
-   * Display helpText or errorMessage if available.
-   * @returns {JSX template}
-   */
-  getHelpText: function(){
-    var helpKey = 'field'+this.props.id+'HelpText';
-    var helpText = this.props.helpText ? this.props.helpText : '';
-    if(this.state.hasError){
-      helpText = this.state.errorMessage;
+    var helpKey = 'field'+this.props.id+'HelpText';      
+    var controlClassName = 'form-control';
+    switch(this.props.type){
+      case 'textarea':
+        return this.getDefaultFieldContainer(<Textarea className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+      case 'radio':  
+      case 'checkbox':
+        return <Checkable {...this.props}/>;          
+      case 'select':
+      case 'multiselect':
+        return this.getDefaultFieldContainer(<Select className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+      default:
+        return this.getDefaultFieldContainer(<Input className={controlClassName} aria-describedby={helpKey} {...this.props} />);
     }
-
-    return (<span id={helpKey} key={helpKey} className="help-block">{helpText}</span>);
-  },
-
-  /**
-   * Wraps checkbox or radio fields with specific label and field template 
-   * and returns new template
-   * @returns {JSX template}
-   */
-  renderFieldGroup : function(label,field,helpText){
-    var classes = {
-      'checkbox': this.props.type === 'checkbox',
-      'radio': this.props.type === 'radio'
-    };
-
-    return  (
-      <fieldset className={React.addons.classSet(this.getRenderViewClasses())} key="fieldGroup">
-        {this.getEditTemplate()}
-        {label}
-        <div className={React.addons.classSet(classes)} key="fieldGroupContent">
-          {field}
-        </div>
-        {helpText}
-      </fieldset>
-    );
-  },
-
-  /**
-   * Wraps label and field templates and returns new template
-   * @returns {JSX template}
-   */
-  renderFieldWithLabel : function(label,field,helpText){
-    return  (
-      <div className={React.addons.classSet(this.getRenderViewClasses())} key="fieldDefaultGroup">
-        {this.getEditTemplate()}
-        {label}
-        {field}
-        {helpText}
-      </div>
-    );
   },
 
   /**
@@ -321,18 +127,10 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
-    if(this.isFieldGroup()){
-      return this.renderFieldGroup(
-        this.getLabel(),
-        this.getField(),
-        this.getHelpText()
-      );
-    }else{
-      return this.renderFieldWithLabel(
-        this.getLabel(),
-        this.getField(),
-        this.getHelpText()
-      );
+    if ( this.isFieldGroup() ) {
+      return <FieldGroup {...this.props} />;
+    } else {
+      return this.getField();
     }
   }
   

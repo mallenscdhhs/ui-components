@@ -1,5 +1,8 @@
+var React = require('react/addons');
+var Components = require('../../src/main');
+var TestUtils = React.addons.TestUtils;  
+
 describe('Page component', function() {
-  var TestUtils = React.addons.TestUtils;  
 
   it('renders a page with a title and content', function(){
     var fixture = require('../fixtures/page-with-content.json');

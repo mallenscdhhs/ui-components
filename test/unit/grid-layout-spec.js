@@ -1,5 +1,8 @@
+var React = require('react/addons');
+var Components = require('../../src/main');
+var TestUtils = React.addons.TestUtils;
+
 describe('Grid Layout component', function(){	
-	var TestUtils = React.addons.TestUtils;
 
 	it('can render a Bootstrap 3 grid', function(){
 		var schema = require('../fixtures/grid-two-col.json');		
@@ -11,8 +14,8 @@ describe('Grid Layout component', function(){
 		expect(cols.length).toEqual(2);
 		expect(cols[0].className).toEqual('col-md-6 col-sm-4');
 		expect(cols[1].className).toEqual('col-md-12 col-sm-12 col-xs-12');
-		expect(cols[0].childNodes[0].textContent).toEqual('Test one');
-		expect(cols[1].childNodes[0].textContent).toEqual('Test two');
+		expect(cols[0].childNodes[0].textContent).toEqual('fieldTest one');
+		expect(cols[1].childNodes[0].textContent).toEqual('fieldTest two');
 	});
 
 	it('can render multiple rows', function(){

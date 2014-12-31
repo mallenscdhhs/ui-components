@@ -1,3 +1,5 @@
+var React = require('react/addons');
+var Components = require('../../src/main');
 var TestUtils = React.addons.TestUtils; 
 
 describe('main component', function(){

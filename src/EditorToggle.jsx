@@ -1,6 +1,7 @@
 var Queue = require('./EventQueue');
+var React = require('react/addons');
 
-module.exports = {
+module.exports = React.createClass({
 
   /**
    * Stop event prop and push event to Queue, enabling global app to open the config editor window.
@@ -45,9 +46,10 @@ module.exports = {
    * Create edit component HTML and handle click events.
    * @returns {JSX}
    */
-  getEditTemplate: function() {
+  render: function() {
     return (
       <div className="config-editor">
+        <span className="config-editor-label">{this.props.componentType}</span>
         {this.getAddButton(this.props.componentType.toLowerCase())}
         <span onClick={this.handleConfigEdit} className="edit-component">
           <span className="glyphicon glyphicon-cog"></span>
@@ -55,4 +57,4 @@ module.exports = {
       </div>
     );
   }
-};
+});

@@ -18,14 +18,18 @@ module.exports = React.createClass({
     };
   },
 
-  render: function() {
-    var classNames = React.addons.classSet({
-      modal: true,
-      fade: true,
-      in: this.props.autoShow
+  componentDidMount: function(){
+    var node = this.getDOMNode();
+    var $modal = $(node).modal({show: this.props.autoShow});
+
+    $modal.on('hidden.bs.modal', function(){
+      React.unmountComponentAtNode(node.parentNode);
     });
+  },
+
+  render: function() {
     return (
-      <div className={classNames} id={this.props.id} tabIndex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
+      <div className="modal fade" id={this.props.id} tabIndex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

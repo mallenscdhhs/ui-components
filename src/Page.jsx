@@ -1,7 +1,7 @@
 'use-strict';
 var React = require('react/addons');
 var marked = require('marked');
-var EditorMixin = require('./EditorMixin');
+var EditorToggle = require('./EditorToggle');
 
 marked.setOptions({  
   sanitize: true,
@@ -11,8 +11,6 @@ marked.setOptions({
 module.exports = React.createClass({
 
   displayName: 'Page',
-
-  mixins: [EditorMixin],
 
   /**
    * Set default props.
@@ -33,7 +31,7 @@ module.exports = React.createClass({
   render: function(){   
     return (
       <article className="editable-component">
-        {this.getEditTemplate()}
+        <EditorToggle {...this.props}/>
         <header>
           <h2>{this.props.title}</h2>
         </header>
