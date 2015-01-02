@@ -11,7 +11,7 @@ var GridColumn = require('./GridColumn');
  * @returns {number}
  */
 var add = function(x, y){
-	return x + y;
+  return x + y;
 };
 
 /**
@@ -21,7 +21,7 @@ var add = function(x, y){
  * @returns {number};
  */
 var getRowIndex = function(n){
-	return n > 0? add(1, n) : n;
+  return n > 0? add(1, n) : n;
 };
 
 /**
@@ -31,9 +31,9 @@ var getRowIndex = function(n){
  * @returns {number}
  */
 var getTotalColumns = function(rows){
-	return _.reduce(rows, function(n, row, i){
-		return n + row.length;
-	}, 0);
+  return _.reduce(rows, function(n, row, i){
+    return n + row.length;
+  }, 0);
 };
 
 /**
@@ -46,12 +46,12 @@ var getTotalColumns = function(rows){
  * @param {number} mod - number to cumulate with
  */
 var distributeIndexes = function(len, mod, num){
-	var result = [];
-	while(num < len){
-		result.push(num);
-		num = num + mod;		
-	}
-	return result;
+  var result = [];
+  while(num < len){
+    result.push(num);
+    num = num + mod;    
+  }
+  return result;
 };
 
 /**
@@ -63,16 +63,16 @@ var distributeIndexes = function(len, mod, num){
  *   components that belong to the current column
  * @returns {array}
  */
-var distributeComponents = function(rows, components, indexDistro){	
-	return _.map(rows, function(row, i){
-		return _.map(row, function(col, n){			
-			return React.addons.update(col, {
-				children: {
-					$set: _.at(components, indexDistro(add(getRowIndex(i), n)))
-				}
-			});
-		});
-	});
+var distributeComponents = function(rows, components, indexDistro){ 
+  return _.map(rows, function(row, i){
+    return _.map(row, function(col, n){     
+      return React.addons.update(col, {
+        children: {
+          $set: _.at(components, indexDistro(add(getRowIndex(i), n)))
+        }
+      });
+    });
+  });
 };
 
 /**
@@ -81,44 +81,44 @@ var distributeComponents = function(rows, components, indexDistro){
  * @module Grid
  */
 module.exports = React.createClass({
-	displayName: 'Grid',
+  displayName: 'Grid',
 
-	propTypes: {
-		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired		
-	},
+  propTypes: {
+    rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired   
+  },
 
-	statics: {
-		add: add,
-		getTotalColumns: getTotalColumns,
-		getRowIndex: getRowIndex,
-		distributeIndexes: distributeIndexes,
-		distributeComponents: distributeComponents
-	},
+  statics: {
+    add: add,
+    getTotalColumns: getTotalColumns,
+    getRowIndex: getRowIndex,
+    distributeIndexes: distributeIndexes,
+    distributeComponents: distributeComponents
+  },
 
-	getDefaultProps: function(){
+  getDefaultProps: function(){
     return {
       componentType: 'layout'
     };
   },
 
-	render: function(){
-		var numChildren = this.props.children.length;
-		var numColumns = getTotalColumns(this.props.rows);	
-		var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);	
-		var rows = distributeComponents(this.props.rows, this.props.children, indexDistro);
+  render: function(){
+    var numChildren = this.props.children.length;
+    var numColumns = getTotalColumns(this.props.rows);  
+    var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);  
+    var rows = distributeComponents(this.props.rows, this.props.children, indexDistro);
 
-		return (
-			<div className="grid-layout">
-				{_.map(rows, function(row, i){
-					return (
-						<GridRow>
-							{_.map(row, function(col){
-								return <GridColumn {...col}/>;
-							})}
-						</GridRow>
-					);
-				})}
-			</div>
-		);
-	}
+    return (
+      <div className="grid-layout">
+        {_.map(rows, function(row, i){
+          return (
+            <GridRow>
+              {_.map(row, function(col){
+                return <GridColumn {...col}/>;
+              })}
+            </GridRow>
+          );
+        })}
+      </div>
+    );
+  }
 });
