@@ -4,6 +4,12 @@ var _ = require('lodash');
 var GridRow = require('./GridRow');
 var GridColumn = require('./GridColumn');
 
+/**
+ * Add two numbers together.
+ * @param {number} x
+ * @param {number} y
+ * @returns {number}
+ */
 var add = function(x, y){
 	return x + y;
 };
@@ -14,17 +20,17 @@ var add = function(x, y){
  * @param {number} n - current row number
  * @returns {number};
  */
-var getRowNum = function(n){
+var getRowIndex = function(n){
 	return n > 0? add(1, n) : n;
 };
 
 /**
  * Returns the total number of columns in a given
- * array of rows where rows = [[...], ...]
+ * array of rows.
  * @param {array} rows
  * @returns {number}
  */
-var getNumColumns = function(rows){
+var getTotalColumns = function(rows){
 	return _.reduce(rows, function(n, row, i){
 		return n + row.length;
 	}, 0);
@@ -34,12 +40,12 @@ var getNumColumns = function(rows){
  * Take a given number(num) and produce a list of values
  * that are cumulative sums of (num + mod) up to a limit(len).
  * @example:
- *  getComponentIndexes(10, 0, 3) = [0,3,6,9]
+ *  distributeIndexes(10, 3, 0) = [0,3,6,9]
  * @param {number} len - number to count to
  * @param {number} num - number to start at
  * @param {number} mod - number to cumulate with
  */
-var getComponentIndexes = function(len, num, mod){
+var distributeIndexes = function(len, mod, num){
 	var result = [];
 	while(num < len){
 		result.push(num);
@@ -50,17 +56,19 @@ var getComponentIndexes = function(len, num, mod){
 
 /**
  * Adds the children components to each column in sequence, distributing
- * components evenly among available columns.
+ * components sequentially among available columns.
  * @param {array} rows
- * @param {number} numColumns
  * @param {array} components
+ * @param {function} indexDistro - the function that calculates the indexes of the 
+ *   components that belong to the current column
+ * @returns {array}
  */
-var distributeComponents = function(rows, components, indexCb){	
+var distributeComponents = function(rows, components, indexDistro){	
 	return _.map(rows, function(row, i){
 		return _.map(row, function(col, n){			
 			return React.addons.update(col, {
 				children: {
-					$set: _.at(components, indexCb(i, n))
+					$set: _.at(components, indexDistro(add(getRowIndex(i), n)))
 				}
 			});
 		});
@@ -80,8 +88,10 @@ module.exports = React.createClass({
 	},
 
 	statics: {
-		getNumColumns: getNumColumns,
-		getComponentIndexes: getComponentIndexes,
+		add: add,
+		getTotalColumns: getTotalColumns,
+		getRowIndex: getRowIndex,
+		distributeIndexes: distributeIndexes,
 		distributeComponents: distributeComponents
 	},
 
@@ -93,14 +103,9 @@ module.exports = React.createClass({
 
 	render: function(){
 		var numChildren = this.props.children.length;
-		var numColumns = getNumColumns(this.props.rows);
-		var distributor = distributeComponents.bind(this, this.props.rows, this.props.children);
-		var rows = ( numColumns >= numChildren )?
-			distributor(function(rowNum, colNum){				
-				return add(getRowNum(rowNum), colNum);
-			}) : distributor(function(rowNum, colNum){
-				return getComponentIndexes(numChildren, add(getRowNum(rowNum), colNum), numColumns);
-			});
+		var numColumns = getTotalColumns(this.props.rows);	
+		var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);	
+		var rows = distributeComponents(this.props.rows, this.props.children, indexDistro);
 
 		return (
 			<div className="grid-layout">
