@@ -3,9 +3,10 @@ var React = require('react/addons');
 var _ = require('lodash');
 var Page = require('./Page');
 var Tree = require('./Tree');
-var Grid = require('./Grid');
 var Action = require('./Action');
 var Queue = require('./EventQueue');
+var GridRow = require('./GridRow');
+var GridColumn = require('./GridColumn');
 
 /**
  * Build nested data structure for rendering a Tree.
@@ -190,18 +191,22 @@ module.exports = React.createClass({
     var treeProps = {
       items: buildTree(this.state, this.props)
     };
-    return (
-      <Grid rows={[[{md: '2', indexRange: [0, 2]}, {md: '10'}],[{md : '2'},{md:'10'}]]}>
-        <h4>{this.props.title}</h4>
-        <Tree {...treeProps} ref="outline" />
-        <div id="workflow-page"></div>
-        <div id="workflow-status"></div>
-        <div id="workflow-actions" className="text-right">
-          {_.map(actions, function(action, i){
-            return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
-          }, this)}
-        </div>
-      </Grid>
+    return (      
+      <GridRow>
+        <GridColumn md="2">
+          <h4>{this.props.title}</h4>
+          <Tree {...treeProps} ref="outline" />
+        </GridColumn>
+        <GridColumn md="10">
+          <div id="workflow-page"></div>
+          <div id="workflow-status"></div>
+          <div id="workflow-actions" className="text-right">
+            {_.map(actions, function(action, i){
+              return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
+            }, this)}
+          </div>
+        </GridColumn>
+      </GridRow>
     );
   }
 });
