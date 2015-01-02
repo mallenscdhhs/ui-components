@@ -1,4 +1,5 @@
-var _ = require('underscore');
+'use-strict';
+var _ = require('lodash');
 
 module.exports = {
 	
@@ -33,8 +34,8 @@ module.exports = {
 		if(this.queue.length){
 			while( this.queue.length ){
 				ev = this.queue.shift();
-				this.nofitySubscribers(ev.entityEvent,ev.data,ev.entityEvent);	
-				this.nofitySubscribers('all',ev.data,ev.entityEvent);				
+				this.notifySubscribers(ev.entityEvent,ev.data,ev.entityEvent);	
+				this.notifySubscribers('all',ev.data,ev.entityEvent);				
 			}
 		}
 	},
@@ -44,7 +45,7 @@ module.exports = {
 	* Push each notification callback into next loop of eventLoop so we don't block. 
 	* @returns {void}
 	*/
-	nofitySubscribers: function(entityEvent,data,eventName){
+	notifySubscribers: function(entityEvent,data,eventName){
 		if(this.subscribers[entityEvent]){
 			var subscribers = Object.keys(this.subscribers[entityEvent]);
 			var mySubs = this.subscribers;
@@ -61,7 +62,7 @@ module.exports = {
 	* Add callback to subscriber list, for the specified eventNamespace and unique subscriber Id
 	* @returns {void}
 	*/
-	subscribe: function(entityEvent,cbId,cb){
+	subscribe: function(entityEvent, cbId, cb){
 		this.addSubscriber(entityEvent,cbId,cb);
 	},
 
@@ -94,4 +95,4 @@ module.exports = {
 	}
 
 
-}
+};

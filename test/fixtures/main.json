@@ -1,0 +1,66 @@
+{
+  "pageId": "pi",
+  "type": "page",
+  "config": {
+    "title": "Provider Information",
+    "content": "Please tell us about **yourself**.",
+    "id": "pi"
+  },
+  "child": "test_form",
+  "components": {
+    "test_form": {
+      "next": "action_1",
+      "child": "test_fieldset",     
+      "type": "form",
+      "config": {
+        "id": "test_form",
+        "name": "test_form"
+      }
+    },    
+    "test_fieldset": {
+      "child": "test_field_1",
+      "type": "fieldset",
+      "config": {
+        "id": "test_fieldset",
+        "name": "Provider Name",
+        "layout": {
+          "type": "grid",
+          "config": {
+            "rows": [
+              [{"md": "6"}, {"md": "6"}]
+            ]
+          }
+        }
+      }
+    },
+    "test_field_1": {
+      "next": "test_field_2",
+      "type": "field",
+      "config": {
+        "id": "test_field_1",
+        "type": "text",
+        "name": "test_4",
+        "label": "First Name"
+      }
+    },
+    "test_field_2": {
+      "type": "field",
+      "config": {
+        "id": "test_field_2",
+        "type": "text",
+        "name": "test_2",
+        "label": "Last Name"
+      }
+    },
+    "action_1": {
+      "type": "action",
+      "config": {
+        "id": "action_1",
+        "type": "button",
+        "classNames": ["btn-primary"],
+        "name": "Action one",
+        "event": "some:event"
+      }
+    }
+  }
+}

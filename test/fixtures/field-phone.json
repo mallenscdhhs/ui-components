@@ -1,0 +1,8 @@
+{
+  "id" : "test-phone",
+  "type" : "tel",
+  "name" : "test-phone",
+  "label" : "Test Phone",
+  "required" : false,
+  "options" : { }  
+}

@@ -1,16 +1,33 @@
+'use-strict';
 var React = require('react/addons');
+var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
   displayName: 'Fieldset',
+
+  getDefaultProps: function(){
+    return {
+      componentType: 'fieldset'
+    };
+  },
+
+  getLabel: function(){
+    var fieldSetLabel = null;
+    if(this.props.name){
+      fieldSetLabel = <legend className="field-label" key={this.props.name+"legend"}>{this.props.name}</legend>;
+    }
+    return fieldSetLabel;
+  },
+
   /**
    * Render a Fieldset component.
    * @returns {JSX}
    */
   render: function(){
-    var fsKey = this.props.name ? (this.props.name).replace(/ /g,'_') : '';
     return (
-      <fieldset key={"fieldSetWithComponentsKey"+fsKey}>
-        <legend className="field-label" key="legendKey">{this.props.name}</legend>
+      <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className="editable-component">
+        <EditorToggle {...this.props}/>
+        {this.getLabel()}
         {this.props.children}
       </fieldset>
     );

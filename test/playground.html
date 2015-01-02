@@ -5,10 +5,22 @@
     <title>Playground</title>
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <script src="lib/jquery/dist/jquery.min.js"></script>
-    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>    
-    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>  
+    <script src="lib/file/filesaver.min.js"></script>    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>    
     <script src="Components.js"></script>
     <style type="text/css">
+      .config-editor{ width:auto; height:25px; line-height:25px; position:absolute; top:0; right:4px; display:none; box-sizing:border-box; padding: 0; cursor:pointer; z-index:9999; color:#999; }
+      .config-editor .add-component{ margin-right:5px; }
+      .component-subs-list-item { text-transform:capitalize; padding:.3em 0;color:#777;}
+      .component-subs-list-item .glyphicon{ margin: 2px 5px 0 0; cursor:pointer;}
+      .component-subs-list-item .glyphicon:hover { color:#333; }
+      *{ position:relative; }
+      .enable-component-editor .editable-component:hover > .config-editor,
+      .enable-component-editor .config-editor:hover{ display:block; }
+      .enable-component-editor .editable-component:hover > .config-editor .add-component:hover,
+      .enable-component-editor .editable-component:hover > .config-editor .edit-component:hover{ color: #337ab7; }
+      .modal-title { text-transform:capitalize; }
       .nav.nav-tree ul {
         margin-left: 1em;
       }
@@ -25,11 +37,11 @@
       html,body,article,.col-md-5{height:100%;}
       #editor {
         position: absolute;
-        top: 0;
+        top: 50px;
         left: 0;
-        bottom: 0;
+        bottom: 30px;
         right: 60%;
-        box-shadow: -10px 4px 6px rgba(0,0,0, 0.5);
+        transition: all 0.5s ease;
       }
       #render {
         box-sizing: border-box;
@@ -37,20 +49,157 @@
         position: absolute;
         top: 0;
         left: 40%;
-        right: 1em;        
+        right: 3em; 
+        transition: all 0.5s ease;       
+      }
+      .editor-menu{
+        background:#272727;
+        color:#fff;
+        color:#eee;
+        font-size:12px;
+        text-align:right;
+        box-sizing:border-box;
+        padding:5px 15px;
+        transition: all 0.5s ease;
+      }
+      #top-menu{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height:50px;
+        right: 60%;
+        line-height:50px; 
+        transition: all 0.5s ease,
+                    opacity 0.1s ease;
+      }
+      #bottom-menu{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height:30px;
+        line-height:22px;
+        right: 60%; 
+        transition: all 0.5s ease;
+      }
+      #toggle-editor{
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        z-index:99999; 
+        transition: all 0.5s ease;
+      }
+      #open-file{
+        margin-left:42px;
+        width:55%;
+        padding:5px 12px;
+      }
+      #show-slide{
+        box-sizing: border-box;
+        position: absolute;
+        width:40%;
+        top: 0;
+        bottom:0;
+        left: 0;
+        background:#272727;
+        box-shadow: 3px 0px 10px 2px rgba(170,170,170,1);
+        transition: all 0.5s ease;
+      }      
+
+      .full-screen-render{
+        width:100% !important;
+        left:0 !important;
+        padding-left:80px !important;
+        padding-right:20px !important;
+      }
+      .hide-editor-and-menus{
+        opacity:0 !important;
+        right:99% !important;
+      }
+      .hide-gutter{
+        width:60px !important;
       }
     </style>
   </head>
   <body>
-    <div id="editor"></div>
+    <button class="btn btn-info" id="toggle-editor">
+      <span class="glyphicon glyphicon-chevron-left" id="toggler-icon" aria-hidden="true" style="top:2px;"></span>      
+    </button>
+    <div id="show-slide" class=""></div>
+    <div id="top-menu" class="editor-menu">
+      <input type="file" class="btn btn-default pull-left" id="open-file" value="Open File" />
+      <button class="btn btn-success pull-right" id="save-file">Save</button>
+      <button class="btn btn-default pull-right" id="toggle-options">
+        <span class="glyphicon glyphicon-cog" aria-hidden="true" style="top:2px;"></span>      
+      </button>
+    </div>
+    <div id="editor" class=""></div>
+    <div id="bottom-menu" class="editor-menu"></div>
     <div id="render"></div>    
-    
-    <script>           
+    <div class="modal fade" id="workingDirModal" tabindex="-1" role="dialog" aria-labelledby="workingDirectoryModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">Workflow Page Directory</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="recipient-name" class="control-label">Directory</label>
+              <input type="text" class="form-control" id="working-dir-loc">
+              <span  class="help-block text-primary">Relative to current HTML page, location of referenced page files. <br> Format: "lib/data/workflow/" with trailing "/".</span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary pull-right" id="update-workflow-directory">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">Options</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="recipient-name" class="control-label">Field Validation</label>
+              <select class="form-control" id="field-validation-option"><option value="false">No</option><option value="true">Yes</option></select>
+              <span  class="help-block text-primary">Turn on and off field level validation during tests.</span>
+            </div>
+            <div class="form-group hidden" id="options-workflow-directory">
+              <label for="recipient-name" class="control-label">Workflow Page Directory</label>
+              <input type="text" class="form-control" id="options-working-dir-loc">
+              <span  class="help-block text-primary">Relative to current HTML page, location of referenced page files. <br> Format: "lib/data/workflow/" with trailing "/".</span>
+            </div>            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary pull-right" id="update-options">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>        
+    <script>
       var React = require('react/addons');
-      var Components = require('Components');
-      var editor = ace.edit("editor");
-      var _ = Components.underscore;
+      var _ = require('lodash');
+      var Components = require('Components');            
+      var Queue = Components.eventQueue;      
+      var editor = ace.edit("editor");      
       var renderWindow = document.getElementById('render');
+      var topMenu = $('#top-menu');
+      var bottomMenu = $('#bottom-menu');
+      var openFile = $('#open-file');
+      var saveFile = $('#save-file');
+      var toggleEditor = $('#toggle-editor');
+      var currentFileName = '';
+      var options = {
+        'pageType' : null,
+        'workflowDirectory' : null,
+        'fieldValidation' : false
+      }
       
       editor.setTheme("ace/theme/tomorrow_night_eighties");
       editor.getSession().setMode("ace/mode/json");      
@@ -67,10 +216,134 @@
             Components.factory(config),
             renderWindow
           );
+          options.type = config.type;
+          bottomMenu.text('Rendered successfully.');
         }catch(err){
-          // Maybe update a status somewhere?
+          // Maybe update a status somewhere
+          console.error(err.stack);
+          bottomMenu.text(err.message);
         }
+        if(options.type === 'workflow' && options.workflowDirectory === null){
+          initWorkflow(config);
+        }        
+
       }, 10));
+
+      function loadFile(input) {
+        if (input.files && input.files[0]) {
+          var file = input.files[0];
+          currentFileName = file.name;
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            editor.setValue(e.target.result);
+            editor.blur();
+          }
+
+          reader.readAsText(file);
+        }
+      }
+
+      openFile.on('change',function(){
+        editor.setValue('');
+        options.workflowDirectory = null;
+        options.type = null;
+        loadFile(this);
+      });
+
+      saveFile.on('click',function(){
+        var blob = new Blob([editor.getValue()], {type: "application/json;charset=utf-8"});
+        saveAs(blob, currentFileName);
+      });
+
+      toggleEditor.on('click',function(){
+        var button = $(this);
+        document.getElementById("render").classList.toggle('full-screen-render');
+        document.getElementById("top-menu").classList.toggle('hide-editor-and-menus');
+        document.getElementById("bottom-menu").classList.toggle('hide-editor-and-menus');
+        document.getElementById("editor").classList.toggle('hide-editor-and-menus');
+        document.getElementById("show-slide").classList.toggle('hide-gutter');
+        document.getElementById("toggler-icon").classList.toggle('glyphicon-chevron-left');
+        document.getElementById("toggler-icon").classList.toggle('glyphicon-chevron-right');
+      });
+
+      $('body').on('click','#toggle-options',function(){
+        if(options.type === 'workflow'){
+          document.getElementById("options-workflow-directory").classList.remove('hidden');
+        }else{
+          document.getElementById("options-workflow-directory").classList.add('hidden');
+        }
+        $('#field-validation-option').val(options.fieldValidation+'');
+        $('#options-working-dir-loc').val(options.workflowDirectory);
+        $('#optionsModal').modal('show');
+      });
+
+      $('body').on('click','#update-options',function(){
+        options.fieldValidation = $('#field-validation-option').val()==='true';
+        if(options.type === 'workflow'){
+          options.workflowDirectory = $('#options-working-dir-loc').val()
+        }
+        $('#optionsModal').modal('hide');
+      });
+
+      /** APP LEVEL CODE BELOW **/
+
+      // Workflow @ APP level 
+      var initWorkflow = function(flow){     
+        options.workflowDirectory = null;
+        var firstPage = null; var list = flow.config.items; var keys = Object.keys(list);
+        _.each(keys,function(k,v){var item = list[k];if(item.previous === null ){firstPage = item.pageId;}});
+
+        // Ask for workflowDirectory where page.json files that are referenced in the workflow are located, relative to the current HTML page.
+        $('#workingDirModal').modal('show').on('hidden.bs.modal', function (e) {
+          if(options.workflowDirectory && firstPage){
+            $.getJSON(options.workflowDirectory+firstPage+'.json').then(function(page){
+              React.render(Components.factory(page),document.getElementById('workflow-page'));
+            });
+          }
+        });
+      }
+
+      $('body').on('click','#update-workflow-directory',function(){
+        options.workflowDirectory = $('#working-dir-loc').val();
+        $('#workingDirModal').modal('hide')
+      });
+         
+      Queue.subscribe('workflow:load:page','globalRouter',function(data){
+        if(options.workflowDirectory && data.page){
+          $.getJSON(options.workflowDirectory+data.page+'.json').then(function(page){
+            React.render(Components.factory(page),document.getElementById('workflow-page'));
+          });
+        }
+      });
+
+      Queue.subscribe('workflow:save:application','globalRouter',function(data){
+        confirm('Save Application and Exit?');
+      });   
+
+      // Field Validation @ APP level 
+      var cache = {};
+      Queue.subscribe('all','globalRouter',function(data,eventType){
+        if(options.fieldValidation){
+          if(eventType.indexOf('field:blur') >= 0){
+            var hasError = true;
+            var errorMessage = 'Input is not valid. Please select a new value.';
+            if(cache[data.id]){
+              hasError= false;
+              errorMessage = '';
+              cache[data.id] = false;
+            }else{
+              cache[data.id] = true;
+            }
+            Queue.push({'entityEvent':'field:error:'+data.id,'data':{'hasError':hasError,'errorMessage':errorMessage}});
+          }
+        }
+      });
+
+
+
+
+
+
     </script>
   </body>
 </html>

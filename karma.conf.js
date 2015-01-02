@@ -14,10 +14,10 @@ module.exports = function(config) {
 
 	// list of files / patterns to load in the browser
 	files: [
-		'node_modules/es5-shim/es5-shim.js',		
-		'dist/Components.js',
-		'test/shim.js',
-		'test/unit/**/*.js'
+		'test/lib/jquery/dist/jquery.js',
+		'test/lib/bootstrap/dist/js/bootstrap.js',
+		'node_modules/es5-shim/es5-shim.js',
+		'test/unit/*-spec.js'
 	],
 
 
@@ -31,7 +31,12 @@ module.exports = function(config) {
 	browserify: {
 	  debug: true,
 	  transform: ['reactify'],
-	  exclude: ['Components']
+	  exclude: [
+	  	'dist/Components.js',
+	  	'test/lib/jquery/dist/jquery.js',
+			'test/lib/bootstrap/dist/js/bootstrap.js'
+		],
+	  extensions: ['.jsx']
 	},
 
 

@@ -1,32 +1,11 @@
-describe('Tree component', function(){	
-	var Tree = Components.elements.tree;
-	var TestUtils = React.addons.TestUtils;
-	var _ = require('underscore');
+var React = require('react/addons');
+var Components = require('../../src/main');
+var Tree = Components.elements.tree;
+var TestUtils = React.addons.TestUtils;
+var _ = require('lodash');
+var fixture = require('../fixtures/tree.json');
 
-	var fixture = {
-		title: 'test tree',
-		api: {},
-		items: [
-			{
-				title: 'One',
-				pageId: 'page1',
-				items: [
-					{
-						title: 'One b',
-						pageId: 'page1b'
-					},
-					{
-						title: 'One a',
-						pageId: 'page1a'
-					}
-				]
-			},
-			{
-				title: 'Two',
-				pageId: 'page2'
-			}
-		]
-	};
+describe('Tree component', function(){	
 	it('can render a nested list structure', function(){
 		var tree = TestUtils.renderIntoDocument(<Tree {...fixture}/>).getDOMNode();
 		var firstLeaf = tree.childNodes[0];

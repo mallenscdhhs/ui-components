@@ -1,6 +1,7 @@
+var Queue = require('../../src/EventQueue');
+
 describe('EventQueue', function(){
-  var Queue = require('../../src/EventQueue');
-  
+    
   describe('Subscribe', function(){
     it('Add callback to selected event namespace with unique Id', function(){
       Queue.subscribe('test:event','myId',function(event){return event;});
@@ -22,8 +23,8 @@ describe('EventQueue', function(){
 
     beforeEach(function(done) {
       foo = {
-        setBar: function(value) {   }
-      }
+        setBar: function(value) {}
+      };
 
       spyOn(foo, 'setBar');
       Queue.subscribe('test:event','myId',foo.setBar);      

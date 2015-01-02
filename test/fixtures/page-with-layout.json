@@ -1,4 +1,5 @@
 {
+  "id": "test_page",
   "type": "page",
   "config": {
     "title": "Test",
@@ -7,24 +8,28 @@
       "config": {
         "rows": [[{"md": "6"}, {"md": "6"}]]
       }
-    },
-    "components": [
-      {
-        "type": "field",
-        "config": {
-          "type": "text",
-          "name": "testone",
-          "label": "Test one"
-        }
-      },
-      {
-        "type": "field",
-        "config": {
-          "type": "text",
-          "name": "testtwo",
-          "label": "Test two"
-        }
+    }
+  },
+  "child": "field_1",
+  "components": {
+    "field_1": {
+      "next": "field_2",
+      "type": "field",
+      "config": {
+        "id": "field_1",
+        "type": "text",
+        "name": "testone",
+        "label": "Test one"
       }
-    ]
+    },
+    "field_2": {
+      "type": "field",
+      "config": {
+        "id": "field_2",
+        "type": "text",
+        "name": "testtwo",
+        "label": "Test two"
+      }
+    }
   }
 }

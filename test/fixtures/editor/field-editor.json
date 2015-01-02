@@ -1,0 +1,69 @@
+{
+  "type": "configEditor",
+  "config": {
+    "id": "configure-field",
+    "title": "Edit Field",
+    "actions": [],
+    "autoShow": true
+  },
+  "child": "edit_form",
+  "components": {
+    "edit_form": {
+      "type": "form",
+      "child": "default_fieldset",
+      "config": {
+        "id": "edit_form",
+        "name": "edit_form"
+      }
+    },
+    "default_fieldset": {
+      "type": "fieldset",
+      "child": "label",
+      "config": {
+        "id": "default_fieldset",
+        "name": "Default Properties"
+      }
+    },
+    "label": {
+      "type": "field",
+      "next": "name",
+      "config": {
+        "id": "label",
+        "name": "label",
+        "label": "Label",
+        "type": "text",
+        "required": true
+      }
+    },
+    "required": {
+      "type": "field",
+      "next": "name",
+      "config": {
+        "id": "required",
+        "name": "required",
+        "label": "Required?",
+        "type": "radio"
+      }
+    },
+    "name": {
+      "type": "field",
+      "next": "maxLength",
+      "config": {
+        "id": "name",
+        "name": "name",
+        "type": "text",
+        "label": "Name",
+        "required": true
+      }
+    },
+    "maxLength": {
+      "type": "field",
+      "config": {
+        "id": "maxLength",
+        "name": "maxLength",
+        "label": "Max length",
+        "type": "number"                
+      }
+    }
+  }  
+}

@@ -8,226 +8,133 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="Components.js"></script>
     <script src="shim.js"></script>
-    <style>.btn{margin:0 3px;}</style>
+    <!-- Load editors data async or live TODO: REMOVE make ASYNC-->
+    <script src="lib/data/editor/editors.js"></script>
+    <style>
+      .btn{ margin:0 3px; }
+      .config-editor{         
+        background: #337ab7;
+        color: #fff;
+        line-height:25px; 
+        position:absolute; top:0; right:0px; 
+        display:none; 
+        box-sizing:border-box; 
+        padding: 0; 
+        cursor:pointer; 
+      }
+      .config-editor span {
+        margin: 3px 0 3px 4px;
+      }
+      .config-editor span:last-child {
+        margin-right: 4px;
+      }
+      .config-editor .add-component{ }
+      .component-subs-list-item { text-transform:capitalize; padding:.3em 0;color:#777;}
+      .component-subs-list-item .glyphicon{ margin: 2px 5px 0 0; cursor:pointer;}
+      .component-subs-list-item .glyphicon:hover { color:#333; }
+      
+      .enable-component-editor .editable-component {
+        position: relative;  
+        box-sizing: border-box;      
+      }
+      .enable-component-editor .editable-component:hover {
+        outline: solid #337ab7 1px;
+        padding: 2px;      
+      }
+      .enable-component-editor .editable-component form.editable-component:hover {
+        padding-top: 27px;
+      }
+
+      .enable-component-editor .editable-component:hover > .config-editor,
+      .enable-component-editor .config-editor:hover{ display:block; }
+      .enable-component-editor .editable-component:hover > .config-editor .add-component:hover,
+      .enable-component-editor .editable-component:hover > .config-editor .edit-component:hover{ color: #ccc; }
+      .modal-title { text-transform:capitalize; }
+    </style>
   </head>
-  <body style="padding: 2em;">
-
-      <div id="test-form"></div>
-
-      <script>
-        var fieldsFixture = {
-          'text' : {
-            'type' : 'field',
-            'config' : {
-              type : 'text',
-              name : 'test-text-1',
-              label : 'Test Text'
+  <body>
+    
+    <div id="modalContainer"></div>
+    
+    <div id="component-page" class="enable-component-editor container"></div>
+      
+    <script>
+      var _ = require('lodash');
+      var Queue = Components.eventQueue;   
+      var container = document.getElementById('modalContainer');           
+      var PageConfig = {
+        type: 'page',
+        config: {
+          title: 'Config editor test page',
+          content: 'Some content.'
+        },
+        child: 'form_1',
+        components: {
+          'form_1': {
+            type: 'form',
+            child: 'fieldset_1',
+            config: {
+              id: 'form_1',
+              name: 'form_1'
             }
           },
-          'textarea' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'textarea',
-              name : 'test-textarea',
-              label : 'Test Textarea'
-            }
-          },
-          'checkbox' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'checkbox',
-              name : 'test-checkbox',
-              label : 'Test Checkbox',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Checkbox 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Checkbox 2',
-                    'value' : '2'
-                  }        
-                ]
+          'fieldset_1': {
+            type: 'fieldset',
+            child: 'field_1',
+            config: {
+              id: 'fieldset_1',
+              name: 'Test fieldset',
+              layout: {
+                type: 'grid',
+                config: {
+                  rows: [[{md: '6'}, {md:'6'}]]
+                }
               }
-            }          
-          },
-          'radio' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'radio',
-              name : 'test-radio',
-              label : 'Test Radio',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Radio 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Radio 2',
-                    'value' : '2'
-                  }        
-                ]
-              }  
-            }          
-          },
-          'select' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'select',
-              name : 'test-select',
-              label : 'Test Select',
-              options : {
-                'items' : [
-                  {
-                    'label' : 'Select 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'Select 2',
-                    'value' : '2'
-                  }        
-                ]
-              }
-            }            
-          },
-          'multiselect' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'multiselect',
-              name : 'test-multiselect',
-              label : 'Test MultiSelect',
-              dependency: {
-                'name':'test-text-1',
-                'value':'hi|hello|bye',
-                'initialState': 'hidden'
-              },
-              options : {
-                'items' : [
-                  {
-                    'label' : 'MultiSelect 1',
-                    'value' : '1'
-                  },
-                  {
-                    'label' : 'MultiSelect 2',
-                    'value' : '2'
-                  }        
-                ]
-              } 
-            }           
-          },          
-          'email' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'email',
-              name : 'test-email',
-              label : 'Test Email'
             }
           },
-          'phone' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'phone',
-              name : 'test-phone',
-              label : 'Test Phone'
+          'field_1': {
+            type: 'field',
+            next: 'field_2',
+            config: {
+              id: 'field_1',
+              type: 'text',
+              name: 'field_1',
+              label: 'Field One'
             }
           },
-          'date' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'date',
-              name : 'test-date',
-              label : 'Test Date',
-              required : true
+          'field_2': {
+            type: 'field',
+            config: {
+              id: 'field_2',
+              type: 'text',
+              name: 'field_2',
+              label: 'Field Two'
             }
-          },
-          'password' : {
-            'type' : 'field',
-            'config' : {            
-              type : 'password',
-              name : 'test-password',
-              label : 'Test Password'
-            }
-          }   
-        };
-
-        var fieldsetFixture = {
-          'type' : 'fieldset',         
-          'config':{          
-            'name' : 'Test Fieldset With All Fields TEST TEST',             
-            'components' :[]
-          },
-          'layout' : {
-            'type': "grid", 
-            'config': {
-              'rows': [[{'md': '3'}]]
-            }
-          }      
-        };
-
-        // Add fields to components
-        Object.keys(fieldsFixture).forEach(function(key,j){
-          fieldsetFixture.config.components.push(fieldsFixture[key]);
-        });
-
-        var formFixture = {
-          'type':'form',
-          'config' :{
-            'name' : 'Test Form One',
-            'model' : {},
-            'actions':[{
-                'type' : 'link',            
-                'config' : {
-                  'name' : 'Test Link Action',
-                  'url' : 'testURLHTTP',
-                  'event' : 'next'              
-                }
-              },{
-                'type' : 'button',            
-                'config' : {
-                  'name' : 'Test Button Action',
-                  'url' : 'testURLHTTP',
-                  'event' : 'back'
-                }
-            }],
-            'rules': [],
-            'components' :[{
-              'type' : 'fieldset',
-              'config':{
-                'name' : 'Test Fieldset One Test',
-                'layout' : {
-                  'type': "grid", 
-                  'config': {
-                    'rows': [[{'md': '3'}]]
-                  }
-                },              
-                'components' :[{
-                  'type' :'field',
-                  'config' : { 
-                    'type' : 'text',
-                    'name' : 'test-text-2',
-                    'label' : 'Test Text Field One',
-                    'required' : false,
-                    'options' : { }
-                  }
-                },{
-                'type' : 'field',
-                'config' : {            
-                  'type' : 'password',
-                  'name' : 'test-password-2',
-                  'label' : 'Test Password One'
-                }
-              }]
-              }  
-            }]  
           }
-        };
+        }
+      };
+      var Page = Components.factory(PageConfig);
+      
+      /**
+       * Common Modal Window Code
+       * Build a modal, with correct 'Action' properties for 'save' events
+       * Subs are children components, displayed with ability to delete
+       * Other data is sent in the created Event when the 'Action' is run.
+       */
+      var renderModal = function(props){
+        var component = PageConfig.components[props.id] || PageConfig;         
+        $.getJSON('/fixtures/editor/'+component.type+'-editor.json')
+          .then(function(config){
+            config.model = component.config;
+            React.render(Components.factory(config),container); 
+          });        
+      };
 
-        formFixture.config.components.push(fieldsetFixture);
-        var Form = Components.factory(formFixture);
-        React.render(Form,document.getElementById('test-form'));
-        
-      </script>
+      Queue.subscribe('component:edit', 'editor:test', renderModal);
+      Queue.subscribe('component:add', 'editor:test', renderModal);
+
+      React.render(Page,document.getElementById('component-page'));
+
+    </script>
   </body>
 </html>

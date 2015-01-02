@@ -1,29 +1,64 @@
+'use-strict';
 var React = require('react/addons');
 var elements = require('./index');
-var _ = require('underscore');
+var _ = require('lodash');
 var EventQueue = require('./EventQueue');
+var update = React.addons.update;
 
 /**
  * Recursively builds up a component hierarchy.
  * @param {object} schema - the parent component schema
  * @returns {function} a ReactElement factory function
  */
+function componentFactory(data){
+  if ( data.components && !data.child ) throw new TypeError('You must provide a "child" property.');
+  return buildComponentTree(data, data)[0];
+}
 
-function componentFactory(schema){
-	var element = elements[schema.type];
-	var factory = React.createFactory(element);
-	var config = _.clone(schema.config);
-	var children = null;
-	var layoutConfig = config.layout;
+/**
+ * Take a binary tree and build a nested tree structure from it.
+ * @param {object} schema - the top-level component schema
+ * @param {object} head - the first item in the list
+ * @returns {array}
+ */
+function buildComponentTree(schema, head){
+  var tree = [];
+  var list = schema.components || {};
+  var children = null;
+  var element, factory;
+  var props;
+  while(head){
+    children = null;
+    props = update(head, { config: {
+      key: {$set: head.config.id+ '-' +head.type},
+      componentType: {$set: head.type}
+    }});    
+    // if there is a layout config then we need to insert
+    // the layout into the binary tree to be rendered
+    if ( props.config.layout ) {
+      props = update(props, { config: {
+        layout: {
+          child: {$set: head.child},
+          id: {$set: head.config.id + '-layout'}
+        }
+      }});
+      children = buildComponentTree(schema, props.config.layout);
+    } else if ( props.child ) {
+      children = buildComponentTree(schema, list[props.child]);
+    }
+    
+    if ( props.type === 'field' && _.has(schema.model, props.config.id) ) {
+      props = update(props, { config: {
+        value: {$set: schema.model[props.config.id]}
+      }});
+    }
 
-	if ( layoutConfig ) {		
-		layoutConfig.config.components = config.components;
-		children = componentFactory(layoutConfig);
-	} else if ( config.components ) {
-		children = config.components.map(componentFactory);	
-	}
-
-	return factory(config, children);
+    element = elements[props.type];
+    factory = React.createFactory(element);
+    tree.push(factory(props.config, children));
+    head = list[props.next];
+  }
+  return tree;
 }
 
 /**
@@ -33,8 +68,8 @@ function componentFactory(schema){
  * @module Components
  */
 module.exports = {
-	elements: elements,
-	factory: componentFactory,
-	underscore: _,		// Remove when done testing workflow
-	eventQueue: EventQueue
+  'elements': elements,
+  'eventQueue': EventQueue,
+  'buildComponentTree': buildComponentTree,
+  'factory': componentFactory
 };

@@ -1,0 +1,7 @@
+{
+  "id" : "test-textarea",
+  "type" : "textarea",
+  "name" : "test-textarea",
+  "label" : "Test Textarea",
+  "value": "Some text content"
+}
