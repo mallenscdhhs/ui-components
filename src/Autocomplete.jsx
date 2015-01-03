@@ -1,6 +1,7 @@
 var React = require('react/addons');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
+var Queue = require('./EventQueue');
 var _ = require('lodash');
 
 var getOptionLabels = function(options){
@@ -32,6 +33,14 @@ module.exports = React.createClass({
   onOptionSelected: function(label){
     var opt = _.find(this.state.options, {label: label});
     this.setState({value: opt.value});
+    Queue.push({
+      entityEvent: 'field:value:change',
+      data: {
+        id: this.props.id,
+        name: this.props.name,
+        value: this.state.value
+      }
+    });
   },
 
   render: function(){
