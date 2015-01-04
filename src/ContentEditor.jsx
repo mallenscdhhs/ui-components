@@ -33,12 +33,21 @@ module.exports = React.createClass({
       ]
     });
     editor.on('change',this.handleContentEditorChange);
-    editor.on('keyup',this.handleContentEditorChange);
+    editor.on('keyup',this.handleContentEditorKeyup);
     this.setState({'editor':editor});
   },
 
   componentWillUnmount: function(){
     this.state.editor.destroy();
+  },
+
+  /**
+   * Used to grab keyUp event, and pass to Change event
+   * @param e {event}
+   * @return {void}
+   */
+  handleContentEditorKeyup: function(e) {
+    this.handleContentEditorChange(e.target.innerHTML);
   },
   /**
    * Callback for Pen editor change event.
