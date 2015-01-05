@@ -34,7 +34,7 @@ gulp.task('test', ['hint'], function(done){
 gulp.task('less:compile', function(){
   return gulp.src('./src/styles/components.less', {base: 'src/styles'})
   .pipe(less({logLevel: 1, errorReporting: 'console'}))
-  .pipe(gulp.dest('dist/'));
+  .pipe(gulp.dest('./dist/'));
 });
 
 
