@@ -1,0 +1,7 @@
+{
+    "id" : "test-contenteditor",
+    "type" : "contenteditor",
+    "name" : "test-contenteditor",
+    "label" : "Test Content Editor",
+    "value": "Some content to edit"
+}
