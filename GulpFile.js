@@ -13,7 +13,7 @@ var less = require('gulp-less');
 
 
 gulp.task('clean', function(done){
-  return del(['dist/'], done);
+  return del(['dist/**/*'], done);
 });
 
 
@@ -33,7 +33,7 @@ gulp.task('test', ['hint'], function(done){
 
 gulp.task('less:compile', function(){
   return gulp.src('src/styles/components.less', {base: 'src/styles'})
-  .pipe(less({lint: true, errorReporting: 'console', logLevel: 2}))
+  .pipe(less())
   .pipe(gulp.dest('dist/'));
 });
 
@@ -41,6 +41,9 @@ gulp.task('less:compile', function(){
 gulp.task('copy:fonts', function(){
   return gulp.src('./node_modules/bootstrap/fonts/*').pipe(gulp.dest('./dist/fonts'));
 });
+
+
+gulp.task('styles', ['less:compile', 'copy:fonts']);
 
 
 gulp.task('transpile', ['clean'], function(){
@@ -68,7 +71,7 @@ gulp.task('clean:build', ['build:Components'], function(done){
 });
 
 
-gulp.task('build', ['clean:build', 'less:compile', 'copy:fonts']);
+gulp.task('build', ['clean:build', 'styles']);
 
 
 gulp.task('release', ['build'], function(){
