@@ -30,7 +30,8 @@
     "marked": "^0.3.2",
     "react-typeahead": "git://github.com/fmoo/react-typeahead.git",
     "reactify": "^0.16.0",
-    "vinyl-source-stream": "^1.0.0"
+    "vinyl-source-stream": "^1.0.0",
+    "pen": "git://github.com/sofish/pen"
   },
   "devDependencies": {
     "bootstrap": "^3.3.1",

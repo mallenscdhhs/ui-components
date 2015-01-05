@@ -1,12 +1,7 @@
 'use-strict';
 var React = require('react/addons');
-var marked = require('marked');
 var EditorToggle = require('./EditorToggle');
-
-marked.setOptions({  
-  sanitize: true,
-  smartLists: true
-});
+var Content = require('./Content');
 
 module.exports = React.createClass({
 
@@ -35,7 +30,7 @@ module.exports = React.createClass({
         <header>
           <h2>{this.props.title}</h2>
         </header>
-        <section dangerouslySetInnerHTML={{__html: marked(this.props.content)}}></section>       
+        <Content key="content" ref="content" content={this.props.content} />
         {this.props.children}
       </article>
     );

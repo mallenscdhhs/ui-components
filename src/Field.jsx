@@ -11,6 +11,7 @@ var Select = require('./Select');
 var Input = require('./Input');
 var Textarea = require('./Textarea');
 var AutoComplete = require('./AutoComplete');
+var ContentEditor = require('./ContentEditor');
 
 module.exports = React.createClass({
   
@@ -110,6 +111,8 @@ module.exports = React.createClass({
     var helpKey = 'field'+this.props.id+'HelpText';      
     var controlClassName = 'form-control';
     switch(this.props.type){
+      case 'contenteditor':
+        return this.getDefaultFieldContainer(<ContentEditor className={controlClassName} aria-describedby={helpKey} {...this.props} />);
       case 'textarea':
         return this.getDefaultFieldContainer(<Textarea className={controlClassName} aria-describedby={helpKey} {...this.props} />);
       case 'radio':  
