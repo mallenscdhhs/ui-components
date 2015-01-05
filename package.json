@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/gulp test",
     "start": "IP=localhost PORT=3100 node test/server",
-    "build": "gulp build",
+    "build": "gulp build && gulp styles",
     "release": "./node_modules/.bin/gulp release",
     "postinstall": "npm run build"
   },

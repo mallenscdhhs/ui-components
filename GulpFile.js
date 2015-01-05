@@ -71,7 +71,7 @@ gulp.task('clean:build', ['build:Components'], function(done){
 });
 
 
-gulp.task('build', ['clean:build', 'styles']);
+gulp.task('build', ['clean:build']);
 
 
 gulp.task('release', ['build'], function(){
