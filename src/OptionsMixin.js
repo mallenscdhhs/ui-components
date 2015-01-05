@@ -1,6 +1,14 @@
 var Queue = require('./EventQueue');
+var React = require('react/addons');
 
 module.exports = {
+
+  propTypes: {
+    options: React.PropTypes.shape({
+      items: React.PropTypes.arrayOf(React.PropTypes.object),
+      name: React.PropTypes.string
+    }).isRequired    
+  },
 
   /**
    * Set the options state for this field.

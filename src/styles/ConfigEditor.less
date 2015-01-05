@@ -1,0 +1,66 @@
+.config-editor {
+  background: #337ab7;
+  color: #fff;
+  line-height: 25px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  display: none;
+  cursor: pointer;
+
+  span {
+    display: inline-block;
+    margin: 3px 0 3px 4px;
+    vertical-align: top;
+
+    &:last-child {
+      margin-right: 4px;
+    }
+  }
+
+  .add-component, .editable-component {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.enable-component-editor {
+  .editable-component {
+    position: relative;
+    box-sizing: border-box;
+
+    &:hover {
+      outline: solid #337ab7 1px;
+      padding: 2px;
+
+      > .config-editor {
+        display:block;
+
+        .add-component {
+          &:hover {
+            color: #ccc;
+          }
+        }
+      }
+    }
+
+    form.editable-component:hover {
+      padding-top: 27px;
+    }
+  }
+}
+
+.component-subs-list-item {
+  text-transform:capitalize;
+  padding:.3em 0;
+  color:#777;
+
+  .glyphicon {
+    margin: 2px 5px 0 0;
+    cursor:pointer;
+
+    &:hover {
+      color: #333;
+    }
+  }
+}

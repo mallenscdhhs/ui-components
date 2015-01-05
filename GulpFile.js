@@ -9,6 +9,8 @@ var source = require('vinyl-source-stream');
 var karma = require('karma').server;
 var pkg = require('./package.json');
 var copy = require('gulp-copy');
+var less = require('gulp-less');
+
 
 gulp.task('clean', function(done){
   return del(['dist/'], done);
@@ -21,10 +23,23 @@ gulp.task('hint', function(){
     .pipe(jsHint.reporter('default'));
 });
 
+
 gulp.task('test', ['hint'], function(done){
   return karma.start({
     configFile: __dirname + '/karma.conf.js'
   }, done);
+});
+
+
+gulp.task('less:compile', function(){
+  return gulp.src('src/styles/components.less', {base: 'src/styles'})
+  .pipe(less({lint: true, errorReporting: 'console', logLevel: 2}))
+  .pipe(gulp.dest('dist/'));
+});
+
+
+gulp.task('copy:fonts', function(){
+  return gulp.src('./node_modules/bootstrap/fonts/*').pipe(gulp.dest('./dist/fonts'));
 });
 
 
@@ -33,6 +48,7 @@ gulp.task('transpile', ['clean'], function(){
     .pipe(react())
     .pipe(gulp.dest('./dist/build'));
 });
+
 
 gulp.task('build:Components', ['transpile'], function(){
   var lodashPath = require.resolve('lodash');
@@ -46,17 +62,21 @@ gulp.task('build:Components', ['transpile'], function(){
     .pipe(gulp.dest('./dist'));
 });
 
+
 gulp.task('clean:build', ['build:Components'], function(done){
   return del(['dist/build'], done);
 });
 
-gulp.task('build', ['clean:build']);
+
+gulp.task('build', ['clean:build', 'less:compile', 'copy:fonts']);
+
 
 gulp.task('release', ['build'], function(){
-  var src = './dist/Components.js';
+  var src = './dist/**/*';
   var dest = './dist/release/'+pkg.version;
   return gulp.src(src).pipe(gulp.dest(dest));
 });
+
 
 gulp.task('specs', ['hint', 'build'], function(){
   fs.readdir('./test/unit', function(err, files){
@@ -69,6 +89,12 @@ gulp.task('specs', ['hint', 'build'], function(){
   });
 });
 
-gulp.task('watch', function(){
+
+gulp.task('watch:specs', function(){
   gulp.watch(['src/*', 'test/unit/*', 'test/fixtures/*'], ['specs']);
+});
+
+
+gulp.task('watch:less', function(){
+  gulp.watch(['src/styles/**/*.less'], ['less:compile', 'copy:fonts']);
 });

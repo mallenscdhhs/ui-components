@@ -10,6 +10,7 @@ var Checkable = require('./Checkable');
 var Select = require('./Select');
 var Input = require('./Input');
 var Textarea = require('./Textarea');
+var AutoComplete = require('./AutoComplete');
 var ContentEditor = require('./ContentEditor');
 
 module.exports = React.createClass({
@@ -99,7 +100,7 @@ module.exports = React.createClass({
    * @returns {object}
    */
   isFieldGroup: function () {
-    return this.props.options && this.props.type !== 'select';
+    return (this.props.type === 'radio' || this.props.type === 'checkbox') && this.props.options;
   },
 
   /**
@@ -117,9 +118,10 @@ module.exports = React.createClass({
       case 'radio':  
       case 'checkbox':
         return <Checkable {...this.props}/>;          
-      case 'select':
-      case 'multiselect':
+      case 'select':      
         return this.getDefaultFieldContainer(<Select className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+      case 'autocomplete':
+        return this.getDefaultFieldContainer(<AutoComplete {...this.props}/>);
       default:
         return this.getDefaultFieldContainer(<Input className={controlClassName} aria-describedby={helpKey} {...this.props} />);
     }
