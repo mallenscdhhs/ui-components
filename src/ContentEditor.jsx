@@ -74,7 +74,7 @@ module.exports = React.createClass({
 
   render: function(){
     var props = _.pick(this.props, inputProps);
-    return <div id={this.props.id} key={this.props.id} ref="editor" value={this.state.value} name={this.props.name} {...props} ></div>;
+    return <div key={this.props.id} ref="editor" value={this.state.value} {...props} ></div>;
   }
 
 });
