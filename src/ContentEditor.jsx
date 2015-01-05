@@ -4,7 +4,7 @@ var FieldMixin = require('./FieldMixin');
 var Queue = require('./EventQueue');
 var _ = require('lodash');
 require('pen');
-var inputProps = ['id', 'name', 'value', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
+var inputProps = ['id', 'name', 'value', 'maxLength', 'className', 'aria-describedby'];
 
 module.exports = React.createClass({
 
@@ -16,8 +16,6 @@ module.exports = React.createClass({
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     value: React.PropTypes.string,
-    rows: React.PropTypes.string,
-    cols: React.PropTypes.string,
     disabled: React.PropTypes.bool
   },
 
