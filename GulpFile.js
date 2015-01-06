@@ -10,6 +10,7 @@ var karma = require('karma').server;
 var pkg = require('./package.json');
 var copy = require('gulp-copy');
 var less = require('gulp-less');
+var gutil = require('gulp-util');
 
 
 gulp.task('clean', function(done){
@@ -33,7 +34,7 @@ gulp.task('test', ['hint'], function(done){
 
 gulp.task('less:compile', function(){
   return gulp.src('./src/styles/components.less', {base: 'src/styles'})
-  .pipe(less({logLevel: 1, errorReporting: 'console'}))
+  .pipe(less({ paths: ['./node_modules'] }).on('error', gutil.log))
   .pipe(gulp.dest('./dist/'));
 });
 
