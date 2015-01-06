@@ -6,7 +6,8 @@
   "scripts": {
     "test": "./node_modules/.bin/gulp test",
     "start": "IP=localhost PORT=3100 node test/server",
-    "build": "gulp build && gulp styles",
+    "build": "./node_modules/.bin/gulp build",
+    "assets": "./node_modules/.bin/gulp assets",
     "release": "./node_modules/.bin/gulp release",
     "postinstall": "npm run build"
   },
@@ -30,10 +31,10 @@
     "react-typeahead": "michaelleeallen/react-typeahead",
     "reactify": "^0.16.0",
     "vinyl-source-stream": "^1.0.0",
-    "pen": "sofish/pen",
-    "bootstrap": "^3.3.1"
+    "pen": "sofish/pen"
   },
   "devDependencies": {
+    "bootstrap": "^3.3.1",
     "connect-cors": "^0.5.6",
     "es5-shim": "^4.0.3",
     "express": "^4.10.1",

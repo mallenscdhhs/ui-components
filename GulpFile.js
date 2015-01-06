@@ -34,8 +34,8 @@ gulp.task('test', ['hint'], function(done){
 
 gulp.task('less:compile', function(){
   return gulp.src('./src/styles/components.less', {base: 'src/styles'})
-  .pipe(less({ paths: ['./node_modules'] }).on('error', gutil.log))
-  .pipe(gulp.dest('./dist/'));
+    .pipe(less({ paths: ['./node_modules'] }).on('error', gutil.log))
+    .pipe(gulp.dest('./dist'));
 });
 
 
@@ -99,4 +99,4 @@ gulp.task('watch:less', function(){
 
 
 gulp.task('build', ['clean:build']);
-gulp.task('styles', ['less:compile', 'copy:fonts']);
+gulp.task('assets', ['less:compile', 'copy:fonts']);
