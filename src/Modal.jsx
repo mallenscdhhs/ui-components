@@ -1,6 +1,7 @@
 var React = require('react');
 var Action = require('./Action');
 var _ = require('lodash');
+var $ = require('jquery');
 
 module.exports = React.createClass({
 
