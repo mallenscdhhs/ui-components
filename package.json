@@ -27,10 +27,10 @@
     "gulp-jshint": "^1.8.6",
     "gulp-react": "^2.0.0",
     "karma": "^0.12.24",
-    "react-typeahead": "git://github.com/michaelleeallen/react-typeahead.git",
+    "react-typeahead": "michaelleeallen/react-typeahead",
     "reactify": "^0.16.0",
     "vinyl-source-stream": "^1.0.0",
-    "pen": "git://github.com/sofish/pen"
+    "pen": "sofish/pen"
   },
   "devDependencies": {
     "bootstrap": "^3.3.1",
@@ -38,6 +38,7 @@
     "es5-shim": "^4.0.3",
     "express": "^4.10.1",
     "gulp-less": "^2.0.1",
+    "gulp-util": "^3.0.1",
     "jasmine": "^2.0.1",
     "karma-bro": "^0.9.0",
     "karma-jasmine": "^0.2.0",
