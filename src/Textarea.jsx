@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
 var inputProps = ['id', 'name', 'value', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];

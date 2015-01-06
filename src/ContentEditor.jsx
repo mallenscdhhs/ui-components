@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var Queue = require('./EventQueue');
 var _ = require('lodash');

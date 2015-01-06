@@ -1,5 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
 var Queue = require('./EventQueue');
+var cx = require('react/lib/cx');
 var _ = require('lodash');
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
    * Render a required indicator template if the field is required.
    * @returns {JSX, undefined}
    */
-  getRequiredIndicator: function(){    
+  getRequiredIndicator: function(){
     if ( this.props.required ) {
      return <span className="required-indicator"> *</span>;
     }
@@ -19,7 +20,7 @@ module.exports = {
    * if one exists.
    * @returns {JSX}
    */
-  getHelpBlock: function(){    
+  getHelpBlock: function(){
     var txt = this.state.hasError? this.state.errorMessage : this.props.helpText;
     return <span className="help-block">{txt}</span>;
   },
@@ -29,7 +30,7 @@ module.exports = {
    * @returns {string}
    */
   getFieldClassNames: function(){
-    return React.addons.classSet({
+    return cx({
       'form-group' : true,
       'editable-component' : true,
       'hidden' : !this.state.display,
@@ -45,12 +46,12 @@ module.exports = {
   handleInputChange: function(event) {
     this.setState({value: event.target.value});
     Queue.push({
-      entityEvent: 'field:value:change', 
+      entityEvent: 'field:value:change',
       data: {
         id: this.props.id,
         name: this.props.name,
         value: event.target.value
       }
     });
-  }  
+  }
 };

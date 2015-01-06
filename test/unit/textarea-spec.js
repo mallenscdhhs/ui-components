@@ -1,6 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
 var Textarea = require('../../src/Textarea');
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-textarea.json');
 
 describe('Textarea', function(){

@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var Page = require('./Page');
 var Tree = require('./Tree');
@@ -191,7 +191,7 @@ module.exports = React.createClass({
     var treeProps = {
       items: buildTree(this.state, this.props)
     };
-    return (      
+    return (
       <GridRow>
         <GridColumn md="2">
           <h4>{this.props.title}</h4>

@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var Container = require('./Container');
 var Action = require('./Action');
@@ -22,7 +22,7 @@ module.exports = React.createClass({
 
   /**
    * Render a Form component.
-   * @returns {JSX} 
+   * @returns {JSX}
    */
   render: function(){
     return (
@@ -32,5 +32,5 @@ module.exports = React.createClass({
       </form>
     );
   }
-  
+
 });

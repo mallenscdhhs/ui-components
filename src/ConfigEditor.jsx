@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
 var Modal = require('./Modal');
@@ -36,7 +36,7 @@ module.exports = React.createClass({
 
     propTypes: {
       id: React.PropTypes.string.isRequired,
-      title: React.PropTypes.string.isRequired,   
+      title: React.PropTypes.string.isRequired,
       actions: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
       componentChildren: React.PropTypes.arrayOf(React.PropTypes.object)
     },
@@ -59,7 +59,7 @@ module.exports = React.createClass({
      * internal state of the component config.
      */
     componentDidMount: function(){
-      Queue.subscribe('field:value:change', 'configeditor', function(data){        
+      Queue.subscribe('field:value:change', 'configeditor', function(data){
         var state = {};
         state[data.name] = data.value;
         this.setState(state);
@@ -71,11 +71,11 @@ module.exports = React.createClass({
      */
     componentWillUnmount: function(){
       Queue.unSubscribe('field:value:change', 'configeditor');
-    },    
+    },
 
     render: function() {
-      return ( 
-        <Modal {...this.props}>        
+      return (
+        <Modal {...this.props}>
           <div id="edit-modal-container">
             {this.props.children}
           </div>

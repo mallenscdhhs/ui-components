@@ -1,16 +1,17 @@
-var React = require('react/addons');
+var React = require('react');
 var Components = require('../../src/main');
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var Grid = Components.elements.grid;
+var update = require('react/lib/update');
 
-describe('Grid', function(){	
+describe('Grid', function(){
 
 	it('can render a Bootstrap 3 grid', function(){
-		var schema = require('../fixtures/grid-two-col.json');		
+		var schema = require('../fixtures/grid-two-col.json');
 		var component = Components.factory(schema);
-		var grid = TestUtils.renderIntoDocument(component);		
+		var grid = TestUtils.renderIntoDocument(component);
 		var row = grid.getDOMNode().childNodes[0];
-		var cols = row.childNodes;		
+		var cols = row.childNodes;
 		expect(grid.getDOMNode().className).toEqual('grid-layout');
 		expect(cols.length).toEqual(2);
 		expect(cols[0].className).toEqual('col-md-6 col-sm-4');
@@ -20,21 +21,21 @@ describe('Grid', function(){
 	});
 
 	it('can render multiple rows', function(){
-		var schema = require('../fixtures/grid-multi-row.json');		
+		var schema = require('../fixtures/grid-multi-row.json');
 		var component = Components.factory(schema);
-		var grid = TestUtils.renderIntoDocument(component);	
+		var grid = TestUtils.renderIntoDocument(component);
 		expect(grid.getDOMNode().childNodes.length).toEqual(2);
 	});
 
 	describe('#getTotalColumns', function(){
-		it('can return the total number of columns', function(){					
+		it('can return the total number of columns', function(){
 			expect(Grid.getTotalColumns([[1,2], [3,4,5], [6,7]])).toEqual(7);
 			expect(Grid.getTotalColumns([[1,2,3,4]])).toEqual(4);
 		});
 	});
 
 	describe('#distributeIndexes', function(){
-		it('can evenly distribute component indexes amound columns', function(){	
+		it('can evenly distribute component indexes amound columns', function(){
 			expect(Grid.distributeIndexes(10, 3, 0)).toEqual([0,3,6,9]);
 			expect(Grid.distributeIndexes(7, 4, 1)).toEqual([1, 5]);
 		});
@@ -57,14 +58,14 @@ describe('Grid', function(){
 			expect(Grid.getRowIndex(2)).toEqual(3);
 			expect(Grid.getRowIndex(3)).toEqual(4);
 			expect(Grid.getRowIndex(4)).toEqual(5);
-		})
+		});
 	});
 
 	describe('#distributeComponents', function(){
 		it('will distribute components sequentially', function(){
 			var schema = require('../fixtures/grid-multi-row.json');
 			var components = require('../fixtures/grid-distributeComponents.json');
-			var config = React.addons.update(schema, {config: {id: {$set: 'test'}}});
+			var config = update(schema, {config: {id: {$set: 'test'}}});
 			config.config.rows[1].push([{md: '4'}]);
 			var indexDistro = Grid.distributeIndexes.bind(null, 5, 5);
 			var rows = Grid.distributeComponents(config.config.rows, components, indexDistro);

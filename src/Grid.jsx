@@ -1,8 +1,9 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var GridRow = require('./GridRow');
 var GridColumn = require('./GridColumn');
+var update = require('react/lib/update');
 
 /**
  * Add two numbers together.
@@ -49,7 +50,7 @@ var distributeIndexes = function(len, mod, num){
   var result = [];
   while(num < len){
     result.push(num);
-    num = num + mod;    
+    num = num + mod;
   }
   return result;
 };
@@ -59,14 +60,14 @@ var distributeIndexes = function(len, mod, num){
  * components sequentially among available columns.
  * @param {array} rows
  * @param {array} components
- * @param {function} indexDistro - the function that calculates the indexes of the 
+ * @param {function} indexDistro - the function that calculates the indexes of the
  *   components that belong to the current column
  * @returns {array}
  */
-var distributeComponents = function(rows, components, indexDistro){ 
+var distributeComponents = function(rows, components, indexDistro){
   return _.map(rows, function(row, i){
-    return _.map(row, function(col, n){     
-      return React.addons.update(col, {
+    return _.map(row, function(col, n){
+      return update(col, {
         children: {
           $set: _.at(components, indexDistro(add(getRowIndex(i), n)))
         }
@@ -84,7 +85,7 @@ module.exports = React.createClass({
   displayName: 'Grid',
 
   propTypes: {
-    rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired   
+    rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired
   },
 
   statics: {
@@ -103,8 +104,8 @@ module.exports = React.createClass({
 
   render: function(){
     var numChildren = this.props.children.length;
-    var numColumns = getTotalColumns(this.props.rows);  
-    var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);  
+    var numColumns = getTotalColumns(this.props.rows);
+    var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);
     var rows = distributeComponents(this.props.rows, this.props.children, indexDistro);
 
     return (

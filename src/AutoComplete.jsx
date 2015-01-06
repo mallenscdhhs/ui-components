@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
 var Queue = require('./EventQueue');

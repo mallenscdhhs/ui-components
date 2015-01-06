@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
 var EditorToggle = require('./EditorToggle');
@@ -13,7 +13,7 @@ module.exports = React.createClass({
     event: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     url: React.PropTypes.string,
-    classNames: React.PropTypes.arrayOf(React.PropTypes.string)    
+    classNames: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
   getDefaultProps: function(){
@@ -34,7 +34,7 @@ module.exports = React.createClass({
     }
     // Add all passed in classes
     if(this.props.classNames){
-      classes = classes.concat(this.props.classNames);      
+      classes = classes.concat(this.props.classNames);
     }
     return classes.join(' ');
   },
@@ -57,11 +57,11 @@ module.exports = React.createClass({
   */
   getLink: function(){
     return (
-      <a 
-        href={this.props.url} 
-        id={this.props.id} 
-        key={this.props.id+"-action"} 
-        className={this.getClasses()} 
+      <a
+        href={this.props.url}
+        id={this.props.id}
+        key={this.props.id+"-action"}
+        className={this.getClasses()}
         onClick={this.handleClick}>
         <EditorToggle {...this.props}/>
         {this.props.name}
@@ -75,11 +75,11 @@ module.exports = React.createClass({
   */
   getButton: function(){
     return (
-      <button 
-        type="button" 
-        id={this.props.id} 
-        key={this.props.id+"-action"} 
-        className={this.getClasses()} 
+      <button
+        type="button"
+        id={this.props.id}
+        key={this.props.id+"-action"}
+        className={this.getClasses()}
         onClick={this.handleClick}>
         <EditorToggle {...this.props}/>
         {this.props.name}
@@ -91,7 +91,7 @@ module.exports = React.createClass({
    * Render a Action component.
    * @returns {JSX}
    */
-  render: function(){ 
+  render: function(){
     return (this.props.type === 'button')? this.getButton() : this.getLink();
   }
 

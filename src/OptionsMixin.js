@@ -1,5 +1,5 @@
 var Queue = require('./EventQueue');
-var React = require('react/addons');
+var React = require('react');
 
 module.exports = {
 
@@ -7,7 +7,7 @@ module.exports = {
     options: React.PropTypes.shape({
       items: React.PropTypes.arrayOf(React.PropTypes.object),
       name: React.PropTypes.string
-    }).isRequired    
+    }).isRequired
   },
 
   /**
@@ -17,22 +17,22 @@ module.exports = {
   updateOptions: function(data){
     this.setState({ options: data });
   },
-  
+
   /**
-   * Load in the options state either from config props or 
+   * Load in the options state either from config props or
    * ask the parent app to load them from the server.
    * @fires field:mount:{id}
    */
   componentDidMount: function(){
     if ( this.props.options.items ) {
       this.setState({options: this.props.options.items});
-    } else {      
-      Queue.subscribe('field:options:'+this.props.id , 'field:'+this.props.id , this.updateOptions);      
+    } else {
+      Queue.subscribe('field:options:'+this.props.id , 'field:'+this.props.id , this.updateOptions);
       Queue.push({ entityEvent: 'load:options', data: {
           resourceName: this.props.options.name,
           fieldId: this.props.id
-        } 
-      });       
+        }
+      });
     }
   },
 

@@ -1,12 +1,14 @@
-var React = require('react/addons');
+var React = require('react');
 var fixture = require('../fixtures/radio.json');
 var Checkable = require('../../src/Checkable');
 var Queue = require('../../src/EventQueue');
+var TestUtils = require('react/lib/ReactTestUtils');
+var update = require('react/lib/update');
 
 describe('Checkable', function(){
 
   it('can render a single radio input', function(){
-    var dom = React.addons.TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
+    var dom = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
     var wrapperDiv = dom.getDOMNode();
     var label = wrapperDiv.childNodes[1];
     var input = label.childNodes[0];
@@ -21,8 +23,8 @@ describe('Checkable', function(){
   });
 
   it('can render a required radio input', function(){
-    var config = React.addons.update(fixture.config, {required: {$set: true}});
-    var dom = React.addons.TestUtils.renderIntoDocument(<Checkable {...config}/>);    
+    var config = update(fixture.config, {required: {$set: true}});
+    var dom = TestUtils.renderIntoDocument(<Checkable {...config}/>);
     var label = dom.getDOMNode().childNodes[1];
     expect(label.childNodes.length).toEqual(4);
     expect(label.childNodes[1].textContent).toEqual(fixture.config.label);
@@ -30,8 +32,8 @@ describe('Checkable', function(){
   });
 
   it('can render a checked radio input', function(){
-    var config = React.addons.update(fixture.config, {checked: {$set: true}});
-    var dom = React.addons.TestUtils.renderIntoDocument(<Checkable {...config}/>);    
+    var config = update(fixture.config, {checked: {$set: true}});
+    var dom = TestUtils.renderIntoDocument(<Checkable {...config}/>);
     var input = dom.getDOMNode().childNodes[1].childNodes[0];
     expect(input.checked).toBe(true);
   });
@@ -44,9 +46,9 @@ describe('Checkable', function(){
       Queue.unSubscribe('field:value:change', 'radio-test');
       done();
     });
-    var comp = React.addons.TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);  
+    var comp = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
     var radio = comp.getDOMNode().childNodes[1].childNodes[0];
-    React.addons.TestUtils.Simulate.change(radio, {target: {checked: true}});
+    TestUtils.Simulate.change(radio, {target: {checked: true}});
   });
 
   it('will publish a value of "null" if input is not checked', function(done){
@@ -57,10 +59,10 @@ describe('Checkable', function(){
       Queue.unSubscribe('field:value:change', 'radio-test');
       done();
     });
-    var comp = React.addons.TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);  
+    var comp = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
     var radio = comp.getDOMNode().childNodes[1].childNodes[0];
-    React.addons.TestUtils.Simulate.change(radio, {target: {checked: false}});
-  }); 
+    TestUtils.Simulate.change(radio, {target: {checked: false}});
+  });
 
   it('will publish a "fieldGroup:item:change" event if input is part of a group', function(done){
     Queue.subscribe('fieldGroup:item:change', 'radio-test', function(data){
@@ -70,10 +72,10 @@ describe('Checkable', function(){
       Queue.unSubscribe('fieldGroup:item:change', 'radio-test');
       done();
     });
-    var config = React.addons.update(fixture.config, {isFieldGroup: {$set: true}});
-    var comp = React.addons.TestUtils.renderIntoDocument(<Checkable {...config}/>);  
+    var config = update(fixture.config, {isFieldGroup: {$set: true}});
+    var comp = TestUtils.renderIntoDocument(<Checkable {...config}/>);
     var radio = comp.getDOMNode().childNodes[1].childNodes[0];
-    React.addons.TestUtils.Simulate.change(radio, {target: {checked: false}});
-  }); 
-     
+    TestUtils.Simulate.change(radio, {target: {checked: false}});
+  });
+
 });

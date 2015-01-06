@@ -27,7 +27,7 @@
     "gulp-jshint": "^1.8.6",
     "gulp-react": "^2.0.0",
     "karma": "^0.12.24",
-    "react-typeahead": "git://github.com/fmoo/react-typeahead.git",
+    "react-typeahead": "git://github.com/michaelleeallen/react-typeahead.git",
     "reactify": "^0.16.0",
     "vinyl-source-stream": "^1.0.0",
     "pen": "git://github.com/sofish/pen"

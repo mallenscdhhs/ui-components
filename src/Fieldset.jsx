@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({

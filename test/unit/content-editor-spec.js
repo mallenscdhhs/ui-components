@@ -1,6 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
 var ContentEditor = require('../../src/ContentEditor');
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-contenteditor.json');
 
 describe('ContentEditor', function(){
@@ -20,7 +20,7 @@ describe('ContentEditor', function(){
     setTimeout(function(){
       expect(comp.state.value).toEqual(testValue); // expect editor to update component value
       done();
-    },10)
+    },10);
   });
 
 });

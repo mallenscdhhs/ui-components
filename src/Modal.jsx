@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var Action = require('./Action');
 var _ = require('lodash');
 
@@ -14,7 +14,7 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       autoShow: false,
-      componentType: 'modal'      
+      componentType: 'modal'
     };
   },
 
@@ -42,7 +42,7 @@ module.exports = React.createClass({
             <div className="modal-body">
               {this.props.children}
             </div>
-            <div className="modal-footer">              
+            <div className="modal-footer">
               {_.map(this.props.actions, function(action){
                 return <Action {...action}/>;
               })}
@@ -51,5 +51,5 @@ module.exports = React.createClass({
         </div>
       </div>
     );
-  }  
+  }
 });

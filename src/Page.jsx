@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var EditorToggle = require('./EditorToggle');
 var Content = require('./Content');
 
@@ -23,7 +23,7 @@ module.exports = React.createClass({
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){   
+  render: function(){
     return (
       <article className="editable-component">
         <EditorToggle {...this.props}/>
