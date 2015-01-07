@@ -35,9 +35,7 @@ module.exports = React.createClass({
 
   getInitialState: function(){
     return {
-      'checked'   : !!this.props.checked,
-      'display'   : true,
-      'has-error' : false
+      'checked'   : !!this.props.checked
     };
   },
 
