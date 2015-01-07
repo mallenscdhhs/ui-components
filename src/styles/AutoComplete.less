@@ -2,17 +2,20 @@
   .list-group {
     position: absolute;
     z-index: 1;
-    width: 100%;
+    width: @auto-complete-width;
+    background: @auto-complete-list-bg;
   }
   .list-group-item {
+    background: @auto-complete-list-bg;
+
     &:hover, &.hover {
-      background: @brand-primary;
+      background: @auto-complete-list-hover-bg;
 
       a {
-        color: #fff;
+        color: @auto-complete-color;
 
         &:hover {
-          color: #fff
+          color: @auto-complete-hover-cover;
         }
       }
     }
