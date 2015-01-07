@@ -1,4 +1,5 @@
 var React = require('react');
+var update = require('react/lib/update');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
 var Queue = require('./EventQueue');
@@ -27,7 +28,26 @@ module.exports = React.createClass({
   displayName: 'AutoComplete',
 
   propTypes: {
+    ref: React.PropTypes.string,
+    className: React.PropsTypes.string,
+    onOptionSelected: React.PropTypes.func,
+    customClasses: React.PropTypes.object,
+    placeholder: React.PropTypes.string,
+    options: React.PropTypes.arrayOf(React.PropTypes.string),
     value: React.PropTypes.string
+  },
+
+  getDefaultProps: function(){
+    return {
+      ref: 'typeahead',
+      className: "field-autocomplete",
+      onOptionSelected: this.onOptionSelected,
+      customClasses: {
+        input: 'form-control',
+        results: 'list-group',
+        listItem: 'list-group-item'
+      }
+    };
   },
 
   getInitialState: function(){
@@ -70,18 +90,12 @@ module.exports = React.createClass({
    */
   render: function(){
     if ( this.state.options.length ){
-      return (
-        <Typeahead
-          ref="typeahead"
-          options={getOptionLabels(this.state.options)}
-          className="field-autocomplete"
-          onOptionSelected={this.onOptionSelected}
-          customClasses={{
-            input: 'form-control',
-            results: 'list-group',
-            listItem: 'list-group-item'
-          }} />
-      );
+      var config = update(this.props, {
+        options: {
+          $set: getOptionLabels(this.state.options)
+        }
+      });
+      return <Typeahead {...config} />;
     } else {
       return <div className="field-autocomplete"></div>;
     }
