@@ -1,7 +1,7 @@
-var React = require('react/addons');
+var React = require('react');
 var Components = require('../../src/main');
 var Tree = Components.elements.tree;
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var _ = require('lodash');
 var fixture = require('../fixtures/tree.json');
 

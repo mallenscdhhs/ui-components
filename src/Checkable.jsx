@@ -1,9 +1,11 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
 var EditorToggle = require('./EditorToggle');
+var classSet = require('react/lib/cx');
+
 
 module.exports = React.createClass({
 
@@ -31,7 +33,7 @@ module.exports = React.createClass({
     };
   },
 
-  getInitialState: function(){    
+  getInitialState: function(){
     return {
       checked: !!this.props.checked
     };
@@ -40,8 +42,8 @@ module.exports = React.createClass({
   /**
    * Because radios and checkboxes only submit their value if they are checked,
    * we must inspect the "checked" state of the input and choose whether or not
-   * to send its value. 
-   * 
+   * to send its value.
+   *
    * @param {object} e - event object
    * @fires field:value:change
    * @fires fieldGroup:item:change
@@ -50,18 +52,18 @@ module.exports = React.createClass({
     var value = e.target.checked? this.props.value : null;
     var eventName = this.props.isFieldGroup? 'fieldGroup:item:change' : 'field:value:change';
     this.setState({checked: e.target.checked});
-    Queue.push({ 
-      entityEvent: eventName, 
+    Queue.push({
+      entityEvent: eventName,
       data: {
         id: this.props.id,
         name: this.props.name,
         value: value
-      } 
+      }
     });
   },
 
-  render: function(){   
-    var classNames = React.addons.classSet({
+  render: function(){
+    var classNames = classSet({
       'editable-component' : !this.props.isFieldGroup,
       'hidden' : !this.state.display,
       'has-error' : this.state.hasError,

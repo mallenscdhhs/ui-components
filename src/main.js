@@ -1,9 +1,9 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
+var update = require('react/lib/update');
 var elements = require('./index');
 var _ = require('lodash');
 var EventQueue = require('./EventQueue');
-var update = React.addons.update;
 
 /**
  * Recursively builds up a component hierarchy.
@@ -32,7 +32,7 @@ function buildComponentTree(schema, head){
     props = update(head, { config: {
       key: {$set: head.config.id+ '-' +head.type},
       componentType: {$set: head.type}
-    }});    
+    }});
     // if there is a layout config then we need to insert
     // the layout into the binary tree to be rendered
     if ( props.config.layout ) {
@@ -46,7 +46,7 @@ function buildComponentTree(schema, head){
     } else if ( props.child ) {
       children = buildComponentTree(schema, list[props.child]);
     }
-    
+
     if ( props.type === 'field' && _.has(schema.model, props.config.id) ) {
       props = update(props, { config: {
         value: {$set: schema.model[props.config.id]}

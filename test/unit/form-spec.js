@@ -1,6 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
 var Components = require('../../src/main');
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var Form = Components.elements.form;
 var fixture = require('../fixtures/form.json');
 

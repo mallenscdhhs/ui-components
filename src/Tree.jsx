@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var TreeItem = require('./TreeItem');
 
@@ -48,7 +48,7 @@ module.exports = React.createClass({
     return {
       componentType: 'tree'
     };
-  },  
+  },
 
   render: function(){
     return renderTree.call(this, this.props);

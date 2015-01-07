@@ -1,5 +1,5 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
 var EditorToggle = require('./EditorToggle');
@@ -10,9 +10,11 @@ var Checkable = require('./Checkable');
 var Select = require('./Select');
 var Input = require('./Input');
 var Textarea = require('./Textarea');
+var AutoComplete = require('./AutoComplete');
+var ContentEditor = require('./ContentEditor');
 
 module.exports = React.createClass({
-  
+
   displayName: 'Field',
 
   mixins: [FieldMixin, DependencyMixin],
@@ -51,7 +53,7 @@ module.exports = React.createClass({
     // Listen for validation errors from application
     Queue.subscribe('field:error:'+this.props.id,'field:'+this.props.id,function(data){
       // Change from initial display state.
-      this.setState({'hasError': data.hasError,'errorMessage':data.errorMessage}); 
+      this.setState({'hasError': data.hasError,'errorMessage':data.errorMessage});
     }.bind(this));
   },
 
@@ -68,9 +70,9 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getInitialState: function() {
-    return { 
-      display: (!this.hasDependency() || this.props.dependency.initialState !=='hidden'), 
-      hasError: false, 
+    return {
+      display: (!this.hasDependency() || this.props.dependency.initialState !=='hidden'),
+      hasError: false,
       errorMessage: ''
     };
   },
@@ -92,13 +94,13 @@ module.exports = React.createClass({
   },
 
   /**
-   * Boolean helper if type is radio or checkbox.  Used to determine if we 
+   * Boolean helper if type is radio or checkbox.  Used to determine if we
    * need to use special wrapper for those field types.
    * Check the type AND if there are available items to show.
    * @returns {object}
    */
   isFieldGroup: function () {
-    return this.props.options && this.props.type !== 'select';
+    return (this.props.type === 'radio' || this.props.type === 'checkbox') && this.props.options;
   },
 
   /**
@@ -106,17 +108,20 @@ module.exports = React.createClass({
    * @returns {JSX template}
    */
   getField : function(){
-    var helpKey = 'field'+this.props.id+'HelpText';      
+    var helpKey = 'field'+this.props.id+'HelpText';
     var controlClassName = 'form-control';
     switch(this.props.type){
+      case 'contenteditor':
+        return this.getDefaultFieldContainer(<ContentEditor className={controlClassName} aria-describedby={helpKey} {...this.props} />);
       case 'textarea':
         return this.getDefaultFieldContainer(<Textarea className={controlClassName} aria-describedby={helpKey} {...this.props} />);
-      case 'radio':  
+      case 'radio':
       case 'checkbox':
-        return <Checkable {...this.props}/>;          
+        return <Checkable {...this.props}/>;
       case 'select':
-      case 'multiselect':
         return this.getDefaultFieldContainer(<Select className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+      case 'autocomplete':
+        return this.getDefaultFieldContainer(<AutoComplete {...this.props}/>);
       default:
         return this.getDefaultFieldContainer(<Input className={controlClassName} aria-describedby={helpKey} {...this.props} />);
     }
@@ -133,5 +138,5 @@ module.exports = React.createClass({
       return this.getField();
     }
   }
-  
+
 });

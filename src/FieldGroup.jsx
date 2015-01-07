@@ -1,4 +1,5 @@
-var React = require('react/addons');
+var React = require('react');
+var update = require('react/lib/update');
 var Checkable = require('./Checkable');
 var FieldMixin = require('./FieldMixin');
 var EditorToggle = require('./EditorToggle');
@@ -88,7 +89,7 @@ module.exports = React.createClass({
         <legend>{this.props.label}{this.getRequiredIndicator()}</legend>
         {_.map(this.state.options, function(option){
           var id = this.props.name + '-option-' + option.value;
-          var config = React.addons.update(option, {
+          var config = update(option, {
             id: {$set: id},
             name: {$set: id},
             type: {$set: this.props.type},
@@ -100,7 +101,7 @@ module.exports = React.createClass({
         }, this)}
         {this.getHelpBlock()}
       </fieldset>
-    );    
+    );
   }
 
 });

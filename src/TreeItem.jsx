@@ -1,6 +1,7 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var Queue = require('./EventQueue');
+var classSet = require('react/lib/cx');
 
 module.exports = React.createClass({
 
@@ -22,12 +23,12 @@ module.exports = React.createClass({
 
 	handleClick: function(e){
 		if(!this.props.disabled){
-			Queue.push({ entityEvent:'tree:load:page', data: this.props.id }); 
+			Queue.push({ entityEvent:'tree:load:page', data: this.props.id });
 		}
 	},
 
 	render: function(){
-		var liClassNames = React.addons.classSet({
+		var liClassNames = classSet({
 			active: this.props.active,
 			disabled: this.props.disabled
 		});

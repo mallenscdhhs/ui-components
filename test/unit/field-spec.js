@@ -1,8 +1,9 @@
-var React = require('react/addons');
+var React = require('react');
 var Field = require('../../src/Field');
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-text.json');
 var EQ = require('../../src/EventQueue');
+var update = require('react/lib/update');
 
 describe('Field component', function() {
 
@@ -12,7 +13,7 @@ describe('Field component', function() {
       id: 'testfield',
       value: 'bar'
     };
-    var config = React.addons.update(fixture, {
+    var config = update(fixture, {
       value: { $set: 'foo' },
       dependency: { $set: dep }
     });
@@ -20,15 +21,15 @@ describe('Field component', function() {
     var dom = comp.getDOMNode();
     expect(/hidden/.test(dom.className)).toEqual(true);
   });
-  
+
   it('can render error messages', function(done){
     var comp = TestUtils.renderIntoDocument(<Field {...fixture}/>);
-    EQ.push({ 
-      entityEvent: 'field:error:'+fixture.id, 
+    EQ.push({
+      entityEvent: 'field:error:'+fixture.id,
       data: {
-        hasError: true, 
+        hasError: true,
         errorMessage: 'It broke.'
-      } 
+      }
     });
     setTimeout(function(){
       var helpBlock = TestUtils.findRenderedDOMComponentWithClass(comp, 'help-block');
@@ -37,7 +38,7 @@ describe('Field component', function() {
       done();
     }, 300);
   });
-  
+
   it('can render a FieldGroup', function(){
     var config = require('../fixtures/field-group.json');
     var comp = TestUtils.renderIntoDocument(<Field {...config}/>);

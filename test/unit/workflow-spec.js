@@ -1,7 +1,7 @@
-var React = require('react/addons');
+var React = require('react');
 var Components = require('../../src/main');
 var _ = require('lodash');
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var Workflow = require('../../src/Workflow');
 var EQ = Components.eventQueue;
 var fixture = require('../fixtures/workflow-simple.json');
@@ -14,7 +14,7 @@ describe('Workflow component', function(){
     this.workflow = TestUtils.renderIntoDocument(this.component);
   });
 
-  it('can progress to the next section', function(done){    
+  it('can progress to the next section', function(done){
     expect(this.workflow.state.currentPage).toEqual('page1');
     EQ.push({entityEvent: 'workflow:next:page', data: ''});
     setTimeout(function(){
@@ -25,7 +25,7 @@ describe('Workflow component', function(){
     }.bind(this), 300);
   });
 
-  it('can revert to the previous section', function(done){   
+  it('can revert to the previous section', function(done){
     this.workflow.setState({currentPage: 'page2', previousPage: 'page1', nextPage: 'page3'});
     expect(this.workflow.state.currentPage).toEqual('page2');
     EQ.push({entityEvent: 'workflow:previous:page', data: {}});
@@ -34,16 +34,25 @@ describe('Workflow component', function(){
       expect(this.workflow.state.previousPage).toEqual(null);
       expect(this.workflow.state.nextPage).toEqual('page2');
       done();
-    }.bind(this), 300);    
+    }.bind(this), 300);
   });
 
-  it('can navigate to a specified section', function(){    
+  it('can navigate to a specified section', function(){
     expect(this.workflow.state.currentPage).toEqual('page1');
     this.workflow.handleDirect('page2');
     expect(this.workflow.state.currentPage).toEqual('page2');
     expect(this.workflow.state.previousPage).toEqual('page1');
     expect(this.workflow.state.nextPage).toEqual('page3');
-  }); 
+  });
+
+  it('can render a workflow', function(){
+    var dom = this.workflow.getDOMNode();
+    expect(dom.className).toEqual('row');
+    expect(dom.childNodes[0].className).toEqual('col-md-2');
+    expect(dom.childNodes[1].className).toEqual('col-md-10');
+    expect(dom.childNodes[0].childNodes[0].tagName.toLowerCase()).toEqual('h4');
+    expect(dom.childNodes[1].childNodes[0].id).toEqual('workflow-page');
+  });
 });
 
 describe('Workflow#buildTree', function(){
@@ -55,7 +64,7 @@ describe('Workflow#buildTree', function(){
       nextPage: 'page2',
       previousPage: null,
       flow: config.items
-    };   
+    };
     var tree = Workflow.buildTree(state, {});
     expect(tree.length).toEqual(2);
     expect(tree[0].id).toEqual('page1');
@@ -68,11 +77,11 @@ describe('Workflow#getPageByKeyExistence', function(){
   beforeEach(function(){
     this.items = _.values(_.clone(fixture).config.items);
   });
-  it('can determine the first page', function(){    
+  it('can determine the first page', function(){
     var pageId = Workflow.getPageByKeyExistence(this.items, 'previous');
     expect(pageId).toEqual('page1');
   });
-  
+
   it('can determine the last page', function(){
     var pageId = Workflow.getPageByKeyExistence(this.items, 'next');
     expect(pageId).toEqual('page3');
@@ -86,13 +95,13 @@ describe('Workflow#setFlowState', function(){
       'b': {id: 'b', next: 'c', previous: 'a', parentId: 'a'},
       'c': {id: 'c', next: null, previous: 'b'}
     };
-    expect(items.a['disabled']).not.toBeDefined();
-    expect(items.b['disabled']).not.toBeDefined();
-    expect(items.c['disabled']).not.toBeDefined();
+    expect(items.a.disabled).not.toBeDefined();
+    expect(items.b.disabled).not.toBeDefined();
+    expect(items.c.disabled).not.toBeDefined();
     Workflow.setFlowState(items, 'b');
-    expect(items.a['disabled']).not.toBeDefined();
-    expect(items.b['disabled']).not.toBeDefined();      
-    expect(items.c['disabled']).toBe(true);
+    expect(items.a.disabled).not.toBeDefined();
+    expect(items.b.disabled).not.toBeDefined();
+    expect(items.c.disabled).toBe(true);
   });
 });
 

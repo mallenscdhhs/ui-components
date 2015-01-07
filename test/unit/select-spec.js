@@ -1,10 +1,11 @@
-var React = require('react/addons');
-var TestUtils = React.addons.TestUtils;
+var React = require('react');
+var TestUtils = require('react/lib/ReactTestUtils');
 var Select = require('../../src/Select');
 var fixture = require('../fixtures/field-select.json');
+var update = require('react/lib/update');
 
 describe('Select', function(){
-  
+
   it('can render a select input with options', function(){
     var comp = TestUtils.renderIntoDocument(<Select {...fixture}/>);
     var dom = comp.getDOMNode();
@@ -17,7 +18,7 @@ describe('Select', function(){
   });
 
   it('can render a mulitple select input', function(){
-    var config = React.addons.update(fixture, {multiple: {$set: true}});
+    var config = update(fixture, {multiple: {$set: true}});
     var comp = TestUtils.renderIntoDocument(<Select {...config}/>);
     var dom = comp.getDOMNode();
     expect(comp.state.value).toEqual([]);

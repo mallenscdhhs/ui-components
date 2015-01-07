@@ -1,12 +1,7 @@
 'use-strict';
-var React = require('react/addons');
-var marked = require('marked');
+var React = require('react');
 var EditorToggle = require('./EditorToggle');
-
-marked.setOptions({  
-  sanitize: true,
-  smartLists: true
-});
+var Content = require('./Content');
 
 module.exports = React.createClass({
 
@@ -28,14 +23,14 @@ module.exports = React.createClass({
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){   
+  render: function(){
     return (
       <article className="editable-component">
         <EditorToggle {...this.props}/>
         <header>
           <h2>{this.props.title}</h2>
         </header>
-        <section dangerouslySetInnerHTML={{__html: marked(this.props.content)}}></section>       
+        <Content key="content" ref="content" content={this.props.content} />
         {this.props.children}
       </article>
     );

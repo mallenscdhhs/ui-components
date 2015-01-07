@@ -1,5 +1,5 @@
 var Queue = require('./EventQueue');
-var React = require('react/addons');
+var React = require('react');
 
 module.exports = React.createClass({
 
@@ -28,18 +28,18 @@ module.exports = React.createClass({
   },
 
   /**
-   * Only show an add button if the component can have children(which 'field' and 'action' cannot). 
+   * Only show an add button if the component can have children(which 'field' and 'action' cannot).
    * @param {string} type - the type of component
    * @returns {JSX}
    */
-  getAddButton: function(type){    
+  getAddButton: function(type){
     if(type !== 'field' && type !== 'action'){
       return (
         <span onClick={this.handleConfigAdd} className="add-component">
           <span className="glyphicon glyphicon glyphicon-plus"></span>
         </span>
       );
-    }    
+    }
   },
 
   /**

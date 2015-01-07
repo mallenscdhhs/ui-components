@@ -1,6 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
 var Components = require('../../src/main');
-var TestUtils = React.addons.TestUtils;  
+var TestUtils = require('react/lib/ReactTestUtils');  
 
 describe('Page component', function() {
 
@@ -10,8 +10,7 @@ describe('Page component', function() {
     var page = TestUtils.renderIntoDocument(Page);
     var h2 = TestUtils.findRenderedDOMComponentWithTag(page, 'h2');
     var section = TestUtils.findRenderedDOMComponentWithTag(page, 'section');
-    expect(section.getDOMNode().childNodes[0].textContent).toEqual('I am some content.');
-    expect(section.getDOMNode().childNodes[0].childNodes[1].tagName).toEqual('STRONG');
+    expect(section).toBeDefined();
     expect(h2.getDOMNode().textContent).toEqual(fixture.config.title);
   });
 

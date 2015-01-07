@@ -1,32 +1,31 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var OptionsMixin = require('./OptionsMixin');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
 var inputProps = ['id', 'name', 'value', 'multiple', 'className', 'aria-describedby'];
 
 module.exports = React.createClass({
-  
+
   displayName: 'Select',
-  
+
   mixins: [FieldMixin, OptionsMixin],
-  
+
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
-    options: React.PropTypes.object.isRequired,
     multiple: React.PropTypes.bool,
-    value: React.PropTypes.string,    
+    value: React.PropTypes.string,
     onChange: React.PropTypes.func,
     onBlur: React.PropTypes.func
   },
-  
+
   getDefaultProps: function(){
     return {
       componentType: 'field'
     };
   },
-  
+
   getInitialState: function(){
     return {
       options: [],
