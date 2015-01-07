@@ -23,7 +23,7 @@ module.exports = React.createClass({
     var $modal = $(node).modal({show: this.props.autoShow});
 
     $modal.on('hidden.bs.modal', function(){
-      React.unmountComponentAtNode(node.parentNode);
+      React.unmountComponentAtNode(node);
     });
   },
 
