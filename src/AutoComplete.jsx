@@ -29,7 +29,7 @@ module.exports = React.createClass({
 
   propTypes: {
     ref: React.PropTypes.string,
-    className: React.PropsTypes.string,
+    className: React.PropTypes.string,
     onOptionSelected: React.PropTypes.func,
     customClasses: React.PropTypes.object,
     placeholder: React.PropTypes.string,
