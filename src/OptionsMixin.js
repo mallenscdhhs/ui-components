@@ -40,6 +40,8 @@ module.exports = {
    * Remove all event listeners.
    */
   componentWillUnmount: function(){
-    Queue.unSubscribe('field:options:'+this.props.id, 'field:'+this.props.id);
+    if ( !this.props.options.items ) {
+      Queue.unSubscribe('field:options:' + this.props.id, 'field:' + this.props.id);
+    }
   }
 };
