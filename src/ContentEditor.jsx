@@ -32,6 +32,7 @@ module.exports = React.createClass({
     });
     editor.on('change',this.handleContentEditorChange);
     editor.on('keyup',this.handleContentEditorKeyup);
+    editor.setContent(this.props.value);
     this.setState({'editor':editor});
   },
 
