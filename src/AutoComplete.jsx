@@ -33,7 +33,6 @@ module.exports = React.createClass({
     onOptionSelected: React.PropTypes.func,
     customClasses: React.PropTypes.object,
     placeholder: React.PropTypes.string,
-    options: React.PropTypes.arrayOf(React.PropTypes.string),
     value: React.PropTypes.string
   },
 
