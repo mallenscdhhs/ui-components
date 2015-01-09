@@ -90,9 +90,11 @@ module.exports = {
 	* Update subs object by removing callback.
 	* @returns {void}
 	*/
-	unSubscribe: function(entityEvent,cbId){
-		delete this.subscribers[entityEvent][cbId];
-	}
+  unSubscribe: function(entityEvent,cbId){
+    if(!!this.subscribers[entityEvent] && !!this.subscribers[entityEvent][cbId]) {
+      delete this.subscribers[entityEvent][cbId];
+    }
+  }
 
 
 };

@@ -21,7 +21,7 @@ module.exports = React.createClass({
 
   render: function(){
     return (
-      <section dangerouslySetInnerHTML={{__html: this.props.content }}></section>
+      <section className="page-content" dangerouslySetInnerHTML={{__html: this.props.content }}></section>
     );
   }
 
