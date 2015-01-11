@@ -54,7 +54,9 @@ module.exports = React.createClass({
 
   getInitialState: function(){
     return {
-      value: this.props.value || (this.props.type === 'checkbox'? [] : '')
+      'value' : this.props.value || (this.props.type === 'checkbox'? [] : ''),
+      'display' : true,
+      'has-error' : false
     };
   },
 
@@ -91,7 +93,7 @@ module.exports = React.createClass({
           var id = this.props.name + '-option-' + option.value;
           var config = update(option, {
             id: {$set: id},
-            name: {$set: id},
+            name: {$set: this.props.name},
             type: {$set: this.props.type},
             checked: {$set: checkOptionValue(option.value)},
             isFieldGroup: {$set: true},
