@@ -19,7 +19,7 @@ module.exports = {
       var initState = this.props.dependency.initialState === 'hidden' ? false : true;
       var depName = this.props.dependency.id;
       var depValues = this.props.dependency.value.split('|'); // Array of 'actionable' values
-      Queue.subscribe('field:value:change', 'field:'+this.props.id+':dependency', function(data){
+      Queue.subscribe('field:value:change:'+depName, 'field:'+this.props.id+':dependency', function(data){
         // Verify field is correct and new value is in the 'actionable' array
         if ( data.name === depName && depValues.indexOf(data.value) >= 0){ 
           // Change from initial display state.
@@ -38,7 +38,8 @@ module.exports = {
    */
   componentWillUnmount: function(){
     if(this.hasDependency()){
-      Queue.unSubscribe('field:value:change','field:'+this.props.id+':dependency');
+      var depName = this.props.dependency.id;
+      Queue.unSubscribe('field:value:change:'+depName,'field:'+this.props.id+':dependency');
     }
   }  
 

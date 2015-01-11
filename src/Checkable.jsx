@@ -14,6 +14,7 @@ module.exports = React.createClass({
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
+    parent: React.PropTypes.string,
     label: React.PropTypes.string.isRequired,
     value: React.PropTypes.oneOfType([
       React.PropTypes.string,
@@ -52,7 +53,7 @@ module.exports = React.createClass({
    */
   handleChange: function(e){
     var value = e.target.checked? this.props.value : null;
-    var eventName = this.props.isFieldGroup? 'fieldGroup:item:change' : 'field:value:change';
+    var eventName = this.props.isFieldGroup? 'fieldGroup:item:change:'+this.props.parent: 'field:value:change:'+this.props.id;
     this.setState({checked: e.target.checked});
     Queue.push({
       entityEvent: eventName,

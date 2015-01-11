@@ -62,7 +62,7 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function(){
-    Queue.subscribe('fieldGroup:item:change', this.props.id, function(data){
+    Queue.subscribe('fieldGroup:item:change:'+this.props.id, this.props.id, function(data){
       var value = data.value;
       if ( this.props.type === 'checkbox' ) {
         if ( data.value === null ) {
@@ -72,7 +72,7 @@ module.exports = React.createClass({
         }
       }
       this.setState({value: value});
-      Queue.push({entityEvent: 'field:value:change', data: {
+      Queue.push({entityEvent: 'field:value:change:'+this.props.id, data: {
         id: this.props.id,
         name: this.props.name,
         value: value
@@ -81,7 +81,7 @@ module.exports = React.createClass({
   },
 
   componentWillUnmount: function(){
-    Queue.unSubscribe('fieldGroup:item:change', this.props.id);
+    Queue.unSubscribe('fieldGroup:item:change:'+this.props.id, this.props.id);
   },
 
   render: function(){
@@ -95,6 +95,7 @@ module.exports = React.createClass({
           var config = update(option, {
             id: {$set: id},
             name: {$set: this.props.name},
+            parent: {$set: this.props.id},
             type: {$set: this.props.type},
             checked: {$set: checkOptionValue(option.value)},
             isFieldGroup: {$set: true},

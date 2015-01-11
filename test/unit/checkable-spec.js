@@ -39,7 +39,7 @@ describe('Checkable', function(){
   });
 
   it('can publish a radio input value on change', function(done){
-    Queue.subscribe('field:value:change', 'radio-test', function(data){
+    Queue.subscribe('field:value:change:'+fixture.config.id, 'radio-test', function(data){
       expect(data.id).toEqual(fixture.config.id);
       expect(data.name).toEqual(fixture.config.name);
       expect(data.value).toBe(fixture.config.value);
@@ -52,11 +52,11 @@ describe('Checkable', function(){
   });
 
   it('will publish a value of "null" if input is not checked', function(done){
-    Queue.subscribe('field:value:change', 'radio-test', function(data){
+    Queue.subscribe('field:value:change:'+fixture.config.id, 'radio-test', function(data){
       expect(data.id).toEqual(fixture.config.id);
       expect(data.name).toEqual(fixture.config.name);
       expect(data.value).toBe(null);
-      Queue.unSubscribe('field:value:change', 'radio-test');
+      Queue.unSubscribe('field:value:change:'+fixture.config.id, 'radio-test');
       done();
     });
     var comp = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
@@ -65,11 +65,11 @@ describe('Checkable', function(){
   });
 
   it('will publish a "fieldGroup:item:change" event if input is part of a group', function(done){
-    Queue.subscribe('fieldGroup:item:change', 'radio-test', function(data){
+    Queue.subscribe('fieldGroup:item:change:'+fixture.config.id, 'radio-test', function(data){
       expect(data.id).toEqual(fixture.config.id);
       expect(data.name).toEqual(fixture.config.name);
       expect(data.value).toBe(null);
-      Queue.unSubscribe('fieldGroup:item:change', 'radio-test');
+      Queue.unSubscribe('fieldGroup:item:change:'+fixture.config.id, 'radio-test');
       done();
     });
     var config = update(fixture.config, {isFieldGroup: {$set: true}});
