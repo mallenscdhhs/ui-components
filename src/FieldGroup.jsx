@@ -5,6 +5,7 @@ var FieldMixin = require('./FieldMixin');
 var EditorToggle = require('./EditorToggle');
 var Queue = require('./EventQueue');
 var OptionsMixin = require('./OptionsMixin');
+var DependencyMixin = require('./DependencyMixin');
 var _ = require('lodash');
 
 /**
@@ -26,7 +27,7 @@ module.exports = React.createClass({
 
   displayName: 'FieldGroup',
 
-  mixins: [FieldMixin, OptionsMixin],
+  mixins: [FieldMixin, OptionsMixin, DependencyMixin],
 
   statics: {
     isOptionChecked: isOptionChecked
@@ -55,7 +56,7 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       'value' : this.props.value || (this.props.type === 'checkbox'? [] : ''),
-      'display' : true,
+      'display': (!this.hasDependency() || this.props.dependency.initialState !=='hidden'),
       'has-error' : false
     };
   },

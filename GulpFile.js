@@ -25,7 +25,7 @@ gulp.task('hint', function(){
 });
 
 
-gulp.task('test', ['hint'], function(done){
+gulp.task('test', ['build'], function(done){
   return karma.start({
     configFile: __dirname + '/karma.conf.js'
   }, done);
