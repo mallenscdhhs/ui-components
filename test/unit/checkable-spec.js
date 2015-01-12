@@ -65,14 +65,14 @@ describe('Checkable', function(){
   });
 
   it('will publish a "fieldGroup:item:change" event if input is part of a group', function(done){
-    Queue.subscribe('fieldGroup:item:change:'+fixture.config.id, 'radio-test', function(data){
+    Queue.subscribe('fieldGroup:item:change:parent123', 'radio-test3', function(data){
       expect(data.id).toEqual(fixture.config.id);
       expect(data.name).toEqual(fixture.config.name);
       expect(data.value).toBe(null);
-      Queue.unSubscribe('fieldGroup:item:change:'+fixture.config.id, 'radio-test');
+      Queue.unSubscribe('fieldGroup:item:change:'+fixture.config.id, 'radio-test3');
       done();
     });
-    var config = update(fixture.config, {isFieldGroup: {$set: true}});
+    var config = update(fixture.config, {isFieldGroup: {$set: true}, 'parent':{$set : 'parent123'}});
     var comp = TestUtils.renderIntoDocument(<Checkable {...config}/>);
     var radio = comp.getDOMNode().childNodes[1].childNodes[0];
     TestUtils.Simulate.change(radio, {target: {checked: false}});
