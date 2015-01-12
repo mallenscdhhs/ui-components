@@ -92,7 +92,7 @@ module.exports = React.createClass({
     return (
       <fieldset className={this.getFieldClassNames()}>
         <EditorToggle {...this.props}/>
-        <legend>{this.props.label}{this.getRequiredIndicator()}</legend>
+        <legend className="fieldGroup-checkable">{this.props.label}{this.getRequiredIndicator()}</legend>
         {_.map(this.state.options, function(option){
           var id = this.props.name + '-option-' + option.value;
           var config = update(option, {
