@@ -72,11 +72,14 @@ module.exports = React.createClass({
         }
       }
       this.setState({value: value});
-      Queue.push({entityEvent: 'field:value:change:'+this.props.id, data: {
-        id: this.props.id,
-        name: this.props.name,
-        value: value
-      }});
+      Queue.push({
+        entityEvent: 'field:value:change:'+this.props.id,
+        data: {
+          id: this.props.id,
+          name: this.props.name,
+          value: value
+        }
+      });
     }.bind(this));
   },
 
