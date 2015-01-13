@@ -5,6 +5,7 @@ var FieldMixin = require('./FieldMixin');
 var EditorToggle = require('./EditorToggle');
 var Queue = require('./EventQueue');
 var OptionsMixin = require('./OptionsMixin');
+var DependencyMixin = require('./DependencyMixin');
 var _ = require('lodash');
 
 /**
@@ -26,7 +27,7 @@ module.exports = React.createClass({
 
   displayName: 'FieldGroup',
 
-  mixins: [FieldMixin, OptionsMixin],
+  mixins: [FieldMixin, OptionsMixin, DependencyMixin],
 
   statics: {
     isOptionChecked: isOptionChecked
@@ -55,13 +56,13 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       'value' : this.props.value || (this.props.type === 'checkbox'? [] : ''),
-      'display' : true,
+      'display': (!this.hasDependency() || this.props.dependency.initialState !=='hidden'),
       'has-error' : false
     };
   },
 
   componentDidMount: function(){
-    Queue.subscribe('fieldGroup:item:change', this.props.id, function(data){
+    Queue.subscribe('fieldGroup:item:change:'+this.props.id, this.props.id, function(data){
       var value = data.value;
       if ( this.props.type === 'checkbox' ) {
         if ( data.value === null ) {
@@ -71,16 +72,19 @@ module.exports = React.createClass({
         }
       }
       this.setState({value: value});
-      Queue.push({entityEvent: 'field:value:change', data: {
-        id: this.props.id,
-        name: this.props.name,
-        value: value
-      }});
+      Queue.push({
+        entityEvent: 'field:value:change:'+this.props.id,
+        data: {
+          id: this.props.id,
+          name: this.props.name,
+          value: value
+        }
+      });
     }.bind(this));
   },
 
   componentWillUnmount: function(){
-    Queue.unSubscribe('fieldGroup:item:change', this.props.id);
+    Queue.unSubscribe('fieldGroup:item:change:'+this.props.id, this.props.id);
   },
 
   render: function(){
@@ -88,12 +92,13 @@ module.exports = React.createClass({
     return (
       <fieldset className={this.getFieldClassNames()}>
         <EditorToggle {...this.props}/>
-        <legend>{this.props.label}{this.getRequiredIndicator()}</legend>
+        <legend className="fieldGroup-checkable">{this.props.label}{this.getRequiredIndicator()}</legend>
         {_.map(this.state.options, function(option){
           var id = this.props.name + '-option-' + option.value;
           var config = update(option, {
             id: {$set: id},
             name: {$set: this.props.name},
+            parent: {$set: this.props.id},
             type: {$set: this.props.type},
             checked: {$set: checkOptionValue(option.value)},
             isFieldGroup: {$set: true},

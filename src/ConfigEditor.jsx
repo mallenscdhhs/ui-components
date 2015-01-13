@@ -59,10 +59,12 @@ module.exports = React.createClass({
      * internal state of the component config.
      */
     componentDidMount: function(){
-      Queue.subscribe('field:value:change', 'configeditor', function(data){
-        var state = {};
-        state[data.name] = data.value;
-        this.setState(state);
+      Queue.subscribe('all', 'configeditor', function(data,event){
+        if(event.lastIndexOf('field:value:change') >= 0) {
+          var state = {};
+          state[data.name] = data.value;
+          this.setState(state);
+        }
       }.bind(this));
     },
 

@@ -46,7 +46,7 @@ module.exports = {
   handleInputChange: function(event) {
     this.setState({value: event.target.value});
     Queue.push({
-      entityEvent: 'field:value:change',
+      entityEvent: 'field:value:change:'+this.props.id,
       data: {
         id: this.props.id,
         name: this.props.name,

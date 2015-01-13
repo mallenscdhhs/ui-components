@@ -38,11 +38,11 @@ describe('FieldGroup', function(){
     var checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
     var numChanges = 0;
     expect(comp.state.value).toEqual([]);
-    EQ.subscribe('field:value:change', 'test', function(data){
+    EQ.subscribe('field:value:change:'+fixture.id, 'test', function(data){
       numChanges += 1;
       if ( numChanges === 2 && data.id === fixture.id ) {
         expect(data.value.join(',')).toEqual('1,2');
-        EQ.unSubscribe('field:value:change', 'test');
+        EQ.unSubscribe('field:value:change:'+fixture.id, 'test');
         done();
       }
     });
@@ -57,11 +57,11 @@ describe('FieldGroup', function(){
     var radios = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
     var numChanges = 0;
     expect(comp.state.value).toEqual('');
-    EQ.subscribe('field:value:change', 'test', function(data){
+    EQ.subscribe('field:value:change:'+fixture.id, 'test', function(data){
       numChanges += 1;
       expect(data.value).toEqual(numChanges.toString());
       if ( numChanges === 2 ) {
-        EQ.unSubscribe('field:value:change', 'test');
+        EQ.unSubscribe('field:value:change:'+fixture.id, 'test');
         done();
       }
     });
