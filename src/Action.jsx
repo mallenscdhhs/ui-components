@@ -2,6 +2,7 @@
 var React = require('react');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
+var dispatcher = require('fluxify').dispatcher;
 var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
@@ -49,6 +50,7 @@ module.exports = React.createClass({
       entityEvent: this.props.event,
       data: this.props
     });
+    dispatcher.dispatch( { 'actionType' : this.props.event , 'data' : this.props });
   },
 
   /**

@@ -3,6 +3,8 @@ var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
+var dispatcher = require('fluxify').dispatcher;
+var constants = require('./Constants.json');
 var EditorToggle = require('./EditorToggle');
 var classSet = require('react/lib/cx');
 
@@ -53,16 +55,21 @@ module.exports = React.createClass({
    */
   handleChange: function(e){
     var value = e.target.checked? this.props.value : null;
-    var eventName = this.props.isFieldGroup? 'fieldGroup:item:change:'+this.props.parent: 'field:value:change:'+this.props.id;
     this.setState({checked: e.target.checked});
-    Queue.push({
-      entityEvent: eventName,
-      data: {
+
+    var eventName = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE+':'+this.props.parent : constants.actions.FIELD_VALUE_CHANGE+':'+this.props.id;
+    var eventData = {
         id: this.props.id,
         name: this.props.name,
         value: value
-      }
+    };
+    Queue.push({
+      entityEvent: eventName,
+      data: eventData
     });
+
+    var actionType = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
+    dispatcher.dispatch( { 'actionType' : actionType , 'data' : eventData  });
   },
 
   render: function(){
