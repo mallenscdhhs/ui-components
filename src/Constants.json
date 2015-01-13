@@ -1,8 +1,0 @@
-{
-    "actions" : {
-        "FIELD_VALUE_CHANGE" : "field:value:change",
-        "FIELD_GROUP_VALUE_CHANGE" : "fieldGroup:item:change",
-        "COMPONENT_REMOVE" : "component:remove"
-
-    }
-}

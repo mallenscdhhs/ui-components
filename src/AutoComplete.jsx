@@ -1,9 +1,8 @@
 var React = require('react');
 var update = require('react/lib/update');
+var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
 var Queue = require('./EventQueue');
-var dispatcher = require('fluxify').dispatcher;
-var constants = require('./Constants.json');
 var _ = require('lodash');
 
 /**
@@ -72,16 +71,14 @@ module.exports = React.createClass({
   onOptionSelected: function(label){
     var opt = _.find(this.state.options, {label: label});
     this.setState({value: opt.value});
-    var eventData = {
-      id: this.props.id,
-      name: this.props.name,
-      value: this.state.value
-    };
     Queue.push({
       entityEvent: 'field:value:change',
-      data:eventData
+      data: {
+        id: this.props.id,
+        name: this.props.name,
+        value: this.state.value
+      }
     });
-    dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
   },
 
   /**
