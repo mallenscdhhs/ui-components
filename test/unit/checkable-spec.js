@@ -69,7 +69,7 @@ describe('Checkable', function(){
       expect(data.id).toEqual(fixture.config.id);
       expect(data.name).toEqual(fixture.config.name);
       expect(data.value).toBe(null);
-      Queue.unSubscribe('fieldGroup:item:change:'+fixture.config.id, 'radio-test3');
+      Queue.unSubscribe('fieldGroup:item:change:parent123', 'radio-test3');
       done();
     });
     var config = update(fixture.config, {isFieldGroup: {$set: true}, 'parent':{$set : 'parent123'}});
