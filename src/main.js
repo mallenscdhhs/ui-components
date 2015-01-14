@@ -63,7 +63,7 @@ function buildComponentTree(schema, head){
 }
 
 function configure(data){
-  configuration.API = _.merge(configuration.API,data);
+  _.merge(configuration,data);
 }
 
 /**

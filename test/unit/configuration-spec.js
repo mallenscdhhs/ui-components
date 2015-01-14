@@ -4,9 +4,11 @@ var TestUtils = require('react/lib/ReactTestUtils');
 var configuration = require('../../src/configuration');
 
 var apiFixture = {
-  "validate" : "test/validate",
-  "options" : "test/options",
-  "page" : "test/page"
+  "API" : {
+    "validate" : "test/validate",
+    "options" : "test/options",
+    "page" : "test/page"
+  }
 };
 
 describe('Configuration', function() {
@@ -16,9 +18,9 @@ describe('Configuration', function() {
     expect(configuration.API.options).toBeUndefined();
     expect(configuration.API.page).toBeUndefined();
     Components.configure(apiFixture);
-    expect(configuration.API.validate).toEqual(apiFixture.validate);
-    expect(configuration.API.options).toEqual(apiFixture.options);
-    expect(configuration.API.page).toEqual(apiFixture.page);
+    expect(configuration.API.validate).toEqual(apiFixture.API.validate);
+    expect(configuration.API.options).toEqual(apiFixture.API.options);
+    expect(configuration.API.page).toEqual(apiFixture.API.page);
   });
 
 });
