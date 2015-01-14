@@ -51,6 +51,6 @@ module.exports = {
       name: this.props.name,
       value: event.target.value
     };
-    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_GROUP_VALUE_CHANGE , 'data' : eventData } );
+    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
   }
 };
