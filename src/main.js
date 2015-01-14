@@ -69,7 +69,7 @@ function buildComponentTree(schema, head){
  */
 module.exports = {
   'elements': elements,
-  'Constants' : Constants,
+  'constants' : Constants,
   'buildComponentTree': buildComponentTree,
   'factory': componentFactory
 };
