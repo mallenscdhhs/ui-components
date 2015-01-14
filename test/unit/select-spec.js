@@ -1,4 +1,5 @@
 var React = require('react');
+require('es6-promise').polyfill();
 var TestUtils = require('react/lib/ReactTestUtils');
 var Select = require('../../src/Select');
 var fixture = require('../fixtures/field-select.json');

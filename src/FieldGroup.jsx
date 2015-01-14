@@ -3,8 +3,10 @@ var update = require('react/lib/update');
 var Checkable = require('./Checkable');
 var FieldMixin = require('./FieldMixin');
 var EditorToggle = require('./EditorToggle');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var constants = require('./constants');
 var OptionsMixin = require('./OptionsMixin');
+var DependencyMixin = require('./DependencyMixin');
 var _ = require('lodash');
 
 /**
@@ -26,7 +28,7 @@ module.exports = React.createClass({
 
   displayName: 'FieldGroup',
 
-  mixins: [FieldMixin, OptionsMixin],
+  mixins: [FieldMixin, OptionsMixin, DependencyMixin],
 
   statics: {
     isOptionChecked: isOptionChecked
@@ -54,31 +56,38 @@ module.exports = React.createClass({
 
   getInitialState: function(){
     return {
-      value: this.props.value || (this.props.type === 'checkbox'? [] : '')
+      'value' : this.props.value || (this.props.type === 'checkbox'? [] : ''),
+      'display': (!this.hasDependency() || this.props.dependency.initialState !=='hidden'),
+      'has-error' : false
     };
   },
 
   componentDidMount: function(){
-    Queue.subscribe('fieldGroup:item:change', this.props.id, function(data){
-      var value = data.value;
-      if ( this.props.type === 'checkbox' ) {
-        if ( data.value === null ) {
-          value = _.filter(this.state.value, {name: data.name});
-        } else {
-          value = this.state.value.concat([data.value]);
+    Dispatcher.register( this.props.id + '-FIELD-GROUP-CHANGE' , function(payload){
+      if( payload.actionType === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
+          payload.data.name === this.props.name &&
+          payload.data.id.lastIndexOf(this.props.id) >= 0) {
+        var value = payload.data.value;
+        if ( this.props.type === 'checkbox' ) {
+          if ( payload.data.value === null ) {
+            value = _.filter(this.state.value, {'name': payload.data.name});
+          } else {
+            value = this.state.value.concat([payload.data.value]);
+          }
         }
+        this.setState({'value': value});
+        var eventData = {
+          id: this.props.id,
+          name: this.props.name,
+          value: value
+        };
+        Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
       }
-      this.setState({value: value});
-      Queue.push({entityEvent: 'field:value:change', data: {
-        id: this.props.id,
-        name: this.props.name,
-        value: value
-      }});
     }.bind(this));
   },
 
   componentWillUnmount: function(){
-    Queue.unSubscribe('fieldGroup:item:change', this.props.id);
+    Dispatcher.unregister( this.props.id + '-FIELD-GROUP-CHANGE' );
   },
 
   render: function(){
@@ -86,12 +95,13 @@ module.exports = React.createClass({
     return (
       <fieldset className={this.getFieldClassNames()}>
         <EditorToggle {...this.props}/>
-        <legend>{this.props.label}{this.getRequiredIndicator()}</legend>
+        <legend className="fieldGroup-checkable">{this.props.label}{this.getRequiredIndicator()}</legend>
         {_.map(this.state.options, function(option){
           var id = this.props.name + '-option-' + option.value;
           var config = update(option, {
             id: {$set: id},
-            name: {$set: id},
+            name: {$set: this.props.name},
+            parent: {$set: this.props.id},
             type: {$set: this.props.type},
             checked: {$set: checkOptionValue(option.value)},
             isFieldGroup: {$set: true},

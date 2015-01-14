@@ -1,7 +1,8 @@
 'use-strict';
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var constants = require('./constants');
 var _ = require('lodash');
 require('pen');
 var inputProps = ['id', 'name', 'value', 'maxLength', 'className', 'aria-describedby'];
@@ -56,14 +57,12 @@ module.exports = React.createClass({
    */
   handleContentEditorChange: function(value){
     this.setState({'value': value});
-    Queue.push({
-      'entityEvent': 'field:value:change',
-      'data': {
-        'id': this.props.id,
-        'name': this.props.name,
-        'value': value
-      }
-    });
+    var eventData ={
+      'id': this.props.id,
+      'name': this.props.name,
+      'value': value
+    };
+    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
   },
 
   getInitialState: function(){

@@ -2,7 +2,8 @@
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
 var classSet = require('react/lib/cx');
 
@@ -14,6 +15,7 @@ module.exports = React.createClass({
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
+    parent: React.PropTypes.string,
     label: React.PropTypes.string.isRequired,
     value: React.PropTypes.oneOfType([
       React.PropTypes.string,
@@ -35,7 +37,9 @@ module.exports = React.createClass({
 
   getInitialState: function(){
     return {
-      'checked'   : !!this.props.checked
+      'checked'   : !!this.props.checked,
+      'display' : true,
+      'has-error' : false
     };
   },
 
@@ -50,16 +54,14 @@ module.exports = React.createClass({
    */
   handleChange: function(e){
     var value = e.target.checked? this.props.value : null;
-    var eventName = this.props.isFieldGroup? 'fieldGroup:item:change' : 'field:value:change';
     this.setState({checked: e.target.checked});
-    Queue.push({
-      entityEvent: eventName,
-      data: {
+    var eventData = {
         id: this.props.id,
         name: this.props.name,
         value: value
-      }
-    });
+    };
+    var actionType = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
+    Dispatcher.dispatch( { 'actionType' : actionType , 'data' : eventData  });
   },
 
   render: function(){

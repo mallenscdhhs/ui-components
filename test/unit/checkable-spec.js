@@ -1,9 +1,11 @@
 var React = require('react');
+require('es6-promise').polyfill();
 var fixture = require('../fixtures/radio.json');
 var Checkable = require('../../src/Checkable');
-var Queue = require('../../src/EventQueue');
 var TestUtils = require('react/lib/ReactTestUtils');
 var update = require('react/lib/update');
+var Dispatcher = require('fluxify').dispatcher;
+var constants = require('../../src/constants');
 
 describe('Checkable', function(){
 
@@ -12,7 +14,6 @@ describe('Checkable', function(){
     var wrapperDiv = dom.getDOMNode();
     var label = wrapperDiv.childNodes[1];
     var input = label.childNodes[0];
-    var labelText = label.childNodes[1];
     dom.setState({display: true});
     expect(wrapperDiv.className).toEqual('editable-component radio');
     expect(label.getAttribute('for')).toEqual(fixture.config.id);
@@ -39,40 +40,49 @@ describe('Checkable', function(){
   });
 
   it('can publish a radio input value on change', function(done){
-    Queue.subscribe('field:value:change', 'radio-test', function(data){
-      expect(data.id).toEqual(fixture.config.id);
-      expect(data.name).toEqual(fixture.config.name);
-      expect(data.value).toBe(fixture.config.value);
-      Queue.unSubscribe('field:value:change', 'radio-test');
-      done();
-    });
+    Dispatcher.register( 'CHECKABLE-TEST-1', function(payload){
+      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
+          payload.data.id === fixture.config.id) {
+          expect(payload.data.id).toEqual(fixture.config.id);
+          expect(payload.data.name).toEqual(fixture.config.name);
+          expect(payload.data.value).toBe(fixture.config.value);
+          Dispatcher.unregister( 'CHECKABLE-TEST-1' );
+          done();
+      }
+    }.bind(this));
     var comp = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
     var radio = comp.getDOMNode().childNodes[1].childNodes[0];
     TestUtils.Simulate.change(radio, {target: {checked: true}});
   });
 
   it('will publish a value of "null" if input is not checked', function(done){
-    Queue.subscribe('field:value:change', 'radio-test', function(data){
-      expect(data.id).toEqual(fixture.config.id);
-      expect(data.name).toEqual(fixture.config.name);
-      expect(data.value).toBe(null);
-      Queue.unSubscribe('field:value:change', 'radio-test');
-      done();
-    });
+    Dispatcher.register( 'CHECKABLE-TEST-2', function(payload){
+      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
+          payload.data.id === fixture.config.id) {
+          expect(payload.data.id).toEqual(fixture.config.id);
+          expect(payload.data.name).toEqual(fixture.config.name);
+          expect(payload.data.value).toBe(null);
+          Dispatcher.unregister( 'CHECKABLE-TEST-2' );
+          done();
+      }
+    }.bind(this));
     var comp = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
     var radio = comp.getDOMNode().childNodes[1].childNodes[0];
     TestUtils.Simulate.change(radio, {target: {checked: false}});
   });
 
   it('will publish a "fieldGroup:item:change" event if input is part of a group', function(done){
-    Queue.subscribe('fieldGroup:item:change', 'radio-test', function(data){
-      expect(data.id).toEqual(fixture.config.id);
-      expect(data.name).toEqual(fixture.config.name);
-      expect(data.value).toBe(null);
-      Queue.unSubscribe('fieldGroup:item:change', 'radio-test');
-      done();
-    });
-    var config = update(fixture.config, {isFieldGroup: {$set: true}});
+    Dispatcher.register( 'CHECKABLE-TEST-3', function(payload){
+      if( payload.actionType === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
+          payload.data.id === fixture.config.id) {
+          expect(payload.data.id).toEqual(fixture.config.id);
+          expect(payload.data.name).toEqual(fixture.config.name);
+          expect(payload.data.value).toBe(null);
+          Dispatcher.unregister( 'CHECKABLE-TEST-3' );
+          done();
+      }
+    }.bind(this));
+    var config = update(fixture.config, {isFieldGroup: {$set: true}, 'parent':{$set : 'parent123'}});
     var comp = TestUtils.renderIntoDocument(<Checkable {...config}/>);
     var radio = comp.getDOMNode().childNodes[1].childNodes[0];
     TestUtils.Simulate.change(radio, {target: {checked: false}});

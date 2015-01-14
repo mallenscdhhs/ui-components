@@ -31,7 +31,8 @@
     "react-typeahead": "michaelleeallen/react-typeahead",
     "reactify": "^0.16.0",
     "vinyl-source-stream": "^1.0.0",
-    "pen": "sofish/pen"
+    "fluxify": "^0.2.1",
+    "es6-promise": "^2.0.1"
   },
   "devDependencies": {
     "bootstrap": "^3.3.1",
@@ -48,6 +49,7 @@
     "lodash": "^2.4.1",
     "phantomjs": "1.9.7-14",
     "react": "^0.12.0",
-    "react-tools": "^0.12.0"
+    "react-tools": "^0.12.0",
+    "pen": "sofish/pen"
   }
 }

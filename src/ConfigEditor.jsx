@@ -1,6 +1,8 @@
 var React = require('react');
 var _ = require('lodash');
 var Queue = require('./EventQueue');
+var dispatcher = require('fluxify').dispatcher;
+var constants = require('./Constants.json');
 var Modal = require('./Modal');
 
 
@@ -10,13 +12,15 @@ var Modal = require('./Modal');
  */
 var RemoveComponent = React.createClass({
   handleClick: function(){
+    var eventData = {
+      type: this.props.type,
+      id: this.props.config.id
+    };
     Queue.push({
       entityEvent: 'component:remove:'+this.props.config.id,
-      data: {
-        type: this.props.type,
-        id: this.props.config.id
-      }
+      data:eventData
     });
+    dispatcher.dispatch( { 'actionType' : constants.actions.COMPONENT_REMOVE , 'data' : eventData  });
   },
   render: function() {
     return (
@@ -59,10 +63,19 @@ module.exports = React.createClass({
      * internal state of the component config.
      */
     componentDidMount: function(){
-      Queue.subscribe('field:value:change', 'configeditor', function(data){
-        var state = {};
-        state[data.name] = data.value;
-        this.setState(state);
+      Queue.subscribe('all', 'configeditor', function(data,event){
+        if(event.lastIndexOf('field:value:change') >= 0) {
+          var state = {};
+          state[data.name] = data.value;
+          this.setState(state);
+        }
+      }.bind(this));
+      dispatcher.register( this.props.id , function(payload){
+        if(payload.actionType === constants.event.FIELD_VALUE_CHANGE) {
+          var state = {};
+          state[payload.data.name] = payload.data.value;
+          this.setState(state);
+        }
       }.bind(this));
     },
 
@@ -71,6 +84,7 @@ module.exports = React.createClass({
      */
     componentWillUnmount: function(){
       Queue.unSubscribe('field:value:change', 'configeditor');
+      dispatcher.unregister( this.props.id );
     },
 
     render: function() {

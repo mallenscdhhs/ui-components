@@ -1,7 +1,8 @@
 'use-strict';
 var React = require('react');
 var _ = require('lodash');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
 var FieldMixin = require('./FieldMixin');
 var FieldGroup = require('./FieldGroup');
@@ -51,9 +52,11 @@ module.exports = React.createClass({
    */
   componentDidMount: function(){
     // Listen for validation errors from application
-    Queue.subscribe('field:error:'+this.props.id,'field:'+this.props.id,function(data){
-      // Change from initial display state.
-      this.setState({'hasError': data.hasError,'errorMessage':data.errorMessage});
+    Dispatcher.register( this.props.id + '-VALIDATION-ERROR' , function(payload){
+      if( payload.actionType === constants.actions.FIELD_VALIDATION_ERROR &&
+          payload.data.id === this.props.id) {
+        this.setState({'hasError': payload.data.hasError,'errorMessage': payload.data.errorMessage});
+      }
     }.bind(this));
   },
 
@@ -62,7 +65,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   componentWillUnmount: function(){
-    Queue.unSubscribe('field:error:'+this.props.id,'field:'+this.props.id);
+    Dispatcher.unregister( this.props.id + '-VALIDATION-ERROR' );
   },
 
   /**

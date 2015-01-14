@@ -1,4 +1,5 @@
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var constants = require('./constants');
 
 module.exports = {
 
@@ -16,17 +17,19 @@ module.exports = {
    */
   componentDidMount: function(){    
     if(this.hasDependency()){      
-      var initState = this.props.dependency.initialState === 'hidden' ? false : true;
+      var initState = this.props.dependency.initialState !== 'hidden';
       var depName = this.props.dependency.id;
-      var depValues = this.props.dependency.value.split('|'); // Array of 'actionable' values
-      Queue.subscribe('field:value:change', 'field:'+this.props.id+':dependency', function(data){
-        // Verify field is correct and new value is in the 'actionable' array
-        if ( data.name === depName && depValues.indexOf(data.value) >= 0){ 
+      var depValues = this.props.dependency.value.split('|');
+
+      Dispatcher.register( this.props.id + '-DEP-CHANGE' , function(payload){
+        if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
+            payload.data.id === depName &&
+            depValues.indexOf(payload.data.value) >= 0) {
           // Change from initial display state.
-          this.setState({display: !initState}); 
+          this.setState({'display': !initState});
         }else{
           // Otherwise, revert to (or stay at) initState
-          this.setState({display: initState});
+          this.setState({'display': initState});
         }
       }.bind(this));
     }
@@ -38,7 +41,7 @@ module.exports = {
    */
   componentWillUnmount: function(){
     if(this.hasDependency()){
-      Queue.unSubscribe('field:value:change','field:'+this.props.id+':dependency');
+      Dispatcher.unregister( this.props.id + '-DEP-CHANGE' );
     }
   }  
 

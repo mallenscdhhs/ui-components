@@ -4,10 +4,10 @@ var _ = require('lodash');
 var Page = require('./Page');
 var Tree = require('./Tree');
 var Action = require('./Action');
-var Queue = require('./EventQueue');
 var GridRow = require('./GridRow');
 var GridColumn = require('./GridColumn');
-
+var Dispatcher = require('fluxify').dispatcher;
+var constants = require('./constants');
 /**
  * Build nested data structure for rendering a Tree.
  * @param {object} state - a component state object
@@ -132,18 +132,22 @@ module.exports = React.createClass({
    * Subscribe to workflow events.
    */
   componentDidMount: function(){
-    Queue.subscribe('tree:load:page', 'workflowRouter', this.handleDirect);
-    Queue.subscribe('workflow:previous:page', 'workflowRouter', this.handlePrevious);
-    Queue.subscribe('workflow:next:page', 'workflowRouter', this.handleNext);
+    Dispatcher.register( this.props.id + '-WORKFLOW' , function(payload){
+      if( payload.actionType === constants.actions.TREE_LOAD_PAGE) {
+        this.handleDirect(payload.data.id);
+      }else if( payload.actionType === constants.actions.WORKFLOW_PREVIOUS_PAGE){
+        this.handlePrevious();
+      }else if( payload.actionType === constants.actions.WORKFLOW_NEXT_PAGE){
+        this.handleNext();
+      }
+    }.bind(this));
   },
 
   /**
   * Unsubscribe from all events.
   */
   componentWillUnmount: function(){
-    Queue.unSubscribe('tree:load:page','workflowRouter');
-    Queue.unSubscribe('workflow:previous:page', 'workflowRouter');
-    Queue.unSubscribe('workflow:next:page', 'workflowRouter');
+    Dispatcher.unregister( this.props.id + '-WORKFLOW' );
   },
 
   /**
@@ -158,7 +162,7 @@ module.exports = React.createClass({
       nextPage: this.state.flow[pageId].next,
       previousPage: this.state.flow[pageId].previous
     });
-    Queue.push({'entityEvent':'workflow:load:page','data':{'page':pageId}});
+    Dispatcher.dispatch( { 'actionType' : constants.actions.WORKFLOW_LOAD_PAGE , 'data' : {'page':pageId} } );
   },
 
   /**
