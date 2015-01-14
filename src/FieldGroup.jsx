@@ -3,7 +3,8 @@ var update = require('react/lib/update');
 var Checkable = require('./Checkable');
 var FieldMixin = require('./FieldMixin');
 var EditorToggle = require('./EditorToggle');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var Constants = require('./Constants.js');
 var OptionsMixin = require('./OptionsMixin');
 var DependencyMixin = require('./DependencyMixin');
 var _ = require('lodash');
@@ -62,29 +63,31 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function(){
-    Queue.subscribe('fieldGroup:item:change:'+this.props.id, this.props.id, function(data){
-      var value = data.value;
-      if ( this.props.type === 'checkbox' ) {
-        if ( data.value === null ) {
-          value = _.filter(this.state.value, {name: data.name});
-        } else {
-          value = this.state.value.concat([data.value]);
+    Dispatcher.register( this.props.id + '-FIELD-GROUP-CHANGE' , function(payload){
+      if( payload.actionType === Constants.actions.FIELD_GROUP_VALUE_CHANGE &&
+          payload.data.name === this.props.name &&
+          payload.data.id.lastIndexOf(this.props.id) >= 0) {
+        var value = payload.data.value;
+        if ( this.props.type === 'checkbox' ) {
+          if ( payload.data.value === null ) {
+            value = _.filter(this.state.value, {'name': payload.data.name});
+          } else {
+            value = this.state.value.concat([payload.data.value]);
+          }
         }
-      }
-      this.setState({value: value});
-      Queue.push({
-        entityEvent: 'field:value:change:'+this.props.id,
-        data: {
+        this.setState({'value': value});
+        var eventData = {
           id: this.props.id,
           name: this.props.name,
           value: value
-        }
-      });
+        };
+        Dispatcher.dispatch( { 'actionType' : Constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+      }
     }.bind(this));
   },
 
   componentWillUnmount: function(){
-    Queue.unSubscribe('fieldGroup:item:change:'+this.props.id, this.props.id);
+    Dispatcher.unregister( this.props.id + '-FIELD-GROUP-CHANGE' );
   },
 
   render: function(){

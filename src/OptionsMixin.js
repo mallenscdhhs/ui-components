@@ -1,5 +1,6 @@
-var Queue = require('./EventQueue');
 var React = require('react');
+var Dispatcher = require('fluxify').dispatcher;
+var Constants = require('./Constants.js');
 
 module.exports = {
 
@@ -27,12 +28,17 @@ module.exports = {
     if ( this.props.options.items ) {
       this.setState({options: this.props.options.items});
     } else {
-      Queue.subscribe('field:options:'+this.props.id , 'field:'+this.props.id , this.updateOptions);
-      Queue.push({ entityEvent: 'load:options', data: {
-          resourceName: this.props.options.name,
-          fieldId: this.props.id
+      Dispatcher.register( this.props.id + '-LOAD-OPTIONS' , function(payload){
+        if( payload.actionType === Constants.actions.LOAD_OPTIONS &&
+            payload.data.id === this.props.id) {
+          this.updateOptions(payload.data);
         }
-      });
+      }.bind(this));
+      var eventData = {
+        'resourceName' : this.props.options.name,
+        'fieldId' : this.props.id
+      };
+      Dispatcher.dispatch( { 'actionType' : Constants.actions.SEND_OPTIONS , 'data' : eventData } );
     }
   },
 
@@ -41,7 +47,7 @@ module.exports = {
    */
   componentWillUnmount: function(){
     if ( !this.props.options.items ) {
-      Queue.unSubscribe('field:options:' + this.props.id, 'field:' + this.props.id);
+      Dispatcher.unregister( this.props.id + '-LOAD-OPTIONS');
     }
   }
 };

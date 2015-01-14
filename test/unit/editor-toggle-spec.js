@@ -1,7 +1,8 @@
 var React = require('react');
 var Components = require('../../src/main');
 var TestUtils = require('react/lib/ReactTestUtils');
-var EQ = Components.eventQueue;
+var Dispatcher = require('fluxify').dispatcher;
+var Constants = require('../../src/Constants.js');
 
 var mockEvent = {
   stopPropagation: function(){},
@@ -29,13 +30,17 @@ describe('EditorToggle', function(){
       this.handler = function(){};
       var editComponent = TestUtils.findRenderedDOMComponentWithClass(this.component, 'edit-component');
       spyOn(this, 'handler');
-      EQ.subscribe('component:edit', 'test-edit-handler', this.handler);    
+      Dispatcher.register( 'TOGGLE-TEST-1', function(payload){
+        if( payload.actionType === Constants.actions.COMPONENT_EDIT) {
+          this.handler(payload.data);
+          Dispatcher.unregister( 'TOGGLE-TEST-1');
+        }
+      }.bind(this));
       TestUtils.Simulate.click(editComponent);
       setTimeout(function(){
-        expect(this.handler).toHaveBeenCalledWith(this.fixture, 'component:edit');
+        expect(this.handler).toHaveBeenCalledWith(this.fixture);
         done();
       }.bind(this), 300);
-      EQ.unSubscribe('component:edit', 'test-edit-handler');
     });
 
   });
@@ -59,13 +64,17 @@ describe('EditorToggle', function(){
       this.handler = function(){};
       var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'add-component');
       spyOn(this, 'handler');
-      EQ.subscribe('component:add', 'test-add-handler', this.handler);    
+      Dispatcher.register( 'TOGGLE-TEST-2', function(payload){
+        if( payload.actionType === Constants.actions.COMPONENT_ADD) {
+          this.handler(payload.data);
+          Dispatcher.unregister( 'TOGGLE-TEST-2');
+        }
+      }.bind(this));
       TestUtils.Simulate.click(btn);
       setTimeout(function(){
-        expect(this.handler).toHaveBeenCalledWith(this.fixture, 'component:add');
+        expect(this.handler).toHaveBeenCalledWith(this.fixture);
         done();
       }.bind(this), 300);
-      EQ.unSubscribe('component:add', 'test-add-handler');
     });
 
   });

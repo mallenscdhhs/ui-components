@@ -1,5 +1,6 @@
 var React = require('react');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var Constants = require('./Constants.js');
 var cx = require('react/lib/cx');
 var _ = require('lodash');
 
@@ -45,13 +46,11 @@ module.exports = {
    */
   handleInputChange: function(event) {
     this.setState({value: event.target.value});
-    Queue.push({
-      entityEvent: 'field:value:change:'+this.props.id,
-      data: {
-        id: this.props.id,
-        name: this.props.name,
-        value: event.target.value
-      }
-    });
+    var eventData = {
+      id: this.props.id,
+      name: this.props.name,
+      value: event.target.value
+    };
+    Dispatcher.dispatch( { 'actionType' : Constants.actions.FIELD_GROUP_VALUE_CHANGE , 'data' : eventData } );
   }
 };
