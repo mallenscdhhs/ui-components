@@ -1,6 +1,7 @@
 'use-strict';
 var React = require('react');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var Constants = require('./Constants.js');
 var classSet = require('react/lib/cx');
 
 module.exports = React.createClass({
@@ -23,7 +24,7 @@ module.exports = React.createClass({
 
 	handleClick: function(e){
 		if(!this.props.disabled){
-			Queue.push({ entityEvent:'tree:load:page', data: this.props.id });
+			Dispatcher.dispatch({'actionType':Constants.actions.TREE_LOAD_PAGE ,'data':{ 'id' : this.props.id }});
 		}
 	},
 

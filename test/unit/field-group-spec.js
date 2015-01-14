@@ -1,8 +1,10 @@
 var React = require('react');
+require('es6-promise').polyfill();
 var TestUtils = require('react/lib/ReactTestUtils');
 var FieldGroup = require('../../src/FieldGroup');
 var fixture = require('../fixtures/field-group.json');
-var EQ = require('../../src/EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var Constants = require('../../src/Constants.js');
 var update = require('react/lib/update');
 
 describe('FieldGroup', function(){
@@ -38,14 +40,17 @@ describe('FieldGroup', function(){
     var checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
     var numChanges = 0;
     expect(comp.state.value).toEqual([]);
-    EQ.subscribe('field:value:change:'+fixture.id, 'test', function(data){
-      numChanges += 1;
-      if ( numChanges === 2 && data.id === fixture.id ) {
-        expect(data.value.join(',')).toEqual('1,2');
-        EQ.unSubscribe('field:value:change:'+fixture.id, 'test');
-        done();
+    Dispatcher.register( 'FIELD-GROUP-TEST-1', function(payload){
+      if( payload.actionType === Constants.actions.FIELD_VALUE_CHANGE &&
+          payload.data.name === fixture.name) {
+        numChanges += 1;
+        if ( numChanges === 2 && payload.data.id === fixture.id ) {
+          expect(payload.data.value.join(',')).toEqual('1,2');
+          Dispatcher.unregister( 'FIELD-GROUP-TEST-1');
+          done();
+        }
       }
-    });
+    }.bind(this));
     TestUtils.Simulate.change(checkboxes[0].getDOMNode(), {target: {checked: true}});
     TestUtils.Simulate.change(checkboxes[1].getDOMNode(), {target: {checked: true}});
   });
@@ -57,15 +62,22 @@ describe('FieldGroup', function(){
     var radios = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
     var numChanges = 0;
     expect(comp.state.value).toEqual('');
-    EQ.subscribe('field:value:change:'+fixture.id, 'test', function(data){
-      numChanges += 1;
-      expect(data.value).toEqual(numChanges.toString());
-      if ( numChanges === 2 ) {
-        EQ.unSubscribe('field:value:change:'+fixture.id, 'test');
-        done();
+    Dispatcher.register( 'FIELD-GROUP-TEST-2', function(payload){
+      if( payload.actionType === Constants.actions.FIELD_VALUE_CHANGE &&
+          payload.data.name === fixture.name) {
+        numChanges += 1;
+        expect(payload.data.value).toEqual(numChanges.toString());
+        if ( numChanges === 2 ) {
+          Dispatcher.unregister( 'FIELD-GROUP-TEST-2');
+          done();
+        }
       }
-    });
-    TestUtils.Simulate.change(radios[0].getDOMNode(), {target: {checked: true}});
-    TestUtils.Simulate.change(radios[1].getDOMNode(), {target: {checked: true}});
+    }.bind(this));
+    setTimeout(function() {
+      TestUtils.Simulate.change(radios[0].getDOMNode(), {target: {checked: true}});
+    },10);
+    setTimeout(function() {
+      TestUtils.Simulate.change(radios[1].getDOMNode(), {target: {checked: true}});
+    },20);
   });
 });

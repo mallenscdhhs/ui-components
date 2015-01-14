@@ -1,4 +1,5 @@
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
+var Constants = require('./Constants.js');
 var React = require('react');
 
 module.exports = React.createClass({
@@ -12,7 +13,7 @@ module.exports = React.createClass({
   handleConfigEdit: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Queue.push({ entityEvent: 'component:edit', data: this.props });
+    Dispatcher.dispatch( { 'actionType' : Constants.actions.COMPONENT_EDIT , 'data' : this.props } );
   },
 
   /**
@@ -24,7 +25,7 @@ module.exports = React.createClass({
   handleConfigAdd: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Queue.push({ entityEvent:'component:add', data: this.props });
+    Dispatcher.dispatch( { 'actionType' : Constants.actions.COMPONENT_ADD , 'data' : this.props } );
   },
 
   /**

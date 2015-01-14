@@ -10,6 +10,5 @@ module.exports = {
 	tree: require('./Tree'),
 	treeItem: require('./TreeItem'),
 	modal: require('./Modal'),
-	configEditor: require('./ConfigEditor'),
 	autoComplete: require('./AutoComplete')
 };

@@ -1,7 +1,7 @@
 'use-strict';
 var React = require('react');
 var _ = require('lodash');
-var Queue = require('./EventQueue');
+var Dispatcher = require('fluxify').dispatcher;
 var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
@@ -45,10 +45,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleClick: function(){
-    Queue.push({
-      entityEvent: this.props.event,
-      data: this.props
-    });
+    Dispatcher.dispatch( { 'actionType' : this.props.event , 'data' : this.props });
   },
 
   /**
