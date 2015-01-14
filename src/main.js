@@ -4,6 +4,7 @@ var update = require('react/lib/update');
 var elements = require('./index');
 var _ = require('lodash');
 var constants = require('./constants');
+var configuration = require('./configuration');
 
 /**
  * Recursively builds up a component hierarchy.
@@ -61,6 +62,10 @@ function buildComponentTree(schema, head){
   return tree;
 }
 
+function configure(data){
+  _.merge(configuration,data);
+}
+
 /**
  * This is the main API for the component library. You can use
  * any of the elements in a JSX environment, or you can generate
@@ -70,6 +75,7 @@ function buildComponentTree(schema, head){
 module.exports = {
   'elements': elements,
   'constants' : constants,
+  'configure' : configure,
   'buildComponentTree': buildComponentTree,
   'factory': componentFactory
 };
