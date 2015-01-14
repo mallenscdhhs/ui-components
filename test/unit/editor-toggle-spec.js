@@ -3,7 +3,7 @@ require('es6-promise').polyfill();
 var Components = require('../../src/main');
 var TestUtils = require('react/lib/ReactTestUtils');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('../../src/Constants.js');
+var constants = require('../../src/constants');
 
 var mockEvent = {
   stopPropagation: function(){},
@@ -32,7 +32,7 @@ describe('EditorToggle', function(){
       var editComponent = TestUtils.findRenderedDOMComponentWithClass(this.component, 'edit-component');
       spyOn(this, 'handler');
       Dispatcher.register( 'TOGGLE-TEST-1', function(payload){
-        if( payload.actionType === Constants.actions.COMPONENT_EDIT) {
+        if( payload.actionType === constants.actions.COMPONENT_EDIT) {
           this.handler(payload.data);
           Dispatcher.unregister( 'TOGGLE-TEST-1');
         }
@@ -66,7 +66,7 @@ describe('EditorToggle', function(){
       var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'add-component');
       spyOn(this, 'handler');
       Dispatcher.register( 'TOGGLE-TEST-2', function(payload){
-        if( payload.actionType === Constants.actions.COMPONENT_ADD) {
+        if( payload.actionType === constants.actions.COMPONENT_ADD) {
           this.handler(payload.data);
           Dispatcher.unregister( 'TOGGLE-TEST-2');
         }

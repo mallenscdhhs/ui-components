@@ -2,7 +2,7 @@
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 var _ = require('lodash');
 require('pen');
 var inputProps = ['id', 'name', 'value', 'maxLength', 'className', 'aria-describedby'];
@@ -62,7 +62,7 @@ module.exports = React.createClass({
       'name': this.props.name,
       'value': value
     };
-    Dispatcher.dispatch( { 'actionType' : Constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
   },
 
   getInitialState: function(){

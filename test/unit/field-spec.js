@@ -4,7 +4,7 @@ var Field = require('../../src/Field');
 var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-text.json');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('../../src/Constants.js');
+var constants = require('../../src/constants');
 var update = require('react/lib/update');
 
 describe('Field component', function() {
@@ -31,7 +31,7 @@ describe('Field component', function() {
       'hasError'    : true,
       'errorMessage' : 'It broke.'
     };
-    Dispatcher.dispatch( { 'actionType' : Constants.actions.FIELD_VALIDATION_ERROR , 'data' : eventData  });
+    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALIDATION_ERROR , 'data' : eventData  });
     setTimeout(function(){
       var helpBlock = TestUtils.findRenderedDOMComponentWithClass(comp, 'help-block');
       expect(helpBlock.getDOMNode().textContent).toEqual('It broke.');

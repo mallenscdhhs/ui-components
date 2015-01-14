@@ -3,7 +3,7 @@ var React = require('react');
 var update = require('react/lib/update');
 var elements = require('./index');
 var _ = require('lodash');
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 
 /**
  * Recursively builds up a component hierarchy.
@@ -69,7 +69,7 @@ function buildComponentTree(schema, head){
  */
 module.exports = {
   'elements': elements,
-  'constants' : Constants,
+  'constants' : constants,
   'buildComponentTree': buildComponentTree,
   'factory': componentFactory
 };

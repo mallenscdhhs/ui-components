@@ -5,7 +5,7 @@ var Checkable = require('../../src/Checkable');
 var TestUtils = require('react/lib/ReactTestUtils');
 var update = require('react/lib/update');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('../../src/Constants.js');
+var constants = require('../../src/constants');
 
 describe('Checkable', function(){
 
@@ -41,7 +41,7 @@ describe('Checkable', function(){
 
   it('can publish a radio input value on change', function(done){
     Dispatcher.register( 'CHECKABLE-TEST-1', function(payload){
-      if( payload.actionType === Constants.actions.FIELD_VALUE_CHANGE &&
+      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
           payload.data.id === fixture.config.id) {
           expect(payload.data.id).toEqual(fixture.config.id);
           expect(payload.data.name).toEqual(fixture.config.name);
@@ -57,7 +57,7 @@ describe('Checkable', function(){
 
   it('will publish a value of "null" if input is not checked', function(done){
     Dispatcher.register( 'CHECKABLE-TEST-2', function(payload){
-      if( payload.actionType === Constants.actions.FIELD_VALUE_CHANGE &&
+      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
           payload.data.id === fixture.config.id) {
           expect(payload.data.id).toEqual(fixture.config.id);
           expect(payload.data.name).toEqual(fixture.config.name);
@@ -73,7 +73,7 @@ describe('Checkable', function(){
 
   it('will publish a "fieldGroup:item:change" event if input is part of a group', function(done){
     Dispatcher.register( 'CHECKABLE-TEST-3', function(payload){
-      if( payload.actionType === Constants.actions.FIELD_GROUP_VALUE_CHANGE &&
+      if( payload.actionType === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
           payload.data.id === fixture.config.id) {
           expect(payload.data.id).toEqual(fixture.config.id);
           expect(payload.data.name).toEqual(fixture.config.name);

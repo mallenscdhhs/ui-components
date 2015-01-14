@@ -1,5 +1,5 @@
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 var React = require('react');
 
 module.exports = React.createClass({
@@ -13,7 +13,7 @@ module.exports = React.createClass({
   handleConfigEdit: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Dispatcher.dispatch( { 'actionType' : Constants.actions.COMPONENT_EDIT , 'data' : this.props } );
+    Dispatcher.dispatch( { 'actionType' : constants.actions.COMPONENT_EDIT , 'data' : this.props } );
   },
 
   /**
@@ -25,7 +25,7 @@ module.exports = React.createClass({
   handleConfigAdd: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Dispatcher.dispatch( { 'actionType' : Constants.actions.COMPONENT_ADD , 'data' : this.props } );
+    Dispatcher.dispatch( { 'actionType' : constants.actions.COMPONENT_ADD , 'data' : this.props } );
   },
 
   /**

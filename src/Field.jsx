@@ -2,7 +2,7 @@
 var React = require('react');
 var _ = require('lodash');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
 var FieldMixin = require('./FieldMixin');
 var FieldGroup = require('./FieldGroup');
@@ -53,7 +53,7 @@ module.exports = React.createClass({
   componentDidMount: function(){
     // Listen for validation errors from application
     Dispatcher.register( this.props.id + '-VALIDATION-ERROR' , function(payload){
-      if( payload.actionType === Constants.actions.FIELD_VALIDATION_ERROR &&
+      if( payload.actionType === constants.actions.FIELD_VALIDATION_ERROR &&
           payload.data.id === this.props.id) {
         this.setState({'hasError': payload.data.hasError,'errorMessage': payload.data.errorMessage});
       }

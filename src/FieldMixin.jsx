@@ -1,6 +1,6 @@
 var React = require('react');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 var cx = require('react/lib/cx');
 var _ = require('lodash');
 
@@ -51,6 +51,6 @@ module.exports = {
       name: this.props.name,
       value: event.target.value
     };
-    Dispatcher.dispatch( { 'actionType' : Constants.actions.FIELD_GROUP_VALUE_CHANGE , 'data' : eventData } );
+    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_GROUP_VALUE_CHANGE , 'data' : eventData } );
   }
 };

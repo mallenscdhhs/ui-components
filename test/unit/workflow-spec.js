@@ -5,7 +5,7 @@ var _ = require('lodash');
 var TestUtils = require('react/lib/ReactTestUtils');
 var Workflow = require('../../src/Workflow');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('../../src/Constants.js');
+var constants = require('../../src/constants');
 var fixture = require('../fixtures/workflow-simple.json');
 
 describe('Workflow component', function(){
@@ -18,7 +18,7 @@ describe('Workflow component', function(){
 
   it('can progress to the next section', function(done){
     expect(this.workflow.state.currentPage).toEqual('page1');
-    Dispatcher.dispatch( { 'actionType' : Constants.actions.WORKFLOW_NEXT_PAGE });
+    Dispatcher.dispatch( { 'actionType' : constants.actions.WORKFLOW_NEXT_PAGE });
     setTimeout(function(){
       expect(this.workflow.state.currentPage).toEqual('page2');
       expect(this.workflow.state.previousPage).toEqual('page1');
@@ -30,7 +30,7 @@ describe('Workflow component', function(){
   it('can revert to the previous section', function(done){
     this.workflow.setState({currentPage: 'page2', previousPage: 'page1', nextPage: 'page3'});
     expect(this.workflow.state.currentPage).toEqual('page2');
-    Dispatcher.dispatch( { 'actionType' : Constants.actions.WORKFLOW_PREVIOUS_PAGE });
+    Dispatcher.dispatch( { 'actionType' : constants.actions.WORKFLOW_PREVIOUS_PAGE });
     setTimeout(function(){
       expect(this.workflow.state.currentPage).toEqual('page1');
       expect(this.workflow.state.previousPage).toEqual(null);
