@@ -1,7 +1,7 @@
 'use-strict';
 var React = require('react');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 var classSet = require('react/lib/cx');
 
 module.exports = React.createClass({
@@ -24,7 +24,7 @@ module.exports = React.createClass({
 
 	handleClick: function(e){
 		if(!this.props.disabled){
-			Dispatcher.dispatch({'actionType':Constants.actions.TREE_LOAD_PAGE ,'data':{ 'id' : this.props.id }});
+			Dispatcher.dispatch({'actionType':constants.actions.TREE_LOAD_PAGE ,'data':{ 'id' : this.props.id }});
 		}
 	},
 

@@ -4,7 +4,7 @@ var Checkable = require('./Checkable');
 var FieldMixin = require('./FieldMixin');
 var EditorToggle = require('./EditorToggle');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 var OptionsMixin = require('./OptionsMixin');
 var DependencyMixin = require('./DependencyMixin');
 var _ = require('lodash');
@@ -64,7 +64,7 @@ module.exports = React.createClass({
 
   componentDidMount: function(){
     Dispatcher.register( this.props.id + '-FIELD-GROUP-CHANGE' , function(payload){
-      if( payload.actionType === Constants.actions.FIELD_GROUP_VALUE_CHANGE &&
+      if( payload.actionType === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
           payload.data.name === this.props.name &&
           payload.data.id.lastIndexOf(this.props.id) >= 0) {
         var value = payload.data.value;
@@ -81,7 +81,7 @@ module.exports = React.createClass({
           name: this.props.name,
           value: value
         };
-        Dispatcher.dispatch( { 'actionType' : Constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+        Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
       }
     }.bind(this));
   },

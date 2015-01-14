@@ -1,5 +1,5 @@
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('./Constants.js');
+var constants = require('./constants');
 
 module.exports = {
 
@@ -22,7 +22,7 @@ module.exports = {
       var depValues = this.props.dependency.value.split('|');
 
       Dispatcher.register( this.props.id + '-DEP-CHANGE' , function(payload){
-        if( payload.actionType === Constants.actions.FIELD_VALUE_CHANGE &&
+        if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
             payload.data.id === depName &&
             depValues.indexOf(payload.data.value) >= 0) {
           // Change from initial display state.

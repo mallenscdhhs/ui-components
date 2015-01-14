@@ -4,7 +4,7 @@ var TestUtils = require('react/lib/ReactTestUtils');
 var FieldGroup = require('../../src/FieldGroup');
 var fixture = require('../fixtures/field-group.json');
 var Dispatcher = require('fluxify').dispatcher;
-var Constants = require('../../src/Constants.js');
+var constants = require('../../src/constants');
 var update = require('react/lib/update');
 
 describe('FieldGroup', function(){
@@ -41,7 +41,7 @@ describe('FieldGroup', function(){
     var numChanges = 0;
     expect(comp.state.value).toEqual([]);
     Dispatcher.register( 'FIELD-GROUP-TEST-1', function(payload){
-      if( payload.actionType === Constants.actions.FIELD_VALUE_CHANGE &&
+      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
           payload.data.name === fixture.name) {
         numChanges += 1;
         if ( numChanges === 2 && payload.data.id === fixture.id ) {
@@ -63,7 +63,7 @@ describe('FieldGroup', function(){
     var numChanges = 0;
     expect(comp.state.value).toEqual('');
     Dispatcher.register( 'FIELD-GROUP-TEST-2', function(payload){
-      if( payload.actionType === Constants.actions.FIELD_VALUE_CHANGE &&
+      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
           payload.data.name === fixture.name) {
         numChanges += 1;
         expect(payload.data.value).toEqual(numChanges.toString());
