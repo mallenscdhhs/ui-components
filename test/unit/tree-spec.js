@@ -1,4 +1,5 @@
 var React = require('react');
+require('es6-promise').polyfill();
 var Components = require('../../src/main');
 var Tree = Components.elements.tree;
 var TestUtils = require('react/lib/ReactTestUtils');
