@@ -1,7 +1,8 @@
 var React = require('react');
-require('es6-promise').polyfill();
 var TestUtils = require('react/lib/ReactTestUtils');
 var AutoComplete = require('../../src/AutoComplete');
+var constants = require('../../src/constants');
+var Dispatcher = require('fluxify').dispatcher;
 
 describe('AutoComplete', function(){
   var fixture = require('../fixtures/autocomplete.json');
@@ -17,5 +18,17 @@ describe('AutoComplete', function(){
       expect(component.refs.typeahead.state.options.length).toEqual(5);
       done();
     }, 300);
+  });
+  
+  it('will call FIELD_VALUE_CHANGE action after user selection', function(done){
+    var node = component.refs.typeahead.refs.entry.getDOMNode();
+    node.value = 'four';
+    Dispatcher.register(function(action){
+      if ( action.actionType === constants.actions.FIELD_VALUE_CHANGE ) {
+        expect(action.data.value).toEqual('four');
+        done();
+      }
+    });
+    TestUtils.Simulate.change(node);
   });
 });

@@ -42,7 +42,6 @@ module.exports = React.createClass({
     return {
       ref: 'typeahead',
       className: "field-autocomplete",
-      onOptionSelected: this.onOptionSelected,
       customClasses: {
         input: 'form-control',
         results: 'list-group',
@@ -71,6 +70,7 @@ module.exports = React.createClass({
    * @fires field:value:change
    */
   onOptionSelected: function(label){
+    console.log(label);
     var opt = _.find(this.state.options, {label: label});
     this.setState({value: opt.value});
     var eventData = {
@@ -90,11 +90,9 @@ module.exports = React.createClass({
   render: function(){
     if ( this.state.options.length ){
       var config = update(this.props, {
-        options: {
-          $set: getOptionLabels(this.state.options)
-        }
+        options: { $set: getOptionLabels(this.state.options) }
       });
-      return <Typeahead {...config} />;
+      return <Typeahead {...config} onOptionSelected={this.onOptionSelected} />;
     } else {
       return <div className="field-autocomplete"></div>;
     }
