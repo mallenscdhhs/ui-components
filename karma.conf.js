@@ -17,7 +17,7 @@ module.exports = function(config) {
     'test/lib/jquery/dist/jquery.js',
     'test/lib/bootstrap/dist/js/bootstrap.js',
     'node_modules/es5-shim/es5-shim.js',
-    'test/unit/autocomplete-spec.js'
+    'test/unit/**/*-spec.js'
   ],
 
 
