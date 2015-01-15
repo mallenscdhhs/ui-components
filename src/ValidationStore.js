@@ -49,7 +49,7 @@ module.exports = Flux.createStore({
                   _.each(resp.errors,function(err){
                     errorsMgs.push(err.errorDesc);
                   });
-                  errorMessage = errorsMgs.join('');
+                  errorMessage = errorsMgs.join('<br>');
                 }
                 // Update Component by setting the validation error indicator 'hasError' and 'errorMessage',
                 // using the FIELD_VALIDATION_ERROR event
@@ -61,12 +61,12 @@ module.exports = Flux.createStore({
               .fail(function(){
                 // Error reaching API endpoint, throw generic error
                 Flux.doAction(
-                  constants.actions.FIELD_VALIDATION_ERROR ,
-                  _.merge(data,{'hasError' : true , 'errorMessage' : 'Unable to call validation rules API.'})
+                  constants.actions.API_COMMUNCATION_ERROR ,
+                  _.merge(data,{'hasError' : true , 'errorMessage' : 'Error calling validation API.'})
                 );
               });
           }else{
-            throw new Error('API Endpoints not configured.');
+            throw new Error('API endpoint for validation not configured.');
           }
           Dispatcher.unregister(data.id + '-VALIDATION-STORE' );
         }

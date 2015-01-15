@@ -14,6 +14,7 @@ module.exports = {
         "WORKFLOW_LOAD_PAGE"          : "workflowLoadPage",
         "GET_SESSION_VALUES"          : "getSessionValues",
         "VALIDATE"                    : "validate",
-        "SESSION_VALUES_LOADED"       : "sessionValuesLoaded"
+        "SESSION_VALUES_LOADED"       : "sessionValuesLoaded",
+        "API_COMMUNCATION_ERROR"      : "apiCommunicationError"
     }
 };
