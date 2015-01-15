@@ -58,7 +58,7 @@ describe('Validation', function() {
           {'sessionField1':'value1'},
           {'sessionField2':'value2'}
         ];
-        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions );
+        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions, data );
         Dispatcher.unregister('session-store-success-test')
       }
     });
@@ -116,7 +116,7 @@ describe('Validation', function() {
           {'sessionField1':'value1'},
           {'sessionField2':'value2'}
         ];
-        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions );
+        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions , data );
         Dispatcher.unregister('session-store-failure-test')
       }
     });

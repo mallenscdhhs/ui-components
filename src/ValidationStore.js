@@ -19,61 +19,62 @@ module.exports = Flux.createStore({
      * @param data {object} Field props
      */
     "fieldValueChange" : function (updater, data) {
+      Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
+    },
 
-      // Session Data Callback
-      // When Session data has been gathered, will fire this event, and
-      // 'session' will be the array of session objects
-      Dispatcher.register(data.id + '-VALIDATION-STORE',function(action,session){
-        if(action === constants.actions.SESSION_VALUES_LOADED) {
-          // Verify API has validation endpoint
-          if (configuration.API && configuration.API.validation) {
-            // Build Request Payload
-            var field = {};
-            field[data.name] = data.value;
-            var requestPayload = {
-              "payload": {
-                "rules"      : data.rules,
-                "sessionData": session,
-                "input"      : [field]
-              }
-            };
-            // Call Validation API with payload
-            $.post(configuration.API.validation, requestPayload)
-              .done(function (resp) {
-                // Successful call, prepare resp to UI
-                var hasError = false;
-                var errorMessage = '';
-                if (resp.operationStatus === 'FAILURE') {
-                  hasError = true;
-                  var errorsMgs = [];
-                  _.each(resp.errors,function(err){
-                    errorsMgs.push(err.errorDesc);
-                  });
-                  errorMessage = errorsMgs.join('<br>');
-                }
-                // Update Component by setting the validation error indicator 'hasError' and 'errorMessage',
-                // using the FIELD_VALIDATION_ERROR event
-                Flux.doAction(
-                  constants.actions.FIELD_VALIDATION_ERROR ,
-                  _.merge(data,{'hasError' : hasError , 'errorMessage' : errorMessage})
-                );
-              })
-              .fail(function(){
-                // Error reaching API endpoint, throw generic error
-                Flux.doAction(
-                  constants.actions.API_COMMUNCATION_ERROR ,
-                  _.merge(data,{'hasError' : true , 'errorMessage' : 'Error calling validation API.'})
-                );
-              });
-          }else{
-            throw new Error('API endpoint for validation not configured.');
+    /**
+     * Session Data Callback
+     * When Session data has been gathered, will fire this event, and
+     * 'session' will be the array of session objects, 'data' is the pass through
+     * from the GET_SESSION_VALUES above
+     * @param updater
+     * @param session
+     * @param data
+     */
+    "sessionValuesLoaded" : function(updater,session,data){
+      // Verify API has validation endpoint
+      if (configuration.API && configuration.API.validation) {
+        // Build Request Payload
+        var field = {};
+        field[data.name] = data.value;
+        var requestPayload = {
+          "payload": {
+            "rules"      : data.rules,
+            "sessionData": session,
+            "input"      : [field]
           }
-          Dispatcher.unregister(data.id + '-VALIDATION-STORE' );
-        }
-      });
-
-      Flux.doAction(constants.actions.GET_SESSION_VALUES);
-
+        };
+        // Call Validation API with payload
+        $.post(configuration.API.validation, requestPayload)
+          .done(function (resp) {
+            // Successful call, prepare resp to UI
+            var hasError = false;
+            var errorMessage = '';
+            if (resp.operationStatus === 'FAILURE') {
+              hasError = true;
+              var errorsMgs = [];
+              _.each(resp.errors,function(err){
+                errorsMgs.push(err.errorDesc);
+              });
+              errorMessage = errorsMgs.join('<br>');
+            }
+            // Update Component by setting the validation error indicator 'hasError' and 'errorMessage',
+            // using the FIELD_VALIDATION_ERROR event
+            Flux.doAction(
+              constants.actions.FIELD_VALIDATION_ERROR ,
+              _.merge(data,{'hasError' : hasError , 'errorMessage' : errorMessage})
+            );
+          })
+          .fail(function(){
+            // Error reaching API endpoint, throw generic error
+            Flux.doAction(
+              constants.actions.API_COMMUNCATION_ERROR ,
+              _.merge(data,{'hasError' : true , 'errorMessage' : 'Error calling validation API.'})
+            );
+          });
+      }else{
+        throw new Error('API endpoint for validation not configured.');
+      }
     }
 
   }
