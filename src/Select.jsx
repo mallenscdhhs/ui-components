@@ -10,7 +10,7 @@ module.exports = React.createClass({
 
   displayName: 'Select',
 
-  mixins: [FieldMixin, ValidationMixin, OptionsMixin],
+  mixins: [FieldMixin, OptionsMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

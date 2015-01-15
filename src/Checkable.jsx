@@ -29,7 +29,7 @@ module.exports = React.createClass({
     required: React.PropTypes.bool
   },
 
-  mixins: [FieldMixin, ValidationMixin],
+  mixins: [FieldMixin],
 
   getDefaultProps: function(){
     return {

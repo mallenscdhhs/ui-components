@@ -9,7 +9,7 @@ module.exports = React.createClass({
 
   displayName: 'Textarea',
 
-  mixins: [FieldMixin, ValidationMixin],
+  mixins: [FieldMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

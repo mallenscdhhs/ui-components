@@ -57,7 +57,7 @@ module.exports = React.createClass({
     };
   },
 
-  mixins: [OptionsMixin, ValidationMixin],
+  mixins: [OptionsMixin],
 
   statics: {
     getOptionLabels: getOptionLabels

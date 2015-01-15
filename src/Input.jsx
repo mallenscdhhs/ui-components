@@ -18,7 +18,7 @@ module.exports = React.createClass({
     maxLength: React.PropTypes.number
   },
 
-  mixins: [FieldMixin, ValidationMixin],
+  mixins: [FieldMixin],
 
   getInitialState: function(){
     return {
