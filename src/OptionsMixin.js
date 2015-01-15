@@ -13,14 +13,6 @@ module.exports = {
   },
 
   /**
-   * Set the options state for this field.
-   * @param {array} data - an array of option configs
-   */
-  updateOptions: function(data){
-    this.setState({ options: data });
-  },
-
-  /**
    * Load in the options state either from config props or
    * ask the parent app to load them from the server.
    * @fires field:mount:{id}
@@ -32,7 +24,7 @@ module.exports = {
       Dispatcher.register( this.props.id + '-LOAD-OPTIONS' , function(action,data){
         if( action === constants.actions.LOAD_OPTIONS &&
             data.id === this.props.id) {
-          this.updateOptions(data);
+          this.setState({options: data.options});
         }
       }.bind(this));
       var eventData = {
