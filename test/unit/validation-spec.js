@@ -67,7 +67,7 @@ describe('Validation', function() {
 
   });
 
-  it('call validation rules and get SUCCESS', function (done) {
+  it('call validation rules and get FAILURE', function (done) {
 
     var fixture = {
       'id': 'idtest',
