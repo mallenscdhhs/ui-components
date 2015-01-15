@@ -4,7 +4,6 @@ var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
 var Dispatcher = require('fluxify').dispatcher;
 var constants = require('./constants');
-
 var _ = require('lodash');
 
 /**
@@ -70,15 +69,20 @@ module.exports = React.createClass({
    * @fires field:value:change
    */
   onOptionSelected: function(label){
-    console.log(label);
     var opt = _.find(this.state.options, {label: label});
     this.setState({value: opt.value});
-    var eventData = {
-      id: this.props.id,
-      name: this.props.name,
-      value: this.state.value
-    };
-    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+    Dispatcher.dispatch({
+      'actionType' : constants.actions.FIELD_VALUE_CHANGE,
+      'data' : {
+        id: this.props.id,
+        name: this.props.name,
+        value: opt.value
+      }
+    });
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState){
+    return !!nextState.options.length;
   },
 
   /**
