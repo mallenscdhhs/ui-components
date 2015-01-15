@@ -18,7 +18,7 @@ module.exports = Flux.createStore({
      * @param updater {function} Method to update store
      * @param data {object} Field props
      */
-    "field:value:change" : function (updater, data) {
+    "fieldValueChange" : function (updater, data) {
 
       // Session Data Callback
       // When Session data has been gathered, will fire this event, and
@@ -39,32 +39,32 @@ module.exports = Flux.createStore({
             };
             // Call Validation API with payload
             $.post(configuration.API.validation, requestPayload)
-            .done(function (resp) {
-              // Successful call, prepare resp to UI
-              var hasError = false;
-              var errorMessage = '';
-              if (resp.operationStatus === 'FAILURE') {
-                hasError = true;
-                var errorsMgs = [];
-                _.each(resp.errors,function(err){
-                  errorsMgs.push(err.errorDesc);
-                });
-                errorMessage = errorsMgs.join('');
-              }
-              // Update Component by setting the validation error indicator 'hasError' and 'errorMessage',
-              // using the FIELD_VALIDATION_ERROR event
-              Flux.doAction(
-                constants.actions.FIELD_VALIDATION_ERROR ,
-                _.merge(data,{'hasError' : hasError , 'errorMessage' : errorMessage})
-              );
-            })
-            .fail(function(){
-              // Error reaching API endpoint, throw generic error
-              Flux.doAction(
-                constants.actions.FIELD_VALIDATION_ERROR ,
-                _.merge(data,{'hasError' : true , 'errorMessage' : 'Unable to call validation rules API.'})
-              );
-            });
+              .done(function (resp) {
+                // Successful call, prepare resp to UI
+                var hasError = false;
+                var errorMessage = '';
+                if (resp.operationStatus === 'FAILURE') {
+                  hasError = true;
+                  var errorsMgs = [];
+                  _.each(resp.errors,function(err){
+                    errorsMgs.push(err.errorDesc);
+                  });
+                  errorMessage = errorsMgs.join('');
+                }
+                // Update Component by setting the validation error indicator 'hasError' and 'errorMessage',
+                // using the FIELD_VALIDATION_ERROR event
+                Flux.doAction(
+                  constants.actions.FIELD_VALIDATION_ERROR ,
+                  _.merge(data,{'hasError' : hasError , 'errorMessage' : errorMessage})
+                );
+              })
+              .fail(function(){
+                // Error reaching API endpoint, throw generic error
+                Flux.doAction(
+                  constants.actions.FIELD_VALIDATION_ERROR ,
+                  _.merge(data,{'hasError' : true , 'errorMessage' : 'Unable to call validation rules API.'})
+                );
+              });
           }else{
             throw new Error('API Endpoints not configured.');
           }
