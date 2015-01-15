@@ -1,0 +1,13 @@
+{
+  "type": "field",
+  "config": {
+    "type": "select",
+    "id": "test",
+    "name": "test",
+    "label": "Test",
+    "options": {
+      "name": "test",
+      "items": [{"value": "test", "label": "test"}]
+    }
+  }
+}
