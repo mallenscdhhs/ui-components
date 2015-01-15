@@ -1,7 +1,8 @@
 'use-strict';
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
-var Dispatcher = require('fluxify').dispatcher;
+var ValidationMixin = require('./ValidationMixin');
+var Flux = require('fluxify');
 var constants = require('./constants');
 var _ = require('lodash');
 require('pen');
@@ -11,7 +12,7 @@ module.exports = React.createClass({
 
   displayName: 'ContentEditor',
 
-  mixins: [FieldMixin],
+  mixins: [FieldMixin, ValidationMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -62,7 +63,7 @@ module.exports = React.createClass({
       'name': this.props.name,
       'value': value
     };
-    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , eventData  );
   },
 
   getInitialState: function(){

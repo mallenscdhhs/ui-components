@@ -21,10 +21,10 @@ module.exports = {
       var depName = this.props.dependency.id;
       var depValues = this.props.dependency.value.split('|');
 
-      Dispatcher.register( this.props.id + '-DEP-CHANGE' , function(payload){
-        if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
-            payload.data.id === depName &&
-            depValues.indexOf(payload.data.value) >= 0) {
+      Dispatcher.register( this.props.id + '-DEP-CHANGE' , function(action,data){
+        if( action === constants.actions.FIELD_VALUE_CHANGE &&
+            data.id === depName &&
+            depValues.indexOf(data.value) >= 0) {
           // Change from initial display state.
           this.setState({'display': !initState});
         }else{

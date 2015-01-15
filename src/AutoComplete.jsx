@@ -2,7 +2,8 @@ var React = require('react');
 var update = require('react/lib/update');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
-var Dispatcher = require('fluxify').dispatcher;
+var ValidationMixin = require('./ValidationMixin');
+var Flux = require('fluxify');
 var constants = require('./constants');
 
 var _ = require('lodash');
@@ -58,7 +59,7 @@ module.exports = React.createClass({
     };
   },
 
-  mixins: [OptionsMixin],
+  mixins: [OptionsMixin, ValidationMixin],
 
   statics: {
     getOptionLabels: getOptionLabels
@@ -78,7 +79,7 @@ module.exports = React.createClass({
       name: this.props.name,
       value: this.state.value
     };
-    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , eventData );
   },
 
   /**

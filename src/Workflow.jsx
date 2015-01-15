@@ -6,7 +6,8 @@ var Tree = require('./Tree');
 var Action = require('./Action');
 var GridRow = require('./GridRow');
 var GridColumn = require('./GridColumn');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
+var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 /**
  * Build nested data structure for rendering a Tree.
@@ -132,12 +133,12 @@ module.exports = React.createClass({
    * Subscribe to workflow events.
    */
   componentDidMount: function(){
-    Dispatcher.register( this.props.id + '-WORKFLOW' , function(payload){
-      if( payload.actionType === constants.actions.TREE_LOAD_PAGE) {
-        this.handleDirect(payload.data.id);
-      }else if( payload.actionType === constants.actions.WORKFLOW_PREVIOUS_PAGE){
+    Dispatcher.register( this.props.id + '-WORKFLOW' , function(action,data){
+      if( action === constants.actions.TREE_LOAD_PAGE) {
+        this.handleDirect(data.id);
+      }else if( action === constants.actions.WORKFLOW_PREVIOUS_PAGE){
         this.handlePrevious();
-      }else if( payload.actionType === constants.actions.WORKFLOW_NEXT_PAGE){
+      }else if( action === constants.actions.WORKFLOW_NEXT_PAGE){
         this.handleNext();
       }
     }.bind(this));
@@ -162,7 +163,7 @@ module.exports = React.createClass({
       nextPage: this.state.flow[pageId].next,
       previousPage: this.state.flow[pageId].previous
     });
-    Dispatcher.dispatch( { 'actionType' : constants.actions.WORKFLOW_LOAD_PAGE , 'data' : {'page':pageId} } );
+    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
   },
 
   /**

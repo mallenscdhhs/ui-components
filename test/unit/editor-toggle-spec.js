@@ -31,9 +31,9 @@ describe('EditorToggle', function(){
       this.handler = function(){};
       var editComponent = TestUtils.findRenderedDOMComponentWithClass(this.component, 'edit-component');
       spyOn(this, 'handler');
-      Dispatcher.register( 'TOGGLE-TEST-1', function(payload){
-        if( payload.actionType === constants.actions.COMPONENT_EDIT) {
-          this.handler(payload.data);
+      Dispatcher.register( 'TOGGLE-TEST-1', function(action,data){
+        if( action === constants.actions.COMPONENT_EDIT) {
+          this.handler(data);
           Dispatcher.unregister( 'TOGGLE-TEST-1');
         }
       }.bind(this));
@@ -65,9 +65,9 @@ describe('EditorToggle', function(){
       this.handler = function(){};
       var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'add-component');
       spyOn(this, 'handler');
-      Dispatcher.register( 'TOGGLE-TEST-2', function(payload){
-        if( payload.actionType === constants.actions.COMPONENT_ADD) {
-          this.handler(payload.data);
+      Dispatcher.register( 'TOGGLE-TEST-2', function(action,data){
+        if( action === constants.actions.COMPONENT_ADD) {
+          this.handler(data);
           Dispatcher.unregister( 'TOGGLE-TEST-2');
         }
       }.bind(this));

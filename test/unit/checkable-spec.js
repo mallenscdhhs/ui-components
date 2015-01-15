@@ -40,12 +40,12 @@ describe('Checkable', function(){
   });
 
   it('can publish a radio input value on change', function(done){
-    Dispatcher.register( 'CHECKABLE-TEST-1', function(payload){
-      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
-          payload.data.id === fixture.config.id) {
-          expect(payload.data.id).toEqual(fixture.config.id);
-          expect(payload.data.name).toEqual(fixture.config.name);
-          expect(payload.data.value).toBe(fixture.config.value);
+    Dispatcher.register( 'CHECKABLE-TEST-1', function(action,data){
+      if( action === constants.actions.FIELD_VALUE_CHANGE &&
+          data.id === fixture.config.id) {
+          expect(data.id).toEqual(fixture.config.id);
+          expect(data.name).toEqual(fixture.config.name);
+          expect(data.value).toBe(fixture.config.value);
           Dispatcher.unregister( 'CHECKABLE-TEST-1' );
           done();
       }
@@ -56,12 +56,12 @@ describe('Checkable', function(){
   });
 
   it('will publish a value of "null" if input is not checked', function(done){
-    Dispatcher.register( 'CHECKABLE-TEST-2', function(payload){
-      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
-          payload.data.id === fixture.config.id) {
-          expect(payload.data.id).toEqual(fixture.config.id);
-          expect(payload.data.name).toEqual(fixture.config.name);
-          expect(payload.data.value).toBe(null);
+    Dispatcher.register( 'CHECKABLE-TEST-2', function(action,data){
+      if( action === constants.actions.FIELD_VALUE_CHANGE &&
+          data.id === fixture.config.id) {
+          expect(data.id).toEqual(fixture.config.id);
+          expect(data.name).toEqual(fixture.config.name);
+          expect(data.value).toBe(null);
           Dispatcher.unregister( 'CHECKABLE-TEST-2' );
           done();
       }
@@ -72,12 +72,12 @@ describe('Checkable', function(){
   });
 
   it('will publish a "fieldGroup:item:change" event if input is part of a group', function(done){
-    Dispatcher.register( 'CHECKABLE-TEST-3', function(payload){
-      if( payload.actionType === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
-          payload.data.id === fixture.config.id) {
-          expect(payload.data.id).toEqual(fixture.config.id);
-          expect(payload.data.name).toEqual(fixture.config.name);
-          expect(payload.data.value).toBe(null);
+    Dispatcher.register( 'CHECKABLE-TEST-3', function(action,data){
+      if( action === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
+          data.id === fixture.config.id) {
+          expect(data.id).toEqual(fixture.config.id);
+          expect(data.name).toEqual(fixture.config.name);
+          expect(data.value).toBe(null);
           Dispatcher.unregister( 'CHECKABLE-TEST-3' );
           done();
       }

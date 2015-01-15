@@ -1,6 +1,7 @@
 'use-strict';
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
+var ValidationMixin = require('./ValidationMixin');
 var _ = require('lodash');
 var inputProps = ['id', 'name', 'value', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
 
@@ -8,7 +9,7 @@ module.exports = React.createClass({
 
   displayName: 'Textarea',
 
-  mixins: [FieldMixin],
+  mixins: [FieldMixin, ValidationMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

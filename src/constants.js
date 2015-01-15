@@ -11,6 +11,9 @@ module.exports = {
         "TREE_LOAD_PAGE"              : "tree:load:page",
         "WORKFLOW_PREVIOUS_PAGE"      : "workflow:previous:page",
         "WORKFLOW_NEXT_PAGE"          : "workflow:next:page",
-        "WORKFLOW_LOAD_PAGE"          : "workflow:load:page"
+        "WORKFLOW_LOAD_PAGE"          : "workflow:load:page",
+        "GET_SESSION_VALUES"          : "get:session:values",
+        "VALIDATE"                    : "validate",
+        "SESSION_VALUES_LOADED"       : "session:values:loaded"
     }
 };
