@@ -50,6 +50,7 @@ module.exports = {
       id: this.props.id,
       name: this.props.name,
       value: event.target.value,
+      type: this.props.type,
       rules : this.props.rules
     };
     Flux.doAction( constants.actions.FIELD_VALUE_CHANGE ,  eventData  );
