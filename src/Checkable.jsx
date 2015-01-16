@@ -76,7 +76,8 @@ module.exports = React.createClass({
       'checkbox': this.props.type === 'checkbox'
     });
     var editorToggle = this.props.isFieldGroup? '': <EditorToggle {...this.props}/>;
-    var props = _.pick(this.props, ['type', 'id', 'name', 'disabled', 'value', 'aria-describedby', 'checked']);
+    var props = _.pick(this.props, ['type', 'id', 'name', 'disabled', 'value', 'aria-describedby']);
+    props.checked = this.state.checked;
     return (
       <div className={classNames}>
         {editorToggle}
