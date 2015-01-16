@@ -2,7 +2,8 @@
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
+var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
 var classSet = require('react/lib/cx');
@@ -61,7 +62,7 @@ module.exports = React.createClass({
         value: value
     };
     var actionType = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
-    Dispatcher.dispatch( { 'actionType' : actionType , 'data' : eventData  });
+    Flux.doAction( actionType , eventData  );
   },
 
   render: function(){

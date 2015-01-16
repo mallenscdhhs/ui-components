@@ -20,10 +20,10 @@ describe('OptionsMixin', function(){
         items: { $set: null }
       }
     });
-    Dispatcher.register('test-opt-mixin', function(action){
-      if ( action.actionType === constants.actions.SEND_OPTIONS ) {
-        expect(action.data.fieldId).toEqual(config.id);
-        expect(action.data.resourceName).toEqual(config.options.name);
+    Dispatcher.register('test-opt-mixin', function(action,data){
+      if ( action === constants.actions.SEND_OPTIONS ) {
+        expect(data.fieldId).toEqual(config.id);
+        expect(data.resourceName).toEqual(config.options.name);
         Dispatcher.unregister('test-opt-mixin');
         done();
       }
@@ -37,27 +37,24 @@ describe('OptionsMixin', function(){
         items: { $set: null }
       }
     });
-    var data = {
-      id: config.id,
-      options: [{value:'foo', label:'Foo'}]
+    var dataFixture = {
+      'id': config.id,
+      'options': [{value:'foo', label:'Foo'}]
     };
     var component;
-    Dispatcher.register('test-opt-mixin-send', function(action){
-      if ( action.actionType === constants.actions.SEND_OPTIONS ) {
-        Flux.doAction({
-          actionType: constants.actions.LOAD_OPTIONS,
-          data: data
-        });
+    Dispatcher.register('test-opt-mixin-send', function(action,data){
+      if ( action === constants.actions.SEND_OPTIONS ) {
+        Flux.doAction(constants.actions.LOAD_OPTIONS,dataFixture);
         Dispatcher.unregister('test-opt-mixin-send');
       }
     });
-    Dispatcher.register('test-opt-mixin-load', function(action){
-      if ( action.actionType === constants.actions.LOAD_OPTIONS ) {
-        expect(action.data.id).toEqual(config.id);
-        expect(action.data.options).toEqual(data.options);
+    Dispatcher.register('test-opt-mixin-load', function(action,data){
+      if ( action === constants.actions.LOAD_OPTIONS ) {
+        expect(data.id).toEqual(config.id);
+        expect(data.options).toEqual(dataFixture.options);
         Dispatcher.unregister('test-opt-mixin-load');
         setTimeout(function(){
-          expect(component.state.options).toEqual(data.options);
+          expect(component.state.options).toEqual(dataFixture.options);
           done();
         }, 500);
       }

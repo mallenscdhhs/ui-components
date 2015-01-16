@@ -40,12 +40,12 @@ describe('FieldGroup', function(){
     var checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
     var numChanges = 0;
     expect(comp.state.value).toEqual([]);
-    Dispatcher.register( 'FIELD-GROUP-TEST-1', function(payload){
-      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
-          payload.data.name === fixture.name) {
+    Dispatcher.register( 'FIELD-GROUP-TEST-1', function(action,data){
+      if( action === constants.actions.FIELD_VALUE_CHANGE &&
+          data.name === fixture.name) {
         numChanges += 1;
-        if ( numChanges === 2 && payload.data.id === fixture.id ) {
-          expect(payload.data.value.join(',')).toEqual('1,2');
+        if ( numChanges === 2 && data.id === fixture.id ) {
+          expect(data.value.join(',')).toEqual('1,2');
           Dispatcher.unregister( 'FIELD-GROUP-TEST-1');
           done();
         }
@@ -62,11 +62,11 @@ describe('FieldGroup', function(){
     var radios = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
     var numChanges = 0;
     expect(comp.state.value).toEqual('');
-    Dispatcher.register( 'FIELD-GROUP-TEST-2', function(payload){
-      if( payload.actionType === constants.actions.FIELD_VALUE_CHANGE &&
-          payload.data.name === fixture.name) {
+    Dispatcher.register( 'FIELD-GROUP-TEST-2', function(action,data){
+      if( action === constants.actions.FIELD_VALUE_CHANGE &&
+          data.name === fixture.name) {
         numChanges += 1;
-        expect(payload.data.value).toEqual(numChanges.toString());
+        expect(data.value).toEqual(numChanges.toString());
         if ( numChanges === 2 ) {
           Dispatcher.unregister( 'FIELD-GROUP-TEST-2');
           done();

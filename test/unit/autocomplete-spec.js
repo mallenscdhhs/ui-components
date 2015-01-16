@@ -28,9 +28,9 @@ describe('AutoComplete', function(){
     var listItems = TestUtils.scryRenderedDOMComponentsWithClass(component, 'list-group-item');
     expect(listItems.length).toEqual(2);
 
-    Dispatcher.register('ac-test', function(action){
-      if ( action.actionType === constants.actions.FIELD_VALUE_CHANGE ) {
-        expect(action.data.value).toEqual('four');
+    Dispatcher.register('ac-test', function(action,data){
+      if ( action === constants.actions.FIELD_VALUE_CHANGE ) {
+        expect(data.value).toEqual('four');
         done();
         Dispatcher.unregister('ac-test');
       }

@@ -3,10 +3,12 @@ var update = require('react/lib/update');
 var Checkable = require('./Checkable');
 var FieldMixin = require('./FieldMixin');
 var EditorToggle = require('./EditorToggle');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
+var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var OptionsMixin = require('./OptionsMixin');
 var DependencyMixin = require('./DependencyMixin');
+var ValidationMixin = require('./ValidationMixin');
 var _ = require('lodash');
 
 /**
@@ -28,7 +30,7 @@ module.exports = React.createClass({
 
   displayName: 'FieldGroup',
 
-  mixins: [FieldMixin, OptionsMixin, DependencyMixin],
+  mixins: [FieldMixin, ValidationMixin, OptionsMixin, DependencyMixin],
 
   statics: {
     isOptionChecked: isOptionChecked
@@ -63,25 +65,26 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function(){
-    Dispatcher.register( this.props.id + '-FIELD-GROUP-CHANGE' , function(payload){
-      if( payload.actionType === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
-          payload.data.name === this.props.name &&
-          payload.data.id.lastIndexOf(this.props.id) >= 0) {
-        var value = payload.data.value;
+    Dispatcher.register( this.props.id + '-FIELD-GROUP-CHANGE' , function(action,data){
+      if( action === constants.actions.FIELD_GROUP_VALUE_CHANGE &&
+          data.name === this.props.name &&
+          data.id.lastIndexOf(this.props.id) >= 0) {
+        var value = data.value;
         if ( this.props.type === 'checkbox' ) {
-          if ( payload.data.value === null ) {
-            value = _.filter(this.state.value, {'name': payload.data.name});
+          if ( data.value === null ) {
+            value = _.filter(this.state.value, {'name': data.name});
           } else {
-            value = this.state.value.concat([payload.data.value]);
+            value = this.state.value.concat([data.value]);
           }
         }
         this.setState({'value': value});
         var eventData = {
           id: this.props.id,
           name: this.props.name,
-          value: value
+          value: value,
+          rules : this.props.rules
         };
-        Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+        Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , eventData );
       }
     }.bind(this));
   },

@@ -2,7 +2,7 @@ var React = require('react');
 var update = require('react/lib/update');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
 var constants = require('./constants');
 var _ = require('lodash');
 
@@ -71,13 +71,10 @@ module.exports = React.createClass({
   onOptionSelected: function(label){
     var opt = _.find(this.state.options, {label: label});
     this.setState({value: opt.value});
-    Dispatcher.dispatch({
-      'actionType' : constants.actions.FIELD_VALUE_CHANGE,
-      'data' : {
+    Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {
         id: this.props.id,
         name: this.props.name,
         value: opt.value
-      }
     });
   },
 

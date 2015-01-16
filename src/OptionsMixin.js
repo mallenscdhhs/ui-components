@@ -1,5 +1,6 @@
 var React = require('react');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
+var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 
 module.exports = {
@@ -20,17 +21,17 @@ module.exports = {
     if ( this.props.options.items ) {
       this.setState({options: this.props.options.items});
     } else {
-      Dispatcher.register( this.props.id + '-LOAD-OPTIONS' , function(payload){
-        if( payload.actionType === constants.actions.LOAD_OPTIONS &&
-            payload.data.id === this.props.id) {
-          this.setState({options: payload.data.options});
+      Dispatcher.register( this.props.id + '-LOAD-OPTIONS' , function(action,data){
+        if( action === constants.actions.LOAD_OPTIONS &&
+            data.id === this.props.id) {
+          this.setState({options: data.options});
         }
       }.bind(this));
       var eventData = {
         'resourceName' : this.props.options.name,
         'fieldId' : this.props.id
       };
-      Dispatcher.dispatch( { 'actionType' : constants.actions.SEND_OPTIONS , 'data' : eventData } );
+      Flux.doAction( constants.actions.SEND_OPTIONS , eventData );
     }
   },
 
