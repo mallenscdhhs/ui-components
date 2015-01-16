@@ -55,13 +55,15 @@ module.exports = React.createClass({
    */
   handleChange: function(e){
     var value = e.target.checked? this.props.value : null;
-    this.setState({checked: e.target.checked});
     var eventData = {
-        id: this.props.id,
-        name: this.props.name,
-        value: value
+      id: this.props.id,
+      name: this.props.name,
+      type: this.props.type,
+      rules : this.props.rules,
+      value: value
     };
     var actionType = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
+    this.setState({checked: e.target.checked});
     Flux.doAction( actionType , eventData  );
   },
 
