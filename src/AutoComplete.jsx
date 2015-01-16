@@ -2,7 +2,6 @@ var React = require('react');
 var update = require('react/lib/update');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
-var ValidationMixin = require('./ValidationMixin');
 var Flux = require('fluxify');
 var constants = require('./constants');
 var _ = require('lodash');

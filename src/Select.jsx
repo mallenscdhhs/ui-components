@@ -2,7 +2,6 @@
 var React = require('react');
 var OptionsMixin = require('./OptionsMixin');
 var FieldMixin = require('./FieldMixin');
-var ValidationMixin = require('./ValidationMixin');
 var _ = require('lodash');
 var inputProps = ['id', 'name', 'value', 'multiple', 'className', 'aria-describedby'];
 

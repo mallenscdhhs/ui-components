@@ -1,7 +1,6 @@
 'use-strict';
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
-var ValidationMixin = require('./ValidationMixin');
 var _ = require('lodash');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;

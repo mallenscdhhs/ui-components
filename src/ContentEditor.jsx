@@ -1,7 +1,6 @@
 'use-strict';
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
-var ValidationMixin = require('./ValidationMixin');
 var Flux = require('fluxify');
 var constants = require('./constants');
 var _ = require('lodash');
@@ -12,7 +11,7 @@ module.exports = React.createClass({
 
   displayName: 'ContentEditor',
 
-  mixins: [FieldMixin, ValidationMixin],
+  mixins: [FieldMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
