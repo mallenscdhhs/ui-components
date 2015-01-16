@@ -2,9 +2,8 @@ var React = require('react');
 var update = require('react/lib/update');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
 var constants = require('./constants');
-
 var _ = require('lodash');
 
 /**
@@ -42,7 +41,6 @@ module.exports = React.createClass({
     return {
       ref: 'typeahead',
       className: "field-autocomplete",
-      onOptionSelected: this.onOptionSelected,
       customClasses: {
         input: 'form-control',
         results: 'list-group',
@@ -73,12 +71,15 @@ module.exports = React.createClass({
   onOptionSelected: function(label){
     var opt = _.find(this.state.options, {label: label});
     this.setState({value: opt.value});
-    var eventData = {
-      id: this.props.id,
-      name: this.props.name,
-      value: this.state.value
-    };
-    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+    Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {
+        id: this.props.id,
+        name: this.props.name,
+        value: opt.value
+    });
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState){
+    return !!nextState.options.length;
   },
 
   /**
@@ -90,11 +91,9 @@ module.exports = React.createClass({
   render: function(){
     if ( this.state.options.length ){
       var config = update(this.props, {
-        options: {
-          $set: getOptionLabels(this.state.options)
-        }
+        options: { $set: getOptionLabels(this.state.options) }
       });
-      return <Typeahead {...config} />;
+      return <Typeahead {...config} onOptionSelected={this.onOptionSelected} />;
     } else {
       return <div className="field-autocomplete"></div>;
     }

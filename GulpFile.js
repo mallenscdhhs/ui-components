@@ -53,7 +53,7 @@ gulp.task('transpile', ['clean'], function(){
 
 gulp.task('build:Components', ['transpile'], function(){
   var lodashPath = require.resolve('lodash');
-  var reactPath = require.resolve('react/addons');
+  var reactPath = require.resolve('react');
   return browserify(['./dist/build/main.js'],{'standalone': 'Components'})
     .exclude(lodashPath)
     .exclude(reactPath)

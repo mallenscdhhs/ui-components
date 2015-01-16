@@ -1,7 +1,7 @@
 'use-strict';
 var React = require('react');
 var _ = require('lodash');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
 var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
@@ -45,7 +45,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleClick: function(){
-    Dispatcher.dispatch( { 'actionType' : this.props.event , 'data' : this.props });
+    Flux.doAction( this.props.event ,  this.props );
   },
 
   /**

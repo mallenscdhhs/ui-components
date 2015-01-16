@@ -1,11 +1,11 @@
 'use-strict';
 var React = require('react');
 var _ = require('lodash');
-var Dispatcher = require('fluxify').dispatcher;
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
-var FieldMixin = require('./FieldMixin');
 var FieldGroup = require('./FieldGroup');
+var FieldMixin = require('./FieldMixin');
+var ValidationMixin = require('./ValidationMixin');
 var DependencyMixin = require('./DependencyMixin');
 var Checkable = require('./Checkable');
 var Select = require('./Select');
@@ -18,7 +18,7 @@ module.exports = React.createClass({
 
   displayName: 'Field',
 
-  mixins: [FieldMixin, DependencyMixin],
+  mixins: [FieldMixin, ValidationMixin, DependencyMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -43,29 +43,6 @@ module.exports = React.createClass({
     return {
       componentType: 'field'
     };
-  },
-
-  /**
-   * Upon mounting, subscribe to any dependency that the field has, an monitor the field
-   * for events that would require you to make a state change.
-   * @returns {void}
-   */
-  componentDidMount: function(){
-    // Listen for validation errors from application
-    Dispatcher.register( this.props.id + '-VALIDATION-ERROR' , function(payload){
-      if( payload.actionType === constants.actions.FIELD_VALIDATION_ERROR &&
-          payload.data.id === this.props.id) {
-        this.setState({'hasError': payload.data.hasError,'errorMessage': payload.data.errorMessage});
-      }
-    }.bind(this));
-  },
-
-  /**
-   * UnSubscribe from any dependent field events that the current field was listening to.
-   * @returns {void}
-   */
-  componentWillUnmount: function(){
-    Dispatcher.unregister( this.props.id + '-VALIDATION-ERROR' );
   },
 
   /**

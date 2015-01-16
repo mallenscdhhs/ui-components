@@ -4,3 +4,4 @@ dist
 test/lib/specs.js
 npm-debug.log
 .idea/
+.c9/

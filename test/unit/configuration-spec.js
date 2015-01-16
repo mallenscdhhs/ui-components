@@ -14,9 +14,7 @@ var apiFixture = {
 describe('Configuration', function() {
 
   it('can load a passed in config', function () {
-    expect(configuration.API.validate).toBeUndefined();
-    expect(configuration.API.options).toBeUndefined();
-    expect(configuration.API.page).toBeUndefined();
+    expect(configuration.API).toBeUndefined();
     Components.configure(apiFixture);
     expect(configuration.API.validate).toEqual(apiFixture.API.validate);
     expect(configuration.API.options).toEqual(apiFixture.API.options);

@@ -1,5 +1,5 @@
 var React = require('react');
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
 var constants = require('./constants');
 var cx = require('react/lib/cx');
 var _ = require('lodash');
@@ -49,8 +49,10 @@ module.exports = {
     var eventData = {
       id: this.props.id,
       name: this.props.name,
-      value: event.target.value
+      value: event.target.value,
+      type: this.props.type,
+      rules : this.props.rules
     };
-    Dispatcher.dispatch( { 'actionType' : constants.actions.FIELD_VALUE_CHANGE , 'data' : eventData } );
+    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE ,  eventData  );
   }
 };
