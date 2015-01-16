@@ -49,9 +49,19 @@ function buildComponentTree(schema, head){
     }
 
     if ( props.type === 'field' && _.has(schema.model, props.config.id) ) {
-      props = update(props, { config: {
-        value: {$set: schema.model[props.config.id]}
-      }});
+      // checkboxes and radios need the "checked" property, not value
+      if ( /checkbox|radio/.test(props.config.type) ) {
+        // if model value is "true", then set "checked" to true
+        if ( schema.model[props.config.id] ) {
+          props = update(props, {config: {
+            checked: { $set: true }
+          }});
+        }
+      } else {
+        props = update(props, { config: {
+          value: {$set: schema.model[props.config.id]}
+        }});
+      }
     }
 
     element = elements[props.type];
