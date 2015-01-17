@@ -19,7 +19,9 @@ module.exports = Flux.createStore({
   actionCallbacks: {
 
     "sendResourceOptions" : function(updater,data){
-      if (configuration.API && configuration.API.options) {
+      if ( !configuration.API || !configuration.API.options ) {
+        throw new Error('API endpoint for options not configured.');
+      } else {
         var requestPayload = {
           "payload": {
             "fieldId": data.fieldId,
@@ -40,8 +42,6 @@ module.exports = Flux.createStore({
               _.merge(data, {'hasError': true, 'errorMessage': 'Error calling options API.'})
             );
           });
-      }else{
-        throw new Error('API endpoint for options not configured.');
       }
     }
 
