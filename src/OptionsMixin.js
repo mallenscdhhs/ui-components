@@ -15,7 +15,7 @@ module.exports = {
   /**
    * Load in the options state either from config props or
    * ask the parent app to load them from the server.
-   * @fires field:mount:{id}
+   * @fires SEND_RESOURCE_OPTIONS
    */
   componentDidMount: function(){
     // Register LOAD_OPTIONS callback
@@ -29,17 +29,15 @@ module.exports = {
     // Init Options
     if ( this.props.options.items ) {
       this.setState({'options': this.props.options.items});
-    } else {
-      if(this.props.options.name) {
-        Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
-          'resourceName': this.props.options.name,
-          'fieldId'     : this.props.id
-        });
-      }else{
-        Flux.doAction(constants.actions.SEND_OPTIONS, {
-          'fieldId'     : this.props.id
-        });
-      }
+    } else if(this.props.options.name) {
+      Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
+        'resourceName': this.props.options.name,
+        'fieldId' : this.props.id
+      });
+    }else{
+      Flux.doAction(constants.actions.SEND_OPTIONS, {
+        'fieldId' : this.props.id
+      });
     }
   },
 

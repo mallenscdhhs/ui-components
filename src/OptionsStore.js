@@ -3,6 +3,11 @@ var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var configuration = require('./configuration');
 var _ = require('lodash');
+
+/**
+ * Responsible for fetching and returning option data.
+ * @module OptionsStore
+ */
 module.exports = Flux.createStore({
 
   id: 'OptionsStore',
@@ -21,7 +26,6 @@ module.exports = Flux.createStore({
             "resourceName" : data.resourceName
           }
         };
-        // Call Validation API with payload
         $.post(configuration.API.options, requestPayload)
           .done(function (resp) {
             var options = [];
