@@ -24,7 +24,7 @@ describe('OptionsMixin', function(){
 
   it('can request resource options to be loaded', function(done){
 
-    fixture = {
+    var reqFixture = {
       "type": "field",
       "config": {
         "type": "select",
@@ -37,39 +37,46 @@ describe('OptionsMixin', function(){
       }
     };
 
-    var resourcePayload = [
-      {"label" : "resourceOne", "value" : 1},
-      {"label" : "resourceTwo", "value" : 2}
-    ];
+    var resourcePayload ={
+      "module" : "individualProvInfo",
+      "operation" : "lookup",
+      "payloadClassName" : "",
+      "responsePayload" : {
+        "result" : {
+          "test" : [
+            {"description" : "resourceOne", "code" : 1},
+            {"description" : "resourceTwo", "code" : 2}
+          ]
+        }
+      }
+    };
 
     spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
       expect(params.url).toEqual("/api/resource");
-      expect(params.data.payload.fieldId).toEqual(fixture.config.id);
-      expect(params.data.payload.resourceName).toEqual(fixture.config.options.name);
+      expect(params.data.payload.lookup[0]).toEqual(reqFixture.config.options.name);
       ajaxMock.resolve(resourcePayload);
       return ajaxMock.promise();
     });
 
     Dispatcher.register('test-opt-mixin-LOAD-RESOURCE', function(action,items){
       if ( action === constants.actions.LOAD_OPTIONS ) {
-        expect(items[0].label).toEqual(resourcePayload[0].label);
-        expect(items[1].label).toEqual(resourcePayload[1].label);
-        Dispatcher.unregister('test-opt-mixin');
+        expect(items[0].description).toEqual(resourcePayload.responsePayload.result[reqFixture.config.options.name][0].description);
+        Dispatcher.unregister('test-opt-mixin-LOAD-RESOURCE');
         done();
       }
     });
 
     Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
-      "resourceName" : fixture.config.options.name,
-      "fieldId" : fixture.config.id
+      "resourceName" : reqFixture.config.options.name,
+      "fieldId" : reqFixture.config.id
     });
 
   });
 
   it('can request custom options to be loaded', function(done){
 
-    fixture = {
+    var custFixture = {
       "type": "field",
       "config": {
         "type": "select",
@@ -82,15 +89,14 @@ describe('OptionsMixin', function(){
       }
     };
 
-    var resourcePayload = [
-      {"label" : "resourceOne", "value" : 1},
-      {"label" : "resourceTwo", "value" : 2}
+    var customPayload = [
+      {"description" : "customOne", "code" : 1},
+      {"description" : "customTwo", "code" : 2}
     ];
 
     Dispatcher.register('test-opt-mixin-LOAD-CUSTOM', function(action,items){
       if ( action === constants.actions.LOAD_OPTIONS) {
-        expect(items[0].label).toEqual(resourcePayload[0].label);
-        expect(items[1].label).toEqual(resourcePayload[1].label);
+        expect(items[0].description).toEqual(customPayload[0].description);
         Dispatcher.unregister('test-opt-mixin-LOAD-CUSTOM');
         done();
       }
@@ -98,14 +104,14 @@ describe('OptionsMixin', function(){
 
     Dispatcher.register('test-opt-mixin-SEND-CUSTOM-OPTIONS', function(action,data){
       if ( action === constants.actions.SEND_OPTIONS ) {
-        expect(data.fieldId).toEqual(fixture.config.id);
-        Flux.doAction(constants.actions.LOAD_OPTIONS,resourcePayload);
+        expect(data.fieldId).toEqual(custFixture.config.id);
+        Flux.doAction(constants.actions.LOAD_OPTIONS,customPayload);
       }
       Dispatcher.unregister('test-opt-mixin-SEND-CUSTOM-OPTIONS');
     });
 
     Flux.doAction(constants.actions.SEND_OPTIONS, {
-      "fieldId" : fixture.config.id
+      "fieldId" : custFixture.config.id
     });
 
   });

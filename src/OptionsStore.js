@@ -23,16 +23,19 @@ module.exports = Flux.createStore({
         throw new Error('API endpoint for options not configured.');
       } else {
         var requestPayload = {
-          "payload": {
-            "fieldId": data.fieldId,
-            "resourceName" : data.resourceName
+          "module" : "",
+          "operation" : "lookup",
+          "payloadClassName": "",
+          "payload" : {
+            "lookup" : [data.resourceName]  // data.fieldId
           }
         };
+
         $.post(configuration.API.options, requestPayload)
           .done(function (resp) {
             var options = [];
-            if (resp && resp.length) {
-              options = resp;
+            if (resp && resp.responsePayload.result[data.resourceName].length) {
+              options = resp.responsePayload.result[data.resourceName];
             }
             Flux.doAction(constants.actions.LOAD_OPTIONS, options);
           })
