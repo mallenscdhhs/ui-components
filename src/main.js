@@ -24,7 +24,7 @@ function componentFactory(data){
  */
 function buildComponentTree(schema, head){
   var tree = [];
-  var list = schema.components;
+  var list = schema.components || {};
   var children = null;
   var element, factory;
   var props;
