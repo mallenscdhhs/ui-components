@@ -2,7 +2,11 @@ var React = require('react');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
-
+/**
+ * Manages component options
+ * @module OptionsMixins
+ * @type {{propTypes: {options: (isRequired|*)}, componentDidMount: Function, componentWillUnmount: Function}}
+ */
 module.exports = {
 
   propTypes: {
