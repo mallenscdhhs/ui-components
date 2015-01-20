@@ -80,4 +80,40 @@ describe('EditorToggle', function(){
 
   });
 
+
+  describe('remove component button', function(){
+
+    beforeEach(function(){
+      this.fixture = {type: 'form', componentType: 'form', name : 'testForm' };
+      this.form = React.createFactory(Components.elements.form);
+      this.component = TestUtils.renderIntoDocument(this.form(this.fixture));
+    });
+
+    it('will render the remove template', function(){
+      var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'config-editor');
+      expect(TestUtils.isDOMComponent(html)).toEqual(true);
+      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(1);
+      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'add-component').length).toEqual(1);
+      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'remove-component').length).toEqual(1);
+    });
+
+    it('will publish remove components event when "remove" is clicked', function(done){
+      this.handler = function(){};
+      var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'remove-component');
+      spyOn(this, 'handler');
+      Dispatcher.register( 'TOGGLE-TEST-REMOVE', function(action,data){
+        if( action === constants.actions.COMPONENT_REMOVE) {
+          this.handler(data);
+          Dispatcher.unregister( 'TOGGLE-TEST-REMOVE');
+        }
+      }.bind(this));
+      TestUtils.Simulate.click(btn);
+      setTimeout(function(){
+        expect(this.handler).toHaveBeenCalledWith(this.fixture);
+        done();
+      }.bind(this), 300);
+    });
+
+  });
+
 });
