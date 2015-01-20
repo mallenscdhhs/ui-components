@@ -17,7 +17,7 @@ module.exports = React.createClass({
   },
 
   /**
-   * Stop even prop and push event to Queue, enabling global app to open the config editor window.
+   * Stop event prop and push event to Queue, enabling global app to open the config editor window.
    * Publishes the component's props.
    * @fires component:add:new
    * @param e Event
@@ -26,6 +26,32 @@ module.exports = React.createClass({
     e.preventDefault();
     e.stopPropagation();
     Flux.doAction( constants.actions.COMPONENT_ADD ,  this.props);
+  },
+
+  /**
+   * Remove selected component
+   * @fires component:remove
+   * @param e
+   */
+  handleConfigRemove: function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    Flux.doAction( constants.actions.COMPONENT_REMOVE ,  this.props);
+  },
+
+  /**
+   * Show remove button unless the component is a page
+   * @param type
+   * @return {XML}
+   */
+  getRemoveButton: function(type){
+    if(type !== 'page'){
+      return (
+        <span onClick={this.handleConfigRemove} className="remove-component">
+          <span className="glyphicon glyphicon glyphicon-minus"></span>
+        </span>
+      );
+    }
   },
 
   /**
@@ -51,6 +77,7 @@ module.exports = React.createClass({
     return (
       <div className="config-editor">
         <span className="config-editor-label">{this.props.componentType}</span>
+        {this.getRemoveButton(this.props.componentType.toLowerCase())}
         {this.getAddButton(this.props.componentType.toLowerCase())}
         <span onClick={this.handleConfigEdit} className="edit-component">
           <span className="glyphicon glyphicon-cog"></span>
