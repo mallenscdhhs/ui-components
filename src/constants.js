@@ -7,6 +7,8 @@ module.exports = {
         "COMPONENT_EDIT"              : "componentEdit",
         "COMPONENT_ADD"               : "componentAdd",
         "SEND_OPTIONS"                : "sendOptions",
+        "SEND_RESOURCE_OPTIONS"       : "sendResourceOptions",
+        "SEND_CUSTOM_OPTIONS"         : "sendCustomOptions",
         "LOAD_OPTIONS"                : "loadOptions",
         "TREE_LOAD_PAGE"              : "treeLoadPage",
         "WORKFLOW_PREVIOUS_PAGE"      : "workflowPreviousPage",
