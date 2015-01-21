@@ -103,23 +103,27 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var numChildren = this.props.children.length;
-    var numColumns = getTotalColumns(this.props.rows);
-    var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);
-    var rows = distributeComponents(this.props.rows, this.props.children, indexDistro);
+    var numChildren = this.props.children && this.props.children.length ? this.props.children.length : 0;
+    if(numChildren) {
+      var numColumns = getTotalColumns(this.props.rows);
+      var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);
+      var rows = distributeComponents(this.props.rows, this.props.children, indexDistro);
 
-    return (
-      <div className="grid-layout">
-        {_.map(rows, function(row, i){
+      return (
+        <div className="grid-layout">
+        {_.map(rows, function (row, i) {
           return (
             <GridRow>
-              {_.map(row, function(col){
+              {_.map(row, function (col) {
                 return <GridColumn {...col}/>;
               })}
             </GridRow>
           );
         })}
-      </div>
-    );
+        </div>
+      );
+    }else{
+      return (<div className="grid-layout"></div>);
+    }
   }
 });
