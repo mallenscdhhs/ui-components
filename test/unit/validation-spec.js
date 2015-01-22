@@ -36,8 +36,8 @@ describe('Validation', function() {
     spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
       expect(params.url).toEqual("/api/rules");
-      expect(params.data.payload.rules[0]).toEqual(fixture.rules[0]);
-      expect(params.data.payload.input[0][fixture.name]).toEqual(fixture.value);
+      expect(params.data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(params.data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(successPayload);
       return ajaxMock.promise();
     });
@@ -88,14 +88,23 @@ describe('Validation', function() {
         "errorDesc" : "Field is not valid.",
         "level" : "INFO",
         "autoHide" : false
+      },{
+        "metadata" : {
+          "rule" : "BR_RULE2",
+          "params" : ["nameTest2"]
+        },
+        "errorCode" : "ERR_1002",
+        "errorDesc" : "Field is not long enough.",
+        "level" : "INFO",
+        "autoHide" : false
       }]
     };
 
     spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
       expect(params.url).toEqual("/api/rules");
-      expect(params.data.payload.rules[0]).toEqual(fixture.rules[0]);
-      expect(params.data.payload.input[0][fixture.name]).toEqual(fixture.value);
+      expect(params.data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(params.data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(failurePayload);
       return ajaxMock.promise();
     });
@@ -104,7 +113,8 @@ describe('Validation', function() {
       if( action === constants.actions.FIELD_VALIDATION_ERROR &&
           data.id === fixture.id){
         expect(data.hasError).toEqual(true);
-        expect(data.errorMessage).toEqual(failurePayload.errors[0].errorDesc);
+        var errorMessage = failurePayload.errors[0].errorDesc + '<br>' + failurePayload.errors[1].errorDesc;
+        expect(data.errorMessage).toEqual(errorMessage);
         done();
         Dispatcher.unregister('field-validation-failure-test')
       }
