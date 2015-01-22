@@ -36,8 +36,8 @@ describe('Validation', function() {
     spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
       expect(params.url).toEqual("/api/rules");
-      expect(params.data.payload.rules[0].ruleName).toEqual(fixture.rules[0]);
-      expect(params.data.payload.input[fixture.name]).toEqual(fixture.value);
+      expect(params.data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(params.data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(successPayload);
       return ajaxMock.promise();
     });
@@ -103,8 +103,8 @@ describe('Validation', function() {
     spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
       expect(params.url).toEqual("/api/rules");
-      expect(params.data.payload.rules[0].ruleName).toEqual(fixture.rules[0]);
-      expect(params.data.payload.input[fixture.name]).toEqual(fixture.value);
+      expect(params.data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(params.data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(failurePayload);
       return ajaxMock.promise();
     });
