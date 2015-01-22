@@ -8,8 +8,7 @@
     "start": "IP=localhost PORT=3100 node test/server",
     "build": "./node_modules/.bin/gulp build",
     "assets": "./node_modules/.bin/gulp assets",
-    "release": "./node_modules/.bin/gulp release",
-    "postinstall": "npm run build"
+    "release": "./node_modules/.bin/gulp release"
   },
   "repository": {
     "type": "git",
