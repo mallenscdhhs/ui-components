@@ -8,7 +8,7 @@ module.exports = {
 	page: require('./Page'),
 	grid: require('./Grid'),
 	tree: require('./Tree'),
-	treeItem: require('./TreeItem'),
+	workflowitem: require('./WorkflowItem'),
 	modal: require('./Modal'),
 	autoComplete: require('./AutoComplete')
 };
