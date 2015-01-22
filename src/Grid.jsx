@@ -103,7 +103,7 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var numChildren = this.props.children && this.props.children.length ? this.props.children.length : 0;
+    var numChildren = this.props.children ? this.props.children.length : 0;
     if(numChildren) {
       var numColumns = getTotalColumns(this.props.rows);
       var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);
