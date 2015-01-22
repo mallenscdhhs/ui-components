@@ -35,14 +35,16 @@ module.exports = Flux.createStore({
       // Verify API has validation endpoint
       if (configuration.API && configuration.API.validation) {
         // Build Request Payload
-        var field = {};
-        field[data.name] = data.value;
+        var field = _.zipObject([data.name], [data.value]);
         var requestPayload = {
-          "payload": {
-            "rules"      : data.rules,
-            "sessionData": session,
-            "input"      : [field]
-          }
+          "input"      : field,
+          "rules"      : _.map(data.rules, function(rule){
+            return {
+              "ruleName": rule,
+              "config": _.pick(data, ['type', 'name', 'id', 'maxLength', 'required'])
+            };
+          }),
+          "sessionData": session
         };
         // Call Validation API with payload
         $.post(configuration.API.validation, requestPayload)
@@ -52,11 +54,9 @@ module.exports = Flux.createStore({
             var errorMessage = '';
             if (resp.operationStatus === 'FAILURE') {
               hasError = true;
-              var errorsMgs = [];
-              _.each(resp.errors,function(err){
-                errorsMgs.push(err.errorDesc);
-              });
-              errorMessage = errorsMgs.join('<br>');
+              errorMessage = _.map(resp.errors,function(err){
+                return err.errorDesc;
+              }).join('<br>');
             }
             // Update Component by setting the validation error indicator 'hasError' and 'errorMessage',
             // using the FIELD_VALIDATION_ERROR event
