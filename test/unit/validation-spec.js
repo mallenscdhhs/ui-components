@@ -33,7 +33,7 @@ describe('Validation', function() {
       }
     };
 
-    spyOn( $, 'post' ).and.callFake(function(params){ 
+    spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
       var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
@@ -102,7 +102,7 @@ describe('Validation', function() {
       }]
     };
 
-    spyOn( $, 'post' ).and.callFake(function(params){ 
+    spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
       var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
