@@ -36,6 +36,13 @@ function buildComponentTree(schema, head){
       key: {$set: headId+ '-' +head.type},
       componentType: {$set: head.type}
     }});
+    // if this is a workflow, then add the items config
+    if ( head.type === 'workflow' ) {
+      props = update(props, {config: {
+        firstPage: {$set: head.child },
+        items: {$set: head.components}
+      }});
+    }
     // if there is a layout config then we need to insert
     // the layout into the binary tree to be rendered
     if ( props.config.layout ) {

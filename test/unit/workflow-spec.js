@@ -19,7 +19,7 @@ describe('Workflow component', function(){
 
   it('can progress to the next section', function(done){
     expect(this.workflow.state.currentPage).toEqual('page1');
-    Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE );
+    Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE);
     setTimeout(function(){
       expect(this.workflow.state.currentPage).toEqual('page2');
       expect(this.workflow.state.previousPage).toEqual('page1');
@@ -34,7 +34,7 @@ describe('Workflow component', function(){
     Flux.doAction( constants.actions.WORKFLOW_PREVIOUS_PAGE );
     setTimeout(function(){
       expect(this.workflow.state.currentPage).toEqual('page1');
-      expect(this.workflow.state.previousPage).toEqual(null);
+      expect(this.workflow.state.previousPage).toBeUndefined();
       expect(this.workflow.state.nextPage).toEqual('page2');
       done();
     }.bind(this), 300);
@@ -55,39 +55,6 @@ describe('Workflow component', function(){
     expect(dom.childNodes[1].className).toEqual('col-md-10');
     expect(dom.childNodes[0].childNodes[0].tagName.toLowerCase()).toEqual('h4');
     expect(dom.childNodes[1].childNodes[0].id).toEqual('workflow-page');
-  });
-});
-
-describe('Workflow#buildTree', function(){
-  it('can build a tree data structure from a linked list', function(){
-    var config = _.clone(fixture).config;
-    var state = {
-      firstPage: 'page1',
-      currentPage: 'page1',
-      nextPage: 'page2',
-      previousPage: null,
-      flow: config.items
-    };
-    var tree = Workflow.buildTree(state, {});
-    expect(tree.length).toEqual(2);
-    expect(tree[0].id).toEqual('page1');
-    expect(tree[0].items[0].id).toEqual('page2');
-    expect(tree[1].id).toEqual('page3');
-  });
-});
-
-describe('Workflow#getPageByKeyExistence', function(){
-  beforeEach(function(){
-    this.items = _.values(_.clone(fixture).config.items);
-  });
-  it('can determine the first page', function(){
-    var pageId = Workflow.getPageByKeyExistence(this.items, 'previous');
-    expect(pageId).toEqual('page1');
-  });
-
-  it('can determine the last page', function(){
-    var pageId = Workflow.getPageByKeyExistence(this.items, 'next');
-    expect(pageId).toEqual('page3');
   });
 });
 
@@ -134,5 +101,21 @@ describe('Workflow#getCurrentActionButtons', function(){
     expect(actions.length).toEqual(3);
     expect(actions[0].id).toEqual(this.config.actions[0].id);
     expect(actions[2].id).toEqual(this.config.actions[2].id);
+  });
+});
+
+describe('Workflow#findPrevious', function(){
+  it('will locate any previous node from a current node', function(){
+    expect(Workflow.findPrevious(fixture.components, 'page1')).toBeUndefined();
+    expect(Workflow.findPrevious(fixture.components, 'page2')).toEqual('page1');
+    expect(Workflow.findPrevious(fixture.components, 'page3')).toEqual('page1');
+  });
+});
+
+describe('Workflow#findNext', function(){
+  it('can locate any next node', function(){
+    expect(Workflow.findNext(fixture.components, 'page1')).toEqual('page2');
+    expect(Workflow.findNext(fixture.components, 'page2')).toEqual('page3');
+    expect(Workflow.findNext(fixture.components, 'page3')).toBeUndefined();
   });
 });
