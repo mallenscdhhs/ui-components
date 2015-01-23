@@ -69,12 +69,6 @@ module.exports = React.createClass({
     this.handleInputChange(e);
   },
 
-  shouldComponentUpdate: function(nextProps, nextState){
-    var hasNewValue = nextState.value !== this.state.value;
-    var hasNewOptions = nextState.options.length !== this.state.options.length;
-    return  hasNewValue || hasNewOptions;
-  },
-
   render: function(){
     var props = _.pick(this.props, this.props.inputProps);
     return (
