@@ -5,6 +5,8 @@ var elements = require('./index');
 var _ = require('lodash');
 var constants = require('./constants');
 var configuration = require('./configuration');
+var ValidationStore = require('./ValidationStore');
+var OptionsStore = require('./OptionsStore');
 
 /**
  * Recursively builds up a component hierarchy.
