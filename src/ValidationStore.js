@@ -48,7 +48,12 @@ module.exports = Flux.createStore({
           "sessionData": session
         };
         // Call Validation API with payload
-        $.post(configuration.API.validation, requestPayload)
+        $.post({
+          url: configuration.API.validation,
+          data: JSON.stringify(requestPayload),
+          dataType: 'json',
+          contentType: 'application/json; charset=UTF-8'
+        })
           .done(function (resp) {
             // Successful call, prepare resp to UI
             var hasError = false;

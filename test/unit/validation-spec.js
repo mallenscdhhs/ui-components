@@ -33,11 +33,13 @@ describe('Validation', function() {
       }
     };
 
-    spyOn( $, 'ajax' ).and.callFake(function(params){ 
+    spyOn( $, 'post' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
+      var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
-      expect(params.data.rules[0].ruleName).toEqual(fixture.rules[0]);
-      expect(params.data.input[fixture.name]).toEqual(fixture.value);
+      expect(params.contentType).toEqual('application/json; charset=UTF-8');
+      expect(data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(successPayload);
       return ajaxMock.promise();
     });
@@ -100,11 +102,13 @@ describe('Validation', function() {
       }]
     };
 
-    spyOn( $, 'ajax' ).and.callFake(function(params){ 
+    spyOn( $, 'post' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
+      var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
-      expect(params.data.rules[0].ruleName).toEqual(fixture.rules[0]);
-      expect(params.data.input[fixture.name]).toEqual(fixture.value);
+      expect(params.contentType).toEqual('application/json; charset=UTF-8');
+      expect(data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(failurePayload);
       return ajaxMock.promise();
     });
