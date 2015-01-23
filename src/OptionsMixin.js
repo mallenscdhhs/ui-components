@@ -26,21 +26,23 @@ module.exports = {
     Dispatcher.register(this.props.id + '-LOAD-OPTIONS', function (action, data) {
       if (action === constants.actions.LOAD_OPTIONS &&
           data.id === this.props.id) {
-        this.setState({options: data.options});
+        this.setState({'option': data.options});
       }
     }.bind(this));
 
     // Init Options
-    if ( this.props.options.items ) {
+    if ( this.props.options && this.props.options.items ) {
       this.setState({'options': this.props.options.items});
-    } else if(this.props.options.name) {
+    } else if(this.props.options && this.props.options.name) {
       Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
         'resourceName': this.props.options.name,
-        'fieldId' : this.props.id
+        'fieldId' : this.props.id,
+        'fieldName' : this.props.name
       });
     }else{
       Flux.doAction(constants.actions.SEND_OPTIONS, {
-        'fieldId' : this.props.id
+        'fieldId' : this.props.id,
+        'fieldName' : this.props.name
       });
     }
   },
