@@ -70,7 +70,9 @@ module.exports = React.createClass({
   },
 
   shouldComponentUpdate: function(nextProps, nextState){
-    return nextState.value !== this.state.value;
+    var hasNewValue = nextState.value !== this.state.value;
+    var hasNewOptions = nextState.options.length !== this.state.options.length;
+    return  hasNewValue || hasNewOptions;
   },
 
   render: function(){
