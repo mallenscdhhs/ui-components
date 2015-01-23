@@ -33,10 +33,9 @@ function setFlowState(list, pageId){
  */
 function getCurrentActionButtons(actions, state){
   return _.filter(actions, function(action){
-    return ! (
-         (action.id === 'workflow-previous-btn' && !state.previousPage )
-      || (action.id === 'workflow-exit-btn' && !state.nextPage )
-    );
+    var hidePrevious = (action.id === 'workflow-previous-btn' && !state.previousPage);
+    var hideSaveAndExit = (action.id === 'workflow-exit-btn' && !state.nextPage );
+    return ! (hidePrevious || hideSaveAndExit);
   });
 }
 
