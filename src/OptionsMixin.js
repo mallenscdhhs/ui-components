@@ -26,7 +26,7 @@ module.exports = {
     Dispatcher.register(this.props.id + '-LOAD-OPTIONS', function (action, data) {
       if (action === constants.actions.LOAD_OPTIONS &&
           data.id === this.props.id) {
-        this.setState({'option': data.options});
+        this.setState({'options': data.options});
       }
     }.bind(this));
 
