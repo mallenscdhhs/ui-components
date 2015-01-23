@@ -26,4 +26,21 @@ describe('Select', function(){
     expect(dom.getAttribute('multiple')).not.toBeNull();
   });
 
+  it('can manage the slected option', function(){
+    var comp = TestUtils.renderIntoDocument(<Select {...fixture}/>);
+    var dom = comp.getDOMNode();
+    TestUtils.Simulate.change(dom, {target: {value: '1', options: dom.options}});
+    expect(comp.state.value).toEqual('1');
+  });
+
+  it('can manage multiple selected options', function(){
+    var config = update(fixture, {multiple: {$set: true}});
+    var comp = TestUtils.renderIntoDocument(<Select {...config}/>);
+    var dom = comp.getDOMNode();
+    TestUtils.Simulate.change(dom, {target: {value: '1', options: dom.options}});
+    expect(comp.state.value).toEqual(['1']);
+    TestUtils.Simulate.change(dom, {target: {value: '2', options: dom.options}});
+    expect(comp.state.value).toEqual(['1', '2']);
+  });
+
 });

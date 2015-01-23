@@ -33,10 +33,18 @@ module.exports = React.createClass({
     };
   },
 
+  handleSelection: function(event){
+    var value = event.target.value;
+    if ( this.props.multiple && !_.contains(this.state.value, value )) {
+      event.target.value = this.state.value.concat([value]);
+    }
+    this.handleInputChange(event);
+  },
+
   render: function(){
     var props = _.pick(this.props, inputProps);
     return (
-      <select value={this.state.value} onChange={this.handleInputChange} {...props}>
+      <select value={this.state.value} onChange={this.handleSelection} {...props}>
         {_.map(this.state.options, function(opt){
           return <option value={opt.value} key={"option-"+opt.value}>{opt.label}</option>;
         })}
