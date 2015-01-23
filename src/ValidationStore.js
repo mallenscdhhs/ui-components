@@ -3,6 +3,7 @@ var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var configuration = require('./configuration');
 var _ = require('lodash');
+
 module.exports = Flux.createStore({
 
   id: 'ValidationStore',

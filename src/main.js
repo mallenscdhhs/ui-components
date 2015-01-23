@@ -5,6 +5,8 @@ var elements = require('./index');
 var _ = require('lodash');
 var constants = require('./constants');
 var configuration = require('./configuration');
+var ValidationStore = require('./ValidationStore');
+var OptionsStore = require('./OptionsStore');
 
 /**
  * Recursively builds up a component hierarchy.
@@ -12,7 +14,7 @@ var configuration = require('./configuration');
  * @returns {function} a ReactElement factory function
  */
 function componentFactory(data){
-  if ( data.components && !data.child ) throw new TypeError('You must provide a "child" property.');
+  if ( !_.isEmpty(data.components) && !data.child ) throw new TypeError('You must provide a "child" property.');
   return buildComponentTree(data, data)[0];
 }
 
@@ -28,19 +30,28 @@ function buildComponentTree(schema, head){
   var children = null;
   var element, factory;
   var props;
+  var headId;
   while(head){
+    headId = head.config.id || head._id;
     children = null;
     props = update(head, { config: {
-      key: {$set: head.config.id+ '-' +head.type},
+      key: {$set: headId+ '-' +head.type},
       componentType: {$set: head.type}
     }});
+    // if this is a workflow, then add the items config
+    if ( head.type === 'workflow' ) {
+      props = update(props, {config: {
+        firstPage: {$set: head.child },
+        items: {$set: head.components}
+      }});
+    }
     // if there is a layout config then we need to insert
     // the layout into the binary tree to be rendered
     if ( props.config.layout ) {
       props = update(props, { config: {
         layout: {
           child: {$set: head.child},
-          id: {$set: head.config.id + '-layout'}
+          id: {$set: headId + '-layout'}
         }
       }});
       children = buildComponentTree(schema, props.config.layout);
@@ -72,6 +83,10 @@ function buildComponentTree(schema, head){
   return tree;
 }
 
+/**
+ * Pass-in any configuration needed to setup the Components library.
+ * @param {object} data
+ */
 function configure(data){
   _.merge(configuration,data);
 }

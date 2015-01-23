@@ -9,43 +9,7 @@ var GridColumn = require('./GridColumn');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
-/**
- * Build nested data structure for rendering a Tree.
- * @param {object} state - a component state object
- * @returns {array}
- */
-function buildTree(state){
-  var tree = [];
-  var head = state.flow[state.firstPage];
-  var children = _.groupBy(_.filter(_.values(state.flow), function(item){
-    return !!item.parentId;
-  }), 'parentId');
 
-  while(head){
-    var branches = children[head.id];
-    var next = state.flow[head.next];
-    if ( !!branches ) {
-      head.items = children[head.id];
-    }
-    head.active = ( head.id === state.currentPage );
-    tree.push(head);
-    head = ( next && branches )? state.flow[next.next] : next;
-  }
-  return tree;
-}
-
-/**
- * Return a the pageId of the item that whose "key" does not exist. Useful
- * for finding the first/last page in a linked list.
- * @param {array} items
- * @param {string} key
- * @returns {string}
- */
-function getPageByKeyExistence(items, key){
-  return _.reduce(items, function(result, current, i){
-    return current[key]? result : current.id;
-  }, '');
-}
 
 /**
  * Sets flow item state(disabled) based on passed in pageId. All pages
@@ -69,14 +33,48 @@ function setFlowState(list, pageId){
  */
 function getCurrentActionButtons(actions, state){
   return _.filter(actions, function(action){
-    return ! (
-         (action.id === 'workflow-previous-btn' && !state.previousPage )
-      || (action.id === 'workflow-exit-btn' && !state.nextPage )
-    );
+    var hidePrevious = (action.id === 'workflow-previous-btn' && !state.previousPage);
+    var hideSaveAndExit = (action.id === 'workflow-exit-btn' && !state.nextPage );
+    return ! (hidePrevious || hideSaveAndExit);
   });
 }
 
+/**
+ * Locate the previous page in the list. Previous can be either a direct sibling,
+ * or a parent, or a direct sibling's last child.
+ * @param {object} list - this binary tree of page configs
+ * @param {string} id - the id of the page who's previous you want to find
+ * @returns {string} the id of the previous page
+ */
+function findPrevious(list, id){
+  return _.findKey(list, function(item){
+    return item.next === id || item.child === id;
+  });
+}
 
+/**
+* Locate the next page in the list. Next can be either a direct sibling,
+* or a parent's direct sibling.
+* @param {object} list - this binary tree of page configs
+* @param {string} id - the id of the page who's next you want to find
+* @returns {string} the id of the next page
+*/
+function findNext(list, id){
+  var next = list[id].child || list[id].next;
+  if ( next ) {
+    return next;
+  } else {
+    var parent = _.findKey(list, function(item){
+      return item.child === id;
+    });
+    return parent? list[parent].next : undefined;
+  }
+}
+
+/**
+ * Renders a workflow that contains a Tree navigation and a Page.
+ * @module Workflow
+ */
 module.exports = React.createClass({
 
   displayName: 'Workflow',
@@ -92,10 +90,10 @@ module.exports = React.createClass({
    * Used for unit testing.
    */
   statics: {
-    buildTree: buildTree,
-    getPageByKeyExistence: getPageByKeyExistence,
     setFlowState: setFlowState,
-    getCurrentActionButtons: getCurrentActionButtons
+    getCurrentActionButtons: getCurrentActionButtons,
+    findPrevious: findPrevious,
+    findNext: findNext
   },
 
   getDefaultProps: function(){
@@ -109,21 +107,17 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getInitialState: function(){
-    var pageObjs = _.values(this.props.items);
-    var firstPage = getPageByKeyExistence(pageObjs, 'previous');
-    var lastPage = getPageByKeyExistence(pageObjs, 'next');
-    var current = (this.props.lastSectionCompleted)?  this.props.items[this.props.lastSectionCompleted].next : firstPage;
+    var firstPage = this.props.firstPage;
     var flow = this.props.items;
+    var current = (this.props.lastSectionCompleted)?  flow[this.props.lastSectionCompleted].next : firstPage;
 
     if ( !this.props.editMode ) {
       setFlowState(flow, current);
     }
 
     return {
-      lastPage: lastPage,
-      firstPage: firstPage,
       currentPage: current,
-      previousPage: current.previous,
+      previousPage: findPrevious(flow, current),
       nextPage: current.next,
       flow: flow
     };
@@ -160,8 +154,8 @@ module.exports = React.createClass({
   handleDirect: function(pageId){
     this.setState({
       currentPage: pageId,
-      nextPage: this.state.flow[pageId].next,
-      previousPage: this.state.flow[pageId].previous
+      nextPage: findNext(this.state.flow, pageId),
+      previousPage: findPrevious(this.state.flow, pageId)
     });
     Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
   },
@@ -171,9 +165,9 @@ module.exports = React.createClass({
    * @fires workflow:load:page
    */
   handleNext: function(){
-    var pageId = this.state.flow[this.state.currentPage].next ? this.state.flow[this.state.currentPage].next :  this.state.currentPage;
-    if(pageId !== this.state.currentPage){
-      this.handleDirect(pageId);
+    var next = findNext(this.state.flow, this.state.currentPage);
+    if( next ){
+      this.handleDirect(next);
     }
   },
 
@@ -182,9 +176,9 @@ module.exports = React.createClass({
    * @fires workflow:load:page
    */
   handlePrevious: function(){
-    var pageId = this.state.flow[this.state.currentPage].previous ? this.state.flow[this.state.currentPage].previous : this.state.currentPage;
-    if(pageId !== this.state.currentPage){
-      this.handleDirect(pageId);
+    var previous = findPrevious(this.state.flow, this.state.currentPage);
+    if( previous ){
+      this.handleDirect(previous);
     }
   },
 
@@ -193,14 +187,13 @@ module.exports = React.createClass({
    */
   render: function(){
     var actions = getCurrentActionButtons(this.props.actions, this.state);
-    var treeProps = {
-      items: buildTree(this.state, this.props)
-    };
     return (
       <GridRow>
         <GridColumn md="2">
           <h4>{this.props.title}</h4>
-          <Tree {...treeProps} ref="outline" />
+          <Tree ref="outline">
+            {this.props.children}
+          </Tree>
         </GridColumn>
         <GridColumn md="10">
           <div id="workflow-page"></div>
