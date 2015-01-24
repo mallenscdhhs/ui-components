@@ -66,7 +66,7 @@ module.exports = React.createClass({
       opts = _.toArray(event.target.options);
       e.target.value = _.map(_.filter(opts, isOptionSelected), getOptionValue);
     }
-    this.setState({ value: e.target.value });
+    this.handleInputChange(e);
   },
 
   render: function(){
