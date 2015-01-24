@@ -38,8 +38,8 @@ module.exports = Flux.createStore({
         // Build Request Payload
         var field = _.zipObject([data.name], [data.value]);
         var requestPayload = {
-          "input"      : field,
-          "rules"      : _.map(data.rules, function(rule){
+          "input": field,
+          "rules": _.map(data.rules, function(rule){
             return {
               "ruleName": rule,
               "config": _.pick(data, ['type', 'name', 'id', 'maxLength', 'required'])
@@ -48,7 +48,13 @@ module.exports = Flux.createStore({
           "sessionData": session
         };
         // Call Validation API with payload
-        $.post(configuration.API.validation, requestPayload)
+        $.ajax({
+          url: configuration.API.validation,
+          type: 'POST',
+          data: JSON.stringify(requestPayload),
+          dataType: 'json',
+          contentType: 'application/json; charset=UTF-8'
+        })
           .done(function (resp) {
             // Successful call, prepare resp to UI
             var hasError = false;
