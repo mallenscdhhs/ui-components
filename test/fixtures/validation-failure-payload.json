@@ -1,0 +1,30 @@
+{
+  "module": "PE",
+  "operationStatus": "FAILURE",
+  "errors": [
+    {
+      "metadata": {
+        "rule": "BR_RULE1",
+        "params": [
+          "nameTest"
+        ]
+      },
+      "errorCode": "ERR_1001",
+      "errorDesc": "Field is not valid.",
+      "level": "INFO",
+      "autoHide": false
+    },
+    {
+      "metadata": {
+        "rule": "BR_RULE2",
+        "params": [
+          "nameTest2"
+        ]
+      },
+      "errorCode": "ERR_1002",
+      "errorDesc": "Field is not long enough.",
+      "level": "INFO",
+      "autoHide": false
+    }
+  ]
+}
