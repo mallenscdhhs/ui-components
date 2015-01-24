@@ -48,7 +48,7 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       componentType: 'field',
-      inputProps: ['id', 'name', 'value', 'multiple', 'className', 'aria-describedby']
+      inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby']
     };
   },
 
@@ -66,7 +66,7 @@ module.exports = React.createClass({
       opts = _.toArray(event.target.options);
       e.target.value = _.map(_.filter(opts, isOptionSelected), getOptionValue);
     }
-    this.handleInputChange(e);
+    this.setState({ value: e.target.value });
   },
 
   render: function(){
