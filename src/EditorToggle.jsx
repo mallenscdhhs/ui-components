@@ -1,7 +1,12 @@
 var Flux = require('fluxify');
 var constants = require('./constants');
 var React = require('react');
+var _ = require('lodash');
 
+/**
+ * Display component editor controls
+ * @module EditorToggle
+ */
 module.exports = React.createClass({
 
   /**
@@ -45,7 +50,7 @@ module.exports = React.createClass({
    * @return {XML}
    */
   getRemoveButton: function(type){
-    if(type !== 'page'){
+    if(!_.includes(['page','tree'], type)){
       return (
         <span onClick={this.handleConfigRemove} className="remove-component">
           <span className="glyphicon glyphicon glyphicon-minus"></span>
@@ -60,7 +65,7 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   getAddButton: function(type){
-    if(type !== 'field' && type !== 'action'){
+    if(!_.includes(['field','action','tree'], type)){
       return (
         <span onClick={this.handleConfigAdd} className="add-component">
           <span className="glyphicon glyphicon glyphicon-plus"></span>
