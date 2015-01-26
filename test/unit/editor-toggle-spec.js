@@ -13,14 +13,14 @@ var mockEvent = {
 describe('EditorToggle', function(){
 
   describe('edit-component button', function(){
-    
+
     beforeEach(function(){
       this.fixture = {type: 'text', id:'test', name: 'test', label: 'test' ,componentType: 'field'};
-      this.field = React.createFactory(Components.elements.field);      
+      this.field = React.createFactory(Components.elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
     });
 
-    it('will render the edit template', function(){    
+    it('will render the edit template', function(){
       var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'config-editor');
       expect(TestUtils.isDOMComponent(html)).toEqual(true);
       expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(1);
@@ -47,20 +47,20 @@ describe('EditorToggle', function(){
   });
 
   describe('add-component button', function(){
-    
+
     beforeEach(function(){
       this.fixture = {type: 'page', title: 'Test page', content: 'testing', componentType: 'page'};
-      this.page = React.createFactory(Components.elements.page);      
+      this.page = React.createFactory(Components.elements.page);
       this.component = TestUtils.renderIntoDocument(this.page(this.fixture));
     });
-    
-    it('will render the add template', function(){    
+
+    it('will render the add template', function(){
       var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'config-editor');
       expect(TestUtils.isDOMComponent(html)).toEqual(true);
       expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(1);
       expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'add-component').length).toEqual(1);
-    });    
-    
+    });
+
     it('will publish a components props when "add" is clicked', function(done){
       this.handler = function(){};
       var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'add-component');
@@ -84,7 +84,7 @@ describe('EditorToggle', function(){
   describe('remove component button', function(){
 
     beforeEach(function(){
-      this.fixture = {type: 'form', componentType: 'form', name : 'testForm' };
+      this.fixture = {type: 'form', id:'test-form', componentType: 'form', name : 'testForm' };
       this.form = React.createFactory(Components.elements.form);
       this.component = TestUtils.renderIntoDocument(this.form(this.fixture));
     });
