@@ -9,10 +9,9 @@ var fixture = require('../fixtures/tree.json');
 describe('Tree component', function(){
 	it('will render if passed children', function(){
 		var tree = TestUtils.renderIntoDocument(<Tree><li>test</li></Tree>).getDOMNode();
-		var firstLeaf = tree.childNodes[0];
-		var firstLeafTree = firstLeaf.childNodes[1];
+		var firstLeaf = tree.childNodes[1];
 		expect(tree.tagName).toEqual('UL');
-		expect(tree.childNodes.length).toEqual(1);
+		expect(tree.childNodes.length).toEqual(2); // +1 for EditorToggle mixin for tree component
 		expect(firstLeaf.tagName).toEqual('LI');
 		expect(firstLeaf.childNodes[0].textContent).toEqual('test');		
 	});
