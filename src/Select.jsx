@@ -48,7 +48,7 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       componentType: 'field',
-      inputProps: ['id', 'name', 'value', 'multiple', 'className', 'aria-describedby']
+      inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby']
     };
   },
 
