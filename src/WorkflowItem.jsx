@@ -36,7 +36,7 @@ module.exports = React.createClass({
 
   render: function(){
     var liClassNames = classSet({
-      'active': this.props.active,
+      'inactive': !this.props.active,
       'disabled': this.props.disabled,
       'editable-component' : true
     });

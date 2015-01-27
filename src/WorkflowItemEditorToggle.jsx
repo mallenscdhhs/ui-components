@@ -30,22 +30,22 @@ module.exports = React.createClass({
   handleDisableToggle: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    var newEnabledStatus = !this.state.enabled;
-    Flux.doAction( constants.actions.TOGGLE_DISABLE_WORKFLOW_PAGE ,  this.props , newEnabledStatus);
-    this.setState({'enabled':newEnabledStatus});
+    var newActiveStatus = !this.state.active;
+    Flux.doAction( constants.actions.TOGGLE_DISABLE_WORKFLOW_PAGE ,  this.props , newActiveStatus);
+    this.setState({'active':newActiveStatus});
   },
 
   getInitialState : function(){
     return {
-      'enabled' : this.props.enabled || true
+      'active' : this.props.active || true
     };
   },
 
   getClassNames: function(){
     return cx({
       'glyphicon' : true,
-      'glyphicon-check' : this.state.enabled,
-      'glyphicon-unchecked' : !this.state.enabled
+      'glyphicon-check' : this.state.active,
+      'glyphicon-unchecked' : !this.state.active
     });
   },
 
