@@ -31,6 +31,7 @@ module.exports = React.createClass({
     e.preventDefault();
     e.stopPropagation();
     //Flux.doAction( constants.actions.COMPONENT_REMOVE ,  this.props);
+    this.setState({'enabled':!this.state.enabled});
   },
 
   getInitialState : function(){

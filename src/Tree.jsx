@@ -18,7 +18,7 @@ module.exports = React.createClass({
   render: function(){
     if ( this.props.children ) {
       return (
-        <ul className="nav nav-tree editable-component">
+        <ul className="nav nav-tree">
           {this.props.children}
         </ul>
       );

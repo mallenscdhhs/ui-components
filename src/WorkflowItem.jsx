@@ -36,8 +36,9 @@ module.exports = React.createClass({
 
   render: function(){
     var liClassNames = classSet({
-      active: this.props.active,
-      disabled: this.props.disabled
+      'active': this.props.active,
+      'disabled': this.props.disabled,
+      'editable-component' : true
     });
     return (
       <li className={liClassNames} role="presentation">
