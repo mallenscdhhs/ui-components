@@ -1,6 +1,5 @@
 'use-strict';
 var React = require('react');
-var EditorToggle = require('./EditorToggle');
 
 /**
  * A tree navigation component.
@@ -20,7 +19,6 @@ module.exports = React.createClass({
     if ( this.props.children ) {
       return (
         <ul className="nav nav-tree editable-component">
-          <EditorToggle {...this.props}/>
           {this.props.children}
         </ul>
       );
