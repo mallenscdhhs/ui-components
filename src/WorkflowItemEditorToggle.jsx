@@ -5,33 +5,34 @@ var cx = require('react/lib/cx');
 var _ = require('lodash');
 
 /**
- * @module WorkflowItemAction
+ * @module WorkflowItemEditorToggle
  */
 module.exports = React.createClass({
 
   handleConfigEdit: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    //Flux.doAction( constants.actions.COMPONENT_EDIT ,  this.props  );
+    Flux.doAction( constants.actions.WORKFLOW_PAGE_EDIT ,  this.props  );
   },
 
   handleMoveUp: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    //Flux.doAction( constants.actions.COMPONENT_ADD ,  this.props);
+    Flux.doAction( constants.actions.MOVE_WORKFLOW_PAGE ,  this.props, 'UP');
   },
 
   handleMoveDown: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    //Flux.doAction( constants.actions.COMPONENT_REMOVE ,  this.props);
+    Flux.doAction( constants.actions.MOVE_WORKFLOW_PAGE ,  this.props, 'DOWN');
   },
 
   handleDisableToggle: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    //Flux.doAction( constants.actions.COMPONENT_REMOVE ,  this.props);
-    this.setState({'enabled':!this.state.enabled});
+    var newEnabledStatus = !this.state.enabled;
+    Flux.doAction( constants.actions.TOGGLE_DISABLE_WORKFLOW_PAGE ,  this.props , newEnabledStatus);
+    this.setState({'enabled':newEnabledStatus});
   },
 
   getInitialState : function(){

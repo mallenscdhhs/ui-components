@@ -17,6 +17,10 @@ module.exports = {
     "GET_SESSION_VALUES": "getSessionValues",
     "VALIDATE": "validate",
     "SESSION_VALUES_LOADED": "sessionValuesLoaded",
-    "API_COMMUNCATION_ERROR": "apiCommunicationError"
+    "API_COMMUNCATION_ERROR": "apiCommunicationError",
+    "TOGGLE_DISABLE_WORKFLOW_PAGE" : "toggleDisableWorkflowPage",
+    "MOVE_WORKFLOW_PAGE" : "moveWorkflowPage",
+    "WORKFLOW_PAGE_EDIT" : "workflowPageEdit"
+
   }
 };
