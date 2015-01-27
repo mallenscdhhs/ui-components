@@ -1,6 +1,7 @@
+var React = require('react');
 var Flux = require('fluxify');
 var constants = require('./constants');
-var React = require('react');
+var cx = require('react/lib/cx');
 var _ = require('lodash');
 
 /**
@@ -26,16 +27,30 @@ module.exports = React.createClass({
     //Flux.doAction( constants.actions.COMPONENT_REMOVE ,  this.props);
   },
 
-  handleDisable: function (e) {
+  handleDisableToggle: function (e) {
     e.preventDefault();
     e.stopPropagation();
     //Flux.doAction( constants.actions.COMPONENT_REMOVE ,  this.props);
   },
 
+  getInitialState : function(){
+    return {
+      'enabled' : this.props.enabled || true
+    };
+  },
+
+  getClassNames: function(){
+    return cx({
+      'glyphicon' : true,
+      'glyphicon-check' : this.state.enabled,
+      'glyphicon-unchecked' : !this.state.enabled
+    });
+  },
+
   getDisableButton: function(){
     return (
-      <span onClick={this.handleDisable} className="workflow-disable-page">
-        <span className="glyphicon glyphicon-chevron-down"></span>
+      <span onClick={this.handleDisableToggle} className="workflow-disable-page">
+        <span className={this.getClassNames()}></span>
       </span>
     );
   },
@@ -66,7 +81,7 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <div className="workflow-actions">
+      <div className="workflow-config-editor">
         {this.getDisableButton()}
         {this.getMoveDownButton()}
         {this.getMoveUpButton()}
