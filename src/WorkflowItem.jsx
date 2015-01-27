@@ -18,13 +18,15 @@ module.exports = React.createClass({
     id: React.PropTypes.string.isRequired,
     title: React.PropTypes.string.isRequired,
     active: React.PropTypes.bool,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    current: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
     return {
-      active: false,
-      disabled: false
+      active: true,
+      disabled: false,
+      current : false
     };
   },
 
@@ -37,6 +39,7 @@ module.exports = React.createClass({
   render: function(){
     var liClassNames = classSet({
       'inactive': !this.props.active,
+      'current' : this.props.current,
       'disabled': this.props.disabled,
       'editable-component' : true
     });
