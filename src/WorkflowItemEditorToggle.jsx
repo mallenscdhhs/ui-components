@@ -9,6 +9,11 @@ var _ = require('lodash');
  */
 module.exports = React.createClass({
 
+  propTypes: {
+    id: React.PropTypes.string,
+    active: React.PropTypes.bool
+  },
+
   handleConfigEdit: function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -37,7 +42,7 @@ module.exports = React.createClass({
 
   getInitialState : function(){
     return {
-      'active' : this.props.active || true
+      'active' : this.props.active
     };
   },
 
