@@ -11,7 +11,7 @@ describe('Tree component', function(){
 		var tree = TestUtils.renderIntoDocument(<Tree><li>test</li></Tree>).getDOMNode();
 		var firstLeaf = tree.childNodes[0];
 		expect(tree.tagName).toEqual('UL');
-		expect(tree.childNodes.length).toEqual(1); // +1 for EditorToggle mixin for tree component
+		expect(tree.childNodes.length).toEqual(1);
 		expect(firstLeaf.tagName).toEqual('LI');
 		expect(firstLeaf.childNodes[0].textContent).toEqual('test');		
 	});
