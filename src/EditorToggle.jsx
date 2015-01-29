@@ -81,7 +81,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="config-editor">
-        <span className="config-editor-label">{this.props.componentType}</span>
+        <span className="config-editor-label">{_.capitalize(this.props.componentType)}</span>
         {this.getRemoveButton(this.props.componentType.toLowerCase())}
         {this.getAddButton(this.props.componentType.toLowerCase())}
         <span onClick={this.handleConfigEdit} className="edit-component">
