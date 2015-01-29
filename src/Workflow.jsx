@@ -189,24 +189,26 @@ module.exports = React.createClass({
   render: function(){
     var actions = getCurrentActionButtons(this.props.actions, this.state);
     return (
-      <GridRow className="editable-component">
+      <div className="editable-component">
         <EditorToggle {...this.props}/>
-        <GridColumn md="2">
-          <h4>{this.props.title}</h4>
-          <Tree ref="outline">
-            {this.props.children}
-          </Tree>
-        </GridColumn>
-        <GridColumn md="10">
-          <div id="workflow-page"></div>
-          <div id="workflow-status"></div>
-          <div id="workflow-actions" className="text-right">
-            {_.map(actions, function(action, i){
-              return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
-            }, this)}
-          </div>
-        </GridColumn>
-      </GridRow>
+        <GridRow>
+          <GridColumn md="2">
+            <h4>{this.props.title}</h4>
+            <Tree ref="outline">
+              {this.props.children}
+            </Tree>
+          </GridColumn>
+          <GridColumn md="10">
+            <div id="workflow-page"></div>
+            <div id="workflow-status"></div>
+            <div id="workflow-actions" className="text-right">
+              {_.map(actions, function(action, i){
+                return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
+              }, this)}
+            </div>
+          </GridColumn>
+        </GridRow>
+      </div>
     );
   }
 });
