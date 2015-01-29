@@ -14,8 +14,8 @@ module.exports = function(config) {
 
   // list of files / patterns to load in the browser
   files: [
-    'test/lib/jquery/dist/jquery.js',
-    'test/lib/bootstrap/dist/js/bootstrap.js',
+    'node_modules/jquery/dist/jquery.js',
+    'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/es5-shim/es5-shim.js',
     'test/unit/**/*-spec.js'
   ],
@@ -33,8 +33,8 @@ module.exports = function(config) {
     transform: ['reactify'],
     exclude: [
       'dist/Components.js',
-      'test/lib/jquery/dist/jquery.js',
-      'test/lib/bootstrap/dist/js/bootstrap.js',
+      'node_modules/jquery/dist/jquery.js',
+      'node_modules/bootstrap/dist/js/bootstrap.js',
       'node_modules/es5-shim/es5-shim.js'
     ],
     extensions: ['.jsx']
@@ -49,12 +49,16 @@ module.exports = function(config) {
   // test results reporter to use
   // possible values: 'dots', 'progress'
   // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-  reporters: ['mocha'],
+  reporters: ['mocha', 'junit'],
 
   mochaReporter: {
     ignoreSkipped: true
   },
 
+  junitReporter: {
+    outputFile: './test/results.xml',
+    suite: ''
+  },
 
   // web server port
   port: 9876,
