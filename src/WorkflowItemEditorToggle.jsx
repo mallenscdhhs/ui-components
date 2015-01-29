@@ -5,6 +5,7 @@ var cx = require('react/lib/cx');
 var _ = require('lodash');
 
 /**
+ * Handles config opts for Workflow Items
  * @module WorkflowItemEditorToggle
  */
 module.exports = React.createClass({
