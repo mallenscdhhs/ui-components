@@ -9,6 +9,7 @@ var GridColumn = require('./GridColumn');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
+var EditorToggle = require('./EditorToggle');
 
 
 /**
@@ -189,6 +190,7 @@ module.exports = React.createClass({
     var actions = getCurrentActionButtons(this.props.actions, this.state);
     return (
       <GridRow>
+        <EditorToggle {...this.props}/>
         <GridColumn md="2">
           <h4>{this.props.title}</h4>
           <Tree ref="outline">
