@@ -9,6 +9,7 @@ var GridColumn = require('./GridColumn');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
+var EditorToggle = require('./EditorToggle');
 
 
 /**
@@ -190,10 +191,13 @@ module.exports = React.createClass({
     return (
       <GridRow>
         <GridColumn md="2">
-          <h4>{this.props.title}</h4>
-          <Tree ref="outline">
-            {this.props.children}
-          </Tree>
+          <div className="editable-component">
+            <EditorToggle {...this.props}/>
+            <h4>{this.props.title}</h4>
+            <Tree ref="outline">
+              {this.props.children}
+            </Tree>
+          </div>
         </GridColumn>
         <GridColumn md="10">
           <div id="workflow-page"></div>

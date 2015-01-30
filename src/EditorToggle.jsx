@@ -50,7 +50,7 @@ module.exports = React.createClass({
    * @return {XML}
    */
   getRemoveButton: function(type){
-    if(!_.includes(['page'], type)){
+    if(!_.includes(['page','workflow'], type)){
       return (
         <span onClick={this.handleConfigRemove} className="remove-component">
           <span className="glyphicon glyphicon glyphicon-minus"></span>
@@ -65,7 +65,7 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   getAddButton: function(type){
-    if(!_.includes(['field','action'], type)){
+    if(!_.includes(['field','action','workflow'], type)){
       return (
         <span onClick={this.handleConfigAdd} className="add-component">
           <span className="glyphicon glyphicon glyphicon-plus"></span>
@@ -81,7 +81,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="config-editor">
-        <span className="config-editor-label">{this.props.componentType}</span>
+        <span className="config-editor-label">{_.capitalize(this.props.componentType)}</span>
         {this.getRemoveButton(this.props.componentType.toLowerCase())}
         {this.getAddButton(this.props.componentType.toLowerCase())}
         <span onClick={this.handleConfigEdit} className="edit-component">
