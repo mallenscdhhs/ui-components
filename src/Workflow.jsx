@@ -190,9 +190,9 @@ module.exports = React.createClass({
     var actions = getCurrentActionButtons(this.props.actions, this.state);
     return (
       <div className="editable-component">
-        <EditorToggle {...this.props}/>
         <GridRow>
           <GridColumn md="2">
+            <EditorToggle {...this.props}/>
             <h4>{this.props.title}</h4>
             <Tree ref="outline">
               {this.props.children}
