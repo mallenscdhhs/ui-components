@@ -8,6 +8,7 @@
   display: none;
   cursor: pointer;
   z-index:300;
+  padding-left:4px;
 
   span {
     display: inline-block;
@@ -25,31 +26,13 @@
   }
 }
 
-.workflow-config-editor {
-  background: #337ab7;
-  color: #fff;
+.nav-tree .config-editor{
   line-height: 40px;
-  position: absolute;
-  top: 0px;
-  right: 0px;
+  bottom: 0px;
   height:100%;
-  display: none;
-  cursor: pointer;
-  z-index: 300;
-
   span {
-    display: inline-block;
-    margin: 0 0 0 4px;
     vertical-align: middle;
-
-    &:last-child {
-      margin-right: 4px;
-    }
-  }
-
-  .add-component, .editable-component {
-    width: 16px;
-    height: 16px;
+    margin: 0 4px;
   }
 }
 

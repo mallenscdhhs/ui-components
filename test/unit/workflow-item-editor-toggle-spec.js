@@ -14,29 +14,11 @@ describe('WorkflowEditorToggle', function(){
   });
 
   it('will render edit, up, down, and status toggle', function(){
-    var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'workflow-config-editor');
+    var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'config-editor');
     expect(TestUtils.isDOMComponent(html)).toEqual(true);
-    expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-edit-page').length).toEqual(1);
     expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-move-up-page').length).toEqual(1);
     expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-move-down-page').length).toEqual(1);
     expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-disable-page').length).toEqual(1);
-  });
-
-  it('will create event when EDIT is clicked', function(done){
-    this.handler = function(){};
-    var editComponent = TestUtils.findRenderedDOMComponentWithClass(this.component, 'workflow-edit-page');
-    spyOn(this, 'handler');
-    Dispatcher.register( 'workflow-items-test-1', function(action,data){
-      if( action === constants.actions.WORKFLOW_PAGE_EDIT) {
-        this.handler(data);
-        Dispatcher.unregister( 'workflow-items-test-1');
-      }
-    }.bind(this));
-    TestUtils.Simulate.click(editComponent);
-    setTimeout(function(){
-      expect(this.handler).toHaveBeenCalledWith(this.fixture);
-      done();
-    }.bind(this), 200);
   });
 
   it('will create event when TOGGLE STATUS is clicked', function(done){
