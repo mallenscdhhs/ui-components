@@ -1,7 +1,7 @@
 var React = require('react');
 var Flux = require('fluxify');
 var constants = require('./constants');
-var cx = require('react/lib/cx');
+var classSet = require('react/lib/cx');
 var _ = require('lodash');
 
 /**
@@ -48,7 +48,7 @@ module.exports = React.createClass({
   },
 
   getClassNames: function(){
-    return cx({
+    return classSet({
       'glyphicon' : true,
       'glyphicon-check' : this.state.active,
       'glyphicon-unchecked' : !this.state.active
