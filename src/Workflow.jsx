@@ -190,12 +190,14 @@ module.exports = React.createClass({
     var actions = getCurrentActionButtons(this.props.actions, this.state);
     return (
       <GridRow>
-        <GridColumn md="2" className="editable-component">
-          <EditorToggle {...this.props}/>
-          <h4>{this.props.title}</h4>
-          <Tree ref="outline">
-            {this.props.children}
-          </Tree>
+        <GridColumn md="2">
+          <div className="editable-component">
+            <EditorToggle {...this.props}/>
+            <h4>{this.props.title}</h4>
+            <Tree ref="outline">
+              {this.props.children}
+            </Tree>
+          </div>
         </GridColumn>
         <GridColumn md="10">
           <div id="workflow-page"></div>
