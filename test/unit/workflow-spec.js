@@ -50,10 +50,10 @@ describe('Workflow component', function(){
 
   it('can render a workflow', function(){
     var dom = this.workflow.getDOMNode();
+    console.log(dom);
     expect(dom.className).toEqual('row');
     expect(dom.childNodes[0].className).toEqual('col-md-2');
-    expect(dom.childNodes[0].childNodes[1].tagName).toEqual('H4');
-    expect(dom.childNodes[1].tagName.toLowerCase()).toEqual('div');
+    expect(dom.childNodes[0].childNodes[0].className).toEqual('editable-component');
     expect(dom.childNodes[1].childNodes[0].id).toEqual('workflow-page');
   });
 });
