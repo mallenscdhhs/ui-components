@@ -1,7 +1,7 @@
 var React = require('react');
 var Flux = require('fluxify');
 var constants = require('./constants');
-var cx = require('react/lib/cx');
+var classSet = require('react/lib/cx');
 var _ = require('lodash');
 
 /**
@@ -13,12 +13,6 @@ module.exports = React.createClass({
   propTypes: {
     id: React.PropTypes.string,
     active: React.PropTypes.bool
-  },
-
-  handleConfigEdit: function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    Flux.doAction( constants.actions.WORKFLOW_PAGE_EDIT ,  this.props  );
   },
 
   handleMoveUp: function (e) {
@@ -48,7 +42,7 @@ module.exports = React.createClass({
   },
 
   getClassNames: function(){
-    return cx({
+    return classSet({
       'glyphicon' : true,
       'glyphicon-check' : this.state.active,
       'glyphicon-unchecked' : !this.state.active
@@ -79,21 +73,12 @@ module.exports = React.createClass({
     );
   },
 
-  getConfigButton: function(){
-    return (
-        <span onClick={this.handleConfigEdit} className="workflow-edit-page">
-          <span className="glyphicon glyphicon-cog"></span>
-        </span>
-    );
-  },
-
   render: function() {
     return (
-      <div className="workflow-config-editor">
+      <div className="config-editor">
         {this.getDisableButton()}
         {this.getMoveDownButton()}
         {this.getMoveUpButton()}
-        {this.getConfigButton()}
       </div>
     );
   }
