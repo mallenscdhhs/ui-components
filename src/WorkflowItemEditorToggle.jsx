@@ -15,12 +15,6 @@ module.exports = React.createClass({
     active: React.PropTypes.bool
   },
 
-  handleConfigEdit: function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    Flux.doAction( constants.actions.WORKFLOW_PAGE_EDIT ,  this.props  );
-  },
-
   handleMoveUp: function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -79,21 +73,12 @@ module.exports = React.createClass({
     );
   },
 
-  getConfigButton: function(){
-    return (
-        <span onClick={this.handleConfigEdit} className="workflow-edit-page">
-          <span className="glyphicon glyphicon-cog"></span>
-        </span>
-    );
-  },
-
   render: function() {
     return (
-      <div className="workflow-config-editor">
+      <div className="config-editor">
         {this.getDisableButton()}
         {this.getMoveDownButton()}
         {this.getMoveUpButton()}
-        {this.getConfigButton()}
       </div>
     );
   }
