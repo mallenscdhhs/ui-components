@@ -50,7 +50,6 @@ describe('Workflow component', function(){
 
   it('can render a workflow', function(){
     var dom = this.workflow.getDOMNode();
-    console.log(dom);
     expect(dom.className).toEqual('row');
     expect(dom.childNodes[0].className).toEqual('col-md-2');
     expect(dom.childNodes[0].childNodes[0].className).toEqual('editable-component');
