@@ -86,29 +86,26 @@ module.exports = React.createClass({
   },
 
   getNestButton: function(){
-    return (
-      <span onClick={this.handleNest} className="workflow-nest-page">
-        <span className="glyphicon glyphicon-chevron-right"></span>
-      </span>
-    );
+    if(!this.props.children) {
+      return (
+        <span onClick={this.handleNest} className="workflow-nest-page">
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </span>
+      );
+    }
+    return null;
   },
 
   getUnNestButton: function(){
-    return (
-      <span onClick={this.handleUnNest} className="workflow-un-nest-page">
-        <span className="glyphicon glyphicon-chevron-left"></span>
-      </span>
-    );
-  },
-
-  getNestingButtons: function(){
-    var nesting = '';
-    if(!this.props.children){
-      nesting = this.getNestButton() + this.getUnNestButton();
+    if(!this.props.children) {
+      return (
+        <span onClick={this.handleUnNest} className="workflow-un-nest-page">
+          <span className="glyphicon glyphicon-chevron-left"></span>
+        </span>
+      );
     }
-    return nesting;
+    return null;
   },
-
 
   render: function() {
     return (
@@ -116,7 +113,8 @@ module.exports = React.createClass({
         {this.getDisableButton()}
         {this.getMoveDownButton()}
         {this.getMoveUpButton()}
-        {this.getNestingButtons()}
+        {this.getNestButton()}
+        {this.getUnNestButton()}
       </div>
     );
   }
