@@ -101,6 +101,14 @@ module.exports = React.createClass({
     );
   },
 
+  getNestingButtons: function(){
+    var nesting = '';
+    if(!this.props.children){
+      nesting = this.getNestButton() + this.getUnNestButton();
+    }
+    return nesting;
+  },
+
 
   render: function() {
     return (
@@ -108,8 +116,7 @@ module.exports = React.createClass({
         {this.getDisableButton()}
         {this.getMoveDownButton()}
         {this.getMoveUpButton()}
-        {this.getNestButton()}
-        {this.getUnNestButton()}
+        {this.getNestingButtons()}
       </div>
     );
   }
