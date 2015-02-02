@@ -27,6 +27,18 @@ module.exports = React.createClass({
     Flux.doAction( constants.actions.MOVE_WORKFLOW_PAGE ,  this.props, 'DOWN');
   },
 
+  handleNest: function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    Flux.doAction( constants.actions.NEST_WORKFLOW_PAGE ,  this.props, 'NEST');
+  },
+
+  handleUnNest: function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    Flux.doAction( constants.actions.NEST_WORKFLOW_PAGE ,  this.props, 'UNNEST');
+  },
+
   handleDisableToggle: function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -73,12 +85,31 @@ module.exports = React.createClass({
     );
   },
 
+  getNestButton: function(){
+    return (
+      <span onClick={this.handleNest} className="workflow-nest-page">
+        <span className="glyphicon glyphicon-chevron-right"></span>
+      </span>
+    );
+  },
+
+  getUnNestButton: function(){
+    return (
+      <span onClick={this.handleUnNest} className="workflow-un-nest-page">
+        <span className="glyphicon glyphicon-chevron-left"></span>
+      </span>
+    );
+  },
+
+
   render: function() {
     return (
       <div className="config-editor">
         {this.getDisableButton()}
         {this.getMoveDownButton()}
         {this.getMoveUpButton()}
+        {this.getNestButton()}
+        {this.getUnNestButton()}
       </div>
     );
   }
