@@ -87,10 +87,9 @@ describe('WorkflowEditorToggle', function(){
     this.handler = function(){};
     spyOn(this, 'handler');
 
-    Dispatcher.register( 'workflow-items-test-5', function(action,data,direction){
+    Dispatcher.register( 'workflow-items-test-5', function(action,data){
       if( action === constants.actions.NEST_WORKFLOW_PAGE) {
         this.handler(data);
-        expect(direction).toEqual('NEST');
         Dispatcher.unregister( 'workflow-items-test-5');
       }
     }.bind(this));
@@ -108,10 +107,9 @@ describe('WorkflowEditorToggle', function(){
     this.handler = function(){};
     spyOn(this, 'handler');
 
-    Dispatcher.register( 'workflow-items-test-6', function(action,data,direction){
-      if( action === constants.actions.NEST_WORKFLOW_PAGE) {
+    Dispatcher.register( 'workflow-items-test-6', function(action,data){
+      if( action === constants.actions.UNNEST_WORKFLOW_PAGE) {
         this.handler(data);
-        expect(direction).toEqual('UNNEST');
         Dispatcher.unregister( 'workflow-items-test-6');
       }
     }.bind(this));

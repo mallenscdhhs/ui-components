@@ -20,6 +20,7 @@ module.exports = {
     "API_COMMUNCATION_ERROR": "apiCommunicationError",
     "TOGGLE_DISABLE_WORKFLOW_PAGE" : "toggleDisableWorkflowPage",
     "MOVE_WORKFLOW_PAGE" : "moveWorkflowPage",
-    "NEST_WORKFLOW_PAGE" : "nestWorkflowPage"
+    "NEST_WORKFLOW_PAGE" : "nestWorkflowPage",
+    "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage"
   }
 };

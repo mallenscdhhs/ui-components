@@ -30,13 +30,13 @@ module.exports = React.createClass({
   handleNest: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Flux.doAction( constants.actions.NEST_WORKFLOW_PAGE ,  this.props, 'NEST');
+    Flux.doAction( constants.actions.NEST_WORKFLOW_PAGE ,  this.props);
   },
 
   handleUnNest: function (e) {
     e.preventDefault();
     e.stopPropagation();
-    Flux.doAction( constants.actions.NEST_WORKFLOW_PAGE ,  this.props, 'UNNEST');
+    Flux.doAction( constants.actions.UNNEST_WORKFLOW_PAGE ,  this.props);
   },
 
   handleDisableToggle: function (e) {
