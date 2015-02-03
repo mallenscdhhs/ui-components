@@ -24,7 +24,7 @@ module.exports = React.createClass({
     };
   },
 
-  handleDateChange : function(event){
+  handleDateChange : function(date,string){
     this.setState({value: event.target.value});
     var eventData = {
       id: this.props.id,
