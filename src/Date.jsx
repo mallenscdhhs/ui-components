@@ -24,9 +24,21 @@ module.exports = React.createClass({
     };
   },
 
+  handleDateChange : function(event){
+    this.setState({value: event.target.value});
+    var eventData = {
+      id: this.props.id,
+      name: this.props.name,
+      value: event.target.value,
+      type: this.props.type,
+      rules : this.props.rules
+    };
+    console.log(eventData);
+  },
+
   render: function(){
     var props = _.pick(this.props, inputProps);
-    return <DateTimePicker time={false} onChange={this.handleInputChange} value={this.state.value} {...props} />;
+    return <DateTimePicker time={false} onChange={this.handleDateChange} value={this.state.value} {...props} />;
   }
 
 });
