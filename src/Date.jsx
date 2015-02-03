@@ -29,11 +29,11 @@ module.exports = React.createClass({
     var eventData = {
       id: this.props.id,
       name: this.props.name,
-      value: event.target.value,
+      value: date,
       type: this.props.type,
       rules : this.props.rules
     };
-    console.log(eventData);
+    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE ,  eventData  );
   },
 
   render: function(){
