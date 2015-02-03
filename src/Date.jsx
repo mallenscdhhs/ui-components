@@ -20,7 +20,7 @@ module.exports = React.createClass({
 
   getInitialState: function(){
     return {
-      value: new Date(this.props.value) || null
+      value: this.props.value ? new Date(this.props.value) : null
     };
   },
 
