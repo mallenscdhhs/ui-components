@@ -4,6 +4,7 @@ var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
 var inputProps = ['id', 'name', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
 var DateTimePicker = require('react-widgets').DateTimePicker;
+var Flux = require('fluxify');
 
 module.exports = React.createClass({
 
