@@ -190,7 +190,7 @@ module.exports = React.createClass({
     var actions = getCurrentActionButtons(this.props.actions, this.state);
     return (
       <GridRow>
-        <GridColumn md="2">
+        <GridColumn md="3">
           <div className="editable-component">
             <EditorToggle {...this.props}/>
             <h4>{this.props.title}</h4>
@@ -199,7 +199,7 @@ module.exports = React.createClass({
             </Tree>
           </div>
         </GridColumn>
-        <GridColumn md="10">
+        <GridColumn md="9">
           <div id="workflow-page"></div>
           <div id="workflow-status"></div>
           <div id="workflow-actions" className="text-right">
