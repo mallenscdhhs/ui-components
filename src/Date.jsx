@@ -44,7 +44,7 @@ module.exports = React.createClass({
 
   render: function(){
     var props = _.pick(this.props, inputProps);
-    return <DateTimePicker time={false} format={"M/d/yyyy"} parse={"M/d/yyyy"} onChange={this.handleDateChange} {...props} value={this.state.value}  />;
+    return <DateTimePicker time={false} format={"MM/dd/yyyy"} parse={"MM/dd/yyyy"} onChange={this.handleDateChange} {...props} value={this.state.value}  />;
   }
 
 });

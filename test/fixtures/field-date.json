@@ -3,7 +3,7 @@
   "type" : "date",
   "name" : "test-date",
   "label" : "Test Date",
-  "value" : "2/5/2012",
+  "value" : "02/05/2012",
   "required" : false,
   "options" : { }  
 }

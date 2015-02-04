@@ -22,8 +22,8 @@ describe('Date input', function(){
     var container = comp.getDOMNode();
     var dom = container.childNodes[0];
     expect(dom.value).toEqual(fixture.value);
-    TestUtils.Simulate.change(dom, {target: {value: '3/15/2013'}});
-    expect(dom.value).toEqual('3/15/2013');
+    TestUtils.Simulate.change(dom, {target: {value: '03/15/2013'}});
+    expect(dom.value).toEqual('03/15/2013');
   });
 
 });
