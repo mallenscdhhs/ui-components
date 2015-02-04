@@ -2,7 +2,7 @@
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
-var inputProps = ['id', 'name', 'value', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
+var inputProps = ['id', 'name', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
 var DateTimePicker = require('react-widgets').DateTimePicker;
 
 module.exports = React.createClass({
@@ -38,7 +38,7 @@ module.exports = React.createClass({
 
   render: function(){
     var props = _.pick(this.props, inputProps);
-    return <DateTimePicker time={false} format={"M/d/yyyy"} onChange={this.handleDateChange} value={this.state.value} {...props} />;
+    return <DateTimePicker time={false} format={"M/d/yyyy"} parse={"M/d/yyyy"} onChange={this.handleDateChange} {...props} value={this.state.value}  />;
   }
 
 });
