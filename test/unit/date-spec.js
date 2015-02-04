@@ -17,4 +17,13 @@ describe('Date input', function(){
     expect(dom.getAttribute('disabled')).toBeNull();
   });
 
+  it('can update date input value', function(){
+    var comp = TestUtils.renderIntoDocument(<Date {...fixture}/>);
+    var container = comp.getDOMNode();
+    var dom = container.childNodes[0];
+    expect(dom.value).toEqual(fixture.value);
+    TestUtils.Simulate.change(dom, {target: {value: '3/15/2013'}});
+    expect(dom.value).toEqual('3/15/2013');
+  });
+
 });

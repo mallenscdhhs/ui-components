@@ -2,11 +2,15 @@
 var React = require('react');
 var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
-var inputProps = ['id', 'name', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
+var inputProps = ['id', 'name', 'aria-describedby'];
 var DateTimePicker = require('react-widgets').DateTimePicker;
 var Flux = require('fluxify');
 var constants = require('./constants');
 
+/**
+ * Date input component
+ * @module Date Date component
+ */
 module.exports = React.createClass({
 
   displayName: 'Date',
