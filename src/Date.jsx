@@ -5,6 +5,7 @@ var _ = require('lodash');
 var inputProps = ['id', 'name', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
 var DateTimePicker = require('react-widgets').DateTimePicker;
 var Flux = require('fluxify');
+var constants = require('./constants');
 
 module.exports = React.createClass({
 
