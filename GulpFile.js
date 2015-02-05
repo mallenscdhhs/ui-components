@@ -40,9 +40,13 @@ gulp.task('less:compile', function(){
 
 
 gulp.task('copy:fonts', function(){
-  return gulp.src('./node_modules/bootstrap/fonts/*').pipe(gulp.dest('./dist/fonts'));
+  return gulp.src(['./node_modules/bootstrap/fonts/*','./node_modules/react-widgets/dist/fonts/*'])
+        .pipe(gulp.dest('./dist/fonts'));
 });
 
+gulp.task('copy:images', function(){
+  return gulp.src(['./node_modules/react-widgets/dist/css/*.gif']).pipe(gulp.dest('./dist/img'));
+});
 
 gulp.task('transpile', ['clean'], function(){
   return gulp.src(['./src/**/*.jsx', './src/*.js'])
@@ -99,4 +103,4 @@ gulp.task('watch:less', function(){
 
 
 gulp.task('build', ['clean:build']);
-gulp.task('assets', ['less:compile', 'copy:fonts']);
+gulp.task('assets', ['less:compile', 'copy:fonts','copy:images']);

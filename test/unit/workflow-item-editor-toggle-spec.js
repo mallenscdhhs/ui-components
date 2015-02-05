@@ -13,12 +13,14 @@ describe('WorkflowEditorToggle', function(){
     this.component = TestUtils.renderIntoDocument(this.item(this.fixture));
   });
 
-  it('will render edit, up, down, and status toggle', function(){
+  it('will render up, down, status, nest and unnest buttons', function(){
     var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'config-editor');
     expect(TestUtils.isDOMComponent(html)).toEqual(true);
     expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-move-up-page').length).toEqual(1);
     expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-move-down-page').length).toEqual(1);
     expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-disable-page').length).toEqual(1);
+    expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-nest-page').length).toEqual(1);
+    expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'workflow-un-nest-page').length).toEqual(1);
   });
 
   it('will create event when TOGGLE STATUS is clicked', function(done){
@@ -74,6 +76,46 @@ describe('WorkflowEditorToggle', function(){
 
     var moveDownComponent = TestUtils.findRenderedDOMComponentWithClass(this.component, 'workflow-move-down-page');
     TestUtils.Simulate.click(moveDownComponent);
+
+    setTimeout(function(){
+      expect(this.handler).toHaveBeenCalledWith(this.fixture);
+      done();
+    }.bind(this), 200);
+  });
+
+  it('will create event when NEST is clicked', function(done){
+    this.handler = function(){};
+    spyOn(this, 'handler');
+
+    Dispatcher.register( 'workflow-items-test-5', function(action,data){
+      if( action === constants.actions.NEST_WORKFLOW_PAGE) {
+        this.handler(data);
+        Dispatcher.unregister( 'workflow-items-test-5');
+      }
+    }.bind(this));
+
+    var nestComponent = TestUtils.findRenderedDOMComponentWithClass(this.component, 'workflow-nest-page');
+    TestUtils.Simulate.click(nestComponent);
+
+    setTimeout(function(){
+      expect(this.handler).toHaveBeenCalledWith(this.fixture);
+      done();
+    }.bind(this), 200);
+  });
+
+  it('will create event when UNNEST is clicked', function(done){
+    this.handler = function(){};
+    spyOn(this, 'handler');
+
+    Dispatcher.register( 'workflow-items-test-6', function(action,data){
+      if( action === constants.actions.UNNEST_WORKFLOW_PAGE) {
+        this.handler(data);
+        Dispatcher.unregister( 'workflow-items-test-6');
+      }
+    }.bind(this));
+
+    var unNestComponent = TestUtils.findRenderedDOMComponentWithClass(this.component, 'workflow-un-nest-page');
+    TestUtils.Simulate.click(unNestComponent);
 
     setTimeout(function(){
       expect(this.handler).toHaveBeenCalledWith(this.fixture);

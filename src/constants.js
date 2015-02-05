@@ -19,6 +19,8 @@ module.exports = {
     "SESSION_VALUES_LOADED": "sessionValuesLoaded",
     "API_COMMUNCATION_ERROR": "apiCommunicationError",
     "TOGGLE_DISABLE_WORKFLOW_PAGE" : "toggleDisableWorkflowPage",
-    "MOVE_WORKFLOW_PAGE" : "moveWorkflowPage"
+    "MOVE_WORKFLOW_PAGE" : "moveWorkflowPage",
+    "NEST_WORKFLOW_PAGE" : "nestWorkflowPage",
+    "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage"
   }
 };

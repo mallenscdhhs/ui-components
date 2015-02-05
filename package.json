@@ -23,7 +23,8 @@
     "react-typeahead": "michaelleeallen/react-typeahead",
     "fluxify": "^0.2.1",
     "es6-promise": "^2.0.1",
-    "reactify": "^0.16.0"
+    "reactify": "^0.16.0",
+    "react-widgets": "^2.2.2"
   },
   "devDependencies": {
     "bootstrap": "^3.3.1",
