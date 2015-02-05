@@ -11,7 +11,7 @@ var Checkable = require('./Checkable');
 var Select = require('./Select');
 var Input = require('./Input');
 var Textarea = require('./Textarea');
-var Date = require('./Date');
+var DateComponent = require('./Date');
 var AutoComplete = require('./AutoComplete');
 var ContentEditor = require('./ContentEditor');
 
@@ -104,7 +104,7 @@ module.exports = React.createClass({
       case 'autocomplete':
         return this.getDefaultFieldContainer(<AutoComplete {...this.props}/>);
       case 'date':
-        return this.getDefaultFieldContainer(<Date {...this.props}/>);
+        return this.getDefaultFieldContainer(<DateComponent {...this.props}/>);
       default:
         return this.getDefaultFieldContainer(<Input className={controlClassName} aria-describedby={helpKey} {...this.props} />);
     }
