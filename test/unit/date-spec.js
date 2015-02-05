@@ -1,13 +1,13 @@
 var React = require('react');
 require('es6-promise').polyfill();
-var Date = require('../../src/Date');
+var DateComponent = require('../../src/Date');
 var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-date.json');
 
 describe('Date input', function(){
 
   it('can render a date input', function(){
-    var comp = TestUtils.renderIntoDocument(<Date {...fixture}/>);
+    var comp = TestUtils.renderIntoDocument(<DateComponent {...fixture}/>);
     var container = comp.getDOMNode();
     var dom = container.childNodes[0];
     expect(container.id).toEqual(fixture.id);
@@ -18,7 +18,7 @@ describe('Date input', function(){
   });
 
   it('can update date input value', function(){
-    var comp = TestUtils.renderIntoDocument(<Date {...fixture}/>);
+    var comp = TestUtils.renderIntoDocument(<DateComponent {...fixture}/>);
     var container = comp.getDOMNode();
     var dom = container.childNodes[0];
     expect(dom.value).toEqual(fixture.value);
