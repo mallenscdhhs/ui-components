@@ -33,8 +33,8 @@ module.exports = Flux.createStore({
      * @param data
      */
     "sessionValuesLoaded" : function(updater,session,data){
-      // Verify API has validation endpoint
-      if (configuration.API && configuration.API.validation) {
+      // Verify API has validation endpoint AND has rules associated with the field
+      if (configuration.API && configuration.API.validation && data.rules) {
         // Build Request Payload
         var field = _.zipObject([data.name], [data.value]);
         var requestPayload = {
