@@ -26,7 +26,7 @@ module.exports = React.createClass({
   * @return {String}
   */
   getClasses: function(){
-    var classes = ['btn', 'editable-component'];
+    var classes = ['btn'];
     // Add default link-type for action links
     if(this.props.type==='link'){
       classes.push('btn-link');
