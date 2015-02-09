@@ -2,7 +2,6 @@
 var React = require('react');
 var _ = require('lodash');
 var Flux = require('fluxify');
-var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
   displayName: 'Action',
