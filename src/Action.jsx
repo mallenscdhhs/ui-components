@@ -2,7 +2,6 @@
 var React = require('react');
 var _ = require('lodash');
 var Flux = require('fluxify');
-var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
   displayName: 'Action',
@@ -77,7 +76,6 @@ module.exports = React.createClass({
         key={this.props.id+"-action"}
         className={this.getClasses()}
         onClick={this.handleClick}>
-        <EditorToggle {...this.props}/>
         {this.props.name}
       </button>
     );
