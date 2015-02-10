@@ -63,7 +63,7 @@ module.exports = React.createClass({
       value: value
     };
     var actionType = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
-    //this.setState({checked: e.target.checked});
+    this.setState({checked: e.target.checked});
     Flux.doAction( actionType , eventData  );
   },
 
@@ -77,7 +77,6 @@ module.exports = React.createClass({
     });
     var editorToggle = this.props.isFieldGroup? '': <EditorToggle {...this.props}/>;
     var props = _.pick(this.props, ['type', 'id', 'name', 'disabled', 'value', 'aria-describedby']);
-    props.checked = this.state.checked;
     return (
       <div className={classNames}>
         {editorToggle}
