@@ -5,9 +5,7 @@
     "id": "test",
     "name": "test",
     "label": "Test",
-    "options": {
-      "name": "test",
-      "items": [{"value": "test", "label": "test"}]
-    }
+    "options": [{"value": "test", "label": "test"}],
+    "optionsResource": "test"
   }
 }
