@@ -38,7 +38,6 @@ module.exports = React.createClass({
 
   getInitialState: function(){
     return {
-      'checked'   : !!this.props.checked,
       'display' : true,
       'has-error' : false
     };
@@ -76,8 +75,7 @@ module.exports = React.createClass({
       'checkbox': this.props.type === 'checkbox'
     });
     var editorToggle = this.props.isFieldGroup? '': <EditorToggle {...this.props}/>;
-    var props = _.pick(this.props, ['type', 'id', 'name', 'disabled', 'value', 'aria-describedby']);
-    props.checked = this.state.checked;
+    var props = _.pick(this.props, ['type', 'id', 'name', 'checked', 'disabled', 'value', 'aria-describedby']);
     return (
       <div className={classNames}>
         {editorToggle}
