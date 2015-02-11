@@ -40,12 +40,6 @@ module.exports = React.createClass({
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     type: React.PropTypes.string.isRequired,
-    options: React.PropTypes.shape({
-      items: React.PropTypes.arrayOf(React.PropTypes.shape({
-        value: React.PropTypes.any,
-        label: React.PropTypes.string
-      }))
-    }),
     value: React.PropTypes.any,
     required: React.PropTypes.bool
   },
