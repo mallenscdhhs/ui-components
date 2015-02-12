@@ -54,10 +54,11 @@ describe('OptionsMixin', function(){
       return ajaxMock.promise();
     });
 
-    Dispatcher.register('test-opt-mixin-LOAD-RESOURCE', function(action,items){
+    Dispatcher.register('test-opt-mixin-LOAD-RESOURCE', function(action,data){
       if ( action === constants.actions.LOAD_OPTIONS ) {
-        expect(items[0].label).toEqual(resourcePayload.responsePayload.result[0].label);
-        expect(items[0].value).toEqual(resourcePayload.responsePayload.result[0].value);
+        expect(data.id).toEqual(reqFixture.config.id);
+        expect(data.options[0].label).toEqual(resourcePayload.responsePayload.result[0].label);
+        expect(data.options[0].value).toEqual(resourcePayload.responsePayload.result[0].value);
         Dispatcher.unregister('test-opt-mixin-LOAD-RESOURCE');
         done();
       }

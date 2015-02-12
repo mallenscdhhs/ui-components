@@ -22,7 +22,10 @@ module.exports = Flux.createStore({
           if (resp && resp.responsePayload.result.length) {
             options = resp.responsePayload.result;
           }
-          Flux.doAction(constants.actions.LOAD_OPTIONS, options);
+          Flux.doAction(constants.actions.LOAD_OPTIONS, {
+            'id': data.fieldId,
+            'options' : options
+          });
         })
         .fail(function () {
           Flux.doAction(
