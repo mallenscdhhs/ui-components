@@ -14,7 +14,7 @@ module.exports = Flux.createStore({
 
   actionCallbacks: {
 
-    sendResourceOptions : function(updater,data){
+    "sendResourceOptions" : function(updater,data){
       if ( !configuration.API || !configuration.API.options ) throw new Error('API endpoint for options not configured.');
       $.getJSON(configuration.API.options+'/'+data.resourceName)
         .done(function (resp) {
