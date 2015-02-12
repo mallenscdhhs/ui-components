@@ -1,0 +1,18 @@
+{
+  "camelcase": true,
+  "eqeqeq": true,
+  "forin": true,
+  "jquery": true,
+  "jasmine": true,
+  "browserify": true,
+  "indent": 2,
+  "latedef": true,
+  "nonbsp": true,
+  "nonew": true,
+  "shadow": false,
+  "undef": true,
+  "scripturl": true,
+  "globals": {
+    "Pen": true
+  }
+}

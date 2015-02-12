@@ -5,14 +5,12 @@
     "id": "ac-test",
     "name": "ac-test",
     "label": "Test",
-    "options": {
-      "items": [
-        {"value": "one", "label": "One"},
-        {"value": "two", "label": "Two"},
-        {"value": "three", "label": "Three"},
-        {"value": "four", "label": "Four"},
-        {"value": "five", "label": "Five"}
-      ]
-    }
+    "options": [
+      {"value": "one", "label": "One"},
+      {"value": "two", "label": "Two"},
+      {"value": "three", "label": "Three"},
+      {"value": "four", "label": "Four"},
+      {"value": "five", "label": "Five"}
+    ]
   }
 }

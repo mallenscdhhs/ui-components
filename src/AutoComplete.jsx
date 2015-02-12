@@ -72,9 +72,9 @@ module.exports = React.createClass({
     var opt = _.find(this.state.options, {label: label});
     this.setState({value: opt.value});
     Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {
-        id: this.props.id,
-        name: this.props.name,
-        value: opt.value
+      id: this.props.id,
+      name: this.props.name,
+      value: opt.value
     });
   },
 

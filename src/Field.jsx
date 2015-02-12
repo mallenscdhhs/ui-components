@@ -28,16 +28,7 @@ module.exports = React.createClass({
     label: React.PropTypes.string.isRequired,
     required: React.PropTypes.bool,
     helpText: React.PropTypes.string,
-    persistInSession: React.PropTypes.bool,
-    dependency: React.PropTypes.shape({
-      id: React.PropTypes.string.isRequired,
-      value: React.PropTypes.string.isRequired,
-      initialState: React.PropTypes.oneOf(['hidden', 'visible']).isRequired
-    }),
-    options: React.PropTypes.shape({
-      items: React.PropTypes.arrayOf(React.PropTypes.object),
-      name: React.PropTypes.string
-    })
+    persistInSession: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
@@ -52,7 +43,7 @@ module.exports = React.createClass({
    */
   getInitialState: function() {
     return {
-      display: (!this.hasDependency() || this.props.dependency.initialState !=='hidden'),
+      display: (!this.hasDependency() || this.props.initialState !=='hidden'),
       hasError: false,
       errorMessage: ''
     };
@@ -81,7 +72,10 @@ module.exports = React.createClass({
    * @returns {object}
    */
   isFieldGroup: function () {
-    return (this.props.type === 'radio' || this.props.type === 'checkbox') && this.props.options;
+    var isRadio = (this.props.type === 'radio');
+    var isCheckbox = (this.props.type === 'checkbox');
+    var hasOptions = !!(this.props.options || this.props.optionsResource);
+    return (isRadio || isCheckbox) && hasOptions;
   },
 
   /**

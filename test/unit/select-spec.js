@@ -16,7 +16,7 @@ describe('Select', function(){
     expect(dom.id).toEqual(fixture.id);
     expect(dom.name).toEqual(fixture.name);
     expect(dom.childNodes[0].tagName.toLowerCase()).toEqual('option');
-    expect(dom.childNodes[0].value).toEqual(fixture.options.items[0].value);
+    expect(dom.childNodes[0].value).toEqual(fixture.options[0].value);
   });
 
   it('can render a mulitple select input', function(){
