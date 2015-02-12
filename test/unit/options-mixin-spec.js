@@ -31,44 +31,39 @@ describe('OptionsMixin', function(){
         "id": "test",
         "name": "test",
         "label": "Test",
-        "options": {
-          "name": "test"
-        }
+        "optionsResource":  "test"
       }
     };
 
     var resourcePayload ={
-      "module" : "individualProvInfo",
-      "operation" : "lookup",
+      "module" : "PE",
+      "operation" : "SUCCESS",
       "payloadClassName" : "",
       "responsePayload" : {
-        "result" : {
-          "test" : [
-            {"description" : "resourceOne", "code" : 1},
-            {"description" : "resourceTwo", "code" : 2}
-          ]
-        }
+        "result" :  [
+          {"description" : "resourceOne", "code" : 1},
+          {"description" : "resourceTwo", "code" : 2}
+        ]
       }
     };
 
     spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
-      expect(params.url).toEqual("/api/resource");
-      expect(params.data.payload.lookup[0]).toEqual(reqFixture.config.options.name);
+      expect(params.url).toEqual("/api/resource/test");
       ajaxMock.resolve(resourcePayload);
       return ajaxMock.promise();
     });
 
     Dispatcher.register('test-opt-mixin-LOAD-RESOURCE', function(action,items){
       if ( action === constants.actions.LOAD_OPTIONS ) {
-        expect(items[0].description).toEqual(resourcePayload.responsePayload.result[reqFixture.config.options.name][0].description);
+        expect(items[0].description).toEqual(resourcePayload.responsePayload.result[0].description);
         Dispatcher.unregister('test-opt-mixin-LOAD-RESOURCE');
         done();
       }
     });
 
     Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
-      "resourceName" : reqFixture.config.options.name,
+      "resourceName" : reqFixture.config.optionsResource,
       "fieldId" : reqFixture.config.id
     });
 
@@ -83,9 +78,7 @@ describe('OptionsMixin', function(){
         "id": "test",
         "name": "test",
         "label": "Test",
-        "options": {
-          "name": "test"
-        }
+        "optionsResource": "test"
       }
     };
 
