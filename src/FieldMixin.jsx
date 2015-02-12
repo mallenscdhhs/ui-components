@@ -32,10 +32,10 @@ module.exports = {
    */
   getFieldClassNames: function(){
     return cx({
-      'form-group' : true,
-      'editable-component' : true,
-      'hidden' : !this.state.display,
-      'has-error' : this.state.hasError
+      'form-group': true,
+      'editable-component': true,
+      'has-error': this.state.hasError,
+      'hidden': !this.state.visible
     });
   },
 

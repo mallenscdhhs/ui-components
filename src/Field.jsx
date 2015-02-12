@@ -43,7 +43,7 @@ module.exports = React.createClass({
    */
   getInitialState: function() {
     return {
-      display: (!this.hasDependency() || this.props.initialState !=='hidden'),
+      visible: this.props.initialState === 'visible',
       hasError: false,
       errorMessage: ''
     };
