@@ -41,8 +41,8 @@ describe('OptionsMixin', function(){
       "payloadClassName" : "",
       "responsePayload" : {
         "result" :  [
-          {"description" : "resourceOne", "code" : 1},
-          {"description" : "resourceTwo", "code" : 2}
+          {"label" : "resourceOne", "value" : 1},
+          {"label" : "resourceTwo", "value" : 2}
         ]
       }
     };
@@ -56,7 +56,8 @@ describe('OptionsMixin', function(){
 
     Dispatcher.register('test-opt-mixin-LOAD-RESOURCE', function(action,items){
       if ( action === constants.actions.LOAD_OPTIONS ) {
-        expect(items[0].description).toEqual(resourcePayload.responsePayload.result[0].description);
+        expect(items[0].label).toEqual(resourcePayload.responsePayload.result[0].label);
+        expect(items[0].value).toEqual(resourcePayload.responsePayload.result[0].value);
         Dispatcher.unregister('test-opt-mixin-LOAD-RESOURCE');
         done();
       }
@@ -83,13 +84,14 @@ describe('OptionsMixin', function(){
     };
 
     var customPayload = [
-      {"description" : "customOne", "code" : 1},
-      {"description" : "customTwo", "code" : 2}
+      {"label" : "customOne", "value" : 1},
+      {"label" : "customTwo", "value" : 2}
     ];
 
     Dispatcher.register('test-opt-mixin-LOAD-CUSTOM', function(action,items){
       if ( action === constants.actions.LOAD_OPTIONS) {
-        expect(items[0].description).toEqual(customPayload[0].description);
+        expect(items[0].value).toEqual(customPayload[0].value);
+        expect(items[0].label).toEqual(customPayload[0].label);
         Dispatcher.unregister('test-opt-mixin-LOAD-CUSTOM');
         done();
       }
