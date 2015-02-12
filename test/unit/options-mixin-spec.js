@@ -19,7 +19,7 @@ describe('OptionsMixin', function(){
   it('can load options from props', function(){
     var component = TestUtils.renderIntoDocument(<Select {...fixture.config}/>);
     expect(component.state.options.length).toEqual(1);
-    expect(component.state.options[0].value).toEqual(fixture.config.options.items[0].value);
+    expect(component.state.options[0].value).toEqual(fixture.config.options[0].value);
   });
 
   it('can request resource options to be loaded', function(done){

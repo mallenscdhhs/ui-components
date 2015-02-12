@@ -10,10 +10,9 @@ var constants = require('./constants');
 module.exports = {
 
   propTypes: {
-    options: React.PropTypes.shape({
-      items: React.PropTypes.arrayOf(React.PropTypes.object),
-      name: React.PropTypes.string
-    }).isRequired
+    options: React.PropTypes.arrayOf(React.PropTypes.object),
+    optionsResource: React.PropTypes.string,
+    optionsDependencyName: React.PropTypes.string
   },
 
   /**
@@ -31,11 +30,11 @@ module.exports = {
     }.bind(this));
 
     // Init Options
-    if ( this.props.options && this.props.options.items ) {
-      this.setState({'options': this.props.options.items});
-    } else if(this.props.options && this.props.options.name) {
+    if ( this.props.options ) {
+      this.setState({'options': this.props.options});
+    } else if ( this.props.optionsResource ) {
       Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
-        'resourceName': this.props.options.name,
+        'resourceName': this.props.optionsResource,
         'fieldId' : this.props.id,
         'fieldName' : this.props.name
       });

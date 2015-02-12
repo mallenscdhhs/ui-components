@@ -11,14 +11,11 @@ var update = require('react/lib/update');
 describe('Field component', function() {
 
   it('can manage viewable state', function(){
-    var dep = {
-      initialState: 'hidden',
-      id: 'testfield',
-      value: 'bar'
-    };
     var config = update(fixture, {
       value: { $set: 'foo' },
-      dependency: { $set: dep }
+      dependencyName: { $set: 'testfield' },
+      dependencyValue: {$set: 'bar'},
+      initialState: {$set: 'hidden'}
     });
     var comp = TestUtils.renderIntoDocument(<Field {...config}/>);
     var dom = comp.getDOMNode();

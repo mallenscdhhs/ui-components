@@ -16,9 +16,9 @@ describe('FieldGroup', function(){
     expect(dom.tagName.toLowerCase()).toEqual('fieldset');
     expect(dom.childNodes.length).toEqual(6);
     expect(dom.childNodes[1].tagName.toLowerCase()).toEqual('legend');
-    expect(checkboxes.length).toEqual(fixture.options.items.length);
+    expect(checkboxes.length).toEqual(fixture.options.length);
     expect(checkboxes[0].getDOMNode().type).toEqual('checkbox');
-    expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options.items[0].value);
+    expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options[0].value);
   });
 
   it('can render a list of radio inputs', function(){
@@ -29,9 +29,9 @@ describe('FieldGroup', function(){
     expect(dom.tagName.toLowerCase()).toEqual('fieldset');
     expect(dom.childNodes.length).toEqual(6);
     expect(dom.childNodes[1].tagName.toLowerCase()).toEqual('legend');
-    expect(checkboxes.length).toEqual(fixture.options.items.length);
+    expect(checkboxes.length).toEqual(fixture.options.length);
     expect(checkboxes[0].getDOMNode().type).toEqual('radio');
-    expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options.items[0].value);
+    expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options[0].value);
   });
 
   it('can manage a list of values for checkboxes', function(done){

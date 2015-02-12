@@ -2,16 +2,14 @@
   "id" : "test-select",
   "type" : "select",
   "name" : "test-select",
-  "options" : {
-    "items" : [
-      {
-        "label" : "Select 1",
-        "value" : "1"
-      },
-      {
-        "label" : "Select 2",
-        "value" : "2"
-      }        
-    ]
-  }    
+  "options" : [
+    {
+      "label" : "Select 1",
+      "value" : "1"
+    },
+    {
+      "label" : "Select 2",
+      "value" : "2"
+    }
+  ]
 }

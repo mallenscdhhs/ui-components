@@ -40,12 +40,6 @@ module.exports = React.createClass({
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     type: React.PropTypes.string.isRequired,
-    options: React.PropTypes.shape({
-      items: React.PropTypes.arrayOf(React.PropTypes.shape({
-        value: React.PropTypes.any,
-        label: React.PropTypes.string
-      }))
-    }),
     value: React.PropTypes.any,
     required: React.PropTypes.bool
   },
@@ -100,7 +94,7 @@ module.exports = React.createClass({
         <EditorToggle {...this.props}/>
         <legend className="fieldGroup-checkable">{this.props.label}{this.getRequiredIndicator()}</legend>
         {_.map(this.state.options, function(option){
-          var id = this.props.name + '-option-' + option.value;
+          var id = this.props.id + '-option-' + option.value;
           var config = update(option, {
             id: {$set: id},
             name: {$set: this.props.name},
