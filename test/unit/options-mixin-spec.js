@@ -31,44 +31,41 @@ describe('OptionsMixin', function(){
         "id": "test",
         "name": "test",
         "label": "Test",
-        "options": {
-          "name": "test"
-        }
+        "optionsResource":  "test"
       }
     };
 
     var resourcePayload ={
-      "module" : "individualProvInfo",
-      "operation" : "lookup",
+      "module" : "PE",
+      "operation" : "SUCCESS",
       "payloadClassName" : "",
       "responsePayload" : {
-        "result" : {
-          "test" : [
-            {"description" : "resourceOne", "code" : 1},
-            {"description" : "resourceTwo", "code" : 2}
-          ]
-        }
+        "result" :  [
+          {"label" : "resourceOne", "value" : 1},
+          {"label" : "resourceTwo", "value" : 2}
+        ]
       }
     };
 
     spyOn( $, 'ajax' ).and.callFake(function(params){ 
       var ajaxMock = $.Deferred();
-      expect(params.url).toEqual("/api/resource");
-      expect(params.data.payload.lookup[0]).toEqual(reqFixture.config.options.name);
+      expect(params.url).toEqual("/api/resource/test");
       ajaxMock.resolve(resourcePayload);
       return ajaxMock.promise();
     });
 
-    Dispatcher.register('test-opt-mixin-LOAD-RESOURCE', function(action,items){
+    Dispatcher.register('test-opt-mixin-LOAD-RESOURCE', function(action,data){
       if ( action === constants.actions.LOAD_OPTIONS ) {
-        expect(items[0].description).toEqual(resourcePayload.responsePayload.result[reqFixture.config.options.name][0].description);
+        expect(data.id).toEqual(reqFixture.config.id);
+        expect(data.options[0].label).toEqual(resourcePayload.responsePayload.result[0].label);
+        expect(data.options[0].value).toEqual(resourcePayload.responsePayload.result[0].value);
         Dispatcher.unregister('test-opt-mixin-LOAD-RESOURCE');
         done();
       }
     });
 
     Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
-      "resourceName" : reqFixture.config.options.name,
+      "resourceName" : reqFixture.config.optionsResource,
       "fieldId" : reqFixture.config.id
     });
 
@@ -83,20 +80,19 @@ describe('OptionsMixin', function(){
         "id": "test",
         "name": "test",
         "label": "Test",
-        "options": {
-          "name": "test"
-        }
+        "optionsResource": "test"
       }
     };
 
     var customPayload = [
-      {"description" : "customOne", "code" : 1},
-      {"description" : "customTwo", "code" : 2}
+      {"label" : "customOne", "value" : 1},
+      {"label" : "customTwo", "value" : 2}
     ];
 
     Dispatcher.register('test-opt-mixin-LOAD-CUSTOM', function(action,items){
       if ( action === constants.actions.LOAD_OPTIONS) {
-        expect(items[0].description).toEqual(customPayload[0].description);
+        expect(items[0].value).toEqual(customPayload[0].value);
+        expect(items[0].label).toEqual(customPayload[0].label);
         Dispatcher.unregister('test-opt-mixin-LOAD-CUSTOM');
         done();
       }
