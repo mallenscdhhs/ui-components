@@ -65,8 +65,9 @@ var distributeIndexes = function(len, mod, num){
  * @returns {array}
  */
 var distributeComponents = function(rows, components, indexDistro){
+  // Fill available rows/columns with components
   var index = -1;
-  return _.map(rows, function(row, i){
+  var fullRows = _.map(rows, function(row, i){
     return _.map(row, function(col, n){
       index = index + 1;
       return update(col, {
@@ -76,6 +77,18 @@ var distributeComponents = function(rows, components, indexDistro){
       });
     });
   });
+
+  // If there are more components than rows/cols, push new row & col to hold each extra component
+  while(index < components.length-1){
+    index = index + 1;
+    var newRowCol = [{
+      "md" : "12",
+      "children" : _.at(components, index)
+    }];
+    fullRows.push(newRowCol);
+  }
+
+  return fullRows;
 };
 
 /**
