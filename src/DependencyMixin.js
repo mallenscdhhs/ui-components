@@ -1,6 +1,9 @@
 var Dispatcher = require('fluxify').dispatcher;
 var constants = require('./constants');
 var React = require('react');
+var _ = require('lodash');
+var utils = require('./utils');
+
 
 module.exports = {
 
@@ -30,7 +33,8 @@ module.exports = {
 
       Dispatcher.register( this.props.id + '-DEP-CHANGE' , function(action,data){
         if( action === constants.actions.FIELD_VALUE_CHANGE && data.name === depName){
-          var visibility = (depValues.indexOf(data.value) >= 0)? !visible : visible;
+          var value = _.isArray(data.value)? data.value : [data.value];
+          var visibility = (utils.containsOneOf(depValues, value))? !visible : visible;
           this.setState({'visible': visibility});
         }
       }.bind(this));
