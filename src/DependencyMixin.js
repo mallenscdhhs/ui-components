@@ -1,6 +1,9 @@
 var Dispatcher = require('fluxify').dispatcher;
 var constants = require('./constants');
 var React = require('react');
+var _ = require('lodash');
+var utils = require('./utils');
+
 
 module.exports = {
 
@@ -24,19 +27,15 @@ module.exports = {
    */
   componentDidMount: function(){
     if(this.hasDependency()){
-      var initState = this.props.initialState !== 'hidden';
+      var visible = this.state.visible;
       var depName = this.props.dependencyName;
       var depValues = this.props.dependencyValue.split('|');
 
       Dispatcher.register( this.props.id + '-DEP-CHANGE' , function(action,data){
         if( action === constants.actions.FIELD_VALUE_CHANGE && data.name === depName){
-          if(depValues.indexOf(data.value) >= 0) {
-            // Change from initial display state.
-            this.setState({'display': !initState});
-          }else{
-            // Otherwise, revert to (or stay at) initState
-            this.setState({'display': initState});
-          }
+          var value = _.isArray(data.value)? data.value : [data.value];
+          var visibility = (utils.containsOneOf(depValues, value))? !visible : visible;
+          this.setState({'visible': visibility});
         }
       }.bind(this));
     }
