@@ -12,31 +12,20 @@ module.exports = Flux.createStore({
 
   id: 'OptionsStore',
 
-  initialState : {
-
-  },
-
   actionCallbacks: {
 
     "sendResourceOptions" : function(updater,data){
       if ( !configuration.API || !configuration.API.options ) throw new Error('API endpoint for options not configured.');
-
-      var requestPayload = {
-        "module" : "",
-        "operation" : "lookup",
-        "payloadClassName": "",
-        "payload" : {
-          "lookup" : [data.resourceName]  // data.fieldId
-        }
-      };
-
-      $.post(configuration.API.options, requestPayload)
+      $.getJSON(configuration.API.options+'/'+data.resourceName)
         .done(function (resp) {
           var options = [];
-          if (resp && resp.responsePayload.result[data.resourceName].length) {
-            options = resp.responsePayload.result[data.resourceName];
+          if (resp && resp.responsePayload.result.length) {
+            options = resp.responsePayload.result;
           }
-          Flux.doAction(constants.actions.LOAD_OPTIONS, options);
+          Flux.doAction(constants.actions.LOAD_OPTIONS, {
+            'id': data.fieldId,
+            'options' : options
+          });
         })
         .fail(function () {
           Flux.doAction(
