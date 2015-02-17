@@ -65,11 +65,13 @@ var distributeIndexes = function(len, mod, num){
  * @returns {array}
  */
 var distributeComponents = function(rows, components, indexDistro){
+  var index = -1;
   return _.map(rows, function(row, i){
     return _.map(row, function(col, n){
+      index = index + 1;
       return update(col, {
         children: {
-          $set: _.at(components, indexDistro(add(getRowIndex(i), n)))
+          $set: _.at(components, index)
         }
       });
     });
