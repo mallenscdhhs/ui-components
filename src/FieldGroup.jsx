@@ -98,7 +98,6 @@ module.exports = React.createClass({
           var config = update(option, {
             id: {$set: id},
             name: {$set: this.props.name},
-            parent: {$set: this.props.id},
             type: {$set: this.props.type},
             checked: {$set: checkOptionValue(option.value)},
             isFieldGroup: {$set: true},

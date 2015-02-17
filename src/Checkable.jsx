@@ -16,7 +16,6 @@ module.exports = React.createClass({
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
-    parent: React.PropTypes.string,
     label: React.PropTypes.string.isRequired,
     value: React.PropTypes.oneOfType([
       React.PropTypes.string,
