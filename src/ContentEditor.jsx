@@ -1,23 +1,26 @@
 'use-strict';
 var React = require('react');
-var FieldMixin = require('./FieldMixin');
-var Flux = require('fluxify');
-var constants = require('./constants');
 var _ = require('lodash');
+var ValueChangeMixin = require('./ValueChangeMixin');
 require('pen');
-var inputProps = ['id', 'name', 'value', 'maxLength', 'className', 'aria-describedby'];
 
+/**
+ * Renders an editable content input, and uses the "pen" module for WYSIWIG.
+ * @module ContentEditor
+ */
 module.exports = React.createClass({
 
   displayName: 'ContentEditor',
 
-  mixins: [FieldMixin],
+  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     value: React.PropTypes.string,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    ref: React.PropTypes.string,
+    inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
   componentDidMount: function(){
@@ -56,13 +59,7 @@ module.exports = React.createClass({
    * @return {void}
    */
   handleContentEditorChange: function(value){
-    this.setState({'value': value});
-    var eventData ={
-      'id': this.props.id,
-      'name': this.props.name,
-      'value': value
-    };
-    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , eventData  );
+    this.onChange({target: {value: value}});
   },
 
   getInitialState: function(){
@@ -72,9 +69,16 @@ module.exports = React.createClass({
     };
   },
 
+  getDefaultProps: function(){
+    return {
+      ref: 'editor',
+      inputProps: ['ref', 'id', 'name', 'value', 'maxLength', 'className', 'aria-describedby']
+    };
+  },
+
   render: function(){
-    var props = _.pick(this.props, inputProps);
-    return <div key={this.props.id} ref="editor" value={this.state.value} {...props} ></div>;
+    var props = _.pick(this.props, this.props.inputProps);
+    return <div key={this.props.id} value={this.state.value} {...props} ></div>;
   }
 
 });

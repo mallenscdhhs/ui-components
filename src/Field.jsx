@@ -1,8 +1,13 @@
 'use-strict';
+
 var React = require('react');
+var cx = require('react/lib/cx');
 var _ = require('lodash');
+var Flux = require('fluxify');
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
+var FieldLabel = require('./FieldLabel');
+var HelpBlock = require('./HelpBlock');
 var FieldGroup = require('./FieldGroup');
 var FieldMixin = require('./FieldMixin');
 var ValidationMixin = require('./ValidationMixin');
@@ -19,7 +24,7 @@ module.exports = React.createClass({
 
   displayName: 'Field',
 
-  mixins: [FieldMixin, ValidationMixin, DependencyMixin],
+  mixins: [ValidationMixin, DependencyMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -33,7 +38,8 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      componentType: 'field'
+      componentType: 'field',
+      initialState: 'visible'
     };
   },
 
@@ -50,19 +56,11 @@ module.exports = React.createClass({
   },
 
   /**
-   * Wrap a field control in the default Bootstrap markup.
-   * @param {JSX} field
-   * @returns {JSX}
+   * Returns whether or not the Field type is "radio" or "checkbox".
+   * @returns {bool}
    */
-  getDefaultFieldContainer: function(field){
-    return (
-      <div className={this.getFieldClassNames()}>
-        <EditorToggle {...this.props}/>
-        <label htmlFor={this.props.id}>{this.props.label}{this.getRequiredIndicator()}</label>
-        {field}
-        {this.getHelpBlock()}
-      </div>
-    );
+  isRadioOrCheckbox: function(){
+    return /radio|checkbox/.test(this.props.type);
   },
 
   /**
@@ -72,36 +70,58 @@ module.exports = React.createClass({
    * @returns {object}
    */
   isFieldGroup: function () {
-    var isRadio = (this.props.type === 'radio');
-    var isCheckbox = (this.props.type === 'checkbox');
     var hasOptions = !!(this.props.options || this.props.optionsResource);
-    return (isRadio || isCheckbox) && hasOptions;
+    return this.isRadioOrCheckbox() && hasOptions;
   },
 
   /**
-   * Creates specified field type template
-   * @returns {JSX template}
+   * Takes the passed-in props object and adds a few computed properties.
+   * @param {object} props
+   * @returns {object}
    */
-  getField : function(){
-    var helpKey = 'field'+this.props.id+'HelpText';
-    var controlClassName = 'form-control';
-    switch(this.props.type){
+  getInputControlProps: function(props){
+    return _.extend(props, {
+      className: 'form-control',
+      'aria-aria-describedby': 'field'+this.props.id+'HelpText'
+    });
+  },
+
+  /**
+   * Creates specified field type component.
+   * @param {string} type
+   * @returns {JSX}
+   */
+  getInputControl : function(type, isFieldGroup){
+    switch(type){
       case 'contenteditor':
-        return this.getDefaultFieldContainer(<ContentEditor className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+        return ContentEditor;
       case 'textarea':
-        return this.getDefaultFieldContainer(<Textarea className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+        return Textarea;
       case 'radio':
       case 'checkbox':
-        return <Checkable {...this.props}/>;
+        return isFieldGroup? FieldGroup : Checkable;
       case 'select':
-        return this.getDefaultFieldContainer(<Select className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+        return Select;
       case 'autocomplete':
-        return this.getDefaultFieldContainer(<AutoComplete {...this.props}/>);
+        return AutoComplete;
       case 'date':
-        return this.getDefaultFieldContainer(<DateComponent {...this.props}/>);
+        return DateComponent;
       default:
-        return this.getDefaultFieldContainer(<Input className={controlClassName} aria-describedby={helpKey} {...this.props} />);
+        return Input;
     }
+  },
+
+  /**
+   * Return the CSS class names to apply to the Field wrapper element.
+   * @returns {object}
+   */
+  getClassNames: function(){
+    return cx({
+      'form-group': true,
+      'editable-component': true,
+      'has-error': this.state.hasError,
+      'hidden': !this.state.visible
+    });
   },
 
   /**
@@ -109,11 +129,26 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
-    if ( this.isFieldGroup() ) {
-      return <FieldGroup {...this.props} />;
-    } else {
-      return this.getField();
+    var isFieldGroup = this.isFieldGroup();
+    var isRadioOrCheckbox = this.isRadioOrCheckbox();
+    var wrapperTag = isFieldGroup? 'fieldset' : 'div';
+    var message = this.state.hasError? this.state.errorMessage : this.props.helpText;
+    var InputControl = this.getInputControl(this.props.type, isFieldGroup);
+    var labelProps = _.pick(this.props, ['id', 'label', 'required']);
+    var children = [];
+
+    if ( isFieldGroup || !isRadioOrCheckbox ) {
+      labelProps.isFieldGroup = isFieldGroup;
+      children.push(<FieldLabel {...labelProps}/>);
     }
+
+    children = children.concat([
+      <EditorToggle {...this.props}/>,
+      <InputControl {...this.getInputControlProps(this.props)} />,
+      <HelpBlock>{message}</HelpBlock>
+    ]);
+
+    return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
   }
 
 });

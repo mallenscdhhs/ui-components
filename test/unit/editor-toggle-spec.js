@@ -15,7 +15,14 @@ describe('EditorToggle', function(){
   describe('edit-component button', function(){
 
     beforeEach(function(){
-      this.fixture = {type: 'text', id:'test', name: 'test', label: 'test' ,componentType: 'field'};
+      this.fixture = {
+        type: 'text',
+        id:'test',
+        name: 'test',
+        label: 'test',
+        componentType: 'field',
+        initialState: 'visible'
+      };
       this.field = React.createFactory(Components.elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
     });

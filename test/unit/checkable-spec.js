@@ -12,10 +12,9 @@ describe('Checkable', function(){
   it('can render a single radio input', function(){
     var dom = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
     var wrapperDiv = dom.getDOMNode();
-    var label = wrapperDiv.childNodes[1];
+    var label = wrapperDiv.childNodes[0];
     var input = label.childNodes[0];
-    dom.setState({display: true});
-    expect(wrapperDiv.className).toEqual('editable-component radio');
+    expect(wrapperDiv.className).toEqual('radio');
     expect(label.getAttribute('for')).toEqual(fixture.config.id);
     expect(input.type).toEqual(fixture.config.type);
     expect(input.value).toEqual(fixture.config.value);
@@ -26,16 +25,15 @@ describe('Checkable', function(){
   it('can render a required radio input', function(){
     var config = update(fixture.config, {required: {$set: true}});
     var dom = TestUtils.renderIntoDocument(<Checkable {...config}/>);
-    var label = dom.getDOMNode().childNodes[1];
-    expect(label.childNodes.length).toEqual(4);
+    var label = dom.getDOMNode().childNodes[0];
     expect(label.childNodes[1].textContent).toEqual(fixture.config.label);
-    expect(label.childNodes[3].textContent).toEqual(' *');
+    expect(label.childNodes[2].textContent).toEqual('*');
   });
 
   it('can render a checked radio input', function(){
     var config = update(fixture.config, {checked: {$set: true}});
     var dom = TestUtils.renderIntoDocument(<Checkable {...config}/>);
-    var input = dom.getDOMNode().childNodes[1].childNodes[0];
+    var input = dom.getDOMNode().childNodes[0].childNodes[0];
     expect(input.checked).toBe(true);
   });
 
@@ -51,7 +49,7 @@ describe('Checkable', function(){
       }
     }.bind(this));
     var comp = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
-    var radio = comp.getDOMNode().childNodes[1].childNodes[0];
+    var radio = comp.getDOMNode().childNodes[0].childNodes[0];
     TestUtils.Simulate.change(radio, {target: {checked: true}});
   });
 
@@ -67,7 +65,7 @@ describe('Checkable', function(){
       }
     }.bind(this));
     var comp = TestUtils.renderIntoDocument(<Checkable {...fixture.config}/>);
-    var radio = comp.getDOMNode().childNodes[1].childNodes[0];
+    var radio = comp.getDOMNode().childNodes[0].childNodes[0];
     TestUtils.Simulate.change(radio, {target: {checked: false}});
   });
 
@@ -84,7 +82,7 @@ describe('Checkable', function(){
     }.bind(this));
     var config = update(fixture.config, {isFieldGroup: {$set: true}, 'parent':{$set : 'parent123'}});
     var comp = TestUtils.renderIntoDocument(<Checkable {...config}/>);
-    var radio = comp.getDOMNode().childNodes[1].childNodes[0];
+    var radio = comp.getDOMNode().childNodes[0].childNodes[0];
     TestUtils.Simulate.change(radio, {target: {checked: false}});
   });
 

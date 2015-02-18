@@ -1,9 +1,9 @@
 'use-strict';
 var React = require('react');
 var OptionsMixin = require('./OptionsMixin');
-var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
 var update = require('react/lib/update');
+var ValueChangeMixin = require('./ValueChangeMixin');
 
 /**
  * Returns the selected state of an <option>. Used in filter.
@@ -31,23 +31,21 @@ module.exports = React.createClass({
 
   displayName: 'Select',
 
-  mixins: [FieldMixin, OptionsMixin],
+  mixins: [OptionsMixin, ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     multiple: React.PropTypes.bool,
+    inputProps: React.PropTypes.arrayOf(React.PropTypes.string),
     value: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.arrayOf(React.PropTypes.string)
-    ]),
-    onChange: React.PropTypes.func,
-    onBlur: React.PropTypes.func
+    ])
   },
 
   getDefaultProps: function(){
     return {
-      componentType: 'field',
       inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby']
     };
   },
@@ -66,7 +64,7 @@ module.exports = React.createClass({
       opts = _.toArray(event.target.options);
       e.target.value = _.map(_.filter(opts, isOptionSelected), getOptionValue);
     }
-    this.handleInputChange(e);
+    this.onChange(e);
   },
 
   render: function(){
