@@ -1,11 +1,8 @@
 'use-strict';
 var React = require('react');
-var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
-var inputProps = ['id', 'name', 'aria-describedby'];
 var DateTimePicker = require('react-widgets').DateTimePicker;
-var Flux = require('fluxify');
-var constants = require('./constants');
+var ValueChangeMixin = require('./ValueChangeMixin');
 
 /**
  * Date input component
@@ -15,13 +12,26 @@ module.exports = React.createClass({
 
   displayName: 'Date',
 
-  mixins: [FieldMixin],
+  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     value: React.PropTypes.string,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    time: React.PropTypes.bool,
+    format: React.PropTypes.string,
+    parse: React.PropTypes.string,
+    inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
+  },
+
+  getDefaultProps: function(){
+    return {
+      inputProps: ['id', 'name', 'time', 'format', 'parse', 'aria-describedby'],
+      time: false,
+      format: 'MM/dd/yyyy',
+      parse: 'MM/dd/yyyy'
+    };
   },
 
   getInitialState: function(){
@@ -30,21 +40,13 @@ module.exports = React.createClass({
     };
   },
 
-  handleDateChange : function(date,dateString){
-    this.setState({value: date});
-    var eventData = {
-      id: this.props.id,
-      name: this.props.name,
-      value: date,
-      type: this.props.type,
-      rules : this.props.rules
-    };
-    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE ,  eventData  );
+  handleDateChange : function(date, dateString){
+    this.onChange({ target: { value: date }});
   },
 
   render: function(){
-    var props = _.pick(this.props, inputProps);
-    return <DateTimePicker time={false} format={"MM/dd/yyyy"} parse={"MM/dd/yyyy"} onChange={this.handleDateChange} {...props} value={this.state.value}  />;
+    var props = _.pick(this.props, this.props.inputProps);
+    return <DateTimePicker {...props}  onChange={this.handleDateChange} value={this.state.value}  />;
   }
 
 });
