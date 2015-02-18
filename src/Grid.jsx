@@ -46,17 +46,16 @@ var distributeComponents = function(rows, components){
     });
   });
 
-  // If there are more components than rows/cols, push new row & col to hold each extra component
-  while(index < components.length-1){
-    index = index + 1;
-    var newRowCol = [{
-      "md" : "12",
-      "children" : _.at(components, index)
-    }];
-    fullRows.push(newRowCol);
+  var extraRows = [];
+  if ( index < components.length-1) {
+    extraRows = _.map(components.slice(index+1), function(component){
+      return [{
+        md: '12',
+        children: [component]
+      }];
+    });
   }
-
-  return fullRows;
+  return fullRows.concat(extraRows);
 };
 
 /**
