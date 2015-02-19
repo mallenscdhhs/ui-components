@@ -25,21 +25,21 @@ describe('Field component', function() {
   it('can render error messages', function(done){
     var comp = TestUtils.renderIntoDocument(<Field {...fixture}/>);
     var eventData = {
-      'id' : fixture.id,
-      'hasError'    : true,
-      'errorMessage' : 'It broke.'
+      'id': fixture.id,
+      'hasError': true,
+      'errorMessage': 'It broke.'
     };
-    Flux.doAction( constants.actions.FIELD_VALIDATION_ERROR ,  eventData );
-    setTimeout(function(){
-      var helpBlock = TestUtils.findRenderedDOMComponentWithClass(comp, 'help-block');
-      expect(helpBlock.getDOMNode().textContent).toEqual('It broke.');
-      expect(/error/.test(comp.getDOMNode().className)).toEqual(true);
-      done();
-    }, 300);
+    Flux.doAction(constants.actions.FIELD_VALIDATION_ERROR, eventData)
+      .then(function(){
+        var helpBlock = TestUtils.findRenderedDOMComponentWithClass(comp, 'help-block');
+        expect(helpBlock.getDOMNode().textContent).toEqual('It broke.');
+        expect(/error/.test(comp.getDOMNode().className)).toEqual(true);
+        done();
+      });
   });
 
   it('can render a FieldGroup', function(){
-    var config = require('../fixtures/field-group.json');
+    var config = require('../fixtures/field-group.json').config;
     var comp = TestUtils.renderIntoDocument(<Field {...config}/>);
     var lgnd = TestUtils.findRenderedDOMComponentWithTag(comp, 'legend');
     var inpts = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');

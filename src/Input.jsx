@@ -1,12 +1,17 @@
 'use-strict';
 var React = require('react');
-var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
-var inputProps = ['type', 'id', 'name', 'maxLength', 'disabled', 'className', 'aria-describedby'];
+var ValueChangeMixin = require('./ValueChangeMixin');
 
+/**
+ * Renders an <input> control.
+ * @module Input
+ */
 module.exports = React.createClass({
 
   displayName: 'Input',
+
+  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -14,10 +19,15 @@ module.exports = React.createClass({
     name: React.PropTypes.string.isRequired,
     value: React.PropTypes.string,
     disabled: React.PropTypes.bool,
-    maxLength: React.PropTypes.number
+    maxLength: React.PropTypes.number,
+    inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
-  mixins: [FieldMixin],
+  getDefaultProps: function(){
+    return {
+      inputProps: ['type', 'id', 'name', 'maxLength', 'disabled', 'className', 'aria-describedby']
+    };
+  },
 
   getInitialState: function(){
     return {
@@ -26,8 +36,8 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var props = _.pick(this.props, inputProps);
-    return <input value={this.state.value} onChange={this.handleInputChange} {...props}/>;
+    var props = _.pick(this.props, this.props.inputProps);
+    return <input value={this.state.value} onChange={this.onChange} {...props}/>;
   }
 
 });

@@ -26,54 +26,36 @@ var getRowIndex = function(n){
 };
 
 /**
- * Returns the total number of columns in a given
- * array of rows.
- * @param {array} rows
- * @returns {number}
- */
-var getTotalColumns = function(rows){
-  return _.reduce(rows, function(n, row, i){
-    return n + row.length;
-  }, 0);
-};
-
-/**
- * Take a given number(num) and produce a list of values
- * that are cumulative sums of (num + mod) up to a limit(len).
- * @example:
- *  distributeIndexes(10, 3, 0) = [0,3,6,9]
- * @param {number} len - number to count to
- * @param {number} num - number to start at
- * @param {number} mod - number to cumulate with
- */
-var distributeIndexes = function(len, mod, num){
-  var result = [];
-  while(num < len){
-    result.push(num);
-    num = num + mod;
-  }
-  return result;
-};
-
-/**
  * Adds the children components to each column in sequence, distributing
  * components sequentially among available columns.
  * @param {array} rows
  * @param {array} components
- * @param {function} indexDistro - the function that calculates the indexes of the
- *   components that belong to the current column
  * @returns {array}
  */
-var distributeComponents = function(rows, components, indexDistro){
-  return _.map(rows, function(row, i){
+var distributeComponents = function(rows, components){
+  // Fill available rows/columns with components
+  var index = -1;
+  var fullRows = _.map(rows, function(row, i){
     return _.map(row, function(col, n){
+      index = index + 1;
       return update(col, {
         children: {
-          $set: _.at(components, indexDistro(add(getRowIndex(i), n)))
+          $set: _.at(components, index)
         }
       });
     });
   });
+
+  var extraRows = [];
+  if ( index < components.length-1) {
+    extraRows = _.map(components.slice(index+1), function(component){
+      return [{
+        md: '12',
+        children: [component]
+      }];
+    });
+  }
+  return fullRows.concat(extraRows);
 };
 
 /**
@@ -90,9 +72,6 @@ module.exports = React.createClass({
 
   statics: {
     add: add,
-    getTotalColumns: getTotalColumns,
-    getRowIndex: getRowIndex,
-    distributeIndexes: distributeIndexes,
     distributeComponents: distributeComponents
   },
 
@@ -105,10 +84,7 @@ module.exports = React.createClass({
   render: function(){
     var numChildren = this.props.children ? this.props.children.length : 0;
     if(numChildren) {
-      var numColumns = getTotalColumns(this.props.rows);
-      var indexDistro = distributeIndexes.bind(this, numChildren, numColumns);
-      var rows = distributeComponents(this.props.rows, this.props.children, indexDistro);
-
+      var rows = distributeComponents(this.props.rows, this.props.children);
       return (
         <div className="grid-layout">
         {_.map(rows, function (row, i) {

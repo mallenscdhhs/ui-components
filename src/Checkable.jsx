@@ -1,89 +1,76 @@
 'use-strict';
 var React = require('react');
-var FieldMixin = require('./FieldMixin');
+var FieldLabel = require('./FieldLabel');
 var _ = require('lodash');
-var Flux = require('fluxify');
-var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
-var EditorToggle = require('./EditorToggle');
-var classSet = require('react/lib/cx');
+var ValueChangeMixin = require('./ValueChangeMixin');
 
-
+/**
+ * Renders either a radio|checkbox input control.
+ * @module Checkable
+ */
 module.exports = React.createClass({
 
   displayName: 'Checkable',
 
+  mixins: [ValueChangeMixin],
+
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
-    parent: React.PropTypes.string,
     label: React.PropTypes.string.isRequired,
     value: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.bool
     ]).isRequired,
+    disabled: React.PropTypes.bool,
     isFieldGroup: React.PropTypes.bool,
     checked: React.PropTypes.bool,
     helpText: React.PropTypes.string,
     required: React.PropTypes.bool
   },
 
-  mixins: [FieldMixin],
-
   getDefaultProps: function(){
     return {
-      componentType: 'field'
+      componentType: 'field',
+      inputProps: ['type', 'id', 'name', 'checked', 'disabled', 'value', 'aria-describedby'],
+      labelProps: ['label', 'id', 'required']
     };
   },
 
   getInitialState: function(){
     return {
-      'display' : true,
-      'has-error' : false
+      'checked' : false
     };
   },
 
   /**
    * Because radios and checkboxes only submit their value if they are checked,
    * we must inspect the "checked" state of the input and choose whether or not
-   * to send its value.
-   *
+   * to send its value. Also, we may need to fire FIELD_GROUP_VALUE_CHANGE if this
+   * input is part of a FieldGroup.
    * @param {object} e - event object
-   * @fires field:value:change
-   * @fires fieldGroup:item:change
+   * @fires FIELD_VALUE_CHANGE | FIELD_GROUP_VALUE_CHANGE
    */
   handleChange: function(e){
     var value = e.target.checked? this.props.value : null;
-    var eventData = {
-      id: this.props.id,
-      name: this.props.name,
-      type: this.props.type,
-      rules : this.props.rules,
-      value: value
-    };
-    var actionType = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
-    this.setState({checked: e.target.checked});
-    Flux.doAction( actionType , eventData  );
+    var stateChange = { checked: e.target.checked };
+    var action = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
+    this.onChange({
+      target: { value: value },
+      stateChange: { checked: e.target.checked },
+      actionName: action
+    });
   },
 
   render: function(){
-    var classNames = classSet({
-      'editable-component' : !this.props.isFieldGroup,
-      'hidden' : !this.state.display,
-      'has-error' : this.state.hasError,
-      'radio': this.props.type === 'radio',
-      'checkbox': this.props.type === 'checkbox'
-    });
-    var editorToggle = this.props.isFieldGroup? '': <EditorToggle {...this.props}/>;
-    var props = _.pick(this.props, ['type', 'id', 'name', 'checked', 'disabled', 'value', 'aria-describedby']);
+    var props = _.pick(this.props, this.props.inputProps);
+    var labelProps = _.pick(this.props, this.props.labelProps);
     return (
-      <div className={classNames}>
-        {editorToggle}
-        <label htmlFor={this.props.id}>
+      <div className={this.props.type}>
+        <FieldLabel {...labelProps}>
           <input {...props} onChange={this.handleChange}/>
-          {this.props.label} {this.getRequiredIndicator()}
-        </label>
-        {this.getHelpBlock()}
+        </FieldLabel>
       </div>
     );
   }

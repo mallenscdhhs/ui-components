@@ -1,14 +1,17 @@
 'use-strict';
 var React = require('react');
-var FieldMixin = require('./FieldMixin');
 var _ = require('lodash');
-var inputProps = ['id', 'name', 'value', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby'];
+var ValueChangeMixin = require('./ValueChangeMixin');
 
+/**
+ * Renders a <textarea> input control.
+ * @module Textarea
+ */
 module.exports = React.createClass({
 
   displayName: 'Textarea',
 
-  mixins: [FieldMixin],
+  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -16,7 +19,14 @@ module.exports = React.createClass({
     value: React.PropTypes.string,
     rows: React.PropTypes.string,
     cols: React.PropTypes.string,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
+  },
+
+  getDefaultProps: function(){
+    return {
+      inputProps: ['id', 'name', 'value', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby']
+    };
   },
 
   getInitialState: function(){
@@ -26,8 +36,8 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var props = _.pick(this.props, inputProps);
-    return <textarea onChange={this.handleInputChange} value={this.state.value} {...props} />;
+    var props = _.pick(this.props, this.props.inputProps);
+    return <textarea value={this.state.value} onChange={this.onChange} {...props} />;
   }
 
 });

@@ -2,7 +2,7 @@ var React = require('react');
 require('es6-promise').polyfill();
 var TestUtils = require('react/lib/ReactTestUtils');
 var FieldGroup = require('../../src/FieldGroup');
-var fixture = require('../fixtures/field-group.json');
+var fixture = require('../fixtures/field-group.json').config;
 var Dispatcher = require('fluxify').dispatcher;
 var constants = require('../../src/constants');
 var update = require('react/lib/update');
@@ -11,11 +11,7 @@ describe('FieldGroup', function(){
 
   it('can render a list of checkboxes', function(){
     var comp = TestUtils.renderIntoDocument(<FieldGroup {...fixture}/>);
-    var dom = comp.getDOMNode();
     var checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
-    expect(dom.tagName.toLowerCase()).toEqual('fieldset');
-    expect(dom.childNodes.length).toEqual(6);
-    expect(dom.childNodes[1].tagName.toLowerCase()).toEqual('legend');
     expect(checkboxes.length).toEqual(fixture.options.length);
     expect(checkboxes[0].getDOMNode().type).toEqual('checkbox');
     expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options[0].value);
@@ -24,11 +20,7 @@ describe('FieldGroup', function(){
   it('can render a list of radio inputs', function(){
     var config = update(fixture, {type: {$set: 'radio'}});
     var comp = TestUtils.renderIntoDocument(<FieldGroup {...config}/>);
-    var dom = comp.getDOMNode();
     var checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
-    expect(dom.tagName.toLowerCase()).toEqual('fieldset');
-    expect(dom.childNodes.length).toEqual(6);
-    expect(dom.childNodes[1].tagName.toLowerCase()).toEqual('legend');
     expect(checkboxes.length).toEqual(fixture.options.length);
     expect(checkboxes[0].getDOMNode().type).toEqual('radio');
     expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options[0].value);
