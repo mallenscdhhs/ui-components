@@ -17,7 +17,8 @@ module.exports = {
           data.id === this.props.id) {
         Flux.doAction(constants.actions.FIELD_VALUE, {
           id : this.props.id,
-          value : this.state.value
+          name : this.props.name,
+          value : this.state.value || this.props.value
         });
       }
     }.bind(this));
