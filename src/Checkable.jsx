@@ -4,6 +4,7 @@ var FieldLabel = require('./FieldLabel');
 var _ = require('lodash');
 var constants = require('./constants');
 var ValueChangeMixin = require('./ValueChangeMixin');
+var FieldValueMixin = require('./FieldValueMixin');
 
 /**
  * Renders either a radio|checkbox input control.
@@ -13,7 +14,7 @@ module.exports = React.createClass({
 
   displayName: 'Checkable',
 
-  mixins: [ValueChangeMixin],
+  mixins: [ValueChangeMixin, FieldValueMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
