@@ -22,7 +22,7 @@ module.exports = {
     "MOVE_WORKFLOW_PAGE" : "moveWorkflowPage",
     "NEST_WORKFLOW_PAGE" : "nestWorkflowPage",
     "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage",
-    "FIELD_SEND_VALUE" : "fieldSendValue",
+    "GET_FIELD_VALUE" : "getFieldValue",
     "FIELD_VALUE" : "fieldValue"
   }
 };
