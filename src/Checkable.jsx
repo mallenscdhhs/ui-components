@@ -34,7 +34,7 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       componentType: 'field',
-      inputProps: ['type', 'id', 'name', 'checked', 'disabled', 'value', 'aria-describedby'],
+      inputProps: ['type', 'id', 'name', 'checked', 'disabled', 'aria-describedby'],
       labelProps: ['label', 'id', 'required']
     };
   },
