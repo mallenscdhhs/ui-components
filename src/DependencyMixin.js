@@ -1,4 +1,5 @@
-var Dispatcher = require('fluxify').dispatcher;
+var Flux = require('fluxify');
+var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var React = require('react');
 var _ = require('lodash');
@@ -32,12 +33,18 @@ module.exports = {
       var depValues = this.props.dependencyValue.split('|');
 
       Dispatcher.register( this.props.id + '-DEP-CHANGE' , function(action,data){
-        if( action === constants.actions.FIELD_VALUE_CHANGE && data.name === depName){
+        if( _.includes([constants.actions.FIELD_VALUE_CHANGE,constants.actions.FIELD_VALUE],action) &&
+          data.name === depName){
           var value = _.isArray(data.value)? data.value : [data.value];
           var visibility = (utils.containsOneOf(depValues, value))? !visible : visible;
           this.setState({'visible': visibility});
         }
       }.bind(this));
+
+      // Request inital value for dependent field
+      Flux.doAction(constants.actions.GET_FIELD_VALUE, {
+        'name' : depName
+      });
     }
   },
 

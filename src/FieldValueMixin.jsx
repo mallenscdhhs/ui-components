@@ -29,7 +29,7 @@ module.exports = {
   componentDidMount: function(){
     Dispatcher.register( this.props.id + '-FIELD-VALUE' , function(action,data){
       if( action === constants.actions.GET_FIELD_VALUE &&
-          data.id === this.props.id) {
+          (data.id === this.props.id || data.name === this.props.name )) {
         Flux.doAction(constants.actions.FIELD_VALUE, {
           id : this.props.id,
           name : this.props.name,

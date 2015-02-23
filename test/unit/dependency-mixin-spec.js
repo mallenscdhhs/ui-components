@@ -40,4 +40,14 @@ describe('DependencyMixin', function(){
       });
   });
 
+  // simulates listening for value change on a checkbox group, which has an Array as its value
+  it('determine if a field show be visible based on initial value of dependent field', function(done){
+    expect(field.state.visible).toEqual(false);
+    Flux.doAction(constants.actions.FIELD_VALUE, {name: 'dep-mixin-test', value: ['boop', 'bar']})
+      .then(function(){
+        expect(field.state.visible).toEqual(true);
+        done();
+      });
+  });
+
 });
