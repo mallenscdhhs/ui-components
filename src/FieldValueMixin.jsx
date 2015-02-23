@@ -12,11 +12,12 @@ module.exports = {
 
   getFieldValue: function(){
     var fieldValue = _.has(this.state,'value') ? this.state.value : this.props.value;
+    var isChecked;
     // If field is a checkbox, with a single value (which will use Checkable instead of FieldGroup),
     // if checked, return field value, otherwise, return null
     if(this.isRadioOrCheckbox() && !this.isFieldGroup()){
-      var isChecked = _.has(this.state,'checked') ? this.state.checked :
-                      _.has(this.props,'checked') ? this.props.checked : false;
+      isChecked = _.has(this.state,'checked') ? this.state.checked :
+                  _.has(this.props,'checked') ? this.props.checked : false;
       fieldValue = !isChecked ? null : fieldValue ;
     }
     return fieldValue;
