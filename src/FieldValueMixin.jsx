@@ -9,6 +9,19 @@ var _ = require('lodash');
  */
 module.exports = {
 
+
+  getFieldValue: function(){
+    var fieldValue = _.has(this.state,'value') ? this.state.value : this.props.value;
+    // If field is a checkbox, with a single value (which will use Checkable instead of FieldGroup),
+    // if checked, return field value, otherwise, return null
+    if(this.isRadioOrCheckbox() && !this.isFieldGroup()){
+      var isChecked = _.has(this.state,'checked') ? this.state.checked :
+                      _.has(this.props,'checked') ? this.props.checked : false;
+      fieldValue = !isChecked ? null : fieldValue ;
+    }
+    return fieldValue;
+  },
+
   /**
    * Registers listener that will fire event containing the field's current value.
    */
@@ -19,7 +32,7 @@ module.exports = {
         Flux.doAction(constants.actions.FIELD_VALUE, {
           id : this.props.id,
           name : this.props.name,
-          value : _.has(this.state,'value') ? this.state.value : this.props.value
+          value : this.getFieldValue()
         });
       }
     }.bind(this));

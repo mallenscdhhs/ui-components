@@ -33,14 +33,14 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       componentType: 'field',
-      inputProps: ['type', 'id', 'name', 'checked', 'value', 'disabled', 'aria-describedby'],
+      inputProps: ['type', 'id', 'name', 'value', 'disabled', 'aria-describedby'],
       labelProps: ['label', 'id', 'required']
     };
   },
 
   getInitialState: function(){
     return {
-      'checked' : false
+      'checked' : this.props.checked
     };
   },
 
@@ -69,7 +69,7 @@ module.exports = React.createClass({
     return (
       <div className={this.props.type}>
         <FieldLabel {...labelProps}>
-          <input {...props} onChange={this.handleChange}/>
+          <input {...props} checked={this.state.checked} onChange={this.handleChange}/>
         </FieldLabel>
       </div>
     );
