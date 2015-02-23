@@ -2,7 +2,6 @@
 var React = require('react');
 var _ = require('lodash');
 var ValueChangeMixin = require('./ValueChangeMixin');
-var FieldValueMixin = require('./FieldValueMixin');
 
 /**
  * Renders an <input> control.
@@ -12,7 +11,7 @@ module.exports = React.createClass({
 
   displayName: 'Input',
 
-  mixins: [ValueChangeMixin, FieldValueMixin],
+  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

@@ -2,7 +2,6 @@ var React = require('react');
 var update = require('react/lib/update');
 var Typeahead = require('react-typeahead').Typeahead;
 var OptionsMixin = require('./OptionsMixin');
-var FieldValueMixin = require('./FieldValueMixin');
 var Flux = require('fluxify');
 var constants = require('./constants');
 var _ = require('lodash');
@@ -57,7 +56,7 @@ module.exports = React.createClass({
     };
   },
 
-  mixins: [OptionsMixin, FieldValueMixin],
+  mixins: [OptionsMixin],
 
   statics: {
     getOptionLabels: getOptionLabels

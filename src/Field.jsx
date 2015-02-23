@@ -19,12 +19,13 @@ var Textarea = require('./Textarea');
 var DateComponent = require('./Date');
 var AutoComplete = require('./AutoComplete');
 var ContentEditor = require('./ContentEditor');
+var FieldValueMixin = require('./FieldValueMixin');
 
 module.exports = React.createClass({
 
   displayName: 'Field',
 
-  mixins: [ValidationMixin, DependencyMixin],
+  mixins: [ValidationMixin, DependencyMixin, FieldValueMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

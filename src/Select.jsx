@@ -4,7 +4,6 @@ var OptionsMixin = require('./OptionsMixin');
 var _ = require('lodash');
 var update = require('react/lib/update');
 var ValueChangeMixin = require('./ValueChangeMixin');
-var FieldValueMixin = require('./FieldValueMixin');
 
 /**
  * Returns the selected state of an <option>. Used in filter.
@@ -32,7 +31,7 @@ module.exports = React.createClass({
 
   displayName: 'Select',
 
-  mixins: [OptionsMixin, ValueChangeMixin, FieldValueMixin],
+  mixins: [OptionsMixin, ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

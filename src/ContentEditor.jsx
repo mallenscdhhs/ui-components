@@ -2,7 +2,6 @@
 var React = require('react');
 var _ = require('lodash');
 var ValueChangeMixin = require('./ValueChangeMixin');
-var FieldValueMixin = require('./FieldValueMixin');
 require('pen');
 
 /**
@@ -13,7 +12,7 @@ module.exports = React.createClass({
 
   displayName: 'ContentEditor',
 
-  mixins: [ValueChangeMixin, FieldValueMixin],
+  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

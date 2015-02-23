@@ -3,7 +3,6 @@ var React = require('react');
 var _ = require('lodash');
 var DateTimePicker = require('react-widgets').DateTimePicker;
 var ValueChangeMixin = require('./ValueChangeMixin');
-var FieldValueMixin = require('./FieldValueMixin');
 
 /**
  * Date input component
@@ -13,7 +12,7 @@ module.exports = React.createClass({
 
   displayName: 'Date',
 
-  mixins: [ValueChangeMixin, FieldValueMixin],
+  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

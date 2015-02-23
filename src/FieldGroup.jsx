@@ -6,7 +6,6 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var OptionsMixin = require('./OptionsMixin');
-var FieldValueMixin = require('./FieldValueMixin');
 var _ = require('lodash');
 
 /**
@@ -28,7 +27,7 @@ module.exports = React.createClass({
 
   displayName: 'FieldGroup',
 
-  mixins: [OptionsMixin, FieldValueMixin],
+  mixins: [OptionsMixin],
 
   statics: {
     isOptionChecked: isOptionChecked
