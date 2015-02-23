@@ -9,12 +9,16 @@ var _ = require('lodash');
  */
 module.exports = {
 
-
+  /**
+   * Look at state then props to determine field's current value.
+   * When used during initialization, state will most likely not be set, so defaults to props.value
+   * @return {obj} Field Value
+   */
   getFieldValue: function(){
     var fieldValue = _.has(this.state,'value') ? this.state.value : this.props.value;
     var isChecked;
-    // If field is a checkbox, with a single value (which will use Checkable instead of FieldGroup),
-    // if checked, return field value, otherwise, return null
+    // If a checkbox, with a single value (which will use Checkable instead of FieldGroup),
+    // is checked, return field value, otherwise, return null
     if(this.isRadioOrCheckbox() && !this.isFieldGroup()){
       isChecked = _.has(this.state,'checked') ? this.state.checked :
                   _.has(this.props,'checked') ? this.props.checked : false;
