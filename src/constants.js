@@ -21,6 +21,8 @@ module.exports = {
     "TOGGLE_DISABLE_WORKFLOW_PAGE" : "toggleDisableWorkflowPage",
     "MOVE_WORKFLOW_PAGE" : "moveWorkflowPage",
     "NEST_WORKFLOW_PAGE" : "nestWorkflowPage",
-    "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage"
+    "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage",
+    "GET_FIELD_VALUE" : "getFieldValue",
+    "FIELD_VALUE" : "fieldValue"
   }
 };
