@@ -9,16 +9,6 @@ var ValidationStore = require('./ValidationStore');
 var OptionsStore = require('./OptionsStore');
 
 /**
- * Recursively builds up a component hierarchy.
- * @param {object} schema - the parent component schema
- * @returns {function} a ReactElement factory function
- */
-function componentFactory(data){
-  if ( !_.isEmpty(data.components) && !data.child ) throw new TypeError('You must provide a "child" property.');
-  return buildComponentTree(data, data)[0];
-}
-
-/**
  * Take a binary tree and build a nested tree structure from it.
  * @param {object} schema - the top-level component schema
  * @param {object} head - the first item in the list
@@ -81,6 +71,16 @@ function buildComponentTree(schema, head){
     head = list[props.next];
   }
   return tree;
+}
+
+/**
+ * Recursively builds up a component hierarchy.
+ * @param {object} schema - the parent component schema
+ * @returns {function} a ReactElement factory function
+ */
+function componentFactory(data){
+  if ( !_.isEmpty(data.components) && !data.child ) throw new TypeError('You must provide a "child" property.');
+  return buildComponentTree(data, data)[0];
 }
 
 /**
