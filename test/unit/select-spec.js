@@ -12,11 +12,11 @@ describe('Select', function(){
     var comp = TestUtils.renderIntoDocument(<Select {...fixture}/>);
     var dom = comp.getDOMNode();
     expect(dom.tagName.toLowerCase()).toEqual('select');
-    expect(dom.childNodes.length).toEqual(2);
+    expect(dom.childNodes.length).toEqual(3);
     expect(dom.id).toEqual(fixture.id);
     expect(dom.name).toEqual(fixture.name);
-    expect(dom.childNodes[0].tagName.toLowerCase()).toEqual('option');
-    expect(dom.childNodes[0].value).toEqual(fixture.options[0].value);
+    expect(dom.childNodes[1].tagName.toLowerCase()).toEqual('option');
+    expect(dom.childNodes[1].value).toEqual(fixture.options[0].value);
   });
 
   it('can render a mulitple select input', function(){
@@ -27,7 +27,7 @@ describe('Select', function(){
     expect(dom.getAttribute('multiple')).not.toBeNull();
   });
 
-  it('can manage the slected option', function(){
+  it('can manage the selected option', function(){
     var comp = TestUtils.renderIntoDocument(<Select {...fixture}/>);
     var dom = comp.getDOMNode();
     TestUtils.Simulate.change(dom, {target: {value: '1', options: dom.options}});

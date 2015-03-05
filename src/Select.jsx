@@ -57,6 +57,18 @@ module.exports = React.createClass({
     };
   },
 
+  /**
+   * Return default 'option' if not a multiselect, so dropdowns will not have 'default' selected options
+   * @return {jsx}
+   */
+  getEmptyOption: function(){
+    var defaultOption;
+    if(this.props.multiple !== true){
+      defaultOption = <option value="" key={"option-default-option"}>select...</option>;
+    }
+    return defaultOption;
+  },
+
   handleSelection: function(event){
     var opts;
     var e = { target: { value: event.target.value }};
@@ -71,6 +83,7 @@ module.exports = React.createClass({
     var props = _.pick(this.props, this.props.inputProps);
     return (
       <select value={this.state.value} onChange={this.handleSelection} {...props}>
+        {this.getEmptyOption()}
         {_.map(this.state.options, function(opt){
           return <option value={opt.value} key={"option-"+opt.value}>{opt.label}</option>;
         })}
