@@ -34,7 +34,8 @@ module.exports = Flux.createStore({
      */
     "sessionValuesLoaded" : function(updater,session,data){
       // Verify API has validation endpoint AND has rules associated with the field
-      if (configuration.API && configuration.API.validation && data.rules) {
+      if ( ! (configuration.API && configuration.API.validation) ) throw new Error('API endpoint for validation not configured.');
+      if ( data.rules ) {
         // Build Request Payload
         var field = _.zipObject([data.name], [data.value]);
         var requestPayload = {
@@ -79,8 +80,6 @@ module.exports = Flux.createStore({
               _.merge(data,{'hasError' : true , 'errorMessage' : 'Error calling validation API.'})
             );
           });
-      }else{
-        throw new Error('API endpoint for validation not configured.');
       }
     }
 
