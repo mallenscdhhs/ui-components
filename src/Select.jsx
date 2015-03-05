@@ -57,6 +57,10 @@ module.exports = React.createClass({
     };
   },
 
+  /**
+   * Return default 'option' if not a multiselect, so dropdowns will not have 'default' selected options
+   * @return {jsx}
+   */
   getEmptyOption: function(){
     var defaultOption;
     if(this.props.multiple !== true){
