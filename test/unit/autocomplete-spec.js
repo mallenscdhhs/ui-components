@@ -34,9 +34,7 @@ describe('AutoComplete', function(){
     var node = inptDom;
     node.value = 'f';
     TestUtils.Simulate.change(node);
-
     var listItems = TestUtils.scryRenderedDOMComponentsWithClass(component, 'rw-list-option');
-    console.log('listItems', listItems[0].getDOMNode());
 
     Dispatcher.register('ac-test', function(action,data){
       if ( action === constants.actions.FIELD_VALUE_CHANGE ) {
