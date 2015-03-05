@@ -31,7 +31,7 @@ describe('Validation', function() {
       }
     };
 
-    spyOn( $, 'ajax' ).and.callFake(function(params){ 
+    spyOn($, 'ajax').and.callFake(function(params){
       var ajaxMock = $.Deferred();
       var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
@@ -78,7 +78,7 @@ describe('Validation', function() {
       'rules' : ['rule1','rule2']
     };
 
-    spyOn( $, 'ajax' ).and.callFake(function(params){ 
+    spyOn($, 'ajax').and.callFake(function(params){
       var ajaxMock = $.Deferred();
       var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
@@ -91,7 +91,7 @@ describe('Validation', function() {
 
     Dispatcher.register(validationCallback, function(action, data) {
       if( action === constants.actions.FIELD_VALIDATION_ERROR && data.id === fixture.id){
-        var errorMessage = failurePayload.errors[0].errorDesc + '<br>' + failurePayload.errors[1].errorDesc;
+        var errorMessage = failurePayload.operationMessages[0].description + '<br>' + failurePayload.operationMessages[1].description;
         expect(data.hasError).toEqual(true);
         expect(data.errorMessage).toEqual(errorMessage);
         Dispatcher.unregister(validationCallback);
