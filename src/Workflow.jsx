@@ -26,7 +26,10 @@ function getItemDetails(schema, itemId){
   if(schema[itemId]) {
     previous = _.findKey(schema, {'next': itemId});
     parent = _.findKey(schema, {'child': itemId});
-    grandParent = previous ? getItemFirstParent(schema,previous) : undefined;
+    grandParent = _.findKey(schema, {'child': itemId});
+    while(grandParent && schema[grandParent] && !_.findKey(schema, {'child': grandParent}) && schema[grandParent].previous){
+      grandParent = schema[grandParent].previous;
+    }
     item = {
       'id': itemId,
       'previous': previous,
