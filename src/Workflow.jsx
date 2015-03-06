@@ -19,15 +19,17 @@ var EditorToggle = require('./EditorToggle');
  * @return {{id: *, previous: *, parent: *, next: *}}
  */
 function getItemDetails(schema, itemId){
-  var previousId = _.findKey(schema, {'next': itemId });
-  return {
-    'id' : itemId,
-    'previous' : previousId,
-    'parent' : _.findKey(schema, {'child': itemId }),
-    'next' : schema[itemId] ? schema[itemId].next : undefined,
-    'child' : schema[itemId] ? schema[itemId].child : undefined,
-    'grandParent' : previousId ? getItemFirstParent(schema, previousId) : undefined
-  };
+  var item;
+  if(schema[itemId]) {
+    item = {
+      'id': itemId,
+      'previous': _.findKey(schema, {'next': itemId}),
+      'parent': _.findKey(schema, {'child': itemId}),
+      'next': schema[itemId].next,
+      'child': schema[itemId].child
+    };
+  }
+  return item;
 }
 
 /**
@@ -39,7 +41,17 @@ function getItemDetails(schema, itemId){
  * @param {string} startId - first item in list, not the current page, but the very first page
  */
 function setFlowState(list, pageId, startId) {
-  return updateFlowState(refreshFlowState(list,startId),pageId);
+  var updatedFlow = updateFlowState(refreshFlowState(list,startId),pageId);
+  var item = getItemDetails(updatedFlow,pageId);
+  var firstGrandParentId = getItemFirstParent(list,pageId);
+  var firstGrandParentItem;
+  if(item && !item.parent && firstGrandParentId){
+    firstGrandParentItem = getItemDetails(list,firstGrandParentId);
+    if(firstGrandParentItem.next){
+      updatedFlow = updateFlowState(updatedFlow,firstGrandParentItem.next);
+    }
+  }
+  return updatedFlow;
 }
 
 /**
@@ -65,12 +77,6 @@ function updateFlowState(list,pageId){
       list[parentItem.next].config.disabled = true;
       list = updateFlowState(list, parentItem.next);
     }
-  }else if(item.grandParent){
-    parentItem = getItemDetails(list, item.grandParent);
-    if(parentItem.next) {
-      list[parentItem.next].config.disabled = true;
-      list = updateFlowState(list, parentItem.next);
-    }
   }
   return list;
 }
@@ -83,17 +89,12 @@ function updateFlowState(list,pageId){
  */
 function refreshFlowState(list,pageId){
   var item = getItemDetails(list, pageId);
-  var parentItem;
   list[pageId].config.disabled = false;
   if ( item.next ) {
     list = refreshFlowState(list, item.next);
   }
   if ( item.child ) {
     list = refreshFlowState(list, item.child);
-  }
-  if ( item.parent ) {
-    parentItem = getItemDetails(list, item.parent);
-    list = refreshFlowState(list, parentItem.next);
   }
   return list;
 }
