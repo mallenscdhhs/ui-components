@@ -80,12 +80,13 @@ function findNext(list, id){
 
 function updateChildren(items, kids){
   return _.map(kids,function(kid){
-    var child = Immutable.Map(kid.props);
-    child.set('disabled',items[kid.props.id].config.disabled);
+    var child = Immutable.Map(kid);
+    var props = Immutable.Map(kid.props);
+    props.set('disabled',items[kid.props.id].config.disabled);
     if(kid.props.children){
-      child.set('children',updateChildren(kid.props.children));
+      props.set('children',updateChildren(items,kid.props.children));
     }
-    return child.toObject();
+    return child.set('props',props.toObject());
   });
 }
 
