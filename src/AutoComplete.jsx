@@ -37,6 +37,7 @@ module.exports = React.createClass({
       React.PropTypes.oneOf(['contains', 'startsWith', 'endsWith']),
     ]),
     className: React.PropTypes.string,
+    options: React.PropTypes.object.isRequired,
     onOptionSelected: React.PropTypes.func,
     customClasses: React.PropTypes.object,
     placeholder: React.PropTypes.string,
