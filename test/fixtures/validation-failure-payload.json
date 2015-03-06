@@ -1,7 +1,7 @@
 {
   "module": "PE",
   "operationStatus": "FAILURE",
-  "errors": [
+  "operationMessages": [
     {
       "metadata": {
         "rule": "BR_RULE1",
@@ -9,8 +9,8 @@
           "nameTest"
         ]
       },
-      "errorCode": "ERR_1001",
-      "errorDesc": "Field is not valid.",
+      "messgeCode": "ERR_1001",
+      "description": "Field is not valid.",
       "level": "INFO",
       "autoHide": false
     },
@@ -21,8 +21,8 @@
           "nameTest2"
         ]
       },
-      "errorCode": "ERR_1002",
-      "errorDesc": "Field is not long enough.",
+      "messgeCode": "ERR_1002",
+      "description": "Field is not long enough.",
       "level": "INFO",
       "autoHide": false
     }
