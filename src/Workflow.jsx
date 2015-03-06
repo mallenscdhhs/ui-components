@@ -20,13 +20,20 @@ var EditorToggle = require('./EditorToggle');
  */
 function getItemDetails(schema, itemId){
   var item;
+  var previous;
+  var parent;
+  var grandParent;
   if(schema[itemId]) {
+    previous = _.findKey(schema, {'next': itemId});
+    parent = _.findKey(schema, {'child': itemId});
+    grandParent = previous ? getItemFirstParent(schema,previous) : undefined;
     item = {
       'id': itemId,
-      'previous': _.findKey(schema, {'next': itemId}),
-      'parent': _.findKey(schema, {'child': itemId}),
+      'previous': previous,
+      'parent': parent,
       'next': schema[itemId].next,
-      'child': schema[itemId].child
+      'child': schema[itemId].child,
+      'grandParent' : grandParent
     };
   }
   return item;
@@ -73,6 +80,12 @@ function updateFlowState(list,pageId){
   }
   if ( item.parent ) {
     parentItem = getItemDetails(list, item.parent);
+    if(parentItem.next) {
+      list[parentItem.next].config.disabled = true;
+      list = updateFlowState(list, parentItem.next);
+    }
+  }else if(item.grandParent){
+    parentItem = getItemDetails(list, item.grandParent);
     if(parentItem.next) {
       list[parentItem.next].config.disabled = true;
       list = updateFlowState(list, parentItem.next);
@@ -184,6 +197,9 @@ function findNext(list, id){
     nextId = item.next;
   }else if( item.parent){
     parentItem = getItemDetails(list,item.parent);
+    nextId = parentItem.next;
+  }else if( item.grandParent){
+    parentItem = getItemDetails(list,item.grandParent);
     nextId = parentItem.next;
   }
   return nextId;
