@@ -176,17 +176,17 @@ function findNext(list, id){
 /**
  * Iterate over ReactComponents, and set their 'disabled' status based on the value from the
  * 'items' object which is the state object containing current item status.
- * @param items
- * @param kids
+ * @param flowItems
+ * @param components
  * @return {*}
  */
-function updateChildren(items, kids){
-  return _.map(kids,function(kid){
-    kid.props.disabled = items[kid.props.id].config.disabled;
-    if(kid.props.children){
-      kid.props.children = updateChildren(items, kid.props.children);
+function updateChildren(flowItems, components){
+  return _.map(components,function(component){
+    component.props.disabled = flowItems[component.props.id].config.disabled;
+    if(component.props.children){
+      component.props.children = updateChildren(flowItems, component.props.children);
     }
-    return kid;
+    return component;
   });
 }
 
