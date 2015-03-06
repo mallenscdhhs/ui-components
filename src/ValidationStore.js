@@ -62,15 +62,15 @@ module.exports = Flux.createStore({
             var errorMessage = '';
             if (resp.operationStatus === 'FAILURE') {
               hasError = true;
-              errorMessage = _.map(resp.errors,function(err){
-                return err.errorDesc;
+              errorMessage = _.map(resp.operationMessages, function(msg){
+                return msg.description;
               }).join('<br>');
             }
             // Update Component by setting the validation error indicator 'hasError' and 'errorMessage',
             // using the FIELD_VALIDATION_ERROR event
             Flux.doAction(
               constants.actions.FIELD_VALIDATION_ERROR ,
-              _.merge(data,{'hasError' : hasError , 'errorMessage' : errorMessage})
+              _.merge(data, {'hasError' : hasError , 'errorMessage' : errorMessage})
             );
           })
           .fail(function(){

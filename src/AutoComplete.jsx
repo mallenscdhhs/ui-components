@@ -1,13 +1,13 @@
 var React = require('react');
 var update = require('react/lib/update');
-var Typeahead = require('react-typeahead').Typeahead;
+var Combobox = require('react-widgets').Combobox;
 var OptionsMixin = require('./OptionsMixin');
 var Flux = require('fluxify');
 var constants = require('./constants');
 var _ = require('lodash');
 
 /**
- * Options are configured as an array of objects, but the Typeahead
+ * Options are configured as an array of objects, but the Combobox
  * component expects a list of strings. This function converts an
  * array of Option configs to an array of the Option.label values.
  * @param {array} options - an array of option config objects
@@ -21,7 +21,7 @@ var getOptionLabels = function(options){
 
 /**
  * Autocomplete field. Will filter a list of options based on user input.
- * This wraps the react-typeahead#Typeahead component from https://github.com/fmoo/react-typeahead.
+ * This wraps the react-widgets#Combobox component from http://jquense.github.io/react-widgets/docs/#/combobox.
  * @module AutoComplete
  */
 module.exports = React.createClass({
@@ -30,6 +30,12 @@ module.exports = React.createClass({
 
   propTypes: {
     ref: React.PropTypes.string,
+    suggest: React.PropTypes.bool,
+    filter: React.PropTypes.oneOfType([
+      React.PropTypes.bool,
+      React.PropTypes.func,
+      React.PropTypes.oneOf(['contains', 'startsWith', 'endsWith']),
+    ]),
     className: React.PropTypes.string,
     onOptionSelected: React.PropTypes.func,
     customClasses: React.PropTypes.object,
@@ -39,8 +45,10 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      ref: 'typeahead',
+      ref: 'combobox',
       className: "field-autocomplete",
+      suggest: true,
+      filter: 'contains',
       customClasses: {
         input: 'form-control',
         results: 'list-group',
@@ -93,7 +101,7 @@ module.exports = React.createClass({
       var config = update(this.props, {
         options: { $set: getOptionLabels(this.state.options) }
       });
-      return <Typeahead {...config} onOptionSelected={this.onOptionSelected} />;
+      return <Combobox {...config} onSelect={this.onOptionSelected} data={config.options}/>;
     } else {
       return <div className="field-autocomplete"></div>;
     }
