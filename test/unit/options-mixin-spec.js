@@ -47,7 +47,7 @@ describe('OptionsMixin', function(){
       }
     };
 
-    spyOn( $, 'ajax' ).and.callFake(function(params){ 
+    spyOn($, 'ajax').and.callFake(function(params){
       var ajaxMock = $.Deferred();
       expect(params.url).toEqual("/api/resource/test");
       ajaxMock.resolve(resourcePayload);
@@ -98,16 +98,16 @@ describe('OptionsMixin', function(){
       }
     });
 
-    Dispatcher.register('test-opt-mixin-SEND-CUSTOM-OPTIONS', function(action,data){
+    Dispatcher.register('test-opt-mixin-SEND-CUSTOM-OPTIONS', function(action, data){
       if ( action === constants.actions.SEND_OPTIONS ) {
-        expect(data.fieldId).toEqual(custFixture.config.id);
-        Flux.doAction(constants.actions.LOAD_OPTIONS,customPayload);
+        expect(data.id).toEqual(custFixture.config.id);
+        Flux.doAction(constants.actions.LOAD_OPTIONS, customPayload);
       }
       Dispatcher.unregister('test-opt-mixin-SEND-CUSTOM-OPTIONS');
     });
 
     Flux.doAction(constants.actions.SEND_OPTIONS, {
-      "fieldId" : custFixture.config.id
+      "id" : custFixture.config.id
     });
 
   });

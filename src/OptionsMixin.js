@@ -39,10 +39,7 @@ module.exports = {
         'fieldName' : this.props.name
       });
     }else{
-      Flux.doAction(constants.actions.SEND_OPTIONS, {
-        'fieldId' : this.props.id,
-        'fieldName' : this.props.name
-      });
+      Flux.doAction(constants.actions.SEND_OPTIONS, this.props);
     }
   },
 
