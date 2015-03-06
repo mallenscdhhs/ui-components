@@ -67,9 +67,10 @@ describe('Workflow#setFlowState', function(){
     expect(items.a.config.disabled).not.toBeDefined();
     expect(items.b.config.disabled).not.toBeDefined();
     expect(items.c.config.disabled).not.toBeDefined();
-    Workflow.setFlowState(items, 'b');
-    expect(items.a.config.disabled).not.toBeDefined();
-    expect(items.b.config.disabled).not.toBeDefined();
+    Workflow.setFlowState(items, 'b', 'a');
+    console.log(JSON.stringify(items));
+    expect(items.a.config.disabled).toBe(false);
+    expect(items.b.config.disabled).toBe(false);
     expect(items.c.config.disabled).toBe(true);
   });
 });

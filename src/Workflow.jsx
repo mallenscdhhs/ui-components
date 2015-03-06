@@ -14,20 +14,39 @@ var Immutable = require('immutable');
 
 /**
  * Sets flow item state(disabled) based on passed in pageId. All pages
- * below the passed in pageId will be disabled.
+ * below the passed in pageId will be disabled, while all those above (including the page itself) will
+ * not be disabled.
  * @param {object} list - a linked list representing flow data
  * @param {string} pageId - a starting point
+ * @param {string} startId - first item in list, not the current page, but the very first page
  */
-function setFlowState(list, pageId){
+function setFlowState(list, pageId, startId) {
+  return updateFlowState(refreshFlowState(list,startId),pageId);
+}
+
+function updateFlowState(list,pageId){
   var next = list[pageId].next;
   if ( next ) {
     list[next].config.disabled = true;
-    list = setFlowState(list, next);
+    list = updateFlowState(list, next);
   }
   var child = list[pageId].child;
   if ( child ) {
     list[child].config.disabled = true;
-    list = setFlowState(list, child);
+    list = updateFlowState(list, child);
+  }
+  return list;
+}
+
+function refreshFlowState(list,pageId){
+  list[pageId].config.disabled = false;
+  var next = list[pageId].next;
+  if ( next ) {
+    list = refreshFlowState(list, next);
+  }
+  var child = list[pageId].child;
+  if ( child ) {
+    list = refreshFlowState(list, child);
   }
   return list;
 }
@@ -130,7 +149,7 @@ module.exports = React.createClass({
     var current = (this.props.lastSectionCompleted)?  flow[this.props.lastSectionCompleted].next : firstPage;
 
     if ( !this.props.editMode ) {
-      flow = setFlowState(flow, current);
+      flow = setFlowState(flow, current, firstPage);
     }
 
     return {
@@ -174,7 +193,7 @@ module.exports = React.createClass({
       currentPage: pageId,
       nextPage: findNext(this.state.flow, pageId),
       previousPage: findPrevious(this.state.flow, pageId),
-      flow: setFlowState(this.state.flow,pageId)
+      flow: setFlowState(this.state.flow,pageId, this.props.firstPage)
     });
     Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
   },
