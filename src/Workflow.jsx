@@ -120,7 +120,7 @@ function refreshFlowState(list,pageId){
  */
 function getItemFirstParent(schema, itemId){
   var item = getItemDetails(schema,itemId);
-  while(item && !item.parent){
+  while(item && !item.parent && item.previous){
     item = getItemDetails(schema,item.previous);
   }
   return item.parent;
