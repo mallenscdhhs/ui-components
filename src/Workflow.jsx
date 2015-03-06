@@ -10,6 +10,7 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
+var Immutable = require('immutable');
 
 /**
  * Sets flow item state(disabled) based on passed in pageId. All pages
@@ -77,6 +78,17 @@ function findNext(list, id){
   }
 }
 
+function updateChildren(items, kids){
+  return _.map(kids,function(kid){
+    var child = Immutable.Map(kid.props);
+    child.set('disabled',items[kid.props.id].config.disabled);
+    if(kid.props.children){
+      child.set('children',updateChildren(kid.props.children));
+    }
+    return child.toObject();
+  });
+}
+
 /**
  * Renders a workflow that contains a Tree navigation and a Page.
  * @module Workflow
@@ -99,7 +111,8 @@ module.exports = React.createClass({
     setFlowState: setFlowState,
     getCurrentActionButtons: getCurrentActionButtons,
     findPrevious: findPrevious,
-    findNext: findNext
+    findNext: findNext,
+    updateChildren: updateChildren
   },
 
   getDefaultProps: function(){
@@ -189,10 +202,6 @@ module.exports = React.createClass({
     }
   },
 
-  getFlow: function(){
-    return this.props.children;
-  },
-
   /**
    * @returns {React}
    */
@@ -205,7 +214,7 @@ module.exports = React.createClass({
             <EditorToggle {...this.props}/>
             <h4>{this.props.title}</h4>
             <Tree ref="outline">
-              { this.getFlow() }
+              { updateChildren(this.state.flow, this.props.children) }
             </Tree>
           </div>
         </GridColumn>
