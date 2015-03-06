@@ -24,6 +24,12 @@ function setFlowState(list, pageId, startId) {
   return updateFlowState(refreshFlowState(list,startId),pageId);
 }
 
+/**
+ * Set all items below pageId to disabled
+ * @param list
+ * @param pageId
+ * @return {*}
+ */
 function updateFlowState(list,pageId){
   var next = list[pageId].next;
   if ( next ) {
@@ -38,6 +44,12 @@ function updateFlowState(list,pageId){
   return list;
 }
 
+/**
+ * Set all pages in list, with pageId as the FIRST page, to enabled.
+ * @param list
+ * @param pageId
+ * @return {*}
+ */
 function refreshFlowState(list,pageId){
   list[pageId].config.disabled = false;
   var next = list[pageId].next;
@@ -49,6 +61,50 @@ function refreshFlowState(list,pageId){
     list = refreshFlowState(list, child);
   }
   return list;
+}
+
+/**
+ * Return details for passed in itemId
+ * @param {object} schema
+ * @param {object} itemId
+ * @return {{id: *, previous: *, parent: *, next: *}}
+ */
+function getItemDetails(schema, itemId){
+  return {
+    'id' : itemId,
+    'previous' : _.findKey(schema, {'next': itemId }),
+    'parent' : _.findKey(schema, {'child': itemId }),
+    'next' : schema[itemId].next,
+    'child' : schema[itemId].child
+  };
+}
+
+/**
+ * Follow tree up from item, to find first parent encountered
+ * @param schema
+ * @param itemId
+ * @return {object} updated schema
+ */
+function getItemFirstParent(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && !item.parent){
+    item = getItemDetails(schema,item.previous);
+  }
+  return item.parent;
+}
+
+/**
+ * Follow tree down from item, to find last element in the tree
+ * @param schema
+ * @param itemId
+ * @return {object}  Updated Schema
+ */
+function getItemLastChild(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && item.next){
+    item = getItemDetails(schema,item.next);
+  }
+  return item.id;
 }
 
 /**
@@ -73,9 +129,22 @@ function getCurrentActionButtons(actions, state){
  * @returns {string} the id of the previous page
  */
 function findPrevious(list, id){
-  return _.findKey(list, function(item){
-    return item.next === id || item.child === id;
-  });
+  var item = getItemDetails(list,id);
+  var previousId;
+  var previousItem;
+  var parentItem;
+  if(item.previous){
+    previousItem = getItemDetails(list,item.previous);
+    if(previousItem.child){
+      previousId= getItemLastChild(list,previousItem.child);
+    }else{
+      previousId = previousItem.id;
+    }
+  }else if(item.parent){
+    parentItem = getItemDetails(list,item.parent);
+    previousId = parentItem.id;
+  }
+  return previousId;
 }
 
 /**
@@ -86,22 +155,32 @@ function findPrevious(list, id){
 * @returns {string} the id of the next page
 */
 function findNext(list, id){
-  var next = list[id].child || list[id].next;
-  if ( next ) {
-    return next;
-  } else {
-    var parent = _.findKey(list, function(item){
-      return item.child === id;
-    });
-    return parent? list[parent].next : undefined;
+  var item = getItemDetails(list,id);
+  var nextId;
+  var parentItem;
+  if(item.child) {
+    nextId = item.child;
+  }else if ( item.next ) {
+    nextId = item.next;
+  }else if( item.parent){
+    parentItem = getItemDetails(list,item.parent);
+    nextId = parentItem.next;
   }
+  return nextId;
 }
 
+/**
+ * Iterate over ReactComponents, and set their 'disabled' status based on the value from the
+ * 'items' object which is the state object containing current item status.
+ * @param items
+ * @param kids
+ * @return {*}
+ */
 function updateChildren(items, kids){
   return _.map(kids,function(kid){
     kid.props.disabled = items[kid.props.id].config.disabled;
     if(kid.props.children){
-      kid.props.children = updateChildren(items,kid.props.children);
+      kid.props.children = updateChildren(items, kid.props.children);
     }
     return kid;
   });
@@ -154,8 +233,8 @@ module.exports = React.createClass({
 
     return {
       currentPage: current,
+      nextPage: findNext(flow, current),
       previousPage: findPrevious(flow, current),
-      nextPage: current.next,
       flow: flow
     };
   },
@@ -193,7 +272,7 @@ module.exports = React.createClass({
       currentPage: pageId,
       nextPage: findNext(this.state.flow, pageId),
       previousPage: findPrevious(this.state.flow, pageId),
-      flow: setFlowState(this.state.flow,pageId, this.props.firstPage)
+      flow: setFlowState(this.state.flow, pageId, this.props.firstPage)
     });
     Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
   },

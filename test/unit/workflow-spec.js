@@ -108,7 +108,7 @@ describe('Workflow#findPrevious', function(){
   it('will locate any previous node from a current node', function(){
     expect(Workflow.findPrevious(fixture.components, 'page1')).toBeUndefined();
     expect(Workflow.findPrevious(fixture.components, 'page2')).toEqual('page1');
-    expect(Workflow.findPrevious(fixture.components, 'page3')).toEqual('page1');
+    expect(Workflow.findPrevious(fixture.components, 'page3')).toEqual('page2');
   });
 });
 
