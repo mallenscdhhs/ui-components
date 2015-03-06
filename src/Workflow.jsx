@@ -115,7 +115,7 @@ module.exports = React.createClass({
     var current = (this.props.lastSectionCompleted)?  flow[this.props.lastSectionCompleted].next : firstPage;
 
     if ( !this.props.editMode ) {
-      setFlowState(flow, current);
+      flow = setFlowState(flow, current);
     }
 
     return {
