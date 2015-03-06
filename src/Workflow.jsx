@@ -23,6 +23,11 @@ function setFlowState(list, pageId){
     list[next].config.disabled = true;
     list = setFlowState(list, next);
   }
+  var child = list[pageId].child;
+  if ( child ) {
+    list[child].config.disabled = true;
+    list = setFlowState(list, child);
+  }
   return list;
 }
 
