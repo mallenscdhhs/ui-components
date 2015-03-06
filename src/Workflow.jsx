@@ -19,12 +19,14 @@ var EditorToggle = require('./EditorToggle');
  * @return {{id: *, previous: *, parent: *, next: *}}
  */
 function getItemDetails(schema, itemId){
+  var previousId = _.findKey(schema, {'next': itemId });
   return {
     'id' : itemId,
-    'previous' : _.findKey(schema, {'next': itemId }),
+    'previous' : previousId,
     'parent' : _.findKey(schema, {'child': itemId }),
-    'next' : schema[itemId].next,
-    'child' : schema[itemId].child
+    'next' : schema[itemId] ? schema[itemId].next : undefined,
+    'child' : schema[itemId] ? schema[itemId].child : undefined,
+    'grandParent' : previousId ? getItemFirstParent(schema, previousId) : undefined
   };
 }
 
@@ -59,8 +61,16 @@ function updateFlowState(list,pageId){
   }
   if ( item.parent ) {
     parentItem = getItemDetails(list, item.parent);
-    list[parentItem.next].config.disabled = true;
-    list = updateFlowState(list, parentItem.next);
+    if(parentItem.next) {
+      list[parentItem.next].config.disabled = true;
+      list = updateFlowState(list, parentItem.next);
+    }
+  }else if(item.grandParent){
+    parentItem = getItemDetails(list, item.grandParent);
+    if(parentItem.next) {
+      list[parentItem.next].config.disabled = true;
+      list = updateFlowState(list, parentItem.next);
+    }
   }
   return list;
 }
@@ -73,12 +83,17 @@ function updateFlowState(list,pageId){
  */
 function refreshFlowState(list,pageId){
   var item = getItemDetails(list, pageId);
+  var parentItem;
   list[pageId].config.disabled = false;
   if ( item.next ) {
     list = refreshFlowState(list, item.next);
   }
   if ( item.child ) {
     list = refreshFlowState(list, item.child);
+  }
+  if ( item.parent ) {
+    parentItem = getItemDetails(list, item.parent);
+    list = refreshFlowState(list, parentItem.next);
   }
   return list;
 }
@@ -213,7 +228,8 @@ module.exports = React.createClass({
     getCurrentActionButtons: getCurrentActionButtons,
     findPrevious: findPrevious,
     findNext: findNext,
-    updateChildren: updateChildren
+    updateChildren: updateChildren,
+    getItemDetails : getItemDetails
   },
 
   getDefaultProps: function(){
@@ -229,7 +245,9 @@ module.exports = React.createClass({
   getInitialState: function(){
     var firstPage = this.props.firstPage;
     var flow = this.props.items;
-    var current = (this.props.lastSectionCompleted)?  flow[this.props.lastSectionCompleted].next : firstPage;
+    var current = ( this.props.lastSectionCompleted ) ?
+      findNext( flow, this.props.lastSectionCompleted ) :
+      firstPage;
 
     if ( !this.props.editMode ) {
       flow = setFlowState(flow, current, firstPage);

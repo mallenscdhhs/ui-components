@@ -118,3 +118,79 @@ describe('Workflow#findNext', function(){
     expect(Workflow.findNext(fixture.components, 'page3')).toBeUndefined();
   });
 });
+
+describe('#getItemDetails', function() {
+
+  it('returns proper item details for first top level item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page1');
+    expect(item.id).toEqual('page1');
+    expect(item.next).toEqual('page2');
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toBeUndefined();
+  });
+
+  it('returns proper item details for parent',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page2');
+    expect(item.id).toEqual('page2');
+    expect(item.next).toEqual('page5');
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page1');
+  });
+
+  it('returns proper item details for first nested item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page3');
+    expect(item.id).toEqual('page3');
+    expect(item.next).toEqual('page4');
+    expect(item.parent).toEqual('page2');
+    expect(item.previous).toBeUndefined();;
+  });
+
+  it('returns proper item details for middle nested item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page4');
+    expect(item.id).toEqual('page4');
+    expect(item.next).toEqual('page6');
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page3');
+  });
+
+  it('returns proper item details for last nested item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page7');
+    expect(item.id).toEqual('page7');
+    expect(item.next).toBeUndefined();
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page6');
+  });
+
+  it('returns proper item details for last top level item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page5');
+    expect(item.id).toEqual('page5');
+    expect(item.next).toBeUndefined();
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page2');
+  });
+
+});
+
+describe('#updateChildren', function() {
+  it('updates react components properly', function () {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var components = Components.factory(fixture);
+    var flow = _.cloneDeep(fixture.components);
+    flow.page1.config.disabled = false;
+    flow.page2.config.disabled = false;
+    flow.page3.config.disabled = true;
+    var newItems = Workflow.updateChildren(flow,components.props.children);
+    _.map(newItems,function(item){
+      console.log(JSON.stringify(item.props));
+    });
+    expect(newItems[0].props.disabled).toEqual(false);
+    expect(newItems[1].props.disabled).toEqual(false);
+    expect(newItems[2].props.disabled).toEqual(true);
+  });
+});
