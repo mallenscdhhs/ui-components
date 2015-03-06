@@ -22,7 +22,7 @@ var WorkflowItem = require('./WorkflowItem');
 function setFlowState(list, pageId){
   var next = list[pageId].next;
   if ( next ) {
-    list[next].disabled = true;
+    list[next].config.disabled = true;
     list = setFlowState(list, next);
   }
   return list;

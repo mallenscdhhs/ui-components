@@ -60,17 +60,17 @@ describe('Workflow component', function(){
 describe('Workflow#setFlowState', function(){
   it('can set the tree data state', function(){
     var items = {
-      'a': {id: 'a', next: 'b', previous: null},
-      'b': {id: 'b', next: 'c', previous: 'a', parentId: 'a'},
-      'c': {id: 'c', next: null, previous: 'b'}
+      'a': {id: 'a', next: 'b',  previous: null, config : {}},
+      'b': {id: 'b', next: 'c',  previous: 'a',  config : {}},
+      'c': {id: 'c', next: null, previous: 'b',  config : {}}
     };
-    expect(items.a.disabled).not.toBeDefined();
-    expect(items.b.disabled).not.toBeDefined();
-    expect(items.c.disabled).not.toBeDefined();
+    expect(items.a.config.disabled).not.toBeDefined();
+    expect(items.b.config.disabled).not.toBeDefined();
+    expect(items.c.config.disabled).not.toBeDefined();
     Workflow.setFlowState(items, 'b');
-    expect(items.a.disabled).not.toBeDefined();
-    expect(items.b.disabled).not.toBeDefined();
-    expect(items.c.disabled).toBe(true);
+    expect(items.a.config.disabled).not.toBeDefined();
+    expect(items.b.config.disabled).not.toBeDefined();
+    expect(items.c.config.disabled).toBe(true);
   });
 });
 
