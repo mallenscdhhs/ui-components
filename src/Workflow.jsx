@@ -10,6 +10,7 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
+var WorkflowItem = require('./WorkflowItem');
 
 
 /**
@@ -22,8 +23,9 @@ function setFlowState(list, pageId){
   var next = list[pageId].next;
   if ( next ) {
     list[next].disabled = true;
-    setFlowState(list, next);
+    list = setFlowState(list, next);
   }
+  return list;
 }
 
 /**
@@ -156,7 +158,8 @@ module.exports = React.createClass({
     this.setState({
       currentPage: pageId,
       nextPage: findNext(this.state.flow, pageId),
-      previousPage: findPrevious(this.state.flow, pageId)
+      previousPage: findPrevious(this.state.flow, pageId),
+      flow: setFlowState(this.state.flow,pageId)
     });
     Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
   },
@@ -195,7 +198,11 @@ module.exports = React.createClass({
             <EditorToggle {...this.props}/>
             <h4>{this.props.title}</h4>
             <Tree ref="outline">
-              {this.props.children}
+              {_.map(this.state.flow, function(item, i){
+                return (<WorkflowItem {...item.config} key={this.props.component_id+'-workflow-item-'+i}>
+                    child
+                  </WorkflowItem>);
+              }, this)}
             </Tree>
           </div>
         </GridColumn>
