@@ -10,7 +10,23 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
-var Immutable = require('immutable');
+
+
+/**
+ * Return details for passed in itemId
+ * @param {object} schema
+ * @param {object} itemId
+ * @return {{id: *, previous: *, parent: *, next: *}}
+ */
+function getItemDetails(schema, itemId){
+  return {
+    'id' : itemId,
+    'previous' : _.findKey(schema, {'next': itemId }),
+    'parent' : _.findKey(schema, {'child': itemId }),
+    'next' : schema[itemId].next,
+    'child' : schema[itemId].child
+  };
+}
 
 /**
  * Sets flow item state(disabled) based on passed in pageId. All pages
@@ -31,15 +47,20 @@ function setFlowState(list, pageId, startId) {
  * @return {*}
  */
 function updateFlowState(list,pageId){
-  var next = list[pageId].next;
-  if ( next ) {
-    list[next].config.disabled = true;
-    list = updateFlowState(list, next);
+  var item = getItemDetails(list, pageId);
+  var parentItem;
+  if ( item.next ) {
+    list[item.next].config.disabled = true;
+    list = updateFlowState(list, item.next);
   }
-  var child = list[pageId].child;
-  if ( child ) {
-    list[child].config.disabled = true;
-    list = updateFlowState(list, child);
+  if ( item.child ) {
+    list[item.child].config.disabled = true;
+    list = updateFlowState(list, item.child);
+  }
+  if ( item.parent ) {
+    parentItem = getItemDetails(list, item.parent);
+    list[parentItem.next].config.disabled = true;
+    list = updateFlowState(list, parentItem.next);
   }
   return list;
 }
@@ -51,32 +72,15 @@ function updateFlowState(list,pageId){
  * @return {*}
  */
 function refreshFlowState(list,pageId){
+  var item = getItemDetails(list, pageId);
   list[pageId].config.disabled = false;
-  var next = list[pageId].next;
-  if ( next ) {
-    list = refreshFlowState(list, next);
+  if ( item.next ) {
+    list = refreshFlowState(list, item.next);
   }
-  var child = list[pageId].child;
-  if ( child ) {
-    list = refreshFlowState(list, child);
+  if ( item.child ) {
+    list = refreshFlowState(list, item.child);
   }
   return list;
-}
-
-/**
- * Return details for passed in itemId
- * @param {object} schema
- * @param {object} itemId
- * @return {{id: *, previous: *, parent: *, next: *}}
- */
-function getItemDetails(schema, itemId){
-  return {
-    'id' : itemId,
-    'previous' : _.findKey(schema, {'next': itemId }),
-    'parent' : _.findKey(schema, {'child': itemId }),
-    'next' : schema[itemId].next,
-    'child' : schema[itemId].child
-  };
 }
 
 /**
