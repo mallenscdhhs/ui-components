@@ -19,18 +19,13 @@ var EditorToggle = require('./EditorToggle');
  * @return {{id: *, previous: *, parent: *, next: *}}
  */
 function getItemDetails(schema, itemId){
-  var item;
-  if(schema[itemId]) {
-    item = {
-      'id': itemId,
-      'previous': _.findKey(schema, {'next': itemId}),
-      'parent': _.findKey(schema, {'child': itemId}),
-      'next': schema[itemId].next,
-      'child': schema[itemId].child,
-      'grandParent' : getItemFirstParent(schema,itemId)
-    };
-  }
-  return item;
+  return {
+    'id': itemId,
+    'previous': _.findKey(schema, {'next': itemId}),
+    'parent': _.findKey(schema, {'child': itemId}),
+    'next': schema[itemId].next,
+    'child': schema[itemId].child
+  };
 }
 
 /**
@@ -68,12 +63,6 @@ function updateFlowState(list,pageId){
       list[parentItem.next].config.disabled = true;
       list = updateFlowState(list, parentItem.next);
     }
-  }else if(item.grandParent) {
-    parentItem = getItemFirstParent(list,item.id);
-    if(parentItem && list[parentItem] && list[parentItem].next) {
-      list[parentItem.next].config.disabled = true;
-      list = updateFlowState(list, list[parentItem].next);
-    }
   }
   return list;
 }
@@ -103,11 +92,11 @@ function refreshFlowState(list,pageId){
  * @return {object} updated schema
  */
 function getItemFirstParent(schema, itemId){
-  var itemPrevious = _.findKey(schema, {'next': itemId});
-  while(itemPrevious){
-    itemPrevious = _.findKey(schema, {'next': itemPrevious});
+  var item = getItemDetails(schema,itemId);
+  while(item && !item.parent){
+    item = getItemDetails(schema,item.previous);
   }
-  return _.findKey(schema, {'child': itemPrevious});
+  return item.parent;
 }
 
 /**
@@ -181,9 +170,6 @@ function findNext(list, id){
     nextId = item.next;
   }else if( item.parent){
     parentItem = getItemDetails(list,item.parent);
-    nextId = parentItem.next;
-  }else if( item.grandParent){
-    parentItem = getItemDetails(list,item.grandParent);
     nextId = parentItem.next;
   }
   return nextId;
