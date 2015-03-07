@@ -20,23 +20,14 @@ var EditorToggle = require('./EditorToggle');
  */
 function getItemDetails(schema, itemId){
   var item;
-  var previous;
-  var parent;
-  var grandParent;
   if(schema[itemId]) {
-    previous = _.findKey(schema, {'next': itemId});
-    parent = _.findKey(schema, {'child': itemId});
-    grandParent = _.findKey(schema, {'child': itemId});
-    while(grandParent && schema[grandParent] && !_.findKey(schema, {'child': grandParent}) && schema[grandParent].previous){
-      grandParent = schema[grandParent].previous;
-    }
     item = {
       'id': itemId,
-      'previous': previous,
-      'parent': parent,
+      'previous': _.findKey(schema, {'next': itemId}),
+      'parent': _.findKey(schema, {'child': itemId}),
       'next': schema[itemId].next,
       'child': schema[itemId].child,
-      'grandParent' : grandParent
+      'grandParent' : null
     };
   }
   return item;
@@ -51,17 +42,7 @@ function getItemDetails(schema, itemId){
  * @param {string} startId - first item in list, not the current page, but the very first page
  */
 function setFlowState(list, pageId, startId) {
-  var updatedFlow = updateFlowState(refreshFlowState(list,startId),pageId);
-  var item = getItemDetails(updatedFlow,pageId);
-  var firstGrandParentId = getItemFirstParent(list,pageId);
-  var firstGrandParentItem;
-  if(item && !item.parent && firstGrandParentId){
-    firstGrandParentItem = getItemDetails(list,firstGrandParentId);
-    if(firstGrandParentItem.next){
-      updatedFlow = updateFlowState(updatedFlow,firstGrandParentItem.next);
-    }
-  }
-  return updatedFlow;
+  return updateFlowState(refreshFlowState(list,startId),pageId);
 }
 
 /**
@@ -87,11 +68,11 @@ function updateFlowState(list,pageId){
       list[parentItem.next].config.disabled = true;
       list = updateFlowState(list, parentItem.next);
     }
-  }else if(item.grandParent){
-    parentItem = getItemDetails(list, item.grandParent);
-    if(parentItem.next) {
+  }else{
+    parentItem = getItemFirstParent(list,item.id);
+    if(parentItem && list[parentItem] && list[parentItem].next) {
       list[parentItem.next].config.disabled = true;
-      list = updateFlowState(list, parentItem.next);
+      list = updateFlowState(list, list[parentItem].next);
     }
   }
   return list;
@@ -123,7 +104,7 @@ function refreshFlowState(list,pageId){
  */
 function getItemFirstParent(schema, itemId){
   var item = getItemDetails(schema,itemId);
-  while(item && !item.parent && item.previous){
+  while(item && item.previous){
     item = getItemDetails(schema,item.previous);
   }
   return item.parent;
