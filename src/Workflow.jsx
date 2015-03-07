@@ -27,7 +27,7 @@ function getItemDetails(schema, itemId){
       'parent': _.findKey(schema, {'child': itemId}),
       'next': schema[itemId].next,
       'child': schema[itemId].child,
-      'grandParent' : null
+      'grandParent' : getItemFirstParent(schema,itemId)
     };
   }
   return item;
@@ -68,7 +68,7 @@ function updateFlowState(list,pageId){
       list[parentItem.next].config.disabled = true;
       list = updateFlowState(list, parentItem.next);
     }
-  }else{
+  }else if(item.grandParent) {
     parentItem = getItemFirstParent(list,item.id);
     if(parentItem && list[parentItem] && list[parentItem].next) {
       list[parentItem.next].config.disabled = true;
@@ -103,11 +103,11 @@ function refreshFlowState(list,pageId){
  * @return {object} updated schema
  */
 function getItemFirstParent(schema, itemId){
-  var item = getItemDetails(schema,itemId);
-  while(item && item.previous){
-    item = getItemDetails(schema,item.previous);
+  var itemPrevious = _.findKey(schema, {'next': itemId});
+  while(itemPrevious){
+    itemPrevious = _.findKey(schema, {'next': itemPrevious});
   }
-  return item.parent;
+  return _.findKey(schema, {'child': itemPrevious});
 }
 
 /**
