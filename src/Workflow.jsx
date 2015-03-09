@@ -19,13 +19,17 @@ var EditorToggle = require('./EditorToggle');
  * @return {{id: *, previous: *, parent: *, next: *}}
  */
 function getItemDetails(schema, itemId){
-  return {
-    'id': itemId,
-    'previous': _.findKey(schema, {'next': itemId}),
-    'parent': _.findKey(schema, {'child': itemId}),
-    'next': schema[itemId].next,
-    'child': schema[itemId].child
-  };
+  if(itemId && schema[itemId]) {
+    return {
+      'id': itemId,
+      'previous': _.findKey(schema, {'next': itemId}),
+      'parent': _.findKey(schema, {'child': itemId}),
+      'next': schema[itemId].next,
+      'child': schema[itemId].child
+    };
+  }else{
+    return {};
+  }
 }
 
 /**
@@ -93,7 +97,7 @@ function refreshFlowState(list,pageId){
  */
 function getItemFirstParent(schema, itemId){
   var item = getItemDetails(schema,itemId);
-  while(item && !item.parent){
+  while(item && item.previous){
     item = getItemDetails(schema,item.previous);
   }
   return item.parent;
@@ -171,6 +175,11 @@ function findNext(list, id){
   }else if( item.parent){
     parentItem = getItemDetails(list,item.parent);
     nextId = parentItem.next;
+  }else if(item.previous){
+    parentItem = getItemDetails(list,getItemFirstParent(list, item.previous));
+    if(parentItem && parentItem.next){
+      nextId = parentItem.next;
+    }
   }
   return nextId;
 }
