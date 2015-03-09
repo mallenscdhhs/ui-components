@@ -67,6 +67,12 @@ function updateFlowState(list,pageId){
       list[parentItem.next].config.disabled = true;
       list = updateFlowState(list, parentItem.next);
     }
+  }else if(item.previous){
+    parentItem = getItemDetails(list,getItemFirstParent(list, item.previous));
+    if(parentItem && parentItem.next){
+      list[parentItem.next].config.disabled = true;
+      list = updateFlowState(list, parentItem.next);
+    }
   }
   return list;
 }
