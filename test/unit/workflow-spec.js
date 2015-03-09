@@ -192,3 +192,19 @@ describe('#updateChildren', function() {
     expect(newItems[2].props.disabled).toEqual(true);
   });
 });
+
+describe('#getItemFirstParent', function() {
+  it('returns parent, if any, of passed in pageId', function () {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var firstParent = Workflow.getItemFirstParent(fixture.components,'page6');
+    expect(firstParent).toEqual('page2');
+  });
+});
+
+describe('#getItemLastChild', function() {
+  it('returns last child in a line of passed in pageId', function () {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var lastChild = Workflow.getItemLastChild(fixture.components,'page3');
+    expect(lastChild).toEqual('page7');
+  });
+});

@@ -95,7 +95,7 @@ function refreshFlowState(schema,pageId){
   if ( item.child ) {
     list = list.mergeDeep(refreshFlowState(list.toJSON(), item.child));
   }
-  return list;
+  return list.toJSON();
 }
 
 /**
@@ -234,7 +234,9 @@ module.exports = React.createClass({
     findPrevious: findPrevious,
     findNext: findNext,
     updateChildren: updateChildren,
-    getItemDetails : getItemDetails
+    getItemDetails : getItemDetails,
+    getItemFirstParent : getItemFirstParent,
+    getItemLastChild: getItemLastChild
   },
 
   getDefaultProps: function(){
