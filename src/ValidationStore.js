@@ -40,12 +40,12 @@ module.exports = Flux.createStore({
         var field = _.zipObject([data.name], [data.value]);
         var requestPayload = {
           "input": field,
-          "rules": _.map(data.rules, function(rule){
-            return {
-              "ruleName": rule,
+          "rules": _.compact(_.map(data.rules, function(enabled, name){
+            return !enabled ? null : {
+              "ruleName": name,
               "config": _.pick(data, ['type', 'name', 'id', 'maxLength', 'required'])
             };
-          }),
+          })),
           "sessionData": session
         };
         // Call Validation API with payload
