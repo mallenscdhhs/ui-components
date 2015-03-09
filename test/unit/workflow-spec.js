@@ -184,11 +184,8 @@ describe('#updateChildren', function() {
     var flow = _.cloneDeep(fixture.components);
     flow.page1.config.disabled = false;
     flow.page2.config.disabled = false;
-    flow.page3.config.disabled = true;
+    flow.page5.config.disabled = true;
     var newItems = Workflow.updateChildren(flow,components.props.children);
-    _.map(newItems,function(item){
-      console.log(JSON.stringify(item.props));
-    });
     expect(newItems[0].props.disabled).toEqual(false);
     expect(newItems[1].props.disabled).toEqual(false);
     expect(newItems[2].props.disabled).toEqual(true);
