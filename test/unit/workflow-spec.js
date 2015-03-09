@@ -192,24 +192,3 @@ describe('#updateChildren', function() {
     expect(newItems[2].props.disabled).toEqual(true);
   });
 });
-
-describe('immutable tests', function() {
-  it('set', function () {
-    var list = Immutable.fromJS({});
-    var list2 = list.setIn(['a','b','c'],true);
-
-    var list3 = Immutable.fromJS({'hi':{'config':{'type':true}},'me':'you'});
-    var list4 = list3.setIn(['hi','config','type'],false);
-    var fixture = require('../fixtures/workflow-with-children.json');
-    var components = Components.factory(fixture);
-    var newList = Immutable.List(components.props.children).map(function(value,key){
-      console.log('start');
-      console.log(JSON.stringify(value.props));
-      var newProps = Immutable.fromJS(value.props).setIn(['disabled'],true);
-      console.log(JSON.stringify(newProps));
-      console.log('end');
-      return Immutable.Map(value).setIn(['props'],newProps);
-    }).toArray();
-    console.log(JSON.stringify(newList[0]));
-  });
-});

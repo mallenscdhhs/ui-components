@@ -201,13 +201,13 @@ function findNext(list, id){
  * @return {*}
  */
 function updateChildren(flowItems, components){
-  return _.map(components,function(component){
+  return Immutable.List(components).map(function(component) {
     component.props.disabled = flowItems[component.props.id].config.disabled;
     if(component.props.children){
       component.props.children = updateChildren(flowItems, component.props.children);
     }
     return component;
-  });
+  }).toArray();
 }
 
 /**
