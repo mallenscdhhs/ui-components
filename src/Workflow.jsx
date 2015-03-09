@@ -12,7 +12,6 @@ var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
 var Immutable = require('immutable');
 
-
 /**
  * Return details for passed in itemId
  * @param {object} schema
@@ -34,15 +33,31 @@ function getItemDetails(schema, itemId){
 }
 
 /**
- * Sets flow item state(disabled) based on passed in pageId. All pages
- * below the passed in pageId will be disabled, while all those above (including the page itself) will
- * not be disabled.
- * @param {object} list - a linked list representing flow data
- * @param {string} pageId - a starting point
- * @param {string} startId - first item in list, not the current page, but the very first page
+ * Follow tree up from item, to find first parent encountered
+ * @param schema
+ * @param itemId
+ * @return {object} updated schema
  */
-function setFlowState(list, pageId, startId) {
-  return updateFlowState(refreshFlowState(list,startId),pageId);
+function getItemFirstParent(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && item.previous){
+    item = getItemDetails(schema,item.previous);
+  }
+  return item.parent;
+}
+
+/**
+ * Follow tree down from item, to find last element in the tree
+ * @param schema
+ * @param itemId
+ * @return {object}  Updated Schema
+ */
+function getItemLastChild(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && item.next){
+    item = getItemDetails(schema,item.next);
+  }
+  return item.id;
 }
 
 /**
@@ -99,31 +114,15 @@ function refreshFlowState(schema,pageId){
 }
 
 /**
- * Follow tree up from item, to find first parent encountered
- * @param schema
- * @param itemId
- * @return {object} updated schema
+ * Sets flow item state(disabled) based on passed in pageId. All pages
+ * below the passed in pageId will be disabled, while all those above (including the page itself) will
+ * not be disabled.
+ * @param {object} list - a linked list representing flow data
+ * @param {string} pageId - a starting point
+ * @param {string} startId - first item in list, not the current page, but the very first page
  */
-function getItemFirstParent(schema, itemId){
-  var item = getItemDetails(schema,itemId);
-  while(item && item.previous){
-    item = getItemDetails(schema,item.previous);
-  }
-  return item.parent;
-}
-
-/**
- * Follow tree down from item, to find last element in the tree
- * @param schema
- * @param itemId
- * @return {object}  Updated Schema
- */
-function getItemLastChild(schema, itemId){
-  var item = getItemDetails(schema,itemId);
-  while(item && item.next){
-    item = getItemDetails(schema,item.next);
-  }
-  return item.id;
+function setFlowState(list, pageId, startId) {
+  return updateFlowState(refreshFlowState(list, startId), pageId);
 }
 
 /**
@@ -349,7 +348,7 @@ module.exports = React.createClass({
           <div id="workflow-status"></div>
           <div id="workflow-actions" className="text-right">
             {_.map(actions, function(action, i){
-              return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
+              return <Action {...action} key={'action-'+i}/>;
             }, this)}
           </div>
         </GridColumn>
