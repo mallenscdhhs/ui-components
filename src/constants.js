@@ -1,5 +1,6 @@
 module.exports = {
   "actions" : {
+    "ALERT_MESSAGES_CLEAR": "clearAlertMessages",
     "FIELD_VALUE_CHANGE": "fieldValueChange",
     "FIELD_GROUP_VALUE_CHANGE": "fieldGroupItemChange",
     "FIELD_VALIDATION_ERROR": "fieldValidationError",
