@@ -1,6 +1,5 @@
 var fs = require('fs');
 var gulp = require('gulp');
-var jsHint = require('gulp-jshint');
 var del = require('del');
 var reactify = require('reactify');
 var react = require('gulp-react');
@@ -18,14 +17,7 @@ gulp.task('clean', function(done){
 });
 
 
-gulp.task('hint', function(){
-  return gulp.src(['./src/**/*.js'])
-    .pipe(jsHint())
-    .pipe(jsHint.reporter('default'));
-});
-
-
-gulp.task('test', ['hint'], function(done){
+gulp.task('test', function(done){
   return karma.start({
     configFile: __dirname + '/karma.conf.js'
   }, done);

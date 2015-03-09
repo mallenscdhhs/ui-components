@@ -8,7 +8,7 @@
         "name": "Previous",
         "type": "button",
         "classNames": ["btn-default"],
-        "event": "workflow:previous:page"
+        "event": "workflowPreviousPage"
       },
       {
         "id": "workflow-cancel-btn",
@@ -18,11 +18,11 @@
         "event": "workflow:cancel"
       },
       {
-        "id": "workflow-save-btn",
-        "name": "Save and Continue",
+        "id": "workflow-next-btn",
+        "name": "Next",
         "type": "button",
         "classNames": ["btn-primary"],
-        "event": "workflow:save"
+        "event": "workflowNextPage"
       },
       {
         "id": "workflow-exit-btn",
