@@ -8,6 +8,7 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('../../src/constants');
 var fixture = require('../fixtures/workflow-simple.json');
+var Immutable = require('immutable');
 
 describe('Workflow component', function(){
 
@@ -67,10 +68,10 @@ describe('Workflow#setFlowState', function(){
     expect(items.a.config.disabled).not.toBeDefined();
     expect(items.b.config.disabled).not.toBeDefined();
     expect(items.c.config.disabled).not.toBeDefined();
-    Workflow.setFlowState(items, 'b', 'a');
-    expect(items.a.config.disabled).toBe(false);
-    expect(items.b.config.disabled).toBe(false);
-    expect(items.c.config.disabled).toBe(true);
+    var newItems = Workflow.setFlowState(items, 'b', 'a');
+    expect(newItems.a.config.disabled).toBe(false);
+    expect(newItems.b.config.disabled).toBe(false);
+    expect(newItems.c.config.disabled).toBe(true);
   });
 });
 
@@ -189,5 +190,26 @@ describe('#updateChildren', function() {
     expect(newItems[0].props.disabled).toEqual(false);
     expect(newItems[1].props.disabled).toEqual(false);
     expect(newItems[2].props.disabled).toEqual(true);
+  });
+});
+
+describe('immutable tests', function() {
+  it('set', function () {
+    var list = Immutable.fromJS({});
+    var list2 = list.setIn(['a','b','c'],true);
+
+    var list3 = Immutable.fromJS({'hi':{'config':{'type':true}},'me':'you'});
+    var list4 = list3.setIn(['hi','config','type'],false);
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var components = Components.factory(fixture);
+    var newList = Immutable.List(components.props.children).map(function(value,key){
+      console.log('start');
+      console.log(JSON.stringify(value.props));
+      var newProps = Immutable.fromJS(value.props).setIn(['disabled'],true);
+      console.log(JSON.stringify(newProps));
+      console.log('end');
+      return Immutable.Map(value).setIn(['props'],newProps);
+    }).toArray();
+    console.log(JSON.stringify(newList[0]));
   });
 });

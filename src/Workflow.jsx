@@ -10,6 +10,7 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
+var Immutable = require('immutable');
 
 
 /**
@@ -46,51 +47,53 @@ function setFlowState(list, pageId, startId) {
 
 /**
  * Set all items below pageId to disabled
- * @param list
+ * @param schema
  * @param pageId
  * @return {*}
  */
-function updateFlowState(list,pageId){
-  var item = getItemDetails(list, pageId);
+function updateFlowState(schema,pageId){
+  var list = Immutable.fromJS(schema);
+  var item = getItemDetails(list.toJSON(), pageId);
   var parentItem;
   if ( item.next ) {
-    list[item.next].config.disabled = true;
-    list = updateFlowState(list, item.next);
+    list = list.setIn([item.next,'config','disabled'], true);
+    list = list.mergeDeep(updateFlowState(list.toJSON(), item.next));
   }
   if ( item.child ) {
-    list[item.child].config.disabled = true;
-    list = updateFlowState(list, item.child);
+    list = list.setIn([item.child,'config','disabled'], true);
+    list = list.mergeDeep(updateFlowState(list.toJSON(), item.child));
   }
   if ( item.parent ) {
-    parentItem = getItemDetails(list, item.parent);
+    parentItem = getItemDetails(list.toJSON(), item.parent);
     if(parentItem.next) {
-      list[parentItem.next].config.disabled = true;
-      list = updateFlowState(list, parentItem.next);
+      list = list.setIn([parentItem.next,'config','disabled'], true);
+      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
     }
   }else if(item.previous){
-    parentItem = getItemDetails(list,getItemFirstParent(list, item.previous));
+    parentItem = getItemDetails(list.toJSON(),getItemFirstParent(list.toJSON(), item.previous));
     if(parentItem && parentItem.next){
-      list[parentItem.next].config.disabled = true;
-      list = updateFlowState(list, parentItem.next);
+      list = list.setIn([parentItem.next,'config','disabled'], true);
+      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
     }
   }
-  return list;
+  return list.toJSON();
 }
 
 /**
  * Set all pages in list, with pageId as the FIRST page, to enabled.
- * @param list
+ * @param schema
  * @param pageId
  * @return {*}
  */
-function refreshFlowState(list,pageId){
-  var item = getItemDetails(list, pageId);
-  list[pageId].config.disabled = false;
+function refreshFlowState(schema,pageId){
+  var list = Immutable.fromJS(schema);
+  var item = getItemDetails(list.toJSON(), pageId);
+  list = list.setIn([pageId,'config','disabled'], false);
   if ( item.next ) {
-    list = refreshFlowState(list, item.next);
+    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.next));
   }
   if ( item.child ) {
-    list = refreshFlowState(list, item.child);
+    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.child));
   }
   return list;
 }
