@@ -104,6 +104,7 @@ function refreshFlowState(schema,pageId){
   var list = Immutable.fromJS(schema);
   var item = getItemDetails(list.toJSON(), pageId);
   list = list.setIn([pageId,'config','disabled'], false);
+  list = list.setIn([pageId,'config','current'], false);
   if ( item.next ) {
     list = list.mergeDeep(refreshFlowState(list.toJSON(), item.next));
   }
@@ -122,7 +123,9 @@ function refreshFlowState(schema,pageId){
  * @param {string} startId - first item in list, not the current page, but the very first page
  */
 function setFlowState(list, pageId, startId) {
-  return updateFlowState(refreshFlowState(list, startId), pageId);
+  var updatedFlow = Immutable.fromJS(updateFlowState(refreshFlowState(list, startId), pageId));
+  updatedFlow = updatedFlow.setIn([pageId,'config','current'],true);
+  return updatedFlow.toJSON();
 }
 
 /**
@@ -202,6 +205,7 @@ function findNext(list, id){
 function updateChildren(flowItems, components){
   return Immutable.List(components).map(function(component) {
     component.props.disabled = flowItems[component.props.id].config.disabled;
+    component.props.current = flowItems[component.props.id].config.current;
     if(component.props.children){
       component.props.children = updateChildren(flowItems, component.props.children);
     }
