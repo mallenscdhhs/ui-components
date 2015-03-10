@@ -95,7 +95,8 @@ function updateFlowState(schema,pageId){
 }
 
 /**
- * Set all pages in list, with pageId as the FIRST page, to enabled.
+ * Set 'disabled' and 'current' flag to false for all items.
+ * PageId should be the very FIRST item in the schema
  * @param schema
  * @param pageId
  * @return {*}
@@ -103,7 +104,7 @@ function updateFlowState(schema,pageId){
 function refreshFlowState(schema,pageId){
   var list = Immutable.fromJS(schema);
   var item = getItemDetails(list.toJSON(), pageId);
-  list = list.setIn([pageId,'config','disabled'], false);
+  list = list.setIn([pageId,'config','disabled'], false).setIn([pageId,'config','current'], false);
   if ( item.next ) {
     list = list.mergeDeep(refreshFlowState(list.toJSON(), item.next));
   }
@@ -116,13 +117,15 @@ function refreshFlowState(schema,pageId){
 /**
  * Sets flow item state(disabled) based on passed in pageId. All pages
  * below the passed in pageId will be disabled, while all those above (including the page itself) will
- * not be disabled.
+ * not be disabled.  Passed in page will be set to 'current' before returning updated flow.
  * @param {object} list - a linked list representing flow data
  * @param {string} pageId - a starting point
  * @param {string} startId - first item in list, not the current page, but the very first page
  */
 function setFlowState(list, pageId, startId) {
-  return updateFlowState(refreshFlowState(list, startId), pageId);
+  return Immutable.fromJS(updateFlowState(refreshFlowState(list, startId), pageId))
+    .setIn([pageId,'config','current'],true)
+    .toJSON();
 }
 
 /**
@@ -193,8 +196,8 @@ function findNext(list, id){
 }
 
 /**
- * Iterate over ReactComponents, and set their 'disabled' status based on the value from the
- * 'items' object which is the state object containing current item status.
+ * Iterate over ReactComponents, and set their 'disabled' and 'current' status based on the value from the
+ * 'items' object which is the state object containing current item values.
  * @param flowItems
  * @param components
  * @return {*}
@@ -202,6 +205,7 @@ function findNext(list, id){
 function updateChildren(flowItems, components){
   return Immutable.List(components).map(function(component) {
     component.props.disabled = flowItems[component.props.id].config.disabled;
+    component.props.current = flowItems[component.props.id].config.current;
     if(component.props.children){
       component.props.children = updateChildren(flowItems, component.props.children);
     }
@@ -258,6 +262,8 @@ module.exports = React.createClass({
     if ( !this.props.editMode ) {
       flow = setFlowState(flow, current, firstPage);
     }
+
+    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : current }  );
 
     return {
       currentPage: current,
