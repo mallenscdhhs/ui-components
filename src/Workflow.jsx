@@ -259,6 +259,8 @@ module.exports = React.createClass({
       flow = setFlowState(flow, current, firstPage);
     }
 
+    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : current }  );
+
     return {
       currentPage: current,
       nextPage: findNext(flow, current),
