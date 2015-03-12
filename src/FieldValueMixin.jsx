@@ -37,7 +37,8 @@ module.exports = {
         Flux.doAction(constants.actions.FIELD_VALUE, {
           id : this.props.id,
           name : this.props.name,
-          value : this.getFieldValue()
+          value : this.getFieldValue(),
+          persistInSession: this.props.persistInSession
         });
       }
     }.bind(this));

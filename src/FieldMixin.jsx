@@ -51,7 +51,8 @@ module.exports = {
       name: this.props.name,
       value: event.target.value,
       type: this.props.type,
-      rules : this.props.rules
+      rules : this.props.rules,
+      persistInSession : this.props.persistInSession
     };
     Flux.doAction( constants.actions.FIELD_VALUE_CHANGE ,  eventData  );
   }
