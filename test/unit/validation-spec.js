@@ -20,7 +20,10 @@ describe('Validation', function() {
       'id': 'idtest',
       'name': 'nameTest',
       'value': 'valueTest',
-      'rules' : ['rule1','rule2']
+      'rules' : {
+        'rule1': true,
+        'rule2': false
+      }
     };
 
     var successPayload = {
@@ -36,7 +39,8 @@ describe('Validation', function() {
       var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
       expect(params.contentType).toEqual('application/json; charset=UTF-8');
-      expect(data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(data.rules.length).toEqual(1);
+      expect(data.rules[0].ruleName).toEqual('rule1');
       expect(data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(successPayload);
       return ajaxMock.promise();
@@ -75,7 +79,10 @@ describe('Validation', function() {
       'id': 'idtest',
       'name': 'nameTest',
       'value': 'valueTest',
-      'rules' : ['rule1','rule2']
+      'rules' : {
+        'rule1': true,
+        'rule2': true
+      }
     };
 
     spyOn($, 'ajax').and.callFake(function(params){
@@ -83,7 +90,9 @@ describe('Validation', function() {
       var data = JSON.parse(params.data);
       expect(params.url).toEqual("/api/rules");
       expect(params.contentType).toEqual('application/json; charset=UTF-8');
-      expect(data.rules[0].ruleName).toEqual(fixture.rules[0]);
+      expect(data.rules.length).toEqual(2);
+      expect(data.rules[0].ruleName).toEqual('rule1');
+      expect(data.rules[1].ruleName).toEqual('rule2');
       expect(data.input[fixture.name]).toEqual(fixture.value);
       ajaxMock.resolve(failurePayload);
       return ajaxMock.promise();

@@ -10,20 +10,122 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
+var Immutable = require('immutable');
 
+/**
+ * Return details for passed in itemId
+ * @param {object} schema
+ * @param {object} itemId
+ * @return {{id: *, previous: *, parent: *, next: *}}
+ */
+function getItemDetails(schema, itemId){
+  if(itemId && schema[itemId]) {
+    return {
+      'id': itemId,
+      'previous': _.findKey(schema, {'next': itemId}),
+      'parent': _.findKey(schema, {'child': itemId}),
+      'next': schema[itemId].next,
+      'child': schema[itemId].child
+    };
+  }else{
+    return {};
+  }
+}
+
+/**
+ * Follow tree up from item, to find first parent encountered
+ * @param schema
+ * @param itemId
+ * @return {object} updated schema
+ */
+function getItemFirstParent(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && item.previous){
+    item = getItemDetails(schema,item.previous);
+  }
+  return item.parent;
+}
+
+/**
+ * Follow tree down from item, to find last element in the tree
+ * @param schema
+ * @param itemId
+ * @return {object}  Updated Schema
+ */
+function getItemLastChild(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && item.next){
+    item = getItemDetails(schema,item.next);
+  }
+  return item.id;
+}
+
+/**
+ * Set all items below pageId to disabled
+ * @param schema
+ * @param pageId
+ * @return {*}
+ */
+function updateFlowState(schema,pageId){
+  var list = Immutable.fromJS(schema);
+  var item = getItemDetails(list.toJSON(), pageId);
+  var parentItem;
+  if ( item.next ) {
+    list = list.setIn([item.next,'config','disabled'], true);
+    list = list.mergeDeep(updateFlowState(list.toJSON(), item.next));
+  }
+  if ( item.child ) {
+    list = list.setIn([item.child,'config','disabled'], true);
+    list = list.mergeDeep(updateFlowState(list.toJSON(), item.child));
+  }
+  if ( item.parent ) {
+    parentItem = getItemDetails(list.toJSON(), item.parent);
+    if(parentItem.next) {
+      list = list.setIn([parentItem.next,'config','disabled'], true);
+      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
+    }
+  }else if(item.previous){
+    parentItem = getItemDetails(list.toJSON(),getItemFirstParent(list.toJSON(), item.previous));
+    if(parentItem && parentItem.next){
+      list = list.setIn([parentItem.next,'config','disabled'], true);
+      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
+    }
+  }
+  return list.toJSON();
+}
+
+/**
+ * Set 'disabled' and 'current' flag to false for all items.
+ * PageId should be the very FIRST item in the schema
+ * @param schema
+ * @param pageId
+ * @return {*}
+ */
+function refreshFlowState(schema,pageId){
+  var list = Immutable.fromJS(schema);
+  var item = getItemDetails(list.toJSON(), pageId);
+  list = list.setIn([pageId,'config','disabled'], false).setIn([pageId,'config','current'], false);
+  if ( item.next ) {
+    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.next));
+  }
+  if ( item.child ) {
+    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.child));
+  }
+  return list.toJSON();
+}
 
 /**
  * Sets flow item state(disabled) based on passed in pageId. All pages
- * below the passed in pageId will be disabled.
+ * below the passed in pageId will be disabled, while all those above (including the page itself) will
+ * not be disabled.  Passed in page will be set to 'current' before returning updated flow.
  * @param {object} list - a linked list representing flow data
  * @param {string} pageId - a starting point
+ * @param {string} startId - first item in list, not the current page, but the very first page
  */
-function setFlowState(list, pageId){
-  var next = list[pageId].next;
-  if ( next ) {
-    list[next].disabled = true;
-    setFlowState(list, next);
-  }
+function setFlowState(list, pageId, startId) {
+  return Immutable.fromJS(updateFlowState(refreshFlowState(list, startId), pageId))
+    .setIn([pageId,'config','current'],true)
+    .toJSON();
 }
 
 /**
@@ -48,9 +150,22 @@ function getCurrentActionButtons(actions, state){
  * @returns {string} the id of the previous page
  */
 function findPrevious(list, id){
-  return _.findKey(list, function(item){
-    return item.next === id || item.child === id;
-  });
+  var item = getItemDetails(list,id);
+  var previousId;
+  var previousItem;
+  var parentItem;
+  if(item.previous){
+    previousItem = getItemDetails(list,item.previous);
+    if(previousItem.child){
+      previousId= getItemLastChild(list,previousItem.child);
+    }else{
+      previousId = previousItem.id;
+    }
+  }else if(item.parent){
+    parentItem = getItemDetails(list,item.parent);
+    previousId = parentItem.id;
+  }
+  return previousId;
 }
 
 /**
@@ -61,15 +176,41 @@ function findPrevious(list, id){
 * @returns {string} the id of the next page
 */
 function findNext(list, id){
-  var next = list[id].child || list[id].next;
-  if ( next ) {
-    return next;
-  } else {
-    var parent = _.findKey(list, function(item){
-      return item.child === id;
-    });
-    return parent? list[parent].next : undefined;
+  var item = getItemDetails(list,id);
+  var nextId;
+  var parentItem;
+  if(item.child) {
+    nextId = item.child;
+  }else if ( item.next ) {
+    nextId = item.next;
+  }else if( item.parent){
+    parentItem = getItemDetails(list,item.parent);
+    nextId = parentItem.next;
+  }else if(item.previous){
+    parentItem = getItemDetails(list,getItemFirstParent(list, item.previous));
+    if(parentItem && parentItem.next){
+      nextId = parentItem.next;
+    }
   }
+  return nextId;
+}
+
+/**
+ * Iterate over ReactComponents, and set their 'disabled' and 'current' status based on the value from the
+ * 'items' object which is the state object containing current item values.
+ * @param flowItems
+ * @param components
+ * @return {*}
+ */
+function updateChildren(flowItems, components){
+  return Immutable.List(components).map(function(component) {
+    component.props.disabled = flowItems[component.props.id].config.disabled;
+    component.props.current = flowItems[component.props.id].config.current;
+    if(component.props.children){
+      component.props.children = updateChildren(flowItems, component.props.children);
+    }
+    return component;
+  }).toArray();
 }
 
 /**
@@ -94,7 +235,11 @@ module.exports = React.createClass({
     setFlowState: setFlowState,
     getCurrentActionButtons: getCurrentActionButtons,
     findPrevious: findPrevious,
-    findNext: findNext
+    findNext: findNext,
+    updateChildren: updateChildren,
+    getItemDetails : getItemDetails,
+    getItemFirstParent : getItemFirstParent,
+    getItemLastChild: getItemLastChild
   },
 
   getDefaultProps: function(){
@@ -110,16 +255,20 @@ module.exports = React.createClass({
   getInitialState: function(){
     var firstPage = this.props.firstPage;
     var flow = this.props.items;
-    var current = (this.props.lastSectionCompleted)?  flow[this.props.lastSectionCompleted].next : firstPage;
+    var current = ( this.props.lastSectionCompleted ) ?
+      findNext( flow, this.props.lastSectionCompleted ) :
+      firstPage;
 
     if ( !this.props.editMode ) {
-      setFlowState(flow, current);
+      flow = setFlowState(flow, current, firstPage);
     }
+
+    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : current }  );
 
     return {
       currentPage: current,
+      nextPage: findNext(flow, current),
       previousPage: findPrevious(flow, current),
-      nextPage: current.next,
       flow: flow
     };
   },
@@ -156,7 +305,8 @@ module.exports = React.createClass({
     this.setState({
       currentPage: pageId,
       nextPage: findNext(this.state.flow, pageId),
-      previousPage: findPrevious(this.state.flow, pageId)
+      previousPage: findPrevious(this.state.flow, pageId),
+      flow: setFlowState(this.state.flow, pageId, this.props.firstPage)
     });
     Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
   },
@@ -195,7 +345,7 @@ module.exports = React.createClass({
             <EditorToggle {...this.props}/>
             <h4>{this.props.title}</h4>
             <Tree ref="outline">
-              {this.props.children}
+              { updateChildren(this.state.flow, this.props.children) }
             </Tree>
           </div>
         </GridColumn>
@@ -204,7 +354,7 @@ module.exports = React.createClass({
           <div id="workflow-status"></div>
           <div id="workflow-actions" className="text-right">
             {_.map(actions, function(action, i){
-              return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
+              return <Action {...action} key={'action-'+i}/>;
             }, this)}
           </div>
         </GridColumn>
