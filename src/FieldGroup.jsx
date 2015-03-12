@@ -38,7 +38,8 @@ module.exports = React.createClass({
     name: React.PropTypes.string.isRequired,
     type: React.PropTypes.string.isRequired,
     value: React.PropTypes.any,
-    required: React.PropTypes.bool
+    required: React.PropTypes.bool,
+    persistInSession: React.PropTypes.bool
   },
 
   getInitialState: function(){
@@ -65,7 +66,8 @@ module.exports = React.createClass({
           id: this.props.id,
           name: this.props.name,
           value: value,
-          rules : this.props.rules
+          rules : this.props.rules,
+          persistInSession: this.props.persistInSession
         });
       }
     }.bind(this));
