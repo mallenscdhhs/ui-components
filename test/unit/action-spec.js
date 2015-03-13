@@ -12,4 +12,10 @@ describe('Action component', function() {
     expect(inputText.length).toEqual(1);
   });
 
+  it('Can render an icon', function() {
+    var action = TestUtils.renderIntoDocument(<Action {...fixture.config}/>);
+    var dom = action.getDOMNode();
+    expect(dom.childNodes[0].className).toEqual('glyphicon glyphicon-' + fixture.config.iconClass);
+  });
+
 });
