@@ -12,7 +12,8 @@ module.exports = React.createClass({
     event: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     url: React.PropTypes.string,
-    classNames: React.PropTypes.arrayOf(React.PropTypes.string)
+    classNames: React.PropTypes.arrayOf(React.PropTypes.string),
+    iconClass: React.PropTypes.string
   },
 
   getDefaultProps: function(){
@@ -39,6 +40,17 @@ module.exports = React.createClass({
   },
 
   /**
+  * Return a span element with icon classes
+  * @return {Object}
+  */
+  getIcon: function(){
+    var iconClassNames = 'glyphicon ' + this.props.iconClass;
+    if(typeof this.props.iconClass !== 'undefined'){
+      return <span className={iconClassNames} aria-hidden="true"></span>;
+    }
+  },
+
+  /**
    * Event handler for onClick, that pushes a message to the queue, with the action is clicked.
    * It's used with workflow to update page based on the action clicked.
    * @returns {void}
@@ -59,6 +71,7 @@ module.exports = React.createClass({
         key={this.props.id+"-action"}
         className={this.getClasses()}
         onClick={this.handleClick}>
+        {this.getIcon()}
         {this.props.name}
       </a>
     );
@@ -76,6 +89,7 @@ module.exports = React.createClass({
         key={this.props.id+"-action"}
         className={this.getClasses()}
         onClick={this.handleClick}>
+        {this.getIcon()}
         {this.props.name}
       </button>
     );
