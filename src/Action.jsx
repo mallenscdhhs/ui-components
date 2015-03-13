@@ -44,8 +44,8 @@ module.exports = React.createClass({
   * @return {Object}
   */
   getIcon: function(){
-    var iconClassNames = 'glyphicon ' + this.props.iconClass;
-    if(typeof this.props.iconClass !== 'undefined'){
+    var iconClassNames = 'glyphicon glyphicon-' + this.props.iconClass;
+    if(this.props.iconClass){
       return <span className={iconClassNames} aria-hidden="true"></span>;
     }
   },
