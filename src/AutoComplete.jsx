@@ -1,3 +1,5 @@
+'use-strict';
+
 var React = require('react');
 var update = require('react/lib/update');
 var Combobox = require('react-widgets').Combobox;
@@ -6,18 +8,6 @@ var Flux = require('fluxify');
 var constants = require('./constants');
 var _ = require('lodash');
 
-/**
- * Options are configured as an array of objects, but the Combobox
- * component expects a list of strings. This function converts an
- * array of Option configs to an array of the Option.label values.
- * @param {array} options - an array of option config objects
- * @returns {array} an array of strings
- */
-var getOptionLabels = function(options){
-  return _.map(options, function(option){
-    return option.label;
-  });
-};
 
 /**
  * Autocomplete field. Will filter a list of options based on user input.
@@ -29,6 +19,7 @@ module.exports = React.createClass({
   displayName: 'AutoComplete',
 
   propTypes: {
+    id: React.PropTypes.string,
     ref: React.PropTypes.string,
     suggest: React.PropTypes.bool,
     filter: React.PropTypes.oneOfType([
@@ -37,10 +28,11 @@ module.exports = React.createClass({
       React.PropTypes.oneOf(['contains', 'startsWith', 'endsWith']),
     ]),
     className: React.PropTypes.string,
-    options: React.PropTypes.object.isRequired,
     onOptionSelected: React.PropTypes.func,
     customClasses: React.PropTypes.object,
     placeholder: React.PropTypes.string,
+    valueField: React.PropTypes.string,
+    textField: React.PropTypes.string,
     value: React.PropTypes.string
   },
 
@@ -50,11 +42,8 @@ module.exports = React.createClass({
       className: "field-autocomplete",
       suggest: true,
       filter: 'contains',
-      customClasses: {
-        input: 'form-control',
-        results: 'list-group',
-        listItem: 'list-group-item'
-      }
+      valueField: 'value',
+      textField: 'label'
     };
   },
 
@@ -67,28 +56,19 @@ module.exports = React.createClass({
 
   mixins: [OptionsMixin],
 
-  statics: {
-    getOptionLabels: getOptionLabels
-  },
-
   /**
    * When the user chooses an option from the list, this method is called
    * with the selection as param.
    * @param {string} label - the user's selection
    * @fires field:value:change
    */
-  onOptionSelected: function(label){
-    var opt = _.find(this.state.options, {label: label});
+  onOptionSelected: function(opt){
     this.setState({value: opt.value});
     Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {
       id: this.props.id,
       name: this.props.name,
       value: opt.value
     });
-  },
-
-  shouldComponentUpdate: function(nextProps, nextState){
-    return !!nextState.options.length;
   },
 
   /**
@@ -98,14 +78,11 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
-    if ( this.state.options.length ){
-      var config = update(this.props, {
-        options: { $set: getOptionLabels(this.state.options) }
-      });
-      return <Combobox {...config} onSelect={this.onOptionSelected} data={config.options}/>;
-    } else {
-      return <div className="field-autocomplete"></div>;
-    }
+    var isBusy = this.state.options.length? false : true;
+    return <Combobox {...this.props}
+      onSelect={this.onOptionSelected}
+      busy={isBusy}
+      data={this.state.options}/>;
   }
 
 });
