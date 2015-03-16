@@ -9,7 +9,6 @@ var EditorToggle = require('./EditorToggle');
 var FieldLabel = require('./FieldLabel');
 var HelpBlock = require('./HelpBlock');
 var FieldGroup = require('./FieldGroup');
-var FieldMixin = require('./FieldMixin');
 var ValidationMixin = require('./ValidationMixin');
 var DependencyMixin = require('./DependencyMixin');
 var Checkable = require('./Checkable');
