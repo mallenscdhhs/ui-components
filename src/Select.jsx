@@ -38,6 +38,10 @@ module.exports = React.createClass({
     name: React.PropTypes.string.isRequired,
     multiple: React.PropTypes.bool,
     inputProps: React.PropTypes.arrayOf(React.PropTypes.string),
+    defaultOption: React.PropTypes.shape({
+      value: React.PropTypes.string,
+      label: React.PropTypes.string
+    }),
     value: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.arrayOf(React.PropTypes.string)
@@ -46,7 +50,11 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby']
+      inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby'],
+      defaultOption: {
+        value: '',
+        label: 'select...'
+      }
     };
   },
 
@@ -64,7 +72,7 @@ module.exports = React.createClass({
   getEmptyOption: function(){
     var defaultOption;
     if(this.props.multiple !== true){
-      defaultOption = <option value="" key={"option-default-option"}>select...</option>;
+      defaultOption = <option value={this.props.defaultOption.value} key={"option-default-option"}>{this.props.defaultOption.label}</option>;
     }
     return defaultOption;
   },
