@@ -8,7 +8,9 @@ module.exports = React.createClass({
     title: React.PropTypes.string,
     actions: React.PropTypes.arrayOf(React.PropTypes.object),
     id: React.PropTypes.string.isRequired,
-    autoShow: React.PropTypes.bool
+    autoShow: React.PropTypes.bool,
+    sizeClassNames: React.PropTypes.arrayOf(React.PropTypes.string),
+    footerClassNames: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
   getDefaultProps: function(){
@@ -16,6 +18,34 @@ module.exports = React.createClass({
       autoShow: false,
       componentType: 'modal'
     };
+  },
+
+  /**
+  * Return a string of classes for modal-size
+  * @return {String}
+  */
+  getSizeClasses: function(){
+    var classes = ['modal-dialog'];
+
+    // Add all passed in classes
+    if(this.props.sizeClassNames){
+      classes = classes.concat(this.props.sizeClassNames);
+    }
+    return classes.join(' ');
+  },
+
+  /**
+  * Return a string of classes for modal-footer
+  * @return {String}
+  */
+  getFooterClasses: function(){
+    var classes = ['modal-footer'];
+
+    // Add all passed in classes
+    if(this.props.footerClassNames){
+      classes = classes.concat(this.props.footerClassNames);
+    }
+    return classes.join(' ');
   },
 
   componentDidMount: function(){
@@ -30,7 +60,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="modal fade" id={this.props.id} tabIndex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className={this.getSizeClasses()}>
           <div className="modal-content">
             <div className="modal-header">
               <button type="button" className="close" data-dismiss="modal">
@@ -42,7 +72,7 @@ module.exports = React.createClass({
             <div className="modal-body">
               {this.props.children}
             </div>
-            <div className="modal-footer">
+            <div className={this.getFooterClasses()}>
               {_.map(this.props.actions, function(action){
                 return <Action {...action}/>;
               })}
