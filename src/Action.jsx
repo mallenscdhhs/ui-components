@@ -13,12 +13,14 @@ module.exports = React.createClass({
     name: React.PropTypes.string.isRequired,
     url: React.PropTypes.string,
     classNames: React.PropTypes.arrayOf(React.PropTypes.string),
-    iconClass: React.PropTypes.string
+    iconClass: React.PropTypes.string,
+    modalDismiss: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
     return {
-      componentType: 'action'
+      componentType: 'action',
+      modalDismiss: false
     };
   },
 
@@ -51,6 +53,18 @@ module.exports = React.createClass({
   },
 
   /**
+  * Return bootstrap modal data-dismiss attribute
+  * @return {String}
+  */
+  modalDismiss: function() {
+    if(this.props.modalDismiss) {
+      return 'modal';
+    } else {
+      return null;
+    }
+  },
+
+  /**
    * Event handler for onClick, that pushes a message to the queue, with the action is clicked.
    * It's used with workflow to update page based on the action clicked.
    * @returns {void}
@@ -70,6 +84,7 @@ module.exports = React.createClass({
         id={this.props.id}
         key={this.props.id+"-action"}
         className={this.getClasses()}
+        data-dismiss={this.modalDismiss()}
         onClick={this.handleClick}>
         {this.getIcon()}
         {this.props.name}
@@ -82,12 +97,15 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
+    var modalDismiss = this.modalDismiss();
+
     return (
       <button
         type="button"
         id={this.props.id}
         key={this.props.id+"-action"}
         className={this.getClasses()}
+        data-dismiss={this.modalDismiss()}
         onClick={this.handleClick}>
         {this.getIcon()}
         {this.props.name}

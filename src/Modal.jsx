@@ -1,4 +1,7 @@
+/* jshint node:true */
 var React = require('react');
+var Flux = require('fluxify');
+var constants = require('./constants');
 var Action = require('./Action');
 var _ = require('lodash');
 
@@ -16,51 +19,28 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       autoShow: false,
-      componentType: 'modal'
+      componentType: 'modal',
+      sizeClassNames: [],
+      footerClassNames: []
     };
   },
 
-  /**
-  * Return a string of classes for modal-size
-  * @return {String}
-  */
-  getSizeClasses: function(){
-    var classes = ['modal-dialog'];
-
-    // Add all passed in classes
-    if(this.props.sizeClassNames){
-      classes = classes.concat(this.props.sizeClassNames);
-    }
-    return classes.join(' ');
+  componentDidMount: function() {
+    var node = this.getDOMNode();
+    $(node).on('hidden.bs.modal', function(e){
+      Flux.doAction(constants.actions.MODAL_HIDE);
+    });
   },
 
-  /**
-  * Return a string of classes for modal-footer
-  * @return {String}
-  */
-  getFooterClasses: function(){
-    var classes = ['modal-footer'];
-
-    // Add all passed in classes
-    if(this.props.footerClassNames){
-      classes = classes.concat(this.props.footerClassNames);
-    }
-    return classes.join(' ');
-  },
-
-  componentDidMount: function(){
+  componentDidUpdate: function() {
     var node = this.getDOMNode();
     var $modal = $(node).modal({show: this.props.autoShow});
-
-    $modal.on('hidden.bs.modal', function(){
-      React.unmountComponentAtNode(node);
-    });
   },
 
   render: function() {
     return (
       <div className="modal fade" id={this.props.id} tabIndex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
-        <div className={this.getSizeClasses()}>
+        <div className={['modal-dialog'].concat(this.props.sizeClassNames).join(' ')}>
           <div className="modal-content">
             <div className="modal-header">
               <button type="button" className="close" data-dismiss="modal">
@@ -72,7 +52,7 @@ module.exports = React.createClass({
             <div className="modal-body">
               {this.props.children}
             </div>
-            <div className={this.getFooterClasses()}>
+            <div className={['modal-footer'].concat(this.props.footerClassNames).join(' ')}>
               {_.map(this.props.actions, function(action){
                 return <Action {...action}/>;
               })}
