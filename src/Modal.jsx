@@ -11,14 +11,14 @@ module.exports = React.createClass({
     title: React.PropTypes.string,
     actions: React.PropTypes.arrayOf(React.PropTypes.object),
     id: React.PropTypes.string.isRequired,
-    autoShow: React.PropTypes.bool,
+    show: React.PropTypes.bool,
     sizeClassNames: React.PropTypes.arrayOf(React.PropTypes.string),
     footerClassNames: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
   getDefaultProps: function(){
     return {
-      autoShow: false,
+      show: false,
       componentType: 'modal',
       sizeClassNames: [],
       footerClassNames: []
@@ -34,7 +34,7 @@ module.exports = React.createClass({
 
   componentDidUpdate: function() {
     var node = this.getDOMNode();
-    var $modal = $(node).modal({show: this.props.autoShow});
+    var $modal = $(node).modal({show: this.props.show});
   },
 
   render: function() {
