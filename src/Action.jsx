@@ -2,6 +2,7 @@
 var React = require('react');
 var _ = require('lodash');
 var Flux = require('fluxify');
+var props;
 
 module.exports = React.createClass({
   displayName: 'Action',
@@ -13,19 +14,28 @@ module.exports = React.createClass({
     name: React.PropTypes.string.isRequired,
     url: React.PropTypes.string,
     classNames: React.PropTypes.arrayOf(React.PropTypes.string),
-    iconClass: React.PropTypes.string,
-    modalDismiss: React.PropTypes.bool
+    iconClass: React.PropTypes.string
   },
 
   getDefaultProps: function(){
     return {
-      componentType: 'action',
-      modalDismiss: false
+      componentType: 'action'
     };
   },
 
   /**
-  * Return a string of classes
+  * Returns an object for action configuration
+  * @return {Object}
+  */
+  getConfig: function() {
+    return {
+      key: this.props.id+'-action',
+      className: this.getClasses()
+    };
+  },
+
+  /**
+  * Returns a string of classes
   * @return {String}
   */
   getClasses: function(){
@@ -42,25 +52,13 @@ module.exports = React.createClass({
   },
 
   /**
-  * Return a span element with icon classes
+  * Returns a span element with icon classes
   * @return {Object}
   */
   getIcon: function(){
     var iconClassNames = 'glyphicon glyphicon-' + this.props.iconClass;
     if(this.props.iconClass){
       return <span className={iconClassNames} aria-hidden="true"></span>;
-    }
-  },
-
-  /**
-  * Return bootstrap modal data-dismiss attribute
-  * @return {String}
-  */
-  modalDismiss: function() {
-    if(this.props.modalDismiss) {
-      return 'modal';
-    } else {
-      return null;
     }
   },
 
@@ -78,14 +76,10 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
+    props = _.merge(this.props, _.merge({href: this.props.url}, this.getConfig()));
+
     return (
-      <a
-        href={this.props.url}
-        id={this.props.id}
-        key={this.props.id+"-action"}
-        className={this.getClasses()}
-        data-dismiss={this.modalDismiss()}
-        onClick={this.handleClick}>
+      <a {...props} onClick={this.handleClick}>
         {this.getIcon()}
         {this.props.name}
       </a>
@@ -97,16 +91,10 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
-    var modalDismiss = this.modalDismiss();
+    props = _.merge(this.props, this.getConfig());
 
     return (
-      <button
-        type="button"
-        id={this.props.id}
-        key={this.props.id+"-action"}
-        className={this.getClasses()}
-        data-dismiss={this.modalDismiss()}
-        onClick={this.handleClick}>
+      <button {...props} onClick={this.handleClick}>
         {this.getIcon()}
         {this.props.name}
       </button>
