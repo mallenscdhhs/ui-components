@@ -2,7 +2,6 @@
 var React = require('react');
 var _ = require('lodash');
 var Flux = require('fluxify');
-var props;
 
 module.exports = React.createClass({
   displayName: 'Action',
@@ -28,10 +27,13 @@ module.exports = React.createClass({
   * @return {Object}
   */
   getConfig: function() {
-    return {
+    var base = {
       key: this.props.id+'-action',
-      className: this.getClasses()
+      className: this.getClasses(),
+      href: this.props.url
     };
+
+    return (this.props.type === 'link') ? _.merge(this.props, base) :  _.merge(this.props, _.omit(base, 'href'));
   },
 
   /**
@@ -76,7 +78,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
-    props = _.merge(this.props, _.merge({href: this.props.url}, this.getConfig()));
+    var props = this.getConfig();
 
     return (
       <a {...props} onClick={this.handleClick}>
@@ -91,7 +93,7 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
-    props = _.merge(this.props, this.getConfig());
+    var props = this.getConfig();
 
     return (
       <button {...props} onClick={this.handleClick}>
