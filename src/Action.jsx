@@ -36,6 +36,9 @@ module.exports = React.createClass({
     if(this.props.classNames){
       classes = classes.concat(this.props.classNames);
     }
+    if(this.props.disabled === true){
+      classes.push('disabled');
+    }
     return classes.join(' ');
   },
 
@@ -56,7 +59,9 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleClick: function(){
-    Flux.doAction( this.props.event ,  this.props );
+    if(this.props.disabled === undefined || this.props.disabled !== true) {
+      Flux.doAction(this.props.event, this.props);
+    }
   },
 
   /**
