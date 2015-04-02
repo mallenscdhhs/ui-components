@@ -1,4 +1,3 @@
-/* jshint node:true */
 var React = require('react');
 var Flux = require('fluxify');
 var constants = require('./constants');
