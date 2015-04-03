@@ -15,7 +15,7 @@ describe('Modal', function(){
     expect(p.getDOMNode().textContent).toEqual('Hi.');
   });
   it('can autoshow a modal window', function(done){
-    var config = { title: 'Foo title', id: 'foo', autoShow: true};
+    var config = { title: 'Foo title', id: 'foo', show: true};
     var m = TestUtils.renderIntoDocument(<Modal {...config}><p>Hi.</p></Modal>);
     setTimeout(function(){
       expect(/in/.test(m.getDOMNode().className)).toEqual(true);
