@@ -29,6 +29,7 @@ module.exports = React.createClass({
     $(node).on('hidden.bs.modal', function(e){
       Flux.doAction(constants.actions.MODAL_HIDE);
     });
+    var $modal = $(node).modal({show: this.props.show});
   },
 
   componentDidUpdate: function() {
