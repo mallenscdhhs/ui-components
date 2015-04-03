@@ -23,7 +23,21 @@ module.exports = React.createClass({
   },
 
   /**
-  * Return a string of classes
+  * Returns an object for action configuration
+  * @return {Object}
+  */
+  getConfig: function() {
+    var base = {
+      key: this.props.id+'-action',
+      className: this.getClasses(),
+      href: this.props.url
+    };
+
+    return (this.props.type === 'link') ? _.merge(this.props, base) :  _.merge(this.props, _.omit(base, 'href'));
+  },
+
+  /**
+  * Returns a string of classes
   * @return {String}
   */
   getClasses: function(){
@@ -40,7 +54,7 @@ module.exports = React.createClass({
   },
 
   /**
-  * Return a span element with icon classes
+  * Returns a span element with icon classes
   * @return {Object}
   */
   getIcon: function(){
@@ -64,13 +78,10 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
+    var props = this.getConfig();
+
     return (
-      <a
-        href={this.props.url}
-        id={this.props.id}
-        key={this.props.id+"-action"}
-        className={this.getClasses()}
-        onClick={this.handleClick}>
+      <a {...props} onClick={this.handleClick}>
         {this.getIcon()}
         {this.props.name}
       </a>
@@ -82,13 +93,10 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
+    var props = this.getConfig();
+
     return (
-      <button
-        type="button"
-        id={this.props.id}
-        key={this.props.id+"-action"}
-        className={this.getClasses()}
-        onClick={this.handleClick}>
+      <button {...props} onClick={this.handleClick}>
         {this.getIcon()}
         {this.props.name}
       </button>
