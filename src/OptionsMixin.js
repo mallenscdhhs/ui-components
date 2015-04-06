@@ -21,7 +21,7 @@ module.exports = {
    * @fires SEND_RESOURCE_OPTIONS
    */
   componentDidMount: function(){
-    // Register LOAD_OPTIONS callback
+    // if a client is sending us new options...
     Dispatcher.register(this.props.id + '-LOAD-OPTIONS', function (action, data) {
       if (action === constants.actions.LOAD_OPTIONS &&
           data.id === this.props.id) {
@@ -29,24 +29,28 @@ module.exports = {
       }
     }.bind(this));
 
-    // Init Options
-    if ( this.props.options ) {
-      this.setState({'options': this.props.options});
-    } else if ( this.props.optionsResource ) {
-      Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
-        'resourceName': this.props.optionsResource,
-        'fieldId' : this.props.id,
-        'fieldName' : this.props.name
-      });
-    }else{
-      Flux.doAction(constants.actions.SEND_OPTIONS, this.props);
-    }
+    this.initOptions(this.props);
   },
 
-  /**
-   * Remove all event listeners.
-   */
   componentWillUnmount: function(){
     Dispatcher.unregister( this.props.id + '-LOAD-OPTIONS');
+  },
+
+  componentWillReceiveProps: function(nextProps){
+    this.initOptions(nextProps);
+  },
+
+  initOptions: function(props){
+    if ( props.options ) {
+      this.setState({'options': props.options});
+    } else if ( props.optionsResource ) {
+      Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
+        'resourceName': props.optionsResource,
+        'fieldId' : props.id,
+        'fieldName' : props.name
+      });
+    }else{
+      Flux.doAction(constants.actions.SEND_OPTIONS, props);
+    }
   }
 };
