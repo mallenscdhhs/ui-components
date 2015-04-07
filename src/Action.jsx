@@ -59,7 +59,7 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleClick: function(){
-    if(this.props.disabled === undefined || this.props.disabled !== true) {
+    if(!this.props.disabled) {
       Flux.doAction(this.props.event, this.props);
     }
   },
