@@ -24,6 +24,7 @@ module.exports = {
     "NEST_WORKFLOW_PAGE" : "nestWorkflowPage",
     "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage",
     "GET_FIELD_VALUE" : "getFieldValue",
-    "FIELD_VALUE" : "fieldValue"
+    "FIELD_VALUE" : "fieldValue",
+    "MODAL_HIDE" : "hideModal"
   }
 };
