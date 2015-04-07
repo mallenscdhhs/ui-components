@@ -51,10 +51,10 @@ describe('Workflow component', function(){
 
   it('can render a workflow', function(){
     var dom = this.workflow.getDOMNode();
-    expect(dom.className).toEqual('row');
-    expect(dom.childNodes[0].className).toEqual('col-md-3');
-    expect(dom.childNodes[0].childNodes[0].className).toEqual('editable-component');
-    expect(dom.childNodes[1].childNodes[0].id).toEqual('workflow-page');
+    expect(dom.className).toEqual('editable-component');
+    expect(dom.childNodes[0].className).toEqual('config-editor');
+    expect(dom.childNodes[0].childNodes[0].className).toEqual('config-editor-label');
+    expect(dom.childNodes[0].childNodes[1].className).toEqual('edit-component');
   });
 });
 
