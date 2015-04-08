@@ -10,8 +10,15 @@
       }
     }
   },
-  "child": "field_1",
+  "child": "fieldset1",
   "components": {
+    "fieldset1": {
+      "child": "field_1",
+      "type": "fieldset",
+      "config": {
+        "name": "Test"
+      }
+    },
     "field_1": {
       "next": "field_2",
       "type": "field",
