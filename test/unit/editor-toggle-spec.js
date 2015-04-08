@@ -54,35 +54,38 @@ describe('EditorToggle', function(){
   });
 
   describe('add-component button', function(){
-
+    var fixture = require('../fixtures/page-with-layout.json');
+    
     beforeEach(function(){
-      this.fixture = {type: 'page', title: 'Test page', content: 'testing', componentType: 'page'};
-      this.page = React.createFactory(Components.elements.page);
-      this.component = TestUtils.renderIntoDocument(this.page(this.fixture));
+      var page = Components.factory(fixture);
+      this.component = TestUtils.renderIntoDocument(page);
     });
 
     it('will render the add template', function(){
-      var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'config-editor');
-      expect(TestUtils.isDOMComponent(html)).toEqual(true);
-      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(1);
+      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'config-editor').length).toEqual(4);
+      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(4);
       expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'add-component').length).toEqual(1);
     });
 
     it('will publish a components props when "add" is clicked', function(done){
-      this.handler = function(){};
       var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'add-component');
-      spyOn(this, 'handler');
-      Dispatcher.register( 'TOGGLE-TEST-2', function(action,data){
-        if( action === constants.actions.COMPONENT_ADD) {
-          this.handler(data);
+      
+      Dispatcher.register( 'TOGGLE-TEST-2', function(action, data){
+        var conf = fixture.components.fieldset1.config;
+        if( action === constants.actions.COMPONENT_ADD ) {
           Dispatcher.unregister( 'TOGGLE-TEST-2');
+          expect(data.name).toEqual(conf.name);
+          done();
         }
-      }.bind(this));
+      });
+      
       TestUtils.Simulate.click(btn);
-      setTimeout(function(){
-        expect(this.handler).toHaveBeenCalledWith(this.fixture);
-        done();
-      }.bind(this), 300);
+    });
+
+    it('will not allow a user to add a component to a Page', function(){
+      var btns = TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'add-component');
+      expect(btns.length).toEqual(1);
+      expect(btns[0].props.componentType).not.toEqual('page');
     });
 
   });
