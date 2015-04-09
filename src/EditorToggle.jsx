@@ -3,7 +3,8 @@ var constants = require('./constants');
 var React = require('react');
 var _ = require('lodash');
 var allowedToAdd = ['fieldset', 'form'];
-var allowedToRemove = ['form', 'fieldset', 'field'];
+var allowedToRemove = ['fieldset', 'field'];
+var allowedToEdit = ['page', 'workflow', 'fieldset', 'field'];
 
 /**
  * Display component editor controls
@@ -77,18 +78,32 @@ module.exports = React.createClass({
   },
 
   /**
+   * Determine if a component is allowed to edit and if so render the edit button.
+   * @param {string} type - the component type
+   * @returns {JSX}
+   */
+  getEditButton: function(type){
+    if ( _.includes(allowedToEdit, type) ) {
+      return (
+        <span onClick={this.handleConfigEdit} className="edit-component">
+          <span className="glyphicon glyphicon-cog"></span>
+        </span>
+      );
+    }
+  },
+
+  /**
    * Create edit component HTML and handle click events.
    * @returns {JSX}
    */
   render: function() {
+    var type = this.props.componentType.toLowerCase();
     return (
       <div className="config-editor">
-        <span className="config-editor-label">{_.capitalize(this.props.componentType)}</span>
-        {this.getRemoveButton(this.props.componentType.toLowerCase())}
-        {this.getAddButton(this.props.componentType.toLowerCase())}
-        <span onClick={this.handleConfigEdit} className="edit-component">
-          <span className="glyphicon glyphicon-cog"></span>
-        </span>
+        <span className="config-editor-label">{_.capitalize(type)}</span>
+        {this.getRemoveButton(type)}
+        {this.getAddButton(type)}
+        {this.getEditButton(type)}
       </div>
     );
   }
