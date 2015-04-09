@@ -2,6 +2,8 @@ var Flux = require('fluxify');
 var constants = require('./constants');
 var React = require('react');
 var _ = require('lodash');
+var allowedToAdd = ['fieldset', 'form'];
+var allowedToRemove = ['form', 'fieldset', 'field'];
 
 /**
  * Display component editor controls
@@ -50,7 +52,7 @@ module.exports = React.createClass({
    * @return {XML}
    */
   getRemoveButton: function(type){
-    if(!_.includes(['page','workflow'], type)){
+    if(_.includes(allowedToRemove, type)){
       return (
         <span onClick={this.handleConfigRemove} className="remove-component">
           <span className="glyphicon glyphicon glyphicon-minus"></span>
@@ -65,7 +67,7 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   getAddButton: function(type){
-    if(!_.includes(['field','action','workflow'], type)){
+    if(_.includes(allowedToAdd, type)){
       return (
         <span onClick={this.handleConfigAdd} className="add-component">
           <span className="glyphicon glyphicon glyphicon-plus"></span>
