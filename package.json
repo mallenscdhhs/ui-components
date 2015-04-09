@@ -20,7 +20,7 @@
     ]
   },
   "dependencies": {
-    "fluxify": "^0.2.1",
+    "fluxify": "0.2.2",
     "es6-promise": "^2.0.1",
     "reactify": "^0.16.0",
     "react-widgets": "^2.2.2",
