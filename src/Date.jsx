@@ -41,7 +41,7 @@ module.exports = React.createClass({
   },
 
   handleDateChange : function(date, dateString){
-    this.onChange({ target: { value: date }});
+    this.onChange({ target: {value: date, dateString: dateString}});
   },
 
   render: function(){
