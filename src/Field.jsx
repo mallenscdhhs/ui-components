@@ -33,13 +33,15 @@ module.exports = React.createClass({
     label: React.PropTypes.string.isRequired,
     required: React.PropTypes.bool,
     helpText: React.PropTypes.string,
-    persistInSession: React.PropTypes.bool
+    persistInSession: React.PropTypes.bool,
+    disabled: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
     return {
       componentType: 'field',
-      initialState: 'visible'
+      initialState: 'visible',
+      disabled: false
     };
   },
 
