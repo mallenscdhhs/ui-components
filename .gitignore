@@ -3,4 +3,6 @@ dist
 !test/**/dist
 test/lib/specs.js
 npm-debug.log
+test/results.xml
 .idea/
+.c9/

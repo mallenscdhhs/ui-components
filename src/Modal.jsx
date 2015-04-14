@@ -1,4 +1,6 @@
-var React = require('react/addons');
+var React = require('react');
+var Flux = require('fluxify');
+var constants = require('./constants');
 var Action = require('./Action');
 var _ = require('lodash');
 
@@ -8,25 +10,37 @@ module.exports = React.createClass({
     title: React.PropTypes.string,
     actions: React.PropTypes.arrayOf(React.PropTypes.object),
     id: React.PropTypes.string.isRequired,
-    autoShow: React.PropTypes.bool
+    show: React.PropTypes.bool,
+    sizeClassNames: React.PropTypes.arrayOf(React.PropTypes.string),
+    footerClassNames: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
   getDefaultProps: function(){
     return {
-      autoShow: false,
-      componentType: 'modal'      
+      show: false,
+      componentType: 'modal',
+      sizeClassNames: [],
+      footerClassNames: []
     };
   },
 
-  render: function() {
-    var classNames = React.addons.classSet({
-      modal: true,
-      fade: true,
-      in: this.props.autoShow
+  componentDidMount: function() {
+    var node = this.getDOMNode();
+    $(node).on('hidden.bs.modal', function(e){
+      Flux.doAction(constants.actions.MODAL_HIDE);
     });
+    var $modal = $(node).modal({show: this.props.show});
+  },
+
+  componentDidUpdate: function() {
+    var node = this.getDOMNode();
+    var $modal = $(node).modal({show: this.props.show});
+  },
+
+  render: function() {
     return (
-      <div className={classNames} id={this.props.id} tabIndex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
-        <div className="modal-dialog">
+      <div className="modal fade" id={this.props.id} tabIndex="-1" role="dialog" aria-labelledby="editComponentModal" aria-hidden="true">
+        <div className={['modal-dialog'].concat(this.props.sizeClassNames).join(' ')}>
           <div className="modal-content">
             <div className="modal-header">
               <button type="button" className="close" data-dismiss="modal">
@@ -38,7 +52,7 @@ module.exports = React.createClass({
             <div className="modal-body">
               {this.props.children}
             </div>
-            <div className="modal-footer">              
+            <div className={['modal-footer'].concat(this.props.footerClassNames).join(' ')}>
               {_.map(this.props.actions, function(action){
                 return <Action {...action}/>;
               })}
@@ -47,5 +61,5 @@ module.exports = React.createClass({
         </div>
       </div>
     );
-  }  
+  }
 });

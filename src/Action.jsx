@@ -1,13 +1,10 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
-var Queue = require('./EventQueue');
-var EditorMixin = require('./EditorMixin');
+var Flux = require('fluxify');
 
 module.exports = React.createClass({
   displayName: 'Action',
-
-  mixins: [EditorMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -15,7 +12,8 @@ module.exports = React.createClass({
     event: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
     url: React.PropTypes.string,
-    classNames: React.PropTypes.arrayOf(React.PropTypes.string)    
+    classNames: React.PropTypes.arrayOf(React.PropTypes.string),
+    iconClass: React.PropTypes.string
   },
 
   getDefaultProps: function(){
@@ -25,20 +23,48 @@ module.exports = React.createClass({
   },
 
   /**
-  * Return a string of classes
+  * Returns an object for action configuration
+  * @return {Object}
+  */
+  getConfig: function() {
+    var base = {
+      key: this.props.id+'-action',
+      className: this.getClasses(),
+      href: this.props.url
+    };
+
+    return (this.props.type === 'link') ? _.merge(this.props, base) :  _.merge(this.props, _.omit(base, 'href'));
+  },
+
+  /**
+  * Returns a string of classes
   * @return {String}
   */
   getClasses: function(){
-    var classes = ['btn', 'editable-component'];
+    var classes = ['btn'];
     // Add default link-type for action links
     if(this.props.type==='link'){
       classes.push('btn-link');
     }
     // Add all passed in classes
     if(this.props.classNames){
-      classes = classes.concat(this.props.classNames);      
+      classes = classes.concat(this.props.classNames);
+    }
+    if(this.props.disabled === true){
+      classes.push('disabled');
     }
     return classes.join(' ');
+  },
+
+  /**
+  * Returns a span element with icon classes
+  * @return {Object}
+  */
+  getIcon: function(){
+    var iconClassNames = 'glyphicon glyphicon-' + this.props.iconClass;
+    if(this.props.iconClass){
+      return <span className={iconClassNames} aria-hidden="true"></span>;
+    }
   },
 
   /**
@@ -47,10 +73,9 @@ module.exports = React.createClass({
    * @returns {void}
    */
   handleClick: function(){
-    Queue.push({
-      entityEvent: this.props.event,
-      data: this.props
-    });
+    if(!this.props.disabled) {
+      Flux.doAction(this.props.event, this.props);
+    }
   },
 
   /**
@@ -58,14 +83,12 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getLink: function(){
+    var props = this.getConfig();
+
     return (
-      <a 
-        href={this.props.url} 
-        id={this.props.id} 
-        key={this.props.id+"-action"} 
-        className={this.getClasses()} 
-        onClick={this.handleClick}>
-          {this.getEditTemplate()}{this.props.name}
+      <a {...props} onClick={this.handleClick}>
+        {this.getIcon()}
+        {this.props.name}
       </a>
     );
   },
@@ -75,14 +98,12 @@ module.exports = React.createClass({
   * @return {JSX Template}
   */
   getButton: function(){
+    var props = this.getConfig();
+
     return (
-      <button 
-        type="button" 
-        id={this.props.id} 
-        key={this.props.id+"-action"} 
-        className={this.getClasses()} 
-        onClick={this.handleClick}>
-          {this.getEditTemplate()}{this.props.name}
+      <button {...props} onClick={this.handleClick}>
+        {this.getIcon()}
+        {this.props.name}
       </button>
     );
   },
@@ -91,7 +112,7 @@ module.exports = React.createClass({
    * Render a Action component.
    * @returns {JSX}
    */
-  render: function(){ 
+  render: function(){
     return (this.props.type === 'button')? this.getButton() : this.getLink();
   }
 

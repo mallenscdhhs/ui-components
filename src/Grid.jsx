@@ -1,74 +1,61 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
+var GridRow = require('./GridRow');
+var GridColumn = require('./GridColumn');
+var update = require('react/lib/update');
 
 /**
- * Returns a string of column size class names(from bootstrap 3).
- * @private
- * @param {object} col - contains sizes: { md: '3', sm: '3', xs: '12'}
- * @returns {string} "col-md-3 col-sm-3 col-xs-12"
- */
-var getColumnClassNames = function(col){
-	return _.map(_.pairs(_.pick(col, ['md', 'sm', 'xs'])), function(pair){
-		pair.unshift('col');
-		return pair.join('-');
-	}).join(' ');
-};
-
-/**
- * Returns the correct component index to retrieve based on the current
- * row index, column index, and possible range offset.
- * @param {number} rowNum
- * @param {number} colNum
- * @param {number} rangeOffset
+ * Add two numbers together.
+ * @param {number} x
+ * @param {number} y
  * @returns {number}
  */
-var getComponentIndex = function(rowNum, colNum, rangeOffset){
-	this.lastIndex = this.lastIndex + (rangeOffset ? rangeOffset : 1);
-	return this.lastIndex;
+var add = function(x, y){
+  return x + y;
 };
 
 /**
- * Renders a row <div>. Computes the current componentIndex by either
- * examining the column config for an indexRange property to specify a
- * slice of the passed-in components array or by incrementing the componentIndex
- * by one and retreiving that specific component from the array.
- * @param {array} components - a list of components
- * @param {array} row - a list of row configs
- * @param {number} i - the current row index
- * @returns {React.DOM.div}
+ * If the current row number is greater than 0 we need to add
+ * one to it in order to get the sequential column number.
+ * @param {number} n - current row number
+ * @returns {number};
  */
-var renderRow = function(components, row, i){
-	var componentIndexRange = 0;
-	var componentList;
-	return (
-		<div className="row" key={"row-"+i}>
-			{row.map(function(col, n){
-				if ( col.indexRange ) {
-					componentIndexRange += (col.indexRange[1] - 1);
-					componentList = Array.prototype.slice.apply(components, col.indexRange);
-				}	else {
-					componentList = components[getComponentIndex.call(this, i, n, componentIndexRange)];
-				}
-				return renderColumn(componentList, col, n);
-			}, this)}
-		</div>
-	);
+var getRowIndex = function(n){
+  return n > 0? add(1, n) : n;
 };
 
 /**
- * Renders a column <div>. Will add Bootstrap 3 column sizes.
- * @param {array} components - a list of components
- * @param {object} col - a column config
- * @param {number} n - the current column index
- * @returns {React.DOM.div}
+ * Adds the children components to each column in sequence, distributing
+ * components sequentially among available columns.
+ * @param {array} rows
+ * @param {array} components
+ * @returns {array}
  */
-var renderColumn = function(components, col, n){
-	return (
-		<div className={getColumnClassNames(col)} key={"col-"+n}>
-			{components}
-		</div>
-	);
+var distributeComponents = function(rows, components){
+  // Fill available rows/columns with components
+  var index = -1;
+  var fullRows = _.map(rows, function(row, i){
+    return _.map(row, function(col, n){
+      index = index + 1;
+      return update(col, {
+        children: {
+          $set: _.at(components, index)
+        }
+      });
+    });
+  });
+
+  var extraRows = [];
+  if ( index < components.length-1) {
+    extraRows = _.map(components.slice(index+1), function(component){
+      return [{
+        md: '12',
+        children: [component]
+      }];
+    });
+  }
+  return fullRows.concat(extraRows);
 };
 
 /**
@@ -77,27 +64,42 @@ var renderColumn = function(components, col, n){
  * @module Grid
  */
 module.exports = React.createClass({
-	displayName: 'Grid',
+  displayName: 'Grid',
 
-	propTypes: {
-		rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired		
-	},
+  propTypes: {
+    rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired
+  },
 
-	getDefaultProps: function(){
+  statics: {
+    add: add,
+    distributeComponents: distributeComponents
+  },
+
+  getDefaultProps: function(){
     return {
       componentType: 'layout'
     };
   },
 
-	render: function(){
-		var uniqueKey = this.props.id
-		this.lastIndex = -1;
-		return (
-			<div className="grid-layout" key={uniqueKey}>
-				{this.props.rows.map(function(row, i){
-					return renderRow.call(this, this.props.children, row, i);
-				}, this)}
-			</div>
-		);
-	}
+  render: function(){
+    var numChildren = this.props.children ? this.props.children.length : 0;
+    if(numChildren) {
+      var rows = distributeComponents(this.props.rows, this.props.children);
+      return (
+        <div className="grid-layout">
+        {_.map(rows, function (row, i) {
+          return (
+            <GridRow>
+              {_.map(row, function (col) {
+                return <GridColumn {...col}/>;
+              })}
+            </GridRow>
+          );
+        })}
+        </div>
+      );
+    }else{
+      return (<div className="grid-layout"></div>);
+    }
+  }
 });

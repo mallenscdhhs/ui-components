@@ -4,77 +4,88 @@
 module.exports = function(config) {
   config.set({
 
-	// base path that will be used to resolve all patterns (eg. files, exclude)
-	basePath: './',
+  // base path that will be used to resolve all patterns (eg. files, exclude)
+  basePath: './',
 
-	// frameworks to use
-	// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-	frameworks: ['jasmine', 'browserify'],
+  browserNoActivityTimeout: 20000,
 
-
-	// list of files / patterns to load in the browser
-	files: [
-		'node_modules/es5-shim/es5-shim.js',		
-		'dist/Components.js',
-		'test/shim.js',
-		'test/unit/**/*-spec.js'
-	],
+  // frameworks to use
+  // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+  frameworks: ['jasmine', 'browserify'],
 
 
-	// preprocess matching files before serving them to the browser
-	// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-	preprocessors: {
-	  'test/unit/**/*.js': ['browserify']
-	},
+  // list of files / patterns to load in the browser
+  files: [
+    'node_modules/jquery/dist/jquery.js',
+    'node_modules/bootstrap/dist/js/bootstrap.js',
+    'node_modules/es5-shim/es5-shim.js',
+    'test/unit/**/*-spec.js'
+  ],
 
 
-	browserify: {
-	  debug: true,
-	  transform: ['reactify'],
-	  exclude: ['Components'],
-	  extensions: ['.jsx']
-	},
+  // preprocess matching files before serving them to the browser
+  // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+  preprocessors: {
+    'test/unit/**/*.js': ['browserify']
+  },
+
+
+  browserify: {
+    debug: true,
+    transform: ['reactify'],
+    exclude: [
+      'dist/Components.js',
+      'node_modules/jquery/dist/jquery.js',
+      'node_modules/bootstrap/dist/js/bootstrap.js',
+      'node_modules/es5-shim/es5-shim.js'
+    ],
+    extensions: ['.jsx']
+  },
 
 
 
-	// list of files to exclude
-	exclude: [
-	],
+  // list of files to exclude
+  exclude: [
+  ],
 
-	// test results reporter to use
-	// possible values: 'dots', 'progress'
-	// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-	reporters: ['mocha'],
+  // test results reporter to use
+  // possible values: 'dots', 'progress'
+  // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+  reporters: ['mocha', 'junit'],
 
-	mochaReporter: {
-	  ignoreSkipped: true
-	},
+  mochaReporter: {
+    ignoreSkipped: true
+  },
 
+  junitReporter: {
+    outputFile: './test/results.xml',
+    suite: ''
+  },
 
-	// web server port
-	port: 9876,
-
-
-	// enable / disable colors in the output (reporters and logs)
-	colors: true,
-
-
-	// level of logging
-	// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-	logLevel: config.LOG_INFO,
+  // web server port
+  port: 9876,
 
 
-	// enable / disable watching file and executing tests whenever any file changes
-	autoWatch: false,
+  // enable / disable colors in the output (reporters and logs)
+  colors: true,
 
 
-	// start these browsers
-	// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-	browsers: ['PhantomJS'],
+  // level of logging
+  // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+  logLevel: config.LOG_INFO,
 
 
-	// Continuous Integration mode
-	// if true, Karma captures browsers, runs the tests and exits
-	singleRun: true
+  // enable / disable watching file and executing tests whenever any file changes
+  autoWatch: false,
+
+
+  // start these browsers
+  // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+  browsers: ['PhantomJS'],
+
+
+  // Continuous Integration mode
+  // if true, Karma captures browsers, runs the tests and exits
+  singleRun: true
   });
 };

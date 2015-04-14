@@ -1,19 +1,12 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
+var update = require('react/lib/update');
 var elements = require('./index');
 var _ = require('lodash');
-var EventQueue = require('./EventQueue');
-
-/**
- * Recursively builds up a component hierarchy.
- * @param {object} schema - the parent component schema
- * @returns {function} a ReactElement factory function
- */
-function componentFactory(data){
-  if ( data.components && !data.child ) throw new TypeError('You must provide a "child" property.');
-  var schema = _.cloneDeep(data);
-  return buildComponentTree(schema, schema)[0];
-}
+var constants = require('./constants');
+var configuration = require('./configuration');
+var ValidationStore = require('./ValidationStore');
+var OptionsStore = require('./OptionsStore');
 
 /**
  * Take a binary tree and build a nested tree structure from it.
@@ -26,31 +19,76 @@ function buildComponentTree(schema, head){
   var list = schema.components || {};
   var children = null;
   var element, factory;
+  var props;
+  var headId;
   while(head){
+    headId = head.config.id || head._id;
     children = null;
+    props = update(head, { config: {
+      key: {$set: headId+ '-' +head.type},
+      componentType: {$set: head.type}
+    }});
+    // if this is a workflow, then add the items config
+    if ( head.type === 'workflow' ) {
+      props = update(props, {config: {
+        firstPage: {$set: head.child },
+        items: {$set: head.components}
+      }});
+    }
     // if there is a layout config then we need to insert
     // the layout into the binary tree to be rendered
-    if ( head.config.layout ) {
-      head.config.layout.child = head.child;
-      head.config.layout.id = head.config.id + '-layout';      
-      children = buildComponentTree(schema, head.config.layout);
-    } else if ( head.child ) {
-      children = buildComponentTree(schema, list[head.child]);
-    }
-    
-    if ( head.type === 'field' && _.has(schema.model, head.config.name) ) {
-      head.config.value = schema.model[head.config.name];
+    if ( props.config.layout ) {
+      props = update(props, { config: {
+        layout: {
+          child: {$set: head.child},
+          id: {$set: headId + '-layout'}
+        }
+      }});
+      children = buildComponentTree(schema, props.config.layout);
+    } else if ( props.child ) {
+      children = buildComponentTree(schema, list[props.child]);
     }
 
-    head.config.key = head.config.id+'-'+head.type;
-    head.config.componentType = head.type;
+    if ( props.type === 'field' && _.has(schema.model, props.config.id) ) {
+      // checkboxes and radios need the "checked" property, not value
+      if ( /checkbox|radio/.test(props.config.type) ) {
+        // if model value is "true", then set "checked" to true
+        if ( schema.model[props.config.id] === props.config.value ) {
+          props = update(props, {config: {
+            checked: { $set: true }
+          }});
+        }
+      } else {
+        props = update(props, { config: {
+          value: {$set: schema.model[props.config.id]}
+        }});
+      }
+    }
 
-    element = elements[head.type];
+    element = elements[props.type];
     factory = React.createFactory(element);
-    tree.push(factory(head.config, children));
-    head = list[head.next];
+    tree.push(factory(props.config, children));
+    head = list[props.next];
   }
   return tree;
+}
+
+/**
+ * Recursively builds up a component hierarchy.
+ * @param {object} schema - the parent component schema
+ * @returns {function} a ReactElement factory function
+ */
+function componentFactory(data){
+  if ( !_.isEmpty(data.components) && !data.child ) throw new TypeError('You must provide a "child" property.');
+  return buildComponentTree(data, data)[0];
+}
+
+/**
+ * Pass-in any configuration needed to setup the Components library.
+ * @param {object} data
+ */
+function configure(data){
+  _.merge(configuration,data);
 }
 
 /**
@@ -61,7 +99,8 @@ function buildComponentTree(schema, head){
  */
 module.exports = {
   'elements': elements,
-  'eventQueue': EventQueue,
+  'constants' : constants,
+  'configure' : configure,
   'buildComponentTree': buildComponentTree,
   'factory': componentFactory
 };

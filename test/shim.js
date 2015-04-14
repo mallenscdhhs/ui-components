@@ -1,2 +1,1 @@
-var React = require('react/addons');
-var Components = require('Components');
+require('es6-promise').polyfill();

@@ -1,18 +1,11 @@
 'use-strict';
-var React = require('react/addons');
-var marked = require('marked');
-var EditorMixin = require('./EditorMixin');
-
-marked.setOptions({  
-  sanitize: true,
-  smartLists: true
-});
+var React = require('react');
+var EditorToggle = require('./EditorToggle');
+var Content = require('./Content');
 
 module.exports = React.createClass({
 
   displayName: 'Page',
-
-  mixins: [EditorMixin],
 
   /**
    * Set default props.
@@ -30,14 +23,14 @@ module.exports = React.createClass({
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){   
+  render: function(){
     return (
       <article className="editable-component">
-        {this.getEditTemplate()}
+        <EditorToggle {...this.props}/>
         <header>
           <h2>{this.props.title}</h2>
         </header>
-        <section dangerouslySetInnerHTML={{__html: marked(this.props.content)}}></section>       
+        <Content key="content" ref="content" content={this.props.content} />
         {this.props.children}
       </article>
     );

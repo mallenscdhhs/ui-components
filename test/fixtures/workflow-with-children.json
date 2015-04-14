@@ -1,0 +1,74 @@
+{
+  "_id": "pe_workflow",
+  "taxonomyCode": "DEF000000X",
+  "type": "workflow",
+  "config": {
+    "title": "Provider Enrollment",
+    "lastSectionCompleted": null
+  },
+  "child": "page1",
+  "components": {
+    "page1": {
+      "type": "workflowitem",
+      "config": {
+        "title": "Page One",
+        "id": "page1",
+        "active" : true
+      },
+      "next": "page2"
+    },
+    "page2": {
+      "type": "workflowitem",
+      "config": {
+        "title": "Page Two",
+        "id": "page2",
+        "active" : false
+      },
+      "next": "page5",
+      "child" : "page3"
+    },
+    "page3": {
+      "type": "workflowitem",
+      "config": {
+        "title": "Page 3",
+        "id": "page3",
+        "active" : true
+      },
+      "next" : "page4"
+    },
+    "page4": {
+      "type": "workflowitem",
+      "config": {
+        "title": "Page 4",
+        "id": "page4",
+        "active" : true
+      },
+      "next" : "page6"
+    },
+    "page6": {
+      "type": "workflowitem",
+      "config": {
+        "title": "Page 6",
+        "id": "page6",
+        "active" : true
+      },
+      "next" : "page7"
+    },
+    "page7": {
+      "type": "workflowitem",
+      "config": {
+        "title": "Page 7",
+        "id": "page7",
+        "active" : true
+      }
+    },
+    "page5": {
+      "type": "workflowitem",
+      "config": {
+        "title": "Page Five",
+        "id": "page5",
+        "active" : true
+      }
+    }
+  }
+}

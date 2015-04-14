@@ -1,11 +1,9 @@
 'use-strict';
-var React = require('react/addons');
-var EditorMixin = require('./EditorMixin');
+var React = require('react');
+var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
   displayName: 'Fieldset',
-
-  mixins: [EditorMixin],
 
   getDefaultProps: function(){
     return {
@@ -28,7 +26,7 @@ module.exports = React.createClass({
   render: function(){
     return (
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className="editable-component">
-        {this.getEditTemplate()}
+        <EditorToggle {...this.props}/>
         {this.getLabel()}
         {this.props.children}
       </fieldset>

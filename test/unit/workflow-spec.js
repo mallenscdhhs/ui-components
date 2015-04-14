@@ -1,8 +1,14 @@
+var React = require('react');
+require('es6-promise').polyfill();
+var Components = require('../../src/main');
 var _ = require('lodash');
-var TestUtils = React.addons.TestUtils;
+var TestUtils = require('react/lib/ReactTestUtils');
 var Workflow = require('../../src/Workflow');
-var EQ = Components.eventQueue;
+var Flux = require('fluxify');
+var Dispatcher = Flux.dispatcher;
+var constants = require('../../src/constants');
 var fixture = require('../fixtures/workflow-simple.json');
+var Immutable = require('immutable');
 
 describe('Workflow component', function(){
 
@@ -12,9 +18,9 @@ describe('Workflow component', function(){
     this.workflow = TestUtils.renderIntoDocument(this.component);
   });
 
-  it('can progress to the next section', function(done){    
+  it('can progress to the next section', function(done){
     expect(this.workflow.state.currentPage).toEqual('page1');
-    EQ.push({entityEvent: 'workflow:next:page', data: ''});
+    Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE);
     setTimeout(function(){
       expect(this.workflow.state.currentPage).toEqual('page2');
       expect(this.workflow.state.previousPage).toEqual('page1');
@@ -23,74 +29,49 @@ describe('Workflow component', function(){
     }.bind(this), 300);
   });
 
-  it('can revert to the previous section', function(done){   
+  it('can revert to the previous section', function(done){
     this.workflow.setState({currentPage: 'page2', previousPage: 'page1', nextPage: 'page3'});
     expect(this.workflow.state.currentPage).toEqual('page2');
-    EQ.push({entityEvent: 'workflow:previous:page', data: {}});
+    Flux.doAction( constants.actions.WORKFLOW_PREVIOUS_PAGE );
     setTimeout(function(){
       expect(this.workflow.state.currentPage).toEqual('page1');
-      expect(this.workflow.state.previousPage).toEqual(null);
+      expect(this.workflow.state.previousPage).toBeUndefined();
       expect(this.workflow.state.nextPage).toEqual('page2');
       done();
-    }.bind(this), 300);    
+    }.bind(this), 300);
   });
 
-  it('can navigate to a specified section', function(){    
+  it('can navigate to a specified section', function(){
     expect(this.workflow.state.currentPage).toEqual('page1');
     this.workflow.handleDirect('page2');
     expect(this.workflow.state.currentPage).toEqual('page2');
     expect(this.workflow.state.previousPage).toEqual('page1');
     expect(this.workflow.state.nextPage).toEqual('page3');
-  }); 
-});
+  });
 
-describe('Workflow#buildTree', function(){
-  it('can build a tree data structure from a linked list', function(){
-    var config = _.clone(fixture).config;
-    var state = {
-      firstPage: 'page1',
-      currentPage: 'page1',
-      nextPage: 'page2',
-      previousPage: null,
-      flow: config.items
-    };   
-    var tree = Workflow.buildTree(state, {});
-    expect(tree.length).toEqual(2);
-    expect(tree[0].id).toEqual('page1');
-    expect(tree[0].items[0].id).toEqual('page2');
-    expect(tree[1].id).toEqual('page3');
-  });
-});
-
-describe('Workflow#getPageByKeyExistence', function(){
-  beforeEach(function(){
-    this.items = _.values(_.clone(fixture).config.items);
-  });
-  it('can determine the first page', function(){    
-    var pageId = Workflow.getPageByKeyExistence(this.items, 'previous');
-    expect(pageId).toEqual('page1');
-  });
-  
-  it('can determine the last page', function(){
-    var pageId = Workflow.getPageByKeyExistence(this.items, 'next');
-    expect(pageId).toEqual('page3');
+  it('can render a workflow', function(){
+    var dom = this.workflow.getDOMNode();
+    expect(dom.className).toEqual('editable-component');
+    expect(dom.childNodes[0].className).toEqual('config-editor');
+    expect(dom.childNodes[0].childNodes[0].className).toEqual('config-editor-label');
+    expect(dom.childNodes[0].childNodes[1].className).toEqual('edit-component');
   });
 });
 
 describe('Workflow#setFlowState', function(){
   it('can set the tree data state', function(){
     var items = {
-      'a': {id: 'a', next: 'b', previous: null},
-      'b': {id: 'b', next: 'c', previous: 'a', parentId: 'a'},
-      'c': {id: 'c', next: null, previous: 'b'}
+      'a': {id: 'a', next: 'b',  previous: null, config : {}},
+      'b': {id: 'b', next: 'c',  previous: 'a',  config : {}},
+      'c': {id: 'c', next: null, previous: 'b',  config : {}}
     };
-    expect(items.a['disabled']).not.toBeDefined();
-    expect(items.b['disabled']).not.toBeDefined();
-    expect(items.c['disabled']).not.toBeDefined();
-    Workflow.setFlowState(items, 'b');
-    expect(items.a['disabled']).not.toBeDefined();
-    expect(items.b['disabled']).not.toBeDefined();      
-    expect(items.c['disabled']).toBe(true);
+    expect(items.a.config.disabled).not.toBeDefined();
+    expect(items.b.config.disabled).not.toBeDefined();
+    expect(items.c.config.disabled).not.toBeDefined();
+    var newItems = Workflow.setFlowState(items, 'b', 'a');
+    expect(newItems.a.config.disabled).toBe(false);
+    expect(newItems.b.config.disabled).toBe(false);
+    expect(newItems.c.config.disabled).toBe(true);
   });
 });
 
@@ -120,5 +101,110 @@ describe('Workflow#getCurrentActionButtons', function(){
     expect(actions.length).toEqual(3);
     expect(actions[0].id).toEqual(this.config.actions[0].id);
     expect(actions[2].id).toEqual(this.config.actions[2].id);
+  });
+});
+
+describe('Workflow#findPrevious', function(){
+  it('will locate any previous node from a current node', function(){
+    expect(Workflow.findPrevious(fixture.components, 'page1')).toBeUndefined();
+    expect(Workflow.findPrevious(fixture.components, 'page2')).toEqual('page1');
+    expect(Workflow.findPrevious(fixture.components, 'page3')).toEqual('page2');
+  });
+});
+
+describe('Workflow#findNext', function(){
+  it('can locate any next node', function(){
+    expect(Workflow.findNext(fixture.components, 'page1')).toEqual('page2');
+    expect(Workflow.findNext(fixture.components, 'page2')).toEqual('page3');
+    expect(Workflow.findNext(fixture.components, 'page3')).toBeUndefined();
+  });
+});
+
+describe('#getItemDetails', function() {
+
+  it('returns proper item details for first top level item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page1');
+    expect(item.id).toEqual('page1');
+    expect(item.next).toEqual('page2');
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toBeUndefined();
+  });
+
+  it('returns proper item details for parent',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page2');
+    expect(item.id).toEqual('page2');
+    expect(item.next).toEqual('page5');
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page1');
+  });
+
+  it('returns proper item details for first nested item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page3');
+    expect(item.id).toEqual('page3');
+    expect(item.next).toEqual('page4');
+    expect(item.parent).toEqual('page2');
+    expect(item.previous).toBeUndefined();;
+  });
+
+  it('returns proper item details for middle nested item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page4');
+    expect(item.id).toEqual('page4');
+    expect(item.next).toEqual('page6');
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page3');
+  });
+
+  it('returns proper item details for last nested item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page7');
+    expect(item.id).toEqual('page7');
+    expect(item.next).toBeUndefined();
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page6');
+  });
+
+  it('returns proper item details for last top level item',function() {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var item = Workflow.getItemDetails(fixture.components, 'page5');
+    expect(item.id).toEqual('page5');
+    expect(item.next).toBeUndefined();
+    expect(item.parent).toBeUndefined();
+    expect(item.previous).toEqual('page2');
+  });
+
+});
+
+describe('#updateChildren', function() {
+  it('updates react components properly', function () {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var components = Components.factory(fixture);
+    var flow = _.cloneDeep(fixture.components);
+    flow.page1.config.disabled = false;
+    flow.page2.config.disabled = false;
+    flow.page5.config.disabled = true;
+    var newItems = Workflow.updateChildren(flow,components.props.children);
+    expect(newItems[0].props.disabled).toEqual(false);
+    expect(newItems[1].props.disabled).toEqual(false);
+    expect(newItems[2].props.disabled).toEqual(true);
+  });
+});
+
+describe('#getItemFirstParent', function() {
+  it('returns parent, if any, of passed in pageId', function () {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var firstParent = Workflow.getItemFirstParent(fixture.components,'page6');
+    expect(firstParent).toEqual('page2');
+  });
+});
+
+describe('#getItemLastChild', function() {
+  it('returns last child in a line of passed in pageId', function () {
+    var fixture = require('../fixtures/workflow-with-children.json');
+    var lastChild = Workflow.getItemLastChild(fixture.components,'page3');
+    expect(lastChild).toEqual('page7');
   });
 });

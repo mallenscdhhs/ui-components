@@ -1,11 +1,9 @@
 'use-strict';
-var React = require('react/addons');
-var EditorMixin = require('./EditorMixin');
+var React = require('react');
+var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
 	displayName: 'Container',
-
-	mixins: [EditorMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -16,10 +14,11 @@ module.exports = React.createClass({
 	* Render a Container component for form components.
 	* @returns {JSX}
 	*/
-	render: function(){ 
+	render: function(){
 		return (
       <div id={this.props.id} className={this.props.classes+' editable-component'}>
-        {this.getEditTemplate()}{this.props.children}
+        <EditorToggle {...this.props}/>
+        {this.props.children}
       </div>
     );
 	}

@@ -5,6 +5,7 @@
     "url" : "testing.html",
     "id" : "action-test-1",
     "type": "link",
-    "event": "test:event"
+    "event": "test:event",
+    "iconClass": "pencil"
   }
 }

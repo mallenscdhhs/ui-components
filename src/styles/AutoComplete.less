@@ -1,0 +1,23 @@
+.field-autocomplete {
+  .list-group {
+    position: absolute;
+    z-index: 1;
+    width: @auto-complete-width;
+    background: @auto-complete-list-bg;
+  }
+  .list-group-item {
+    background: @auto-complete-list-bg;
+
+    &:hover, &.hover {
+      background: @auto-complete-list-hover-bg;
+
+      a {
+        color: @auto-complete-color;
+
+        &:hover {
+          color: @auto-complete-hover-color;
+        }
+      }
+    }
+  }
+}

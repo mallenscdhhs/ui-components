@@ -1,62 +1,131 @@
 'use-strict';
-var React = require('react/addons');
+var React = require('react');
 var _ = require('lodash');
 var Page = require('./Page');
 var Tree = require('./Tree');
-var Grid = require('./Grid');
 var Action = require('./Action');
-var Queue = require('./EventQueue');
+var GridRow = require('./GridRow');
+var GridColumn = require('./GridColumn');
+var Flux = require('fluxify');
+var Dispatcher = Flux.dispatcher;
+var constants = require('./constants');
+var EditorToggle = require('./EditorToggle');
+var Immutable = require('immutable');
 
 /**
- * Build nested data structure for rendering a Tree.
- * @param {object} state - a component state object
- * @returns {array}
+ * Return details for passed in itemId
+ * @param {object} schema
+ * @param {object} itemId
+ * @return {{id: *, previous: *, parent: *, next: *}}
  */
-function buildTree(state){
-  var tree = [];
-  var head = state.flow[state.firstPage];
-  var children = _.groupBy(_.filter(_.values(state.flow), function(item){
-    return !!item.parentId;
-  }), 'parentId');
-
-  while(head){
-    var branches = children[head.id];
-    var next = state.flow[head.next];
-    if ( !!branches ) {
-      head.items = children[head.id];
-    }
-    head.active = ( head.id === state.currentPage );
-    tree.push(head);
-    head = ( next && branches )? state.flow[next.next] : next;
+function getItemDetails(schema, itemId){
+  if(itemId && schema[itemId]) {
+    return {
+      'id': itemId,
+      'previous': _.findKey(schema, {'next': itemId}),
+      'parent': _.findKey(schema, {'child': itemId}),
+      'next': schema[itemId].next,
+      'child': schema[itemId].child
+    };
+  }else{
+    return {};
   }
-  return tree;
 }
 
 /**
- * Return a the pageId of the item that whose "key" does not exist. Useful
- * for finding the first/last page in a linked list.
- * @param {array} items
- * @param {string} key
- * @returns {string}
+ * Follow tree up from item, to find first parent encountered
+ * @param schema
+ * @param itemId
+ * @return {object} updated schema
  */
-function getPageByKeyExistence(items, key){
-  return _.reduce(items, function(result, current, i){
-    return current[key]? result : current.id;
-  }, '');
+function getItemFirstParent(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && item.previous){
+    item = getItemDetails(schema,item.previous);
+  }
+  return item.parent;
+}
+
+/**
+ * Follow tree down from item, to find last element in the tree
+ * @param schema
+ * @param itemId
+ * @return {object}  Updated Schema
+ */
+function getItemLastChild(schema, itemId){
+  var item = getItemDetails(schema,itemId);
+  while(item && item.next){
+    item = getItemDetails(schema,item.next);
+  }
+  return item.id;
+}
+
+/**
+ * Set all items below pageId to disabled
+ * @param schema
+ * @param pageId
+ * @return {*}
+ */
+function updateFlowState(schema,pageId){
+  var list = Immutable.fromJS(schema);
+  var item = getItemDetails(list.toJSON(), pageId);
+  var parentItem;
+  if ( item.next ) {
+    list = list.setIn([item.next,'config','disabled'], true);
+    list = list.mergeDeep(updateFlowState(list.toJSON(), item.next));
+  }
+  if ( item.child ) {
+    list = list.setIn([item.child,'config','disabled'], true);
+    list = list.mergeDeep(updateFlowState(list.toJSON(), item.child));
+  }
+  if ( item.parent ) {
+    parentItem = getItemDetails(list.toJSON(), item.parent);
+    if(parentItem.next) {
+      list = list.setIn([parentItem.next,'config','disabled'], true);
+      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
+    }
+  }else if(item.previous){
+    parentItem = getItemDetails(list.toJSON(),getItemFirstParent(list.toJSON(), item.previous));
+    if(parentItem && parentItem.next){
+      list = list.setIn([parentItem.next,'config','disabled'], true);
+      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
+    }
+  }
+  return list.toJSON();
+}
+
+/**
+ * Set 'disabled' and 'current' flag to false for all items.
+ * PageId should be the very FIRST item in the schema
+ * @param schema
+ * @param pageId
+ * @return {*}
+ */
+function refreshFlowState(schema,pageId){
+  var list = Immutable.fromJS(schema);
+  var item = getItemDetails(list.toJSON(), pageId);
+  list = list.setIn([pageId,'config','disabled'], false).setIn([pageId,'config','current'], false);
+  if ( item.next ) {
+    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.next));
+  }
+  if ( item.child ) {
+    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.child));
+  }
+  return list.toJSON();
 }
 
 /**
  * Sets flow item state(disabled) based on passed in pageId. All pages
- * below the passed in pageId will be disabled.
+ * below the passed in pageId will be disabled, while all those above (including the page itself) will
+ * not be disabled.  Passed in page will be set to 'current' before returning updated flow.
  * @param {object} list - a linked list representing flow data
  * @param {string} pageId - a starting point
+ * @param {string} startId - first item in list, not the current page, but the very first page
  */
-function setFlowState(list, pageId){
-  var next = list[pageId].next;
-  if ( next ) {
-    list[next].disabled = true;
-    setFlowState(list, next);
-  }
+function setFlowState(list, pageId, startId) {
+  return Immutable.fromJS(updateFlowState(refreshFlowState(list, startId), pageId))
+    .setIn([pageId,'config','current'],true)
+    .toJSON();
 }
 
 /**
@@ -67,14 +136,87 @@ function setFlowState(list, pageId){
  */
 function getCurrentActionButtons(actions, state){
   return _.filter(actions, function(action){
-    return ! (
-         (action.id === 'workflow-previous-btn' && !state.previousPage )
-      || (action.id === 'workflow-exit-btn' && !state.nextPage )
-    );
+    var hidePrevious = (action.id === 'workflow-previous-btn' && !state.previousPage);
+    var hideSaveAndExit = (action.id === 'workflow-exit-btn' && !state.nextPage );
+    return ! (hidePrevious || hideSaveAndExit);
   });
 }
 
+/**
+ * Locate the previous page in the list. Previous can be either a direct sibling,
+ * or a parent, or a direct sibling's last child.
+ * @param {object} list - this binary tree of page configs
+ * @param {string} id - the id of the page who's previous you want to find
+ * @returns {string} the id of the previous page
+ */
+function findPrevious(list, id){
+  var item = getItemDetails(list,id);
+  var previousId;
+  var previousItem;
+  var parentItem;
+  if(item.previous){
+    previousItem = getItemDetails(list,item.previous);
+    if(previousItem.child){
+      previousId= getItemLastChild(list,previousItem.child);
+    }else{
+      previousId = previousItem.id;
+    }
+  }else if(item.parent){
+    parentItem = getItemDetails(list,item.parent);
+    previousId = parentItem.id;
+  }
+  return previousId;
+}
 
+/**
+* Locate the next page in the list. Next can be either a direct sibling,
+* or a parent's direct sibling.
+* @param {object} list - this binary tree of page configs
+* @param {string} id - the id of the page who's next you want to find
+* @returns {string} the id of the next page
+*/
+function findNext(list, id){
+  var item = getItemDetails(list,id);
+  var nextId;
+  var parentItem;
+  if(item.child) {
+    nextId = item.child;
+  }else if ( item.next ) {
+    nextId = item.next;
+  }else if( item.parent){
+    parentItem = getItemDetails(list,item.parent);
+    nextId = parentItem.next;
+  }else if(item.previous){
+    parentItem = getItemDetails(list,getItemFirstParent(list, item.previous));
+    if(parentItem && parentItem.next){
+      nextId = parentItem.next;
+    }
+  }
+  return nextId;
+}
+
+/**
+ * Iterate over ReactComponents, and set their 'disabled' and 'current' status based on the value from the
+ * 'items' object which is the state object containing current item values.
+ * @param flowItems
+ * @param components
+ * @return {*}
+ */
+function updateChildren(flowItems, components){
+  return Immutable.List(components).map(function(component) {
+    component.props.disabled = flowItems[component.props.id].config.disabled;
+    component.props.current = flowItems[component.props.id].config.current;
+    if(component.props.children){
+      component.props.children = updateChildren(flowItems, component.props.children);
+    }
+    return component;
+  }).toArray();
+}
+
+/**
+ * Renders a workflow that contains a Tree navigation and a Page.
+ * @module Workflow
+ */
 module.exports = React.createClass({
 
   displayName: 'Workflow',
@@ -90,10 +232,14 @@ module.exports = React.createClass({
    * Used for unit testing.
    */
   statics: {
-    buildTree: buildTree,
-    getPageByKeyExistence: getPageByKeyExistence,
     setFlowState: setFlowState,
-    getCurrentActionButtons: getCurrentActionButtons
+    getCurrentActionButtons: getCurrentActionButtons,
+    findPrevious: findPrevious,
+    findNext: findNext,
+    updateChildren: updateChildren,
+    getItemDetails : getItemDetails,
+    getItemFirstParent : getItemFirstParent,
+    getItemLastChild: getItemLastChild
   },
 
   getDefaultProps: function(){
@@ -107,22 +253,22 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getInitialState: function(){
-    var pageObjs = _.values(this.props.items);
-    var firstPage = getPageByKeyExistence(pageObjs, 'previous');
-    var lastPage = getPageByKeyExistence(pageObjs, 'next');
-    var current = (this.props.lastSectionCompleted)?  this.props.items[this.props.lastSectionCompleted].next : firstPage;
+    var firstPage = this.props.firstPage;
     var flow = this.props.items;
+    var current = ( this.props.lastSectionCompleted ) ?
+      findNext( flow, this.props.lastSectionCompleted ) :
+      firstPage;
 
     if ( !this.props.editMode ) {
-      setFlowState(flow, current);
+      flow = setFlowState(flow, current, firstPage);
     }
 
+    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : current }  );
+
     return {
-      lastPage: lastPage,
-      firstPage: firstPage,
       currentPage: current,
-      previousPage: current.previous,
-      nextPage: current.next,
+      nextPage: findNext(flow, current),
+      previousPage: findPrevious(flow, current),
       flow: flow
     };
   },
@@ -131,18 +277,22 @@ module.exports = React.createClass({
    * Subscribe to workflow events.
    */
   componentDidMount: function(){
-    Queue.subscribe('tree:load:page', 'workflowRouter', this.handleDirect);
-    Queue.subscribe('workflow:previous:page', 'workflowRouter', this.handlePrevious);
-    Queue.subscribe('workflow:next:page', 'workflowRouter', this.handleNext);
+    Dispatcher.register( this.props.id + '-WORKFLOW' , function(action,data){
+      if( action === constants.actions.TREE_LOAD_PAGE) {
+        this.handleDirect(data.id);
+      }else if( action === constants.actions.WORKFLOW_PREVIOUS_PAGE){
+        this.handlePrevious();
+      }else if( action === constants.actions.WORKFLOW_NEXT_PAGE){
+        this.handleNext();
+      }
+    }.bind(this));
   },
 
   /**
   * Unsubscribe from all events.
   */
   componentWillUnmount: function(){
-    Queue.unSubscribe('tree:load:page','workflowRouter');
-    Queue.unSubscribe('workflow:previous:page', 'workflowRouter');
-    Queue.unSubscribe('workflow:next:page', 'workflowRouter');
+    Dispatcher.unregister( this.props.id + '-WORKFLOW' );
   },
 
   /**
@@ -154,10 +304,11 @@ module.exports = React.createClass({
   handleDirect: function(pageId){
     this.setState({
       currentPage: pageId,
-      nextPage: this.state.flow[pageId].next,
-      previousPage: this.state.flow[pageId].previous
+      nextPage: findNext(this.state.flow, pageId),
+      previousPage: findPrevious(this.state.flow, pageId),
+      flow: setFlowState(this.state.flow, pageId, this.props.firstPage)
     });
-    Queue.push({'entityEvent':'workflow:load:page','data':{'page':pageId}});
+    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
   },
 
   /**
@@ -165,9 +316,9 @@ module.exports = React.createClass({
    * @fires workflow:load:page
    */
   handleNext: function(){
-    var pageId = this.state.flow[this.state.currentPage].next ? this.state.flow[this.state.currentPage].next :  this.state.currentPage;
-    if(pageId !== this.state.currentPage){
-      this.handleDirect(pageId);
+    var next = findNext(this.state.flow, this.state.currentPage);
+    if( next ){
+      this.handleDirect(next);
     }
   },
 
@@ -176,9 +327,9 @@ module.exports = React.createClass({
    * @fires workflow:load:page
    */
   handlePrevious: function(){
-    var pageId = this.state.flow[this.state.currentPage].previous ? this.state.flow[this.state.currentPage].previous : this.state.currentPage;
-    if(pageId !== this.state.currentPage){
-      this.handleDirect(pageId);
+    var previous = findPrevious(this.state.flow, this.state.currentPage);
+    if( previous ){
+      this.handleDirect(previous);
     }
   },
 
@@ -187,21 +338,14 @@ module.exports = React.createClass({
    */
   render: function(){
     var actions = getCurrentActionButtons(this.props.actions, this.state);
-    var treeProps = {
-      items: buildTree(this.state, this.props)
-    };
     return (
-      <Grid rows={[[{md: '2', indexRange: [0, 2]}, {md: '10'}],[{md : '2'},{md:'10'}]]}>
+      <div className="editable-component">
+        <EditorToggle {...this.props}/>
         <h4>{this.props.title}</h4>
-        <Tree {...treeProps} ref="outline" />
-        <div id="workflow-page"></div>
-        <div id="workflow-status"></div>
-        <div id="workflow-actions" className="text-right">
-          {_.map(actions, function(action, i){
-            return <Action {...action} key={this.props.component_id+'-action-'+i}/>;
-          }, this)}
-        </div>
-      </Grid>
+        <Tree ref="outline">
+          { updateChildren(this.state.flow, this.props.children) }
+        </Tree>
+      </div>
     );
   }
 });

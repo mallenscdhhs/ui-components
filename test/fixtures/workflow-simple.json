@@ -2,56 +2,61 @@
   "type": "workflow",
   "config": {
     "title": "Simple Workflow",
-    "items": {
-      "page1": {
-        "id": "page1",
-        "next": "page2",
-        "previous": null,
-        "title": "Page One"
-      },
-      "page2": {
-        "parentId": "page1",
-        "id": "page2",
-        "next": "page3",
-        "previous": "page1",
-        "title": "Page Two"
-      },
-      "page3": {
-        "id": "page3",
-        "next": null,
-        "previous": "page2",
-        "title": "Page Three"
-      }
-    },
     "actions": [
       {
-        "id": "workflow-previous-btn", 
+        "id": "workflow-previous-btn",
         "name": "Previous",
-        "type": "button", 
+        "type": "button",
         "classNames": ["btn-default"],
-        "event": "workflow:previous:page"
+        "event": "workflowPreviousPage"
       },
       {
-        "id": "workflow-cancel-btn", 
+        "id": "workflow-cancel-btn",
         "name": "Cancel",
         "type": "button",
         "classNames": ["btn-default"],
         "event": "workflow:cancel"
-      },      
-      { 
-        "id": "workflow-save-btn", 
-        "name": "Save and Continue", 
-        "type": "button",
-        "classNames": ["btn-primary"],
-        "event": "workflow:save"
       },
       {
-        "id": "workflow-exit-btn", 
+        "id": "workflow-next-btn",
+        "name": "Next",
+        "type": "button",
+        "classNames": ["btn-primary"],
+        "event": "workflowNextPage"
+      },
+      {
+        "id": "workflow-exit-btn",
         "name": "Save and Exit",
         "type": "button",
         "classNames": ["btn-default"],
         "event": "workflow:exit"
       }
     ]
+  },
+  "child": "page1",
+  "components": {
+    "page1": {
+      "type": "workflowitem",
+      "config": {
+        "id": "page1",
+        "title": "Page One"
+      },
+      "next": "page3",
+      "child": "page2"
+    },
+    "page2": {
+      "type": "workflowitem",
+      "config": {
+        "id": "page2",
+        "title": "Page Two"
+      }
+    },
+    "page3": {
+      "type": "workflowitem",
+      "config": {
+        "id": "page3",
+        "title": "Page Three"
+      }
+    }
   }
 }
