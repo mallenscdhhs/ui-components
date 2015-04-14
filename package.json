@@ -1,6 +1,6 @@
 {
-  "name": "Components",
-  "version": "1.1.0",
+  "name": "@scdhhs/ui-components",
+  "version": "1.0.0",
   "description": "A UI component library for Twitter Bootstrap written with Reactjs.",
   "main": "src/main.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://mrmichael@bitbucket.org/mrmichael/ui-component-library.git"
+    "url": "https://bitbucket.org/scdhhs/ui-component-library.git"
   },
   "browserify": {
     "transform": [
