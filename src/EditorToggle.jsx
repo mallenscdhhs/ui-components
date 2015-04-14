@@ -2,6 +2,9 @@ var Flux = require('fluxify');
 var constants = require('./constants');
 var React = require('react');
 var _ = require('lodash');
+var allowedToAdd = ['fieldset', 'form'];
+var allowedToRemove = ['fieldset', 'field'];
+var allowedToEdit = ['page', 'workflow', 'fieldset', 'field'];
 
 /**
  * Display component editor controls
@@ -50,7 +53,7 @@ module.exports = React.createClass({
    * @return {XML}
    */
   getRemoveButton: function(type){
-    if(!_.includes(['page','workflow'], type)){
+    if(_.includes(allowedToRemove, type)){
       return (
         <span onClick={this.handleConfigRemove} className="remove-component">
           <span className="glyphicon glyphicon glyphicon-minus"></span>
@@ -65,10 +68,25 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   getAddButton: function(type){
-    if(!_.includes(['field','action','workflow'], type)){
+    if(_.includes(allowedToAdd, type)){
       return (
         <span onClick={this.handleConfigAdd} className="add-component">
           <span className="glyphicon glyphicon glyphicon-plus"></span>
+        </span>
+      );
+    }
+  },
+
+  /**
+   * Determine if a component is allowed to edit and if so render the edit button.
+   * @param {string} type - the component type
+   * @returns {JSX}
+   */
+  getEditButton: function(type){
+    if ( _.includes(allowedToEdit, type) ) {
+      return (
+        <span onClick={this.handleConfigEdit} className="edit-component">
+          <span className="glyphicon glyphicon-cog"></span>
         </span>
       );
     }
@@ -79,14 +97,13 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function() {
+    var type = this.props.componentType.toLowerCase();
     return (
       <div className="config-editor">
-        <span className="config-editor-label">{_.capitalize(this.props.componentType)}</span>
-        {this.getRemoveButton(this.props.componentType.toLowerCase())}
-        {this.getAddButton(this.props.componentType.toLowerCase())}
-        <span onClick={this.handleConfigEdit} className="edit-component">
-          <span className="glyphicon glyphicon-cog"></span>
-        </span>
+        <span className="config-editor-label">{_.capitalize(type)}</span>
+        {this.getRemoveButton(type)}
+        {this.getAddButton(type)}
+        {this.getEditButton(type)}
       </div>
     );
   }
