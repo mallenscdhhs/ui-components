@@ -1,7 +1,7 @@
 'use-strict';
 var React = require('react');
 var Flux = require('fluxify');
-var classSet = require('react/lib/cx');
+var classSet = require('classnames');
 var Tree = require('./Tree');
 var constants = require('./constants');
 var WorkflowItemEditorToggle = require('./WorkflowItemEditorToggle');

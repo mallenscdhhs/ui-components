@@ -1,7 +1,7 @@
 'use-strict';
 
 var React = require('react');
-var cx = require('react/lib/cx');
+var cx = require('classnames');
 var _ = require('lodash');
 var Flux = require('fluxify');
 var constants = require('./constants');
