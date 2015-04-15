@@ -45,37 +45,18 @@ module.exports = React.createClass({
   },
 
   /**
-  * Return an <a> (link) template
-  * @return {JSX Template}
-  */
-  getLink: function(){
-    return (
-      <a {...this.props} onClick={this.handleClick} href={this.props.url}>
-        {this.getIcon()}
-        {this.props.name}
-      </a>
-    );
-  },
-
-  /**
-  * Return a <button> template
-  * @return {JSX Template}
-  */
-  getButton: function(){
-    return (
-      <button {...this.props} onClick={this.handleClick}>
-        {this.getIcon()}
-        {this.props.name}
-      </button>
-    );
-  },
-
-  /**
    * Render a Action component.
    * @returns {JSX}
    */
   render: function(){
-    return (this.props.type === 'button')? this.getButton() : this.getLink();
+    var ActionType = (this.props.type === 'link') ? 'link' : 'button';
+
+    return (
+      <ActionType {...this.props} onClick={this.handleClick} href={this.props.url}>
+        {this.getIcon()}
+        {this.props.name}
+      </ActionType>
+    );
   }
 
 });
