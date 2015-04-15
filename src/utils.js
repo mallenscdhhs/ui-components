@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var ClassNames = require('classnames');
 
 /**
  * Determines if the passed-in list contains a value from the passedin "values" array.
@@ -19,17 +20,5 @@ exports.containsOneOf = function(list, values){
 * @return {String}
 */
 exports.getClasses = function(props){
-  var classes = ['btn'];
-  // Add default link-type for action links
-  if(props.type === 'link'){
-    classes.push('btn-link');
-  }
-  // Add all passed in classes
-  if(props.classNames){
-    classes = classes.concat(props.classNames);
-  }
-  if(props.disabled === true){
-    classes.push('disabled');
-  }
-  return classes.join(' ');
+  return ClassNames('btn', props.classNames, {link: (props.type === 'link'), disabled: props.disabled});
 };
