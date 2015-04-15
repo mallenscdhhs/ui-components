@@ -1,7 +1,7 @@
 'use-strict';
 
 var React = require('react');
-var ClassNames = require('classnames');
+var classNames = require('classnames');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var _ = require('lodash');
@@ -70,7 +70,7 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var classNames = ClassNames({
+    var setClassNames = classNames({
       'hidden': this.state.hidden,
       'alert': true,
       'alert-dismissible': true,
@@ -80,7 +80,7 @@ module.exports = React.createClass({
       'alert-success': this.state.type === 'success'
     });
     return (
-      <div className={classNames}>
+      <div className={setClassNames}>
         <button type="button" className="close" onClick={this.handleClose} aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
