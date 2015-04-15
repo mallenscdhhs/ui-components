@@ -129,13 +129,13 @@ module.exports = React.createClass({
 
     if ( isFieldGroup || !isRadioOrCheckbox ) {
       labelProps.isFieldGroup = isFieldGroup;
-      children.push(<FieldLabel {...labelProps}/>);
+      children.push(<FieldLabel {...labelProps} key="field-label"/>);
     }
 
     children = children.concat([
-      <EditorToggle {...this.props}/>,
-      <InputControl {...this.props} />,
-      <HelpBlock id={this.props.id}>{message}</HelpBlock>
+      <EditorToggle {...this.props} key="editor-toggle"/>,
+      <InputControl {...this.props} key="input-control"/>,
+      <HelpBlock id={this.props.id} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
