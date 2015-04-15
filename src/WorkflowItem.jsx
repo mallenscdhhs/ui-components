@@ -1,7 +1,7 @@
 'use-strict';
 var React = require('react');
 var Flux = require('fluxify');
-var classSet = require('classnames');
+var ClassNames = require('classnames');
 var Tree = require('./Tree');
 var constants = require('./constants');
 var WorkflowItemEditorToggle = require('./WorkflowItemEditorToggle');
@@ -37,7 +37,7 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var liClassNames = classSet({
+    var liClassNames = ClassNames({
       'inactive': !this.props.active,
       'current' : this.props.current,
       'disabled': this.props.disabled,

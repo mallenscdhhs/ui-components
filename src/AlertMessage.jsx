@@ -1,7 +1,7 @@
 'use-strict';
 
 var React = require('react');
-var classSet = require('classnames');
+var ClassNames = require('classnames');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var _ = require('lodash');
@@ -70,7 +70,7 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var classNames = classSet({
+    var classNames = ClassNames({
       'hidden': this.state.hidden,
       'alert': true,
       'alert-dismissible': true,
