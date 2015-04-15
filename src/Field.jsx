@@ -77,18 +77,6 @@ module.exports = React.createClass({
   },
 
   /**
-   * Takes the passed-in props object and adds a few computed properties.
-   * @param {object} props
-   * @returns {object}
-   */
-  getInputControlProps: function(props){
-    return _.extend(props, {
-      className: 'form-control',
-      'aria-aria-describedby': 'field'+this.props.id+'HelpText'
-    });
-  },
-
-  /**
    * Creates specified field type component.
    * @param {string} type
    * @returns {JSX}
@@ -146,8 +134,8 @@ module.exports = React.createClass({
 
     children = children.concat([
       <EditorToggle {...this.props}/>,
-      <InputControl {...this.getInputControlProps(this.props)} />,
-      <HelpBlock>{message}</HelpBlock>
+      <InputControl {...this.props} />,
+      <HelpBlock id={this.props.id}>{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);

@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var ClassNames = require('classnames');
+var setClassNames = require('classnames');
 
 /**
  * Determines if the passed-in list contains a value from the passedin "values" array.
@@ -17,8 +17,21 @@ exports.containsOneOf = function(list, values){
 * @param {object} props - Abstract the classNames array, type string,
 * and disabled boolean from the parent component to determine which
 * classes should be passed to the owner component
-* @return {String}
+* @return {string}
 */
-exports.getClasses = function(props){
-  return ClassNames('btn', props.classNames, {link: (props.type === 'link'), disabled: props.disabled});
+exports.getActionClasses = function(props){
+  return setClassNames('btn', props.classNames, {'link': (props.type === 'link'), 'disabled': props.disabled});
+};
+
+/**
+* Returns a config object with a few computed properties
+* @param {string} fieldId - Pass in the fieldId from the parent
+* component and return computed props to the owner component
+* @return {object}
+*/
+exports.getComputedInputAttr = function(fieldId){
+  return {
+    'className': 'form-control',
+    'aria-describedby': fieldId+'-help-block'
+  };
 };
