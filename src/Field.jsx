@@ -1,7 +1,7 @@
 'use-strict';
 
 var React = require('react');
-var cx = require('classnames');
+var classSet = require('classnames');
 var _ = require('lodash');
 var Flux = require('fluxify');
 var constants = require('./constants');
@@ -118,7 +118,7 @@ module.exports = React.createClass({
    * @returns {object}
    */
   getClassNames: function(){
-    return cx({
+    return classSet({
       'form-group': true,
       'editable-component': true,
       'has-error': this.state.hasError,
