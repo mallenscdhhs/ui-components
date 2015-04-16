@@ -19,8 +19,8 @@ exports.containsOneOf = function(list, values){
 * classes should be passed to the owner component
 * @return {string}
 */
-exports.getActionClasses = function(props){
-  return setClassNames('btn', props.classNames, {'link': (props.type === 'link'), 'disabled': props.disabled});
+exports.getClasses = function(props){
+  return setClassNames(props.classNames, {'link': (props.type === 'link'), 'disabled': props.disabled});
 };
 
 /**

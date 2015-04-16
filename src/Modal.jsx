@@ -55,7 +55,7 @@ module.exports = React.createClass({
             </div>
             <div className={['modal-footer'].concat(this.props.footerClassNames).join(' ')}>
               {_.map(this.props.actions, function(action){
-                return <Action {...action} key={action.id+'-action'} className={Utils.getActionClasses(action)} />;
+                return <Action {...action} key={action.id+'-action'} className={Utils.getClasses(action)} />;
               })}
             </div>
           </div>

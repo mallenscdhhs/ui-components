@@ -49,7 +49,7 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
-    var ActionType = (this.props.type === 'link') ? 'link' : 'button';
+    var ActionType = (this.props.type === 'link') ? 'a' : 'button';
 
     return (
       <ActionType {...this.props} onClick={this.handleClick} href={this.props.url}>
