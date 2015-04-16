@@ -26,7 +26,8 @@ function buildComponentTree(schema, head){
     children = null;
     props = update(head, { config: {
       key: {$set: headId+ '-' +head.type},
-      componentType: {$set: head.type}
+      componentType: {$set: head.type},
+      className: {$set: 'form-control'}
     }});
     // if this is a workflow, then add the items config
     if ( head.type === 'workflow' ) {
