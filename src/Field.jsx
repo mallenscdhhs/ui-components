@@ -77,18 +77,6 @@ module.exports = React.createClass({
   },
 
   /**
-   * Takes the passed-in props object and adds a few computed properties.
-   * @param {object} props
-   * @returns {object}
-   */
-  getInputControlProps: function(props){
-    return _.extend(props, {
-      className: 'form-control',
-      'aria-aria-describedby': 'field'+this.props.id+'HelpText'
-    });
-  },
-
-  /**
    * Creates specified field type component.
    * @param {string} type
    * @returns {JSX}
@@ -141,13 +129,13 @@ module.exports = React.createClass({
 
     if ( isFieldGroup || !isRadioOrCheckbox ) {
       labelProps.isFieldGroup = isFieldGroup;
-      children.push(<FieldLabel {...labelProps}/>);
+      children.push(<FieldLabel {...labelProps} key="field-label"/>);
     }
 
     children = children.concat([
-      <EditorToggle {...this.props}/>,
-      <InputControl {...this.getInputControlProps(this.props)} />,
-      <HelpBlock>{message}</HelpBlock>
+      <EditorToggle {...this.props} key="editor-toggle"/>,
+      <InputControl {...this.props} key="input-control"/>,
+      <HelpBlock id={this.props.id} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
