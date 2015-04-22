@@ -20,11 +20,12 @@
     ]
   },
   "dependencies": {
-    "fluxify": "0.2.2",
+    "classnames": "^1.2.0",
     "es6-promise": "^2.0.1",
-    "reactify": "^0.16.0",
+    "fluxify": "0.2.2",
+    "immutable": "^3.6.4",
     "react-widgets": "^2.2.2",
-    "immutable": "^3.6.4"
+    "reactify": "^0.16.0"
   },
   "devDependencies": {
     "bootstrap": "^3.3.1",

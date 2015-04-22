@@ -2,6 +2,7 @@ var React = require('react');
 var Flux = require('fluxify');
 var constants = require('./constants');
 var Action = require('./Action');
+var Utils = require('./utils');
 var _ = require('lodash');
 
 module.exports = React.createClass({
@@ -54,7 +55,7 @@ module.exports = React.createClass({
             </div>
             <div className={['modal-footer'].concat(this.props.footerClassNames).join(' ')}>
               {_.map(this.props.actions, function(action){
-                return <Action {...action}/>;
+                return <Action {...action} key={action.id+'-action'} className={Utils.getClasses(action)} />;
               })}
             </div>
           </div>
