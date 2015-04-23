@@ -1,4 +1,5 @@
 var React = require("react");
+var setClassNames = require('classnames');
 var Popover = require("react-bootstrap").Popover;
 var OverlayTrigger = require("react-bootstrap").OverlayTrigger;
 
@@ -11,13 +12,21 @@ module.exports = React.createClass({
   displayName: 'Description',
 
   getPopover: function(){
-    return <Popover title='Popover left'>{this.props.name}</Popover>;
+    return <Popover title='Popover left'>{this.props.description}</Popover>;
+  },
+
+  getClassNames: function(){
+    return setClassNames({
+      'glyphicon': true,
+      'glyphicon-info-sign': true,
+      'hide': !this.props.description
+    });
   },
 
   render: function(){
     return (<div>
               <OverlayTrigger trigger='click' placement='left' overlay={this.getPopover()}>
-                <span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                <span className={this.getClassNames()} aria-hidden="true"></span>
               </OverlayTrigger>
             </div>);
   }
