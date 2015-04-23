@@ -12,7 +12,7 @@ module.exports = React.createClass({
   displayName: 'Description',
 
   getPopover: function(){
-    return <Popover title='Popover left'>{this.props.description}</Popover>;
+    return <Popover title={this.props.label}>{this.props.description}</Popover>;
   },
 
   getClassNames: function(){
@@ -25,7 +25,7 @@ module.exports = React.createClass({
 
   render: function(){
     return (<div>
-              <OverlayTrigger trigger='click' placement='left' overlay={this.getPopover()}>
+              <OverlayTrigger trigger='click' placement='bottom' overlay={this.getPopover()}>
                 <span className={this.getClassNames()} aria-hidden="true"></span>
               </OverlayTrigger>
             </div>);
