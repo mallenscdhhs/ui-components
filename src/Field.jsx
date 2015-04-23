@@ -19,6 +19,7 @@ var DateComponent = require('./Date');
 var AutoComplete = require('./AutoComplete');
 var ContentEditor = require('./ContentEditor');
 var FieldValueMixin = require('./FieldValueMixin');
+var Description = require('./Description');
 
 module.exports = React.createClass({
 
@@ -135,7 +136,8 @@ module.exports = React.createClass({
     children = children.concat([
       <EditorToggle {...this.props} key="editor-toggle"/>,
       <InputControl {...this.props} key="input-control"/>,
-      <HelpBlock id={this.props.id} key="help-block">{message}</HelpBlock>
+      <HelpBlock id={this.props.id} key="help-block">{message}</HelpBlock>,
+      <Description key="description-text" {...this.props} />
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
