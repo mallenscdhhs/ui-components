@@ -17,7 +17,7 @@ module.exports = React.createClass({
   render: function(){
     return (<div>
               <OverlayTrigger trigger='click' placement='left' overlay={this.getPopover()}>
-                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                <span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
               </OverlayTrigger>
             </div>);
   }
