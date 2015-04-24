@@ -19,7 +19,7 @@ module.exports = Flux.createStore({
      * @param updater {function} Method to update store
      * @param data {object} Field props
      */
-    "fieldValueChange" : function (updater, data) {
+    blurField : function (updater, data) {
       Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
     },
 
@@ -32,7 +32,7 @@ module.exports = Flux.createStore({
      * @param session
      * @param data
      */
-    "sessionValuesLoaded" : function(updater,session,data){
+    sessionValuesLoaded : function(updater,session,data){
       // Verify API has validation endpoint AND has rules associated with the field
       if ( ! (configuration.API && configuration.API.validation) ) throw new Error('API endpoint for validation not configured.');
       if ( data.rules ) {

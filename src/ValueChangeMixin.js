@@ -19,10 +19,21 @@ module.exports = {
     var state = event.stateChange || {value: event.target.value};
     var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession']);
     payload.value = event.target.value;
-    if(event.target.dateString) {
+    if( event.target.dateString ) {
       payload.dateString = event.target.dateString;
     }
     this.setState(state);
     Flux.doAction(actionName, payload);
+  },
+
+  /**
+   * Handles the onBlur event of a Field and sends the Field's data in an action
+   * call. The ValidationStore has a handler for the FIELD_BLUR action and performs
+   * validation when called.
+   * @fires FIELD_BLUR
+   */
+  onBlur: function(event){
+    var payload = _.extend({ value: this.state.value }, this.props);
+    Flux.doAction(constants.actions.FIELD_BLUR, payload);
   }
 };
