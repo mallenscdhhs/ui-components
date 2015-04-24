@@ -19,7 +19,17 @@ module.exports = Flux.createStore({
      * @param updater {function} Method to update store
      * @param data {object} Field props
      */
-    blurField : function (updater, data) {
+    fieldValueChange : _.debounce(function (updater, data) {
+      Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
+    }, 500),
+
+    /**
+     * Initiate Validation Process using when user blurs a field in order to
+     * prevent a user from "skipping" a required field.
+     * @param updater {function} Method to update store
+     * @param data {object} Field props
+     */
+    blurField: function(updater, data){
       Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
     },
 
