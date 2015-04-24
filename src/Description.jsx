@@ -25,7 +25,7 @@ module.exports = React.createClass({
 
   render: function(){
     return (<div>
-              <OverlayTrigger trigger='mouseover' placement='top' overlay={this.getPopover()}>
+              <OverlayTrigger trigger='hover' placement='top' overlay={this.getPopover()}>
                 <span className={this.getClassNames()} aria-hidden="true"></span>
               </OverlayTrigger>
             </div>);
