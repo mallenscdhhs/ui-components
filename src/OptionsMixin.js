@@ -2,6 +2,8 @@ var React = require('react');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('./constants');
+var _ = require('lodash');
+
 /**
  * Manages component options
  * @module OptionsMixins
@@ -37,7 +39,9 @@ module.exports = {
   },
 
   componentWillReceiveProps: function(nextProps){
-    this.initOptions(nextProps);
+    if ( !_.isEqual(nextProps, this.props) ) {
+      this.initOptions(nextProps);
+    }
   },
 
   initOptions: function(props){
@@ -49,7 +53,7 @@ module.exports = {
         'fieldId' : props.id,
         'fieldName' : props.name
       });
-    }else{
+    } else {
       Flux.doAction(constants.actions.SEND_OPTIONS, props);
     }
   }

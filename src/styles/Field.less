@@ -1,6 +1,28 @@
-.form-group legend {
-  border: 0 !important;
-  font-size: @font-size-base;
-  font-weight: bold;
-  margin-bottom: 0;
+fieldset {
+  margin-bottom: @padding-large-vertical;
+}
+
+.form-group {
+
+  legend {
+    border: 0 !important;
+    font-size: @font-size-base;
+    font-weight: bold;
+    margin-bottom: @padding-small-vertical;
+  }
+
+  .radio,
+  .radio-inline,
+  .checkbox,
+  .checkbox-inline {
+    label {
+      margin-right: @padding-base-horizontal;
+      font-weight: normal;
+    }
+  }
+
+  .required {
+    margin-left: @padding-xs-horizontal;
+    color: @brand-danger;
+  }
 }
