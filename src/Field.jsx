@@ -124,7 +124,7 @@ module.exports = React.createClass({
     var wrapperTag = isFieldGroup? 'fieldset' : 'div';
     var message = this.state.hasError? this.state.errorMessage : this.props.helpText;
     var InputControl = this.getInputControl(this.props.type, isFieldGroup);
-    var labelProps = _.pick(this.props, ['id', 'label', 'required']);
+    var labelProps = _.pick(this.props, ['id', 'label', 'required','description']);
     var children = [];
 
     if ( isFieldGroup || !isRadioOrCheckbox ) {
