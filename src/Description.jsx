@@ -11,6 +11,19 @@ module.exports = React.createClass({
 
   displayName: 'Description',
 
+  propTypes: {
+    description: React.PropTypes.string.isRequired,
+    descriptionTrigger: React.PropTypes.string,
+    descriptionPlacement: React.PropTypes.string
+  },
+
+  getDefaultProps: function(){
+    return {
+      descriptionTrigger: 'hover',
+      descriptionPlacement:  'top'
+    };
+  },
+
   getPopover: function(){
     return <Popover title={this.props.label}>{this.props.description}</Popover>;
   },
@@ -18,15 +31,14 @@ module.exports = React.createClass({
   getClassNames: function(){
     return setClassNames({
       'glyphicon': true,
-      'glyphicon-info-sign': true,
-      'hide': !this.props.description
+      'glyphicon-info-sign': true
     });
   },
 
   render: function(){
     return (
-      <span>
-        <OverlayTrigger trigger='hover' placement='top' overlay={this.getPopover()}>
+      <span className="field-description">
+        <OverlayTrigger trigger={this.props.descriptionTrigger} placement={this.props.descriptionPlacement} overlay={this.getPopover()}>
           <span className={this.getClassNames()} aria-hidden="true"></span>
         </OverlayTrigger>
       </span>
