@@ -135,7 +135,7 @@ module.exports = React.createClass({
     children = children.concat([
       <EditorToggle {...this.props} key="editor-toggle"/>,
       <InputControl {...this.props} key="input-control"/>,
-      <HelpBlock {...this.props} id={this.props.id} key="help-block">{message}</HelpBlock>
+      <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
