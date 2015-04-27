@@ -17,11 +17,12 @@ module.exports = React.createClass({
     descriptionPlacement: React.PropTypes.string
   },
 
-  getDefaultProps: function(){
-    return {
-      descriptionTrigger: 'hover',
-      descriptionPlacement:  'top'
-    };
+  getTrigger: function(){
+    return this.props.descriptionTrigger ? this.props.descriptionTrigger : 'hover';
+  },
+
+  getPlacement: function(){
+    return this.props.descriptionPlacement ? this.props.descriptionPlacement : 'top';
   },
 
   getPopover: function(){
@@ -38,7 +39,7 @@ module.exports = React.createClass({
   render: function(){
     return (
       <span className="field-description">
-        <OverlayTrigger trigger={this.props.descriptionTrigger} placement={this.props.descriptionPlacement} overlay={this.getPopover()}>
+        <OverlayTrigger trigger={this.getTrigger()} placement={this.getPlacement()} overlay={this.getPopover()}>
           <span className={this.getClassNames()} aria-hidden="true"></span>
         </OverlayTrigger>
       </span>
