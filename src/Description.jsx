@@ -24,10 +24,10 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    return (<div>
+    return (<span>
               <OverlayTrigger trigger='hover' placement='top' overlay={this.getPopover()}>
                 <span className={this.getClassNames()} aria-hidden="true"></span>
               </OverlayTrigger>
-            </div>);
+            </span>);
   }
 });
