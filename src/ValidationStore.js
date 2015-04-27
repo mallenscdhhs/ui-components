@@ -20,7 +20,11 @@ module.exports = Flux.createStore({
      * @param data {object} Field props
      */
     "fieldValueChange" : function (updater, data) {
-      Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
+      var visible = data.visible !== 'hidden';
+      var enabled = !data.disabled;
+      if(visible && enabled) {
+        Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
+      }
     },
 
     /**

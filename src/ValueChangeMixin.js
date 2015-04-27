@@ -17,8 +17,9 @@ module.exports = {
   onChange: function(event){
     var actionName = event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     var state = event.stateChange || {value: event.target.value};
-    var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession']);
+    var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession','disabled']);
     payload.value = event.target.value;
+    payload.visible = this.state.visible;
     if(event.target.dateString) {
       payload.dateString = event.target.dateString;
     }
