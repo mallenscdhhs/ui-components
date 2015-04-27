@@ -16,6 +16,7 @@ module.exports = Flux.createStore({
 
     /**
      * Initiate Validation Process using field data
+     * Do not kick off validation if field is disabled or not visible
      * @param updater {function} Method to update store
      * @param data {object} Field props
      */
