@@ -1,5 +1,6 @@
 var React = require("react");
 var RequiredIndicator = require('./RequiredIndicator');
+var Description = require('./Description');
 
 /**
  * Determines whether to render a <label> or <legend> based on the
@@ -17,6 +18,14 @@ module.exports = React.createClass({
     required: React.PropTypes.bool
   },
 
+  getDescription: function(){
+    var description;
+    if(this.props.description){
+      description = (<Description key="description-text" {...this.props} />);
+    }
+    return description;
+  },
+
   render: function(){
     var tagName = this.props.isFieldGroup? 'legend' : 'label';
     return React.createElement(
@@ -24,7 +33,8 @@ module.exports = React.createClass({
       {htmlFor: this.props.id},
       this.props.children,
       this.props.label,
-      <RequiredIndicator {...this.props}/>
+      <RequiredIndicator {...this.props}/>,
+      this.getDescription()
     );
   }
 });

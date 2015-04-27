@@ -124,7 +124,7 @@ module.exports = React.createClass({
     var wrapperTag = isFieldGroup? 'fieldset' : 'div';
     var message = this.state.hasError? this.state.errorMessage : this.props.helpText;
     var InputControl = this.getInputControl(this.props.type, isFieldGroup);
-    var labelProps = _.pick(this.props, ['id', 'label', 'required']);
+    var labelProps = _.pick(this.props, ['id', 'label', 'required','description','descriptionPlacement','descriptionTrigger']);
     var children = [];
 
     if ( isFieldGroup || !isRadioOrCheckbox ) {
@@ -135,7 +135,7 @@ module.exports = React.createClass({
     children = children.concat([
       <EditorToggle {...this.props} key="editor-toggle"/>,
       <InputControl {...this.props} key="input-control"/>,
-      <HelpBlock id={this.props.id} key="help-block">{message}</HelpBlock>
+      <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
