@@ -1,9 +1,13 @@
 'use-strict';
 var React = require('react');
 var EditorToggle = require('./EditorToggle');
+var DependencyMixin = require('./DependencyMixin');
 
 module.exports = React.createClass({
+
   displayName: 'Fieldset',
+
+  mixins: [DependencyMixin],
 
   getDefaultProps: function(){
     return {
