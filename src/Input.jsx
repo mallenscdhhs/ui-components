@@ -20,12 +20,25 @@ module.exports = React.createClass({
     value: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     maxLength: React.PropTypes.number,
-    inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
+    inputProps: React.PropTypes.arrayOf(React.PropTypes.string),
+    forceManualInput: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
     return {
       inputProps: ['type', 'id', 'name', 'maxLength', 'disabled', 'className', 'aria-describedby']
+    };
+  },
+
+  getManualInputProps: function() {
+    return {
+      type: 'text',
+      onPaste: this.handleComputedInput,
+      onCopy: this.handleComputedInput,
+      onCut: this.handleComputedInput,
+      onDrag: this.handleComputedInput,
+      onDrop: this.handleComputedInput,
+      autoComplete: 'off'
     };
   },
 
@@ -35,9 +48,20 @@ module.exports = React.createClass({
     };
   },
 
+  handleComputedInput: function(e) {
+    e.preventDefault();
+  },
+
   render: function(){
     var props = _.pick(this.props, this.props.inputProps);
-    return <input value={this.state.value} onChange={this.onChange} {...props}/>;
+    var manualInputProps = (this.props.forceManualInput) ? this.getManualInputProps() : null;
+    return (
+      <input
+        {...props}
+        {...manualInputProps}
+        value={this.state.value}
+        onChange={this.onChange} />
+    );
   }
 
 });

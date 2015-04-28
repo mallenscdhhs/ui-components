@@ -34,14 +34,16 @@ module.exports = React.createClass({
     required: React.PropTypes.bool,
     helpText: React.PropTypes.string,
     persistInSession: React.PropTypes.bool,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    forceManualInput: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
     return {
       componentType: 'field',
       initialState: 'visible',
-      disabled: false
+      disabled: false,
+      forceManualInput: false
     };
   },
 
