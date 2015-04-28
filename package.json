@@ -1,5 +1,5 @@
 {
-  "name": "Components",
+  "name": "@scdhhs/ui-components",
   "version": "1.0.0",
   "description": "A UI component library for Twitter Bootstrap written with Reactjs.",
   "main": "src/main.js",
