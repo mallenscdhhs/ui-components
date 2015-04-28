@@ -22,7 +22,15 @@ module.exports = {
     if(event.target.dateString) {
       payload.dateString = event.target.dateString;
     }
-    this.setState(state);
-    Flux.doAction(actionName, payload);
+    if(this.props.mask) {
+      var self = this;
+      this.getMaskPattern();
+      _.defer(function() {
+        self.handleMaskChange(payload, event.pasted);
+      });
+    } else {
+      this.setState(state);
+      Flux.doAction(actionName, payload);
+    }
   }
 };
