@@ -33,6 +33,7 @@ module.exports = React.createClass({
     label: React.PropTypes.string.isRequired,
     required: React.PropTypes.bool,
     helpText: React.PropTypes.string,
+    visible: React.PropTypes.string,
     persistInSession: React.PropTypes.bool,
     disabled: React.PropTypes.bool
   },
@@ -51,7 +52,7 @@ module.exports = React.createClass({
    */
   getInitialState: function() {
     return {
-      visible: this.props.initialState === 'visible',
+      visible: this.props.initialState !== 'hidden',
       hasError: false,
       errorMessage: ''
     };
