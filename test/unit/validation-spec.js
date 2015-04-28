@@ -7,6 +7,7 @@ var constants = require('../../src/constants');
 var ValidationStore = require('../../src/ValidationStore');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
+var successPayload = require('../fixtures/validation-success-payload.json');
 
 describe('Validation', function() {
 
@@ -23,14 +24,6 @@ describe('Validation', function() {
       'rules' : {
         'rule1': true,
         'rule2': false
-      }
-    };
-
-    var successPayload = {
-      "module" : "PE",
-      "operationStatus" : "SUCCESS",
-      "responsePayload" : {
-        "message" : "Updated Successfully."
       }
     };
 
@@ -121,4 +114,66 @@ describe('Validation', function() {
 
     Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixture);
   });
+
+  it('will not call validation if disabled or not visible', function (done) {
+
+    var fixtureDisabled = {
+      'id': 'idtest',
+      'name': 'nameTest',
+      'value': 'valueTest',
+      'rules' : {
+        'rule1': true,
+        'rule2': false
+      },
+      'disabled' : true
+    };
+
+    var fixtureVisibile = {
+      'id': 'idtest',
+      'name': 'nameTest',
+      'value': 'valueTest',
+      'rules' : {
+        'rule1': true,
+        'rule2': false
+      },
+      'visible' : 'hidden'
+    };
+
+    var calledService = false;
+
+    spyOn($, 'ajax').and.callFake(function(){
+      var ajaxMock = $.Deferred();
+      ajaxMock.resolve(successPayload);
+      return ajaxMock.promise();
+    });
+
+    Dispatcher.register('field-validation-success-test',function(action,data) {
+      if( action === constants.actions.FIELD_VALIDATION_ERROR &&
+          data.id === fixture.id){
+        calledService = true;
+        Dispatcher.unregister('field-validation-success-test');
+      }
+    });
+
+    Dispatcher.register('session-store-success-test',function(action,data){
+      if(action === constants.actions.GET_SESSION_VALUES && data.id === fixture.id){
+        var sessions = [
+          {'sessionField1':'value1'},
+          {'sessionField2':'value2'}
+        ];
+        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions, data );
+        Dispatcher.unregister('session-store-success-test');
+      }
+    });
+
+    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureDisabled);
+    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureVisibile);
+
+    setTimeout(function(){
+      expect(calledService).toEqual(false);
+      done();
+    },100);
+
+  });
+
 });
