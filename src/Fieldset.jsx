@@ -4,6 +4,10 @@ var EditorToggle = require('./EditorToggle');
 var DependencyMixin = require('./DependencyMixin');
 var setClassNames = require('classnames');
 
+/**
+ * Fieldset component
+ * @module Fieldset
+ */
 module.exports = React.createClass({
 
   displayName: 'Fieldset',
@@ -16,10 +20,11 @@ module.exports = React.createClass({
     };
   },
 
-  getInitialState: function() {
-    return {
-      visible: this.props.initialState !== 'hidden'
-    };
+  /**
+   * Init visible state, based on initialState
+   */
+  componentWillMount: function() {
+    this.setState({ 'visible': this.props.initialState !== 'hidden'});
   },
 
   getLabel: function(){
