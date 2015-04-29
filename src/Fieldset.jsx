@@ -1,9 +1,18 @@
 'use-strict';
 var React = require('react');
 var EditorToggle = require('./EditorToggle');
+var DependencyMixin = require('./DependencyMixin');
+var setClassNames = require('classnames');
 
+/**
+ * Fieldset component
+ * @module Fieldset
+ */
 module.exports = React.createClass({
+
   displayName: 'Fieldset',
+
+  mixins: [DependencyMixin],
 
   getDefaultProps: function(){
     return {
@@ -19,13 +28,20 @@ module.exports = React.createClass({
     return fieldSetLabel;
   },
 
+  getClassNames: function(){
+    return setClassNames({
+      'editable-component' : true,
+      'hidden': !this.state.visible
+    });
+  },
+
   /**
    * Render a Fieldset component.
    * @returns {JSX}
    */
   render: function(){
     return (
-      <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className="editable-component">
+      <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className={this.getClassNames()}>
         <EditorToggle {...this.props}/>
         {this.getLabel()}
         {this.props.children}
