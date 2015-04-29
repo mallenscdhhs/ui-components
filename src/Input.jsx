@@ -39,11 +39,15 @@ module.exports = React.createClass({
 
   getInitialState: function(){
     return {
-      value: this.props.value || '',
+      value: '',
       maskConfig: {},
       unmasked: '',
       keyPressed: ''
     };
+  },
+
+  componentWillMount: function(){
+    this.setState({value: this.props.value});
   },
 
   render: function(){

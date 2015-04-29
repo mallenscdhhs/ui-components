@@ -30,10 +30,8 @@ module.exports = {
     var pasted = e.clipboardData.getData('Text');
     var self = this;
     e.preventDefault();
-    _.map(pasted, function(char) {
-      _.defer(function() {
-        self.onChange({target: {value: char}, pasted: pasted});
-      });
+    _.forEach(pasted, function(char) {
+      self.onChange({target: {value: char}, pasted: pasted});
     });
   },
 
@@ -43,7 +41,7 @@ module.exports = {
       mask: [],
       separator: []
     };
-    _.map(this.props.mask, function(char, i) {
+    _.forEach(this.props.mask, function(char, i) {
       if(char === '0') {
         indexes.mask.push(i);
       } else if(char !== 'X') {
@@ -99,18 +97,18 @@ module.exports = {
       if(sepIdxLen > 2) {
         if ( (currentValue.length > ( separatorIndex[sepIdxLen-2]-(sepIdxLen-2)) ) && (currentValue.length < (separatorIndex[sepIdxLen-1]-1)) ) {
           newValue += currentValue.substr(0, separatorIndex[0]) + config.separator;
-          _.times((sepIdxLen-2), function(i) {
-            newValue += currentValue.substr( separatorIndex[i], ( (separatorIndex[i+1]-separatorIndex[i])-1) ) + config.separator;
-          });
+          newValue += _.times((sepIdxLen-2), function(i) {
+            return currentValue.substr( separatorIndex[i], ( (separatorIndex[i+1]-separatorIndex[i])-1) ) + config.separator;
+          }).join('');
           currentValue = currentValue.substr( (separatorIndex[sepIdxLen-2]-1) );
         }
       }
     }
     if ( currentValue.length > (separatorIndex[sepIdxLen-1] - (sepIdxLen-1)) ) {
       newValue += currentValue.substr(0, separatorIndex[0]) + config.separator;
-      _.times((sepIdxLen-1), function(i) {
-        newValue += currentValue.substr( (separatorIndex[i]-i ), ((separatorIndex[1+i]-separatorIndex[i])-1) ) + config.separator;
-      });
+      newValue += _.times((sepIdxLen-1), function(i) {
+        return currentValue.substr( (separatorIndex[i]-i ), ((separatorIndex[1+i]-separatorIndex[i])-1) ) + config.separator;
+      }).join('');
       currentValue = currentValue.substr(separatorIndex[sepIdxLen-1]-(sepIdxLen-1));
     }
     newValue += currentValue;
@@ -119,6 +117,8 @@ module.exports = {
 
   handleMaskChange: function(payload, pasted) {
     var actionName = constants.actions.FIELD_VALUE_CHANGE;
+    var outputValue = '';
+    var outputUnmasked = '';
     // handle backspacing
     var isBackspace = (this.state.keyPressed === constants.keyCodes.BACKSPACE);
     // remove any char if not a number or asterisk
@@ -127,7 +127,6 @@ module.exports = {
     var symb = this.getRegEx(config.symbol, config.allowedStringType);
     var sep = this.getRegEx(config.separator);
     var validChar = symb.test(payload.value.slice(-1));
-    var self = this;
     if (validChar) {
       // filter out separators
       var filtered = payload.value.replace(sep, '');
@@ -138,19 +137,13 @@ module.exports = {
       if ( currentValue.length > this.state.maskConfig.maskIndex.length ) {
         currentValue = filtered;
       }
-      this.setState({
-        value: pasted ? this.setMask(pasted, true) : this.setMask(currentValue),
-        unmasked: isBackspace ? this.state.unmasked.slice(0, -1) : this.state.unmasked + newUnmasked
-      });
+      outputValue = pasted ? this.setMask(pasted, true) : this.setMask(currentValue);
+      outputUnmasked = isBackspace ? this.state.unmasked.slice(0, -1) : this.state.unmasked + newUnmasked;
     } else {
-      this.setState({
-        value: payload.value.slice(0, -1),
-        unmasked: isBackspace ? this.state.unmasked.slice(0, -1) : this.state.unmasked
-      });
+      outputValue = payload.value.slice(0, -1);
+      outputUnmasked = isBackspace ? this.state.unmasked.slice(0, -1) : this.state.unmasked;
     }
-    // allow state to update and merge into payload
-    _.defer(function() {
-      Flux.doAction(actionName, _.merge(payload, {value: self.state.value, unmasked: self.state.unmasked}));
-    });
+    this.setState({value: outputValue, unmasked: outputUnmasked});
+    Flux.doAction(actionName, _.merge(payload, {value: outputValue, unmasked: outputUnmasked}));
   }
 };
