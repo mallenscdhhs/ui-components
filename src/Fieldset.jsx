@@ -20,13 +20,6 @@ module.exports = React.createClass({
     };
   },
 
-  /**
-   * Init visible state, based on initialState
-   */
-  componentWillMount: function() {
-    this.setState({ 'visible': this.props.initialState !== 'hidden'});
-  },
-
   getLabel: function(){
     var fieldSetLabel = null;
     if(this.props.name){

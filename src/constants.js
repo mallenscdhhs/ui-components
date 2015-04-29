@@ -7,6 +7,7 @@ module.exports = {
     "COMPONENT_REMOVE": "componentRemove",
     "COMPONENT_EDIT": "componentEdit",
     "COMPONENT_ADD": "componentAdd",
+    "COMPONENT_VISIBILITY" : "componentVisibility",
     "SEND_OPTIONS": "sendOptions",
     "SEND_RESOURCE_OPTIONS": "sendResourceOptions",
     "SEND_CUSTOM_OPTIONS": "sendCustomOptions",

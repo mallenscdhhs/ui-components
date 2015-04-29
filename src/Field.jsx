@@ -62,13 +62,6 @@ module.exports = React.createClass({
   },
 
   /**
-   * Init visible state, based on initialState
-   */
-  componentWillMount: function() {
-    this.setState({ 'visible': this.props.initialState !== 'hidden'});
-  },
-
-  /**
    * Returns whether or not the Field type is "radio" or "checkbox".
    * @returns {bool}
    */
