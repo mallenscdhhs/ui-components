@@ -1,5 +1,5 @@
 {
-  "name": "Components",
+  "name": "@scdhhs/ui-components",
   "version": "1.0.0",
   "description": "A UI component library for Twitter Bootstrap written with Reactjs.",
   "main": "src/main.js",
@@ -24,6 +24,7 @@
     "es6-promise": "^2.0.1",
     "fluxify": "0.2.2",
     "immutable": "^3.6.4",
+    "react-bootstrap": "^0.21.0",
     "react-widgets": "^2.2.2",
     "reactify": "^0.16.0"
   },

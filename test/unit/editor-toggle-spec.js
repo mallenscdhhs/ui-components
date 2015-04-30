@@ -21,7 +21,8 @@ describe('EditorToggle', function(){
         name: 'test',
         label: 'test',
         componentType: 'field',
-        initialState: 'visible'
+        initialState: 'visible',
+        disabled : false
       };
       this.field = React.createFactory(Components.elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
@@ -94,16 +95,15 @@ describe('EditorToggle', function(){
   describe('remove component button', function(){
 
     beforeEach(function(){
-      this.fixture = {type: 'form', id:'test-form', componentType: 'form', name : 'testForm' };
-      this.form = React.createFactory(Components.elements.form);
-      this.component = TestUtils.renderIntoDocument(this.form(this.fixture));
+      this.fixture = {type: 'field', id:'test-field', componentType: 'field', name : 'testField', initialState: 'visible', disabled : false };
+      this.field = React.createFactory(Components.elements.field);
+      this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
     });
 
     it('will render the remove template', function(){
       var html = TestUtils.findRenderedDOMComponentWithClass(this.component, 'config-editor');
       expect(TestUtils.isDOMComponent(html)).toEqual(true);
       expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(1);
-      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'add-component').length).toEqual(1);
       expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'remove-component').length).toEqual(1);
     });
 

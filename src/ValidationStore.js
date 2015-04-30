@@ -16,11 +16,16 @@ module.exports = Flux.createStore({
 
     /**
      * Initiate Validation Process using field data
+     * Do not kick off validation if field is disabled or not visible
      * @param updater {function} Method to update store
      * @param data {object} Field props
      */
     "fieldValueChange" : function (updater, data) {
-      Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
+      var visible = data.visible !== 'hidden';
+      var enabled = !data.disabled;
+      if(visible && enabled) {
+        Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
+      }
     },
 
     /**

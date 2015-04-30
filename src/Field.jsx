@@ -20,6 +20,10 @@ var AutoComplete = require('./AutoComplete');
 var ContentEditor = require('./ContentEditor');
 var FieldValueMixin = require('./FieldValueMixin');
 
+/**
+ * Field component
+ * @module Field
+ */
 module.exports = React.createClass({
 
   displayName: 'Field',
@@ -33,6 +37,7 @@ module.exports = React.createClass({
     label: React.PropTypes.string.isRequired,
     required: React.PropTypes.bool,
     helpText: React.PropTypes.string,
+    visible: React.PropTypes.string,
     persistInSession: React.PropTypes.bool,
     disabled: React.PropTypes.bool
   },
@@ -46,12 +51,11 @@ module.exports = React.createClass({
   },
 
   /**
-   * Init Field state, including if the field is viewable based on a dependency
+   * Init Field state
    * @returns {object}
    */
   getInitialState: function() {
     return {
-      visible: this.props.initialState === 'visible',
       hasError: false,
       errorMessage: ''
     };
@@ -124,7 +128,7 @@ module.exports = React.createClass({
     var wrapperTag = isFieldGroup? 'fieldset' : 'div';
     var message = this.state.hasError? this.state.errorMessage : this.props.helpText;
     var InputControl = this.getInputControl(this.props.type, isFieldGroup);
-    var labelProps = _.pick(this.props, ['id', 'label', 'required']);
+    var labelProps = _.pick(this.props, ['id', 'label', 'required','description','descriptionPlacement','descriptionTrigger']);
     var children = [];
 
     if ( isFieldGroup || !isRadioOrCheckbox ) {
@@ -135,7 +139,7 @@ module.exports = React.createClass({
     children = children.concat([
       <EditorToggle {...this.props} key="editor-toggle"/>,
       <InputControl {...this.props} key="input-control"/>,
-      <HelpBlock id={this.props.id} key="help-block">{message}</HelpBlock>
+      <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
