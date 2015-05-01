@@ -18,19 +18,16 @@ module.exports = {
     var actionName = event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     var state = event.stateChange || {value: event.target.value};
     var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession']);
-    payload.value = event.target.value;
-    if(event.target.dateString) {
-      payload.dateString = event.target.dateString;
-    }
     if(this.props.mask) {
-      var self = this;
-      this.getMaskPattern();
-      _.defer(function() {
-        self.handleMaskChange(payload, event.pasted);
-      });
+      payload.value = state.value;
+      payload.unmasked = state.unmasked;
     } else {
-      this.setState(state);
-      Flux.doAction(actionName, payload);
+      payload.value = event.target.value;
+      if(event.target.dateString) {
+        payload.dateString = event.target.dateString;
+      }
     }
+    this.setState(state);
+    Flux.doAction(actionName, payload);
   }
 };
