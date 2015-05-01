@@ -110,4 +110,12 @@ describe('Input', function(){
     });
   });
 
+  it('can force manual input', function(){
+    var config = update(fixture, {forceManualInput: {$set: true}});
+    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
+    var dom = comp.getDOMNode();
+    // verify that autocomplete attribute (along with the other internal helper props that don't render in the dom) is added to the input
+    expect( dom.getAttribute('autocomplete') ).toEqual('off');
+  });
+
 });

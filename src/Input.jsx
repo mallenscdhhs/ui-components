@@ -24,7 +24,8 @@ module.exports = React.createClass({
     inputProps: React.PropTypes.arrayOf(React.PropTypes.string),
     mask: React.PropTypes.string,
     maskSymbol: React.PropTypes.string,
-    maskAllowedStringType: React.PropTypes.string
+    maskAllowedStringType: React.PropTypes.string,
+    forceManualInput: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
@@ -37,6 +38,17 @@ module.exports = React.createClass({
     return {'onKeyDown': this.handleKeyDown, 'onPaste': this.handlePaste};
   },
 
+  getManualInputProps: function() {
+    return {
+      onPaste: this.handleComputedInput,
+      onCopy: this.handleComputedInput,
+      onCut: this.handleComputedInput,
+      onDrag: this.handleComputedInput,
+      onDrop: this.handleComputedInput,
+      autoComplete: 'off'
+    };
+  },
+
   getInitialState: function(){
     return {
       value: '',
@@ -47,6 +59,10 @@ module.exports = React.createClass({
 
   componentWillMount: function(){
     this.setState({value: this.props.value});
+  },
+
+  handleComputedInput: function(e) {
+    e.preventDefault();
   },
 
   handleKeyDown: function(e) {
@@ -78,10 +94,12 @@ module.exports = React.createClass({
   render: function(){
     var props = _.pick(this.props, this.props.inputProps);
     var maskProps = (this.props.mask) ? this.getMaskProps() : null;
+    var manualInputProps = (this.props.forceManualInput) ? this.getManualInputProps() : null;
     return (
       <input
         {...props}
         {...maskProps}
+        {...manualInputProps}
         value={this.state.value}
         onChange={this.handleInputChange} />
     );

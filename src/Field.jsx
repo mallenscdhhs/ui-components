@@ -40,7 +40,8 @@ module.exports = React.createClass({
     visible: React.PropTypes.string,
     persistInSession: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
-    mask: React.PropTypes.string
+    mask: React.PropTypes.string,
+    forceManualInput: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
@@ -48,7 +49,8 @@ module.exports = React.createClass({
       componentType: 'field',
       initialState: 'visible',
       disabled: false,
-      mask: ''
+      mask: '',
+      forceManualInput: false
     };
   },
 
