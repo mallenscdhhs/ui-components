@@ -17,7 +17,8 @@ module.exports = {
   onChange: function(event){
     var actionName = event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     var state = event.stateChange || {value: event.target.value};
-    var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession']);
+    var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession', 'disabled']);
+    payload.visible = this.state.visible;
     if(this.props.mask) {
       payload.value = state.value;
       payload.unmasked = state.unmasked;

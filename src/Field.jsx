@@ -20,6 +20,10 @@ var AutoComplete = require('./AutoComplete');
 var ContentEditor = require('./ContentEditor');
 var FieldValueMixin = require('./FieldValueMixin');
 
+/**
+ * Field component
+ * @module Field
+ */
 module.exports = React.createClass({
 
   displayName: 'Field',
@@ -33,6 +37,7 @@ module.exports = React.createClass({
     label: React.PropTypes.string.isRequired,
     required: React.PropTypes.bool,
     helpText: React.PropTypes.string,
+    visible: React.PropTypes.string,
     persistInSession: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
     mask: React.PropTypes.string
@@ -48,12 +53,11 @@ module.exports = React.createClass({
   },
 
   /**
-   * Init Field state, including if the field is viewable based on a dependency
+   * Init Field state
    * @returns {object}
    */
   getInitialState: function() {
     return {
-      visible: this.props.initialState === 'visible',
       hasError: false,
       errorMessage: ''
     };

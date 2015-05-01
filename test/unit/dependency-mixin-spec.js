@@ -1,5 +1,6 @@
 var React = require('react');
 var Field = require('../../src/Field');
+var Fieldset = require('../../src/Fieldset');
 var Flux = require('fluxify');
 var constants = require('../../src/constants');
 var Dispatcher = Flux.Dispatcher;
@@ -45,6 +46,16 @@ describe('DependencyMixin', function(){
     Flux.doAction(constants.actions.FIELD_VALUE, {name: 'dep-mixin-test', value: ['boop', 'bar']})
       .then(function(){
         expect(field.state.visible).toEqual(true);
+        done();
+      });
+  });
+
+  it('can update a fieldset\'s visibility when a dependent field changes its value', function(done){
+    var fieldset = TestUtils.renderIntoDocument(<Fieldset {...config}/>);
+    expect(fieldset.state.visible).toEqual(false);
+    Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {name: 'dep-mixin-test', value: 'bar'})
+      .then(function(){
+        expect(fieldset.state.visible).toEqual(true);
         done();
       });
   });

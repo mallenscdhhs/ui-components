@@ -5,7 +5,10 @@ var React = require('react');
 var _ = require('lodash');
 var utils = require('./utils');
 
-
+/**
+ * DependencyMixin which manages visibility state based on component's dependent field value
+ * @module DependencyMixin
+ */
 module.exports = {
 
   propTypes: {
@@ -20,6 +23,13 @@ module.exports = {
    */
   hasDependency: function(){
     return !!this.props.dependencyName;
+  },
+
+  /**
+   * Init visible state, based on initialState
+   */
+  componentWillMount: function() {
+    this.setState({ 'visible': this.props.initialState !== 'hidden'});
   },
 
   /**
@@ -38,6 +48,7 @@ module.exports = {
           var value = _.isArray(data.value)? data.value : [data.value];
           var visibility = (utils.containsOneOf(depValues, value))? !visible : visible;
           this.setState({'visible': visibility});
+          Flux.doAction(constants.actions.COMPONENT_VISIBILITY,this.props,visibility);
         }
       }.bind(this));
 
