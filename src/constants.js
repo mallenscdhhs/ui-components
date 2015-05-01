@@ -1,4 +1,7 @@
 module.exports = {
+  "keyCodes": {
+    "BACKSPACE": 8
+  },
   "actions" : {
     "ALERT_MESSAGES_CLEAR": "clearAlertMessages",
     "FIELD_VALUE_CHANGE": "fieldValueChange",
