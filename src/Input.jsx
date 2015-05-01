@@ -40,7 +40,6 @@ module.exports = React.createClass({
 
   getManualInputProps: function() {
     return {
-      type: 'text',
       onPaste: this.handleComputedInput,
       onCopy: this.handleComputedInput,
       onCut: this.handleComputedInput,
