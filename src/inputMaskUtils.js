@@ -34,14 +34,13 @@ module.exports = {
         separator = char;
       }
     });
-    var maskConfig = {
+    return {
       allowedStringType: customConfig.maskAllowedStringType ? customConfig.maskAllowedStringType : '0-9',
       symbol: customConfig.maskSymbol ? customConfig.maskSymbol : '*',
       separator: separator,
       maskIndex: indexes.mask,
       separatorIndex: indexes.separator
     };
-    return maskConfig;
   },
 
   getRegEx: function(expressionString, stringType) {
