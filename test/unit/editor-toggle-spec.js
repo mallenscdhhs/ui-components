@@ -22,7 +22,9 @@ describe('EditorToggle', function(){
         label: 'test',
         componentType: 'field',
         initialState: 'visible',
-        disabled : false
+        disabled : false,
+        mask : '',
+        forceManualInput : false
       };
       this.field = React.createFactory(Components.elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
@@ -56,7 +58,7 @@ describe('EditorToggle', function(){
 
   describe('add-component button', function(){
     var fixture = require('../fixtures/page-with-layout.json');
-    
+
     beforeEach(function(){
       var page = Components.factory(fixture);
       this.component = TestUtils.renderIntoDocument(page);
@@ -70,7 +72,7 @@ describe('EditorToggle', function(){
 
     it('will publish a components props when "add" is clicked', function(done){
       var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'add-component');
-      
+
       Dispatcher.register( 'TOGGLE-TEST-2', function(action, data){
         var conf = fixture.components.fieldset1.config;
         if( action === constants.actions.COMPONENT_ADD ) {
@@ -79,7 +81,7 @@ describe('EditorToggle', function(){
           done();
         }
       });
-      
+
       TestUtils.Simulate.click(btn);
     });
 
@@ -95,7 +97,16 @@ describe('EditorToggle', function(){
   describe('remove component button', function(){
 
     beforeEach(function(){
-      this.fixture = {type: 'field', id:'test-field', componentType: 'field', name : 'testField', initialState: 'visible', disabled : false };
+      this.fixture = {
+        type: 'field',
+        id:'test-field',
+        componentType: 'field',
+        name : 'testField',
+        initialState: 'visible',
+        disabled : false,
+        mask : '',
+        forceManualInput : false
+      };
       this.field = React.createFactory(Components.elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
     });
