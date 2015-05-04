@@ -37,7 +37,13 @@ module.exports = React.createClass({
 
   render: function(){
     var props = _.pick(this.props, this.props.inputProps);
-    return <textarea value={this.state.value} onChange={this.onChange} {...props} />;
+    return (
+      <textarea
+        value={this.state.value}
+        onChange={this.onChange}
+        onBlur={this.onBlur}
+        {...props} />
+    );
   }
 
 });
