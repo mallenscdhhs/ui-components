@@ -1,4 +1,7 @@
 module.exports = {
+  "keyCodes": {
+    "BACKSPACE": 8
+  },
   "actions" : {
     "ALERT_MESSAGES_CLEAR": "clearAlertMessages",
     "FIELD_VALUE_CHANGE": "fieldValueChange",
@@ -26,6 +29,7 @@ module.exports = {
     "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage",
     "GET_FIELD_VALUE" : "getFieldValue",
     "FIELD_VALUE" : "fieldValue",
+    "FIELD_BLUR": "blurField",
     "MODAL_HIDE" : "hideModal"
   }
 };
