@@ -25,6 +25,7 @@ module.exports = React.createClass({
     ]).isRequired,
     disabled: React.PropTypes.bool,
     isFieldGroup: React.PropTypes.bool,
+    inline: React.PropTypes.bool,
     checked: React.PropTypes.bool,
     helpText: React.PropTypes.string,
     required: React.PropTypes.bool
@@ -33,6 +34,7 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return {
       componentType: 'field',
+      inline: true,
       inputProps: ['type', 'id', 'name', 'value', 'disabled', 'aria-describedby'],
       labelProps: ['label', 'id', 'required']
     };
@@ -66,10 +68,18 @@ module.exports = React.createClass({
   render: function(){
     var props = _.pick(this.props, this.props.inputProps);
     var labelProps = _.pick(this.props, this.props.labelProps);
+    var className = this.props.type;
+    if ( this.props.inline ) {
+      className += '-inline';
+    }
     return (
-      <div className={this.props.type}>
+      <div className={className}>
         <FieldLabel {...labelProps}>
-          <input {...props} checked={this.state.checked} onChange={this.handleChange}/>
+          <input
+            checked={this.state.checked}
+            onChange={this.handleChange}
+            onBlur={this.onBlur}
+            {...props} />
         </FieldLabel>
       </div>
     );

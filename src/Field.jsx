@@ -20,6 +20,10 @@ var AutoComplete = require('./AutoComplete');
 var ContentEditor = require('./ContentEditor');
 var FieldValueMixin = require('./FieldValueMixin');
 
+/**
+ * Field component
+ * @module Field
+ */
 module.exports = React.createClass({
 
   displayName: 'Field',
@@ -33,25 +37,29 @@ module.exports = React.createClass({
     label: React.PropTypes.string.isRequired,
     required: React.PropTypes.bool,
     helpText: React.PropTypes.string,
+    visible: React.PropTypes.string,
     persistInSession: React.PropTypes.bool,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    mask: React.PropTypes.string,
+    forceManualInput: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
     return {
       componentType: 'field',
       initialState: 'visible',
-      disabled: false
+      disabled: false,
+      mask: '',
+      forceManualInput: false
     };
   },
 
   /**
-   * Init Field state, including if the field is viewable based on a dependency
+   * Init Field state
    * @returns {object}
    */
   getInitialState: function() {
     return {
-      visible: this.props.initialState === 'visible',
       hasError: false,
       errorMessage: ''
     };
@@ -74,18 +82,6 @@ module.exports = React.createClass({
   isFieldGroup: function () {
     var hasOptions = !!(this.props.options || this.props.optionsResource);
     return this.isRadioOrCheckbox() && hasOptions;
-  },
-
-  /**
-   * Takes the passed-in props object and adds a few computed properties.
-   * @param {object} props
-   * @returns {object}
-   */
-  getInputControlProps: function(props){
-    return _.extend(props, {
-      className: 'form-control',
-      'aria-aria-describedby': 'field'+this.props.id+'HelpText'
-    });
   },
 
   /**
@@ -136,18 +132,18 @@ module.exports = React.createClass({
     var wrapperTag = isFieldGroup? 'fieldset' : 'div';
     var message = this.state.hasError? this.state.errorMessage : this.props.helpText;
     var InputControl = this.getInputControl(this.props.type, isFieldGroup);
-    var labelProps = _.pick(this.props, ['id', 'label', 'required']);
+    var labelProps = _.pick(this.props, ['id', 'label', 'required','description','descriptionPlacement','descriptionTrigger']);
     var children = [];
 
     if ( isFieldGroup || !isRadioOrCheckbox ) {
       labelProps.isFieldGroup = isFieldGroup;
-      children.push(<FieldLabel {...labelProps}/>);
+      children.push(<FieldLabel {...labelProps} key="field-label"/>);
     }
 
     children = children.concat([
-      <EditorToggle {...this.props}/>,
-      <InputControl {...this.getInputControlProps(this.props)} />,
-      <HelpBlock>{message}</HelpBlock>
+      <EditorToggle {...this.props} key="editor-toggle"/>,
+      <InputControl {...this.props} key="input-control"/>,
+      <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);

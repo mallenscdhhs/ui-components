@@ -1,4 +1,7 @@
 module.exports = {
+  "keyCodes": {
+    "BACKSPACE": 8
+  },
   "actions" : {
     "ALERT_MESSAGES_CLEAR": "clearAlertMessages",
     "FIELD_VALUE_CHANGE": "fieldValueChange",
@@ -7,6 +10,7 @@ module.exports = {
     "COMPONENT_REMOVE": "componentRemove",
     "COMPONENT_EDIT": "componentEdit",
     "COMPONENT_ADD": "componentAdd",
+    "COMPONENT_VISIBILITY" : "componentVisibility",
     "SEND_OPTIONS": "sendOptions",
     "SEND_RESOURCE_OPTIONS": "sendResourceOptions",
     "SEND_CUSTOM_OPTIONS": "sendCustomOptions",
@@ -25,6 +29,7 @@ module.exports = {
     "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage",
     "GET_FIELD_VALUE" : "getFieldValue",
     "FIELD_VALUE" : "fieldValue",
+    "FIELD_BLUR": "blurField",
     "MODAL_HIDE" : "hideModal"
   }
 };

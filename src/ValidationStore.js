@@ -16,10 +16,25 @@ module.exports = Flux.createStore({
 
     /**
      * Initiate Validation Process using field data
+     * Do not kick off validation if field is disabled or not visible
      * @param updater {function} Method to update store
      * @param data {object} Field props
      */
-    "fieldValueChange" : function (updater, data) {
+    fieldValueChange : _.debounce(function (updater, data) {
+      var visible = data.visible !== 'hidden';
+      var enabled = !data.disabled;
+      if(visible && enabled) {
+        Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
+      }
+    }, 500),
+
+    /**
+     * Initiate Validation Process using when user blurs a field in order to
+     * prevent a user from "skipping" a required field.
+     * @param updater {function} Method to update store
+     * @param data {object} Field props
+     */
+    blurField: function(updater, data){
       Flux.doAction(constants.actions.GET_SESSION_VALUES, data);
     },
 
@@ -32,7 +47,7 @@ module.exports = Flux.createStore({
      * @param session
      * @param data
      */
-    "sessionValuesLoaded" : function(updater,session,data){
+    sessionValuesLoaded : function(updater,session,data){
       // Verify API has validation endpoint AND has rules associated with the field
       if ( ! (configuration.API && configuration.API.validation) ) throw new Error('API endpoint for validation not configured.');
       if ( data.rules ) {

@@ -23,40 +23,6 @@ module.exports = React.createClass({
   },
 
   /**
-  * Returns an object for action configuration
-  * @return {Object}
-  */
-  getConfig: function() {
-    var base = {
-      key: this.props.id+'-action',
-      className: this.getClasses(),
-      href: this.props.url
-    };
-
-    return (this.props.type === 'link') ? _.merge(this.props, base) :  _.merge(this.props, _.omit(base, 'href'));
-  },
-
-  /**
-  * Returns a string of classes
-  * @return {String}
-  */
-  getClasses: function(){
-    var classes = ['btn'];
-    // Add default link-type for action links
-    if(this.props.type==='link'){
-      classes.push('btn-link');
-    }
-    // Add all passed in classes
-    if(this.props.classNames){
-      classes = classes.concat(this.props.classNames);
-    }
-    if(this.props.disabled === true){
-      classes.push('disabled');
-    }
-    return classes.join(' ');
-  },
-
-  /**
   * Returns a span element with icon classes
   * @return {Object}
   */
@@ -79,41 +45,18 @@ module.exports = React.createClass({
   },
 
   /**
-  * Return an <a> (link) template
-  * @return {JSX Template}
-  */
-  getLink: function(){
-    var props = this.getConfig();
-
-    return (
-      <a {...props} onClick={this.handleClick}>
-        {this.getIcon()}
-        {this.props.name}
-      </a>
-    );
-  },
-
-  /**
-  * Return a <button> template
-  * @return {JSX Template}
-  */
-  getButton: function(){
-    var props = this.getConfig();
-
-    return (
-      <button {...props} onClick={this.handleClick}>
-        {this.getIcon()}
-        {this.props.name}
-      </button>
-    );
-  },
-
-  /**
    * Render a Action component.
    * @returns {JSX}
    */
   render: function(){
-    return (this.props.type === 'button')? this.getButton() : this.getLink();
+    var ActionType = (this.props.type === 'link') ? 'a' : 'button';
+
+    return (
+      <ActionType {...this.props} onClick={this.handleClick} href={this.props.url}>
+        {this.getIcon()}
+        {this.props.name}
+      </ActionType>
+    );
   }
 
 });
