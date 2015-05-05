@@ -24,7 +24,7 @@ module.exports = React.createClass({
   getHelpText: function(){
     var helpText;
     if(this.props.helpText){
-      helpText = <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>;
+      helpText = <HelpBlock {...this.props} key="help-block">{this.props.helpText}</HelpBlock>;
     }
     return helpText;
   },
