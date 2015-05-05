@@ -14,12 +14,12 @@ module.exports = {
    * @fires FIELD_VALUE_CHANGE
    * @param {object} event - { target: ..., actionName: String, stateChange: Object }
    * @param {boolean} fieldValueChangeAction - optionally pass in to use custom onChange
-   * action rather than the default FIELD_VALUE_CHANGE action.
+   * action name rather than the default FIELD_VALUE_CHANGE action.
    */
   onChange: function(event){
     var actionName = '';
     if(this.props.fieldValueChangeAction) {
-      actionName = constants.actions.FIELD_VALUE_CHANGE_ACTION;
+      actionName = this.props.fieldValueChangeAction;
     } else {
       actionName = event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     }

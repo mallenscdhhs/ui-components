@@ -12,17 +12,14 @@ module.exports = React.createClass({
   displayName: 'EntryList',
 
   propTypes: {
-    type: React.PropTypes.string.isRequired,
-    config: React.PropTypes.shape({
-      model: React.PropTypes.string,
-      form: React.PropTypes.shape({
-        fields: React.PropTypes.array.isRequired
-      }),
-      formButtonText: React.PropTypes.string,
-      emptyText: React.PropTypes.string,
-      addButtonText: React.PropTypes.string,
-      columns: React.PropTypes.array.isRequired
-    })
+    model: React.PropTypes.string,
+    form: React.PropTypes.shape({
+      fields: React.PropTypes.array.isRequired
+    }),
+    formButtonText: React.PropTypes.string,
+    emptyText: React.PropTypes.string,
+    addButtonText: React.PropTypes.string,
+    columns: React.PropTypes.arrayOf(React.PropTypes.object)
   },
 
   getDefaultProps: function(){
@@ -76,8 +73,8 @@ module.exports = React.createClass({
 
   renderForm: function(showForm, model) {
     // when the user fills out the add entry form
-    Dispatcher.register('entrylist-field-value-change-action', function(action, data) {
-      if ( action === constants.actions.FIELD_VALUE_CHANGE_ACTION ) {
+    Dispatcher.register('entrylist-field-value-change', function(action, data) {
+      if ( action === 'entrylist-field-value-change-action' ) {
         var value = data.dateString ? data.dateString : data.value;
         this.setState({ 'entry': _.merge(this.state.entry, _.zipObject([data.name], [value])) });
       }
@@ -86,7 +83,7 @@ module.exports = React.createClass({
     // when the user clicks the #add-entry-btn
     Dispatcher.register('add-new-entrylist-entry', function(action){
       if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD ) {
-        Dispatcher.unregister('entrylist-field-value-change-action');
+        Dispatcher.unregister('entrylist-field-value-change');
         Dispatcher.unregister('add-new-entrylist-entry');
         this.setState({
           'entries': this.state.entries.concat(this.state.entry),
@@ -109,7 +106,7 @@ module.exports = React.createClass({
                     <Field
                       {...field}
                       className="form-control"
-                      fieldValueChangeAction={true} />
+                      fieldValueChangeAction="entrylist-field-value-change-action" />
                   </div>
                 );
               })}
@@ -161,7 +158,7 @@ module.exports = React.createClass({
                     var data = entry[col.dataKey];
                     return <td key={col.dataKey}>{data}</td>;
                   })}
-                  <td key={'remove-entry-'+entryIdx} className="entrylist-table-remove">
+                  <td key={'remove-entry-'+entryIdx} className="entrylist-remove">
                     <Action
                       {...rowActionConfig}
                       id={'remove-entry-'+entryIdx}
