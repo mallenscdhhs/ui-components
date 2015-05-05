@@ -24,14 +24,11 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      type: 'entrylist',
-      config: {
-        model: '',
-        form: {
-          fields: []
-        },
-        columns: []
-      }
+      model: '',
+      form: {
+        fields: []
+      },
+      columns: []
     };
   },
 
@@ -67,7 +64,7 @@ module.exports = React.createClass({
 
   showEmptyText: function() {
     if (!this.state.entries.length) {
-      return <tr><td colSpan="5">{this.props.config.emptyText}</td></tr>;
+      return <tr><td colSpan="5">{this.props.emptyText}</td></tr>;
     }
   },
 
@@ -91,7 +88,13 @@ module.exports = React.createClass({
           'showForm': false
         });
         // fire FIELD_VALUE_CHANGE for the model
-        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, this.state.entries);
+        var entriesModel = {
+          id: this.props.model,
+          name: 'entrylistModel',
+          type: 'entrylist',
+          value: this.state.entries
+        };
+        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel);
       }
     }.bind(this));
 
@@ -100,7 +103,7 @@ module.exports = React.createClass({
         <td colSpan="5">
           <form id="entrylist-form" name="entrylist-form" className="mamd">
             <div className="row">
-              {this.props.config.form.fields.map(function(field) {
+              {this.props.form.fields.map(function(field) {
                 return (
                   <div key={field.id} className="col-md-6">
                     <Field
@@ -117,7 +120,7 @@ module.exports = React.createClass({
                   id="add-button"
                   type="button"
                   className="btn btn-default"
-                  name={this.props.config.form.formButtonText ? this.props.form.formButtonText : 'Add Entry'}
+                  name={this.props.form.formButtonText ? this.props.form.formButtonText : 'Add Entry'}
                   event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
               </div>
             </div>
@@ -132,7 +135,7 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function() {
-    var columns = this.props.config.columns;
+    var columns = this.props.columns;
     var rowActionConfig = {
       name: 'remove',
       type: 'link',
