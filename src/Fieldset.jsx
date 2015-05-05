@@ -2,6 +2,7 @@
 var React = require('react');
 var EditorToggle = require('./EditorToggle');
 var DependencyMixin = require('./DependencyMixin');
+var Description = require('./Description');
 var setClassNames = require('classnames');
 
 /**
@@ -20,10 +21,26 @@ module.exports = React.createClass({
     };
   },
 
+  getHelpText: function(){
+    var helpText;
+    if(this.props.helpText){
+      helpText = <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>;
+    }
+    return helpText;
+  },
+
+  getDescription: function(){
+    var description;
+    if(this.props.description){
+      description = <Description key="description-text" {...this.props} />;
+    }
+    return description;
+  },
+
   getLabel: function(){
     var fieldSetLabel = null;
     if(this.props.name){
-      fieldSetLabel = <legend className="field-label" key={this.props.name+"legend"}>{this.props.name}</legend>;
+      fieldSetLabel = <legend className="field-label" key={this.props.name+"Legend"}>{this.props.legend} {this.getDescription()}</legend>;
     }
     return fieldSetLabel;
   },
@@ -44,6 +61,7 @@ module.exports = React.createClass({
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className={this.getClassNames()}>
         <EditorToggle {...this.props}/>
         {this.getLabel()}
+        {this.getHelpText()}
         {this.props.children}
       </fieldset>
     );
