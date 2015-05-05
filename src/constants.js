@@ -5,6 +5,7 @@ module.exports = {
   "actions" : {
     "ALERT_MESSAGES_CLEAR": "clearAlertMessages",
     "FIELD_VALUE_CHANGE": "fieldValueChange",
+    "FIELD_VALUE_CHANGE_ACTION": "fieldValueChangeAction",
     "FIELD_GROUP_VALUE_CHANGE": "fieldGroupItemChange",
     "FIELD_VALIDATION_ERROR": "fieldValidationError",
     "COMPONENT_REMOVE": "componentRemove",
@@ -30,6 +31,9 @@ module.exports = {
     "GET_FIELD_VALUE" : "getFieldValue",
     "FIELD_VALUE" : "fieldValue",
     "FIELD_BLUR": "blurField",
-    "MODAL_HIDE" : "hideModal"
+    "MODAL_HIDE" : "hideModal",
+    "ENTRYLIST_FORM_SHOW": "showEntryListForm",
+    "ENTRYLIST_ENTRY_REMOVE": "removeEntryListEntry",
+    "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry"
   }
 };
