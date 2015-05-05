@@ -22,7 +22,9 @@ describe('EditorToggle', function(){
         label: 'test',
         componentType: 'field',
         initialState: 'visible',
-        disabled : false
+        disabled : false,
+        mask: '',
+        forceManualInput: false
       };
       this.field = React.createFactory(Components.elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));

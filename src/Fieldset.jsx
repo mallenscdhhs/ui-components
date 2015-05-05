@@ -41,7 +41,7 @@ module.exports = React.createClass({
   getLabel: function(){
     var fieldSetLabel = null;
     if(this.props.name){
-      fieldSetLabel = <legend className="field-label" key={this.props.name+"Legend"}>{this.props.legend} {this.getDescription()}</legend>;
+      fieldSetLabel = <legend className="field-label" key={this.props.name+"Legend"}>{this.props.legend}{this.getDescription()}</legend>;
     }
     return fieldSetLabel;
   },
