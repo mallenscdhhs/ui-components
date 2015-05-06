@@ -3,7 +3,6 @@ var React = require('react');
 var EditorToggle = require('./EditorToggle');
 var DependencyMixin = require('./DependencyMixin');
 var Description = require('./Description');
-var HelpBlock = require('./HelpBlock');
 var setClassNames = require('classnames');
 
 /**
