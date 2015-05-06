@@ -10,7 +10,7 @@ describe('Fieldset component', function() {
     var Fieldset = Components.factory(fixture);
     var fieldset = TestUtils.renderIntoDocument(Fieldset);
     var legend = TestUtils.findRenderedDOMComponentWithTag(fieldset, 'legend');
-    expect(legend.getDOMNode().textContent).toEqual(fixture.config.name);
+    expect(legend.getDOMNode().textContent).toEqual(fixture.config.legend);
   });
 
   it('Renders fieldset container', function(){
