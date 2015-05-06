@@ -17,12 +17,7 @@ module.exports = {
    * action name rather than the default FIELD_VALUE_CHANGE action.
    */
   onChange: function(event){
-    var actionName = '';
-    if(this.props.fieldValueChangeAction) {
-      actionName = this.props.fieldValueChangeAction;
-    } else {
-      actionName = event.actionName || constants.actions.FIELD_VALUE_CHANGE;
-    }
+    var actionName = this.props.fieldValueChangeAction || event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     var state = event.stateChange || {value: event.target.value};
     var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession', 'disabled']);
     payload.visible = this.state.visible;

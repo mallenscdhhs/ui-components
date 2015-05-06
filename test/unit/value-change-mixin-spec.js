@@ -17,9 +17,6 @@ describe('ValueChangeMixin', function() {
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig}/>);
     var wrapperDiv = dom.getDOMNode();
     var input = wrapperDiv.childNodes[2];
-    setTimeout(function() {
-      TestUtils.Simulate.change(input, {target: {value: 'value test'}});
-    }, 100);
 
     Dispatcher.register( 'test-field-value-change', function(action, data) {
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
@@ -32,6 +29,8 @@ describe('ValueChangeMixin', function() {
         done();
       }
     });
+    TestUtils.Simulate.change(input, {target: {value: 'value test'}});
+
   });
 
   it('optionally can send data payload on user change via custom action instead of FIELD_VALUE_CHANGE', function(done) {
@@ -44,9 +43,6 @@ describe('ValueChangeMixin', function() {
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig} fieldValueChangeAction="custom-field-value-change-action"/>);
     var wrapperDiv = dom.getDOMNode();
     var input = wrapperDiv.childNodes[2];
-    setTimeout(function() {
-      TestUtils.Simulate.change(input, {target: {value: 'custom action value test'}});
-    }, 100);
 
     Dispatcher.register( 'custom-field-value-change-action-event', function(action, data) {
       if( action === 'custom-field-value-change-action' &&
@@ -63,6 +59,7 @@ describe('ValueChangeMixin', function() {
         done();
       }, 300);
     });
+    TestUtils.Simulate.change(input, {target: {value: 'custom action value test'}});
   });
 
 });
