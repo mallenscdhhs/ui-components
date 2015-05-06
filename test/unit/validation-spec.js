@@ -9,11 +9,18 @@ var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var successPayload = require('../fixtures/validation-success-payload.json');
 
+
 describe('Validation', function() {
 
   beforeEach(function(){
     Components.configure({"API":{"validation":"/api/rules"}});
+    jasmine.Ajax.install();
   });
+
+  afterEach(function() {
+    jasmine.Ajax.uninstall();
+  });
+
 
   it('call validation rules and get SUCCESS', function (done) {
 
@@ -139,41 +146,22 @@ describe('Validation', function() {
       'visible' : 'hidden'
     };
 
-    var calledService = false;
+    jasmine.Ajax
+      .stubRequest('/api/rules')
+      .andReturn(successPayload);
 
-    spyOn($, 'ajax').and.callFake(function(){
-      var ajaxMock = $.Deferred();
-      ajaxMock.resolve(successPayload);
-      return ajaxMock.promise();
-    });
+    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureDisabled)
+      .then(function(){
+        var request = jasmine.Ajax.requests.mostRecent();
+        expect(request).not.toBeDefined();
 
-    Dispatcher.register('field-validation-success-test',function(action,data) {
-      if( action === constants.actions.FIELD_VALIDATION_ERROR &&
-          data.id === fixture.id){
-        calledService = true;
-        Dispatcher.unregister('field-validation-success-test');
-      }
-    });
-
-    Dispatcher.register('session-store-success-test',function(action,data){
-      if(action === constants.actions.GET_SESSION_VALUES && data.id === fixture.id){
-        var sessions = [
-          {'sessionField1':'value1'},
-          {'sessionField2':'value2'}
-        ];
-        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions, data );
-        Dispatcher.unregister('session-store-success-test');
-      }
-    });
-
-    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureDisabled);
-    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureVisibile);
-
-    setTimeout(function(){
-      expect(calledService).toEqual(false);
-      done();
-    },100);
-
+        Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureVisibile)
+          .then(function(){
+            var request = jasmine.Ajax.requests.mostRecent();
+            expect(request).not.toBeDefined();
+            done();
+          });
+      });
   });
 
 });
