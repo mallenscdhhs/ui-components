@@ -1,6 +1,8 @@
 # UI Components
 [![Travis Build Status][build-badge]][build]
-[![NPM version][npm-badge]][npm]
+
+[build-badge]: https://travis-ci.org/scdhhs/ui-components.svg
+[build]: https://travis-ci.org/scdhhs/ui-components
 
 UI component library for producing HTML output from JSON configuration. This library is built with [Facebook's React](http://facebook.github.io/react/) and [Twitter Bootstrap](http://getbootstrap.com).
 
