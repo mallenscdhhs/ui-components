@@ -54,7 +54,7 @@ module.exports = React.createClass({
      * @returns {JSON}
      */
     configure: function(schema, model, components){
-      var props = schema.get('config');
+      var props = schema.get('config').set('className', 'form-control');
       if ( _.has(model, props.get('id', '')) ) {
         // checkboxes and radios need the "checked" property, not value
         if ( /checkbox|radio/.test(props.get('type')) ) {
