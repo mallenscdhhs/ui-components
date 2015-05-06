@@ -14,7 +14,7 @@ describe('Checkable', function(){
     var wrapperDiv = dom.getDOMNode();
     var label = wrapperDiv.childNodes[0];
     var input = label.childNodes[0];
-    expect(wrapperDiv.className).toEqual('radio');
+    expect(wrapperDiv.className).toEqual('radio-inline');
     expect(label.getAttribute('for')).toEqual(fixture.config.id);
     expect(input.type).toEqual(fixture.config.type);
     expect(input.value).toEqual(fixture.config.value);

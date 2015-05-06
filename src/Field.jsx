@@ -3,6 +3,7 @@
 var React = require('react');
 var setClassNames = require('classnames');
 var _ = require('lodash');
+var Immutable = require('immutable');
 var Flux = require('fluxify');
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
@@ -42,6 +43,31 @@ module.exports = React.createClass({
     disabled: React.PropTypes.bool,
     mask: React.PropTypes.string,
     forceManualInput: React.PropTypes.bool
+  },
+
+  statics: {
+    /**
+     * Provides configuration processing for Field components.
+     * @param {Immutable.Map} schema - this components schema
+     * @param {Immutable.Map} [model] - the data model(if any)
+     * @param {Immutable.Map} components - the component list
+     * @returns {JSON}
+     */
+    configure: function(schema, model, components){
+      var props = schema.get('config');
+      if ( _.has(model, props.get('id', '')) ) {
+        // checkboxes and radios need the "checked" property, not value
+        if ( /checkbox|radio/.test(props.get('type')) ) {
+          // if model value is "true", then set "checked" to true
+          if ( model[props.get('id', '')] === props.get('value') ) {
+            props = props.set('checked', true);
+          }
+        } else {
+          props = props.set('value', model[props.get('id')]);
+        }
+      }
+      return props.toJSON();
+    }
   },
 
   getDefaultProps: function(){

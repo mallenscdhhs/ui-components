@@ -1,6 +1,6 @@
 'use-strict';
 var React = require('react');
-var update = require('react/lib/update');
+var Immutable = require('immutable');
 var elements = require('./index');
 var _ = require('lodash');
 var constants = require('./constants');
@@ -17,64 +17,20 @@ var OptionsStore = require('./OptionsStore');
 function buildComponentTree(schema, head){
   var tree = [];
   var list = schema.components || {};
-  var children = null;
-  var element, factory;
-  var props;
-  var headId;
+  var iList = Immutable.Map(list);
+  var element, factory, props, children, iHead, iModel;
   while(head){
-    headId = head.config.id || head._id;
     children = null;
-    props = update(head, { config: {
-      key: {$set: headId+ '-' +head.type},
-      componentType: {$set: head.type}
-    }});
-    // if this is a form field, add the form-control class
-    if( props.type === 'field' ) {
-      props = update(head, { config: {
-        className: {$set: 'form-control'}
-      }});
-    }
-    // if this is a workflow, then add the items config
-    if ( head.type === 'workflow' ) {
-      props = update(props, {config: {
-        firstPage: {$set: head.child },
-        items: {$set: head.components}
-      }});
-    }
-    // if there is a layout config then we need to insert
-    // the layout into the binary tree to be rendered
-    if ( props.config.layout ) {
-      props = update(props, { config: {
-        layout: {
-          child: {$set: head.child},
-          id: {$set: headId + '-layout'}
-        }
-      }});
-      children = buildComponentTree(schema, props.config.layout);
-    } else if ( props.child ) {
-      children = buildComponentTree(schema, list[props.child]);
-    }
-
-    if ( props.type === 'field' && _.has(schema.model, props.config.id) ) {
-      // checkboxes and radios need the "checked" property, not value
-      if ( /checkbox|radio/.test(props.config.type) ) {
-        // if model value is "true", then set "checked" to true
-        if ( schema.model[props.config.id] === props.config.value ) {
-          props = update(props, {config: {
-            checked: { $set: true }
-          }});
-        }
-      } else {
-        props = update(props, { config: {
-          value: {$set: schema.model[props.config.id]}
-        }});
-      }
-    }
-
-    element = elements[props.type];
+    element = elements[head.type];
     factory = React.createFactory(element);
-    tree.push(factory(props.config, children));
-    head = list[props.next];
+    iHead = Immutable.fromJS(head);
+    iModel = Immutable.Map(schema.model);
+    props = element.configure? element.configure(iHead, iModel, iList) : head.config;
+    if ( head.child ) {
+      children = buildComponentTree(schema, list[head.child]);
+    }
+    tree.push(factory(props, children));
+    head = list[head.next];
   }
   return tree;
 }
