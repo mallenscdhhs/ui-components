@@ -7,6 +7,7 @@ var _ = require('lodash');
 var Immutable = require('immutable');
 var Action = require('./Action');
 var Field = require('./Field');
+var EntryListItem = require('./EntryListItem');
 
 module.exports = React.createClass({
   displayName: 'EntryList',
@@ -55,20 +56,7 @@ module.exports = React.createClass({
         this.setState({ 'entries': entries.remove(data.removalId).toJSON() });
       }
     }.bind(this));
-  },
 
-  componentWillUnmount: function(){
-    Dispatcher.unregister('show-entrylist-form');
-    Dispatcher.unregister('remove-entrylist-entry');
-  },
-
-  showEmptyText: function() {
-    if (!this.state.entries.length) {
-      return <tr><td colSpan="5">{this.props.emptyText}</td></tr>;
-    }
-  },
-
-  renderForm: function(showForm, model) {
     // when the user fills out the add entry form
     Dispatcher.register('entrylist-field-value-change', function(action, data) {
       if ( action === 'entrylist-field-value-change-action' ) {
@@ -80,8 +68,6 @@ module.exports = React.createClass({
     // when the user clicks the #add-entry-btn
     Dispatcher.register('add-new-entrylist-entry', function(action){
       if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD ) {
-        Dispatcher.unregister('entrylist-field-value-change');
-        Dispatcher.unregister('add-new-entrylist-entry');
         this.setState({
           'entries': this.state.entries.concat(this.state.entry),
           'entry': {},
@@ -97,7 +83,22 @@ module.exports = React.createClass({
         Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel);
       }
     }.bind(this));
+  },
 
+  componentWillUnmount: function(){
+    Dispatcher.unregister('show-entrylist-form');
+    Dispatcher.unregister('remove-entrylist-entry');
+    Dispatcher.unregister('entrylist-field-value-change');
+    Dispatcher.unregister('add-new-entrylist-entry');
+  },
+
+  showEmptyText: function() {
+    if (!this.state.entries.length) {
+      return <tr><td colSpan="5">{this.props.emptyText}</td></tr>;
+    }
+  },
+
+  renderForm: function(showForm, model) {
     return (
       <tr className={showForm ? '' : 'hide'}>
         <td colSpan="5">
@@ -156,18 +157,11 @@ module.exports = React.createClass({
           <tbody>
             {this.state.entries.map(function(entry, entryIdx) {
               return (
-                <tr key={entry.dataKey}>
-                  {columns.map(function(col, colIdx) {
-                    var data = entry[col.dataKey];
-                    return <td key={col.dataKey}>{data}</td>;
-                  })}
-                  <td key={'remove-entry-'+entryIdx} className="entrylist-remove">
-                    <Action
-                      {...rowActionConfig}
-                      id={'remove-entry-'+entryIdx}
-                      removalId={entryIdx} />
-                  </td>
-                </tr>
+                <EntryListItem
+                  entry={entry}
+                  entryIdx={entryIdx}
+                  columns={columns}
+                  actionConfig={rowActionConfig} />
               );
             })}
             {this.showEmptyText()}

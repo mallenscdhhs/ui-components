@@ -8,7 +8,7 @@ module.exports = {
 	contentEditor: require('./ContentEditor'),
 	date: require('./Date'),
 	editorToggle: require('./EditorToggle'),
-	entryList: require('./EntryList'),
+	entrylist: require('./EntryList'),
 	field: require('./Field'),
 	fieldGroup: require('./FieldGroup'),
 	fieldLabel: require('./FieldLabel'),
