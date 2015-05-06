@@ -16,17 +16,17 @@
   },
   "browserify": {
     "transform": [
-      "reactify"
+      "babelify"
     ]
   },
   "dependencies": {
+    "babelify": "^6.0.2",
     "classnames": "^1.2.0",
     "es6-promise": "^2.0.1",
     "fluxify": "0.2.2",
     "immutable": "^3.6.4",
     "react-bootstrap": "^0.21.0",
-    "react-widgets": "^2.2.2",
-    "reactify": "^0.16.0"
+    "react-widgets": "^2.2.2"
   },
   "devDependencies": {
     "bootstrap": "^3.3.1",
@@ -37,7 +37,7 @@
     "express": "^4.10.1",
     "gulp": "^3.8.9",
     "gulp-copy": "0.0.2",
-    "gulp-less": "^2.0.1",
+    "gulp-less": "^3.0.0",
     "gulp-react": "^2.0.0",
     "gulp-util": "^3.0.1",
     "jasmine": "^2.0.1",
@@ -49,8 +49,8 @@
     "karma-junit-reporter": "^0.2.2",
     "karma-mocha-reporter": "^0.3.1",
     "karma-phantomjs-launcher": "^0.1.4",
-    "pen": "sofish/pen",
     "lodash": "^3.0.0",
+    "pen": "sofish/pen",
     "phantomjs": "1.9.7-14",
     "react": "^0.13.0",
     "vinyl-source-stream": "^1.0.0"

@@ -1,7 +1,7 @@
 var fs = require('fs');
 var gulp = require('gulp');
 var del = require('del');
-var reactify = require('reactify');
+var babelify = require('babelify');
 var react = require('gulp-react');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
@@ -40,36 +40,17 @@ gulp.task('copy:images', function(){
   return gulp.src(['./node_modules/react-widgets/dist/css/*.gif']).pipe(gulp.dest('./dist/img'));
 });
 
-gulp.task('transpile', ['clean'], function(){
-  return gulp.src(['./src/**/*.jsx', './src/*.js'])
-    .pipe(react())
-    .pipe(gulp.dest('./dist/build'));
-});
 
-
-gulp.task('build:Components', ['transpile'], function(){
-  var lodashPath = require.resolve('lodash');
-  var reactPath = require.resolve('react');
-  return browserify(['./dist/build/main.js'],{'standalone': 'Components'})
-    .exclude(lodashPath)
-    .exclude(reactPath)
-    .transform(reactify)
+gulp.task('build:components', function(){
+  var externals = ['lodash', 'react', 'fluxify', 'immutable'];
+  return browserify(['./src/main.js'], {extensions: ['.jsx']})
+    .external(externals)
+    .transform(babelify)
     .bundle()
-    .pipe(source('Components.js'))
+    .pipe(source('scdhhs-ui-components.js'))
     .pipe(gulp.dest('./dist'));
 });
 
-
-gulp.task('clean:build', ['build:Components'], function(done){
-  return del(['dist/build'], done);
-});
-
-
-gulp.task('release', ['build'], function(){
-  var src = './dist/**/*';
-  var dest = './dist/release/'+pkg.version;
-  return gulp.src(src).pipe(gulp.dest(dest));
-});
 
 
 gulp.task('specs', ['hint', 'build'], function(){
@@ -94,5 +75,9 @@ gulp.task('watch:less', function(){
 });
 
 
-gulp.task('build', ['clean:build']);
 gulp.task('assets', ['less:compile', 'copy:fonts','copy:images']);
+
+gulp.task('build', ['clean'], function(){
+  gulp.start('build:components');
+  gulp.start('assets');
+});
