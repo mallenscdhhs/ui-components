@@ -29,6 +29,7 @@ module.exports = {
     "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage",
     "GET_FIELD_VALUE" : "getFieldValue",
     "FIELD_VALUE" : "fieldValue",
+    "FIELD_BLUR": "blurField",
     "MODAL_HIDE" : "hideModal"
   }
 };

@@ -90,7 +90,11 @@ module.exports = React.createClass({
   render: function(){
     var props = _.pick(this.props, this.props.inputProps);
     return (
-      <select value={this.state.value} onChange={this.handleSelection} {...props}>
+      <select
+        value={this.state.value}
+        onChange={this.handleSelection}
+        onBlur={this.onBlur}
+        {...props}>
         {this.getEmptyOption()}
         {_.map(this.state.options, function(opt){
           return <option value={opt.value} key={"option-"+opt.value}>{opt.label}</option>;

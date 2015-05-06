@@ -97,7 +97,16 @@ describe('EditorToggle', function(){
   describe('remove component button', function(){
 
     beforeEach(function(){
-      this.fixture = {type: 'field', id:'test-field', componentType: 'field', name : 'testField', initialState: 'visible', disabled : false , mask: '', forceManualInput: false};
+      this.fixture = {
+        type: 'field',
+        id:'test-field',
+        componentType: 'field',
+        name : 'testField',
+        initialState: 'visible',
+        disabled : false,
+        mask : '',
+        forceManualInput : false
+      };
       this.field = React.createFactory(Components.elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
     });

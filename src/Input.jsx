@@ -101,7 +101,8 @@ module.exports = React.createClass({
         {...maskProps}
         {...manualInputProps}
         value={this.state.value}
-        onChange={this.handleInputChange} />
+        onChange={this.handleInputChange}
+        onBlur={this.onBlur}/>
     );
   }
 
