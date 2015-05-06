@@ -13,9 +13,11 @@ module.exports = {
    * of this method by passing in extra configuration data on the event object.
    * @fires FIELD_VALUE_CHANGE
    * @param {object} event - { target: ..., actionName: String, stateChange: Object }
+   * @param {boolean} fieldValueChangeAction - optionally pass in to use custom onChange
+   * action name rather than the default FIELD_VALUE_CHANGE action.
    */
   onChange: function(event){
-    var actionName = event.actionName || constants.actions.FIELD_VALUE_CHANGE;
+    var actionName = this.props.fieldValueChangeAction || event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     var state = event.stateChange || {value: event.target.value};
     var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession', 'disabled']);
     payload.visible = this.state.visible;
