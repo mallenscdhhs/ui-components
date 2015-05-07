@@ -35,14 +35,14 @@ module.exports = React.createClass({
     return {
       componentType: 'field',
       inline: true,
-      inputProps: ['type', 'id', 'name', 'value', 'disabled', 'aria-describedby'],
+      inputProps: ['type', 'id', 'name', 'value', 'disabled', 'checked', 'aria-describedby'],
       labelProps: ['label', 'id', 'required']
     };
   },
 
   getInitialState: function(){
     return {
-      'checked' : this.props.checked
+      'checked' : !!this.props.checked
     };
   },
 
@@ -56,7 +56,6 @@ module.exports = React.createClass({
    */
   handleChange: function(e){
     var value = e.target.checked? this.props.value : null;
-    var stateChange = { checked: e.target.checked };
     var action = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
     this.onChange({
       target: { value: value },
