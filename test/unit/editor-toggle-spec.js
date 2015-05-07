@@ -1,18 +1,21 @@
-var React = require('react');
-var Components = require('../../src/main');
-var TestUtils = require('react/lib/ReactTestUtils');
-var Dispatcher = require('fluxify').dispatcher;
-var constants = require('../../src/constants');
+import React from 'react';
+import elements from '../../src/index';
+import Factory from '../../src/Factory';
+import TestUtils from 'react/lib/ReactTestUtils';
+import { dispatcher as Dispatcher} from 'fluxify';
+import constants from '../../src/constants';
 
 var mockEvent = {
   stopPropagation: function(){},
   preventDefault: function(){}
 };
 
+var fixture = require('../fixtures/page-with-layout.json');
+
 describe('EditorToggle', function(){
 
   it('will not allow a user to add a component to a Page', function(){
-    var page = Components.factory(require('../fixtures/page-with-layout.json'));
+    var page = Factory.build(elements, fixture, fixture)[0];
     var component = TestUtils.renderIntoDocument(page);
     var btns = TestUtils.scryRenderedDOMComponentsWithClass(component, 'add-component');
     expect(btns.length).toEqual(0);
@@ -32,7 +35,7 @@ describe('EditorToggle', function(){
         mask : '',
         forceManualInput : false
       };
-      this.field = React.createFactory(Components.elements.field);
+      this.field = React.createFactory(elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
     });
 
@@ -66,7 +69,7 @@ describe('EditorToggle', function(){
     var fixture = require('../fixtures/fieldset.json');
 
     beforeEach(function(){
-      var page = Components.factory(fixture);
+      var page = Factory.build(elements, fixture, fixture)[0];
       this.component = TestUtils.renderIntoDocument(page);
     });
 
@@ -106,7 +109,7 @@ describe('EditorToggle', function(){
         mask : '',
         forceManualInput : false
       };
-      this.field = React.createFactory(Components.elements.field);
+      this.field = React.createFactory(elements.field);
       this.component = TestUtils.renderIntoDocument(this.field(this.fixture));
     });
 
