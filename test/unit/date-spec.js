@@ -1,5 +1,4 @@
 var React = require('react');
-require('es6-promise').polyfill();
 var DateComponent = require('../../src/Date');
 var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-date.json');

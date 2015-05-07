@@ -239,7 +239,20 @@ module.exports = React.createClass({
     updateChildren: updateChildren,
     getItemDetails : getItemDetails,
     getItemFirstParent : getItemFirstParent,
-    getItemLastChild: getItemLastChild
+    getItemLastChild: getItemLastChild,
+    /**
+     * Provides configuration processing for Workflow.
+     * @param {Immutable.Map} schema - this components schema
+     * @param {Immutable.Map} [model] - the data model(if any)
+     * @param {Immutable.Map} components - the component list
+     * @returns {JSON}
+     */
+    configure: function(schema, model, components){
+      return schema.get('config')
+        .set('items', components)
+        .set('firstPage', schema.get('child', ''))
+        .toJSON();
+    }
   },
 
   getDefaultProps: function(){

@@ -1,5 +1,4 @@
 var React = require('react');
-require('es6-promise').polyfill();
 var Textarea = require('../../src/Textarea');
 var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-textarea.json');

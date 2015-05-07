@@ -1,5 +1,4 @@
 var React = require('react');
-require('es6-promise').polyfill();
 var fixture = require('../fixtures/radio.json');
 var Checkable = require('../../src/Checkable');
 var TestUtils = require('react/lib/ReactTestUtils');

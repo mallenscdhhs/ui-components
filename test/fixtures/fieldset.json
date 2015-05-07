@@ -2,7 +2,8 @@
   "type": "fieldset",
   "config": {
     "id": "test_fieldset",
-    "name" : "Test Legend",
+    "name" : "testLegend",
+    "legend" : "Test Legend",
     "layout" : {
       "type": "grid", 
       "config": {
