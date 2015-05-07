@@ -11,6 +11,13 @@ var mockEvent = {
 
 describe('EditorToggle', function(){
 
+  it('will not allow a user to add a component to a Page', function(){
+    var page = Components.factory(require('../fixtures/page-with-layout.json'));
+    var component = TestUtils.renderIntoDocument(page);
+    var btns = TestUtils.scryRenderedDOMComponentsWithClass(component, 'add-component');
+    expect(btns.length).toEqual(0);
+  });
+
   describe('edit-component button', function(){
 
     beforeEach(function(){
@@ -56,7 +63,7 @@ describe('EditorToggle', function(){
   });
 
   describe('add-component button', function(){
-    var fixture = require('../fixtures/page-with-layout.json');
+    var fixture = require('../fixtures/fieldset.json');
 
     beforeEach(function(){
       var page = Components.factory(fixture);
@@ -64,8 +71,8 @@ describe('EditorToggle', function(){
     });
 
     it('will render the add template', function(){
-      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'config-editor').length).toEqual(4);
-      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(4);
+      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'config-editor').length).toEqual(2);
+      expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'edit-component').length).toEqual(2);
       expect(TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'add-component').length).toEqual(1);
     });
 
@@ -73,7 +80,7 @@ describe('EditorToggle', function(){
       var btn = TestUtils.findRenderedDOMComponentWithClass(this.component, 'add-component');
 
       Dispatcher.register( 'TOGGLE-TEST-2', function(action, data){
-        var conf = fixture.components.fieldset1.config;
+        var conf = fixture.config;
         if( action === constants.actions.COMPONENT_ADD ) {
           Dispatcher.unregister( 'TOGGLE-TEST-2');
           expect(data.name).toEqual(conf.name);
@@ -84,14 +91,7 @@ describe('EditorToggle', function(){
       TestUtils.Simulate.click(btn);
     });
 
-    it('will not allow a user to add a component to a Page', function(){
-      var btns = TestUtils.scryRenderedDOMComponentsWithClass(this.component, 'add-component');
-      expect(btns.length).toEqual(1);
-      expect(btns[0].props.componentType).not.toEqual('page');
-    });
-
   });
-
 
   describe('remove component button', function(){
 
