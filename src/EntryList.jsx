@@ -6,8 +6,16 @@ var constants = require('./constants');
 var _ = require('lodash');
 var Immutable = require('immutable');
 var Action = require('./Action');
-var Field = require('./Field');
 var EntryListItem = require('./EntryListItem');
+var Form = require('./Form');
+var Grid = require('./Grid');
+var Field = require('./Field');
+var Factory = require('./Factory');
+var elements = {
+  form: Form,
+  grid: Grid,
+  field: Field
+};
 
 module.exports = React.createClass({
   displayName: 'EntryList',
@@ -15,13 +23,11 @@ module.exports = React.createClass({
   propTypes: {
     model: React.PropTypes.string,
     entries: React.PropTypes.arrayOf(React.PropTypes.object),
-    form: React.PropTypes.shape({
-      fields: React.PropTypes.array.isRequired
-    }),
     formButtonText: React.PropTypes.string,
     emptyText: React.PropTypes.string,
     addButtonText: React.PropTypes.string,
-    columns: React.PropTypes.arrayOf(React.PropTypes.object)
+    columns: React.PropTypes.arrayOf(React.PropTypes.object),
+    form: React.PropTypes.object
   },
 
   statics: {
@@ -35,7 +41,7 @@ module.exports = React.createClass({
     configure: function(schema, model, components){
       var config = schema.get('config');
       var entries = model.get(config.get('model'));
-      return model ? config.set('entries', entries).toJSON() : config.toJSON();
+      return entries ? config.set('entries', entries).toJSON() : config.toJSON();
     }
   },
 
@@ -43,10 +49,8 @@ module.exports = React.createClass({
     return {
       model: '',
       entries: [],
-      form: {
-        fields: []
-      },
-      columns: []
+      columns: [],
+      form: {}
     };
   },
 
@@ -123,30 +127,17 @@ module.exports = React.createClass({
     return (
       <tr className={showForm ? '' : 'hide'}>
         <td colSpan="5">
-          <form id="entrylist-form" name="entrylist-form" className="mamd">
-            <div className="row">
-              {this.props.form.fields.map(function(field) {
-                return (
-                  <div key={field.id} className="col-md-6">
-                    <Field
-                      {...field}
-                      className="form-control"
-                      fieldValueChangeAction="entrylist-field-value-change-action" />
-                  </div>
-                );
-              })}
+          {Factory.build(elements, this.props.form, this.props.form)[0]}
+          <div className="row text-right">
+            <div className="col-md-12">
+              <Action
+                id="add-button"
+                type="button"
+                className="btn btn-default"
+                name={this.props.formButtonText ? this.props.formButtonText : 'Add Entry'}
+                event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
             </div>
-            <div className="row text-right">
-              <div className="col-md-12">
-                <Action
-                  id="add-button"
-                  type="button"
-                  className="btn btn-default"
-                  name={this.props.form.formButtonText ? this.props.form.formButtonText : 'Add Entry'}
-                  event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
-              </div>
-            </div>
-          </form>
+          </div>
         </td>
       </tr>
     );
