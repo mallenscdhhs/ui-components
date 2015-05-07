@@ -7,17 +7,10 @@
   "child": "pageLayout",
   "components": {
     "pageLayout": {
-      "child": "fieldset1",
+      "child": "field_1",
       "type": "grid",
       "config": {
         "rows": [[{"md": "6"}, {"md": "6"}]]
-      }
-    },
-    "fieldset1": {
-      "child": "field_1",
-      "type": "fieldset",
-      "config": {
-        "name": "Test"
       }
     },
     "field_1": {
