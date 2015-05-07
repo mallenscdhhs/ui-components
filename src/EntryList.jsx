@@ -14,6 +14,7 @@ module.exports = React.createClass({
 
   propTypes: {
     model: React.PropTypes.string,
+    entries: React.PropTypes.arrayOf(React.PropTypes.object),
     form: React.PropTypes.shape({
       fields: React.PropTypes.array.isRequired
     }),
@@ -23,9 +24,25 @@ module.exports = React.createClass({
     columns: React.PropTypes.arrayOf(React.PropTypes.object)
   },
 
+  statics: {
+    /**
+     * Provides configuration processing for Field components.
+     * @param {Immutable.Map} schema - this components schema
+     * @param {Immutable.Map} [model] - the data model(if any)
+     * @param {Immutable.Map} components - the component list
+     * @returns {JSON}
+     */
+    configure: function(schema, model, components){
+      var config = schema.get('config');
+      var entries = model.get(config.get('model'));
+      return model ? config.set('entries', entries).toJSON() : config.toJSON();
+    }
+  },
+
   getDefaultProps: function(){
     return {
       model: '',
+      entries: [],
       form: {
         fields: []
       },
@@ -39,6 +56,10 @@ module.exports = React.createClass({
       entry: {},
       showForm: false
     };
+  },
+
+  componentWillMount: function() {
+    this.setState({entries: this.props.entries});
   },
 
   componentDidMount: function() {
