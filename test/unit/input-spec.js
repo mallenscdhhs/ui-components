@@ -1,5 +1,4 @@
 var React = require('react');
-require('es6-promise').polyfill();
 var update = require('react/lib/update');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;

@@ -1,4 +1,3 @@
-require('es6-promise').polyfill();
 var React = require('react');
 var TestUtils = require('react/lib/ReactTestUtils');
 var AutoComplete = require('../../src/AutoComplete');

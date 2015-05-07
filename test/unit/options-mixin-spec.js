@@ -1,6 +1,5 @@
 var constants = require('../../src/constants');
 var Components = require('../../src/main');
-require('es6-promise').polyfill();
 var Select = require('../../src/Select');
 var React = require('react');
 var TestUtils = require('react/lib/ReactTestUtils');
