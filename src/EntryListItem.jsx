@@ -1,5 +1,6 @@
 'use-strict';
 var React = require('react');
+var constants = require('./constants');
 var Action = require('./Action');
 
 module.exports = React.createClass({
@@ -8,33 +9,36 @@ module.exports = React.createClass({
   propTypes: {
     entry: React.PropTypes.object,
     entryIdx: React.PropTypes.number,
-    columns: React.PropTypes.array,
-    actionConfig: React.PropTypes.object
+    columns: React.PropTypes.array
   },
 
   getDefaultProps: function(){
     return {
       entry: {},
       entryIdx: 0,
-      columns: [],
-      actionConfig: {}
+      columns: []
     };
   },
 
   render: function(){
     var entry = this.props.entry;
     var entryIdx = this.props.entryIdx;
+    var actionConfig = {
+      name: 'remove',
+      type: 'link',
+      event: constants.actions.ENTRYLIST_ENTRY_REMOVE
+    };
 
     return (
-      <tr key={entry.dataKey}>
+      <tr key={'entry-row-' + entryIdx}>
         {this.props.columns.map(function(col, colIdx) {
           var data = entry[col.dataKey];
-          return <td key={col.dataKey}>{data}</td>;
+          return <td key={col.dataKey + '-' + entryIdx}>{data}</td>;
         })}
-        <td key={'remove-entry-'+entryIdx} className="entrylist-remove">
+        <td key={'remove-entry-' + entryIdx} className="entrylist-remove">
           <Action
-            {...this.props.actionConfig}
-            id={'remove-entry-'+entryIdx}
+            {...actionConfig}
+            id={'remove-entry-' + entryIdx}
             removalId={entryIdx} />
         </td>
       </tr>

@@ -101,7 +101,7 @@ module.exports = React.createClass({
         // fire FIELD_VALUE_CHANGE for the model
         var entriesModel = {
           id: this.props.model,
-          name: 'entrylistModel',
+          name: this.props.model,
           type: 'entrylist',
           value: this.state.entries
         };
@@ -119,27 +119,25 @@ module.exports = React.createClass({
 
   showEmptyText: function() {
     if (!this.state.entries.length) {
-      return <tr><td colSpan="5">{this.props.emptyText}</td></tr>;
+      return <tr><td colSpan={this.props.columns.length}>{this.props.emptyText}</td></tr>;
     }
   },
 
   renderForm: function(showForm, model) {
     return (
-      <tr className={showForm ? '' : 'hide'}>
-        <td colSpan="5">
-          {Factory.build(elements, this.props.form, this.props.form)[0]}
-          <div className="row text-right">
-            <div className="col-md-12">
-              <Action
-                id="add-button"
-                type="button"
-                className="btn btn-default"
-                name={this.props.formButtonText ? this.props.formButtonText : 'Add Entry'}
-                event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
-            </div>
+      <div className={'entrylist-form ' + (showForm ? '' : 'hide')}>
+        {Factory.build(elements, this.props.form, this.props.form)[0]}
+        <div className="row text-right">
+          <div className="col-md-12">
+            <Action
+              id="add-button"
+              type="button"
+              className="btn btn-default"
+              name={this.props.formButtonText ? this.props.formButtonText : 'Add Entry'}
+              event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
           </div>
-        </td>
-      </tr>
+        </div>
+      </div>
     );
   },
 
@@ -149,21 +147,16 @@ module.exports = React.createClass({
    */
   render: function() {
     var columns = this.props.columns;
-    var rowActionConfig = {
-      name: 'remove',
-      type: 'link',
-      event: constants.actions.ENTRYLIST_ENTRY_REMOVE
-    };
 
     return (
-      <div className="mblg">
+      <div className="entrylist mblg">
         <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr>
               {columns.map(function(col) {
                 return <th key={col.dataKey}>{col.header}</th>;
               })}
-              <th></th>
+              <th key="remove"></th>
             </tr>
           </thead>
           <tbody>
@@ -172,20 +165,19 @@ module.exports = React.createClass({
                 <EntryListItem
                   entry={entry}
                   entryIdx={entryIdx}
-                  columns={columns}
-                  actionConfig={rowActionConfig} />
+                  columns={columns} />
               );
             })}
             {this.showEmptyText()}
-            {this.renderForm(this.state.showForm, this.state.entry)}
           </tbody>
         </table>
+        {this.renderForm(this.state.showForm, this.state.entry)}
         <Action
           id="add-entry-btn"
           type="button"
           iconClass="plus"
           className="btn btn-primary"
-          name="Add Medicaid Number"
+          name={this.props.addButtonText}
           event={constants.actions.ENTRYLIST_FORM_SHOW} />
       </div>
     );
