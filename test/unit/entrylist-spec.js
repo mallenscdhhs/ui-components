@@ -18,6 +18,7 @@ describe('EntryList', function(){
   });
 
   it('can facilitate removal of entries', function(done){
+    // click Remove link on the first entry to remove it
     let removeFirstEntry = TestUtils.scryRenderedDOMComponentsWithTag(dom, 'a')[0];
     expect(entries.length).toEqual(config.model.medicaidNumbers.length);
     TestUtils.Simulate.click(removeFirstEntry);
@@ -28,12 +29,18 @@ describe('EntryList', function(){
   });
 
   it('can facilitate adding new entries', function(done){
-    let addEntry = TestUtils.findRenderedDOMComponentWithClass(dom, 'btn-default');
-    expect(entries.length).toEqual(config.model.medicaidNumbers.length - 1);
-    TestUtils.Simulate.click(addEntry);
+    // click Add New Entry button to show new entry form
+    let addNewEntryBtn = TestUtils.findRenderedDOMComponentWithClass(dom, 'btn-primary');
+    TestUtils.Simulate.click(addNewEntryBtn);
     setTimeout(function() {
-      expect(entries.length).toEqual(config.model.medicaidNumbers.length);
-      done();
+      // click Add button to add the entry
+      let addEntry = TestUtils.findRenderedDOMComponentWithClass(dom, 'btn-default');
+      expect(entries.length).toEqual(config.model.medicaidNumbers.length - 1);
+      TestUtils.Simulate.click(addEntry);
+      setTimeout(function() {
+        expect(entries.length).toEqual(config.model.medicaidNumbers.length);
+        done();
+      }, 200);
     }, 200);
   });
 });
