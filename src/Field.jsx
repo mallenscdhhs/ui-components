@@ -3,6 +3,7 @@
 var React = require('react');
 var setClassNames = require('classnames');
 var _ = require('lodash');
+var Immutable = require('immutable');
 var Flux = require('fluxify');
 var constants = require('./constants');
 var EditorToggle = require('./EditorToggle');
@@ -42,6 +43,23 @@ module.exports = React.createClass({
     disabled: React.PropTypes.bool,
     mask: React.PropTypes.string,
     forceManualInput: React.PropTypes.bool
+  },
+
+  statics: {
+    /**
+     * Provides configuration processing for Field components.
+     * @param {Immutable.Map} schema - this components schema
+     * @param {Immutable.Map} model - the data model(if any)
+     * @param {Immutable.Map} components - the component list
+     * @returns {JSON}
+     */
+    configure: function(schema, model, components){
+      var props = schema.getIn(['config']).setIn(['className'], 'form-control');
+      if ( model.has(props.get('id')) ) {
+        props = props.set('value', model.get(props.get('id')));
+      }
+      return props.toJSON();
+    }
   },
 
   getDefaultProps: function(){

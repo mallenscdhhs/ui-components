@@ -26,7 +26,7 @@ module.exports = React.createClass({
   },
 
   getPopover: function(){
-    return <Popover title={this.props.label}>{this.props.description}</Popover>;
+    return <Popover title={this.props.descriptionTitle}>{this.props.description}</Popover>;
   },
 
   getClassNames: function(){

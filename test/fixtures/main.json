@@ -10,27 +10,28 @@
   "components": {
     "test_form": {
       "next": "action_1",
-      "child": "test_fieldset",     
+      "child": "test_fieldset",
       "type": "form",
       "config": {
         "id": "test_form",
         "name": "test_form"
       }
-    },    
+    },
     "test_fieldset": {
-      "child": "test_field_1",
+      "child": "test_fieldset_layout",
       "type": "fieldset",
       "config": {
         "id": "test_fieldset",
-        "name": "Provider Name",
-        "layout": {
-          "type": "grid",
-          "config": {
-            "rows": [
-              [{"md": "6"}, {"md": "6"}]
-            ]
-          }
-        }
+        "name": "Provider Name"
+      }
+    },
+    "test_fieldset_layout": {
+      "type": "grid",
+      "child": "test_field_1",
+      "config": {
+        "rows": [
+          [{"md": "6"}, {"md": "6"}]
+        ]
       }
     },
     "test_field_1": {
