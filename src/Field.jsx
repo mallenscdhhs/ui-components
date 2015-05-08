@@ -49,22 +49,14 @@ module.exports = React.createClass({
     /**
      * Provides configuration processing for Field components.
      * @param {Immutable.Map} schema - this components schema
-     * @param {Immutable.Map} [model] - the data model(if any)
+     * @param {Immutable.Map} model - the data model(if any)
      * @param {Immutable.Map} components - the component list
      * @returns {JSON}
      */
     configure: function(schema, model, components){
-      var props = schema.get('config').set('className', 'form-control');
-      if ( _.has(model, props.get('id', '')) ) {
-        // checkboxes and radios need the "checked" property, not value
-        if ( /checkbox|radio/.test(props.get('type')) ) {
-          // if model value is "true", then set "checked" to true
-          if ( model[props.get('id', '')] === props.get('value') ) {
-            props = props.set('checked', true);
-          }
-        } else {
-          props = props.set('value', model[props.get('id')]);
-        }
+      var props = schema.getIn(['config']).setIn(['className'], 'form-control');
+      if ( model.has(props.get('id')) ) {
+        props = props.set('value', model.get(props.get('id')));
       }
       return props.toJSON();
     }
