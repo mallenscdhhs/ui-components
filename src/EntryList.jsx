@@ -95,17 +95,19 @@ module.exports = React.createClass({
       if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD ) {
         this.setState({
           'entries': this.state.entries.concat(this.state.entry),
-          'entry': {},
-          'showForm': false
+          'entry': {}
         });
         // fire FIELD_VALUE_CHANGE for the model
+        var self = this;
         var entriesModel = {
           id: this.props.model,
           name: this.props.model,
           type: 'entrylist',
           value: this.state.entries
         };
-        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel);
+        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(function() {
+          self.setState({showForm: false});
+        });
       }
     }.bind(this));
   },
@@ -124,21 +126,23 @@ module.exports = React.createClass({
   },
 
   renderForm: function(showForm, model) {
-    return (
-      <div className={'entrylist-form ' + (showForm ? '' : 'hide')}>
-        {Factory.build(elements, this.props.form, this.props.form)[0]}
-        <div className="row text-right">
-          <div className="col-md-12">
-            <Action
-              id="add-button"
-              type="button"
-              className="btn btn-default"
-              name={this.props.formButtonText ? this.props.formButtonText : 'Add Entry'}
-              event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
+    if(showForm) {
+      return (
+        <div className="entrylist-form">
+          {Factory.build(elements, this.props.form, this.props.form)[0]}
+          <div className="row text-right">
+            <div className="col-md-12">
+              <Action
+                id="add-button"
+                type="button"
+                className="btn btn-default"
+                name={this.props.formButtonText ? this.props.formButtonText : 'Add Entry'}
+                event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   },
 
   /**
