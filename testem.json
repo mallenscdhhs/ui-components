@@ -1,0 +1,17 @@
+{
+  "framework": "custom",
+  "serve_files": [
+    "node_modules/jquery/dist/jquery.js",
+    "node_modules/bootstrap/dist/js/bootstrap.js",
+    "test/tests.js"
+  ],
+  "src_files": [
+    "test/shim.js",
+    "test/**/*-spec.js"
+  ],
+  "test_page": "test/template.mustache",
+  "before_tests": "node_modules/.bin/browserify --extension=.jsx test/shim.js test/**/*-spec.js --transform babelify -d -o test/tests.js",
+  "on_exit": "rm test/tests.js",
+  "launch_in_dev": [ "chrome" ],
+  "launch_in_ci": [ "phantomjs" ]
+}

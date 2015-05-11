@@ -1,8 +1,8 @@
 var React = require('react');
-require('es6-promise').polyfill();
 var Field = require('../../src/Field');
 var TestUtils = require('react/lib/ReactTestUtils');
 var fixture = require('../fixtures/field-text.json');
+var Immutable = require('immutable');
 var Flux = require('fluxify');
 var Dispatcher = Flux.dispatcher;
 var constants = require('../../src/constants');
@@ -47,4 +47,20 @@ describe('Field component', function() {
     expect(lgnd.getDOMNode().textContent).toEqual(config.label);
     expect(inpts.length).toEqual(3);
   });
+
+
+  it('can set field value properly', function(){
+    var config = Immutable.fromJS({
+      'config' : {
+        "id" : "testText",
+        "type" : "text",
+        "name" : "testText",
+        "label" : "Test Text"
+      }
+    });
+    var model = Immutable.fromJS({'testText':'my test value'});
+    var result = Field.configure(config,model,Immutable.fromJS({}));
+    expect(result.value).toEqual(model.get('testText'));
+  });
+
 });
