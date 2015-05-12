@@ -1,0 +1,111 @@
+{
+  "type": "page",
+  "config": {
+    "id": "entrylist-test-page",
+    "name": "entrylist-test-page"
+  },
+  "child": "myEntryList",
+  "components": {
+    "myEntryList": {
+      "type": "entrylist",
+      "config": {
+        "model": "medicaidNumbers",
+        "form": {
+          "type": "form",
+          "config": {
+            "id": "entrylist-form",
+            "name": "entrylist-form",
+            "className": "mamd"
+          },
+          "child": "formLayout",
+          "components": {
+            "formLayout": {
+              "child": "medicaidNumber",
+              "type": "grid",
+              "config": {
+                "rows": [
+                  [{"md": "6"}, {"md": "6"}],
+                  [{"md": "6"}, {"md": "6"}]
+                ]
+              }
+            },
+            "medicaidNumber": {
+              "next": "state",
+              "type": "field",
+              "config": {
+                "id": "medicaid-number",
+                "type": "text",
+                "name": "medicaidNumber",
+                "label": "Medicaid #",
+                "className": "form-control",
+                "fieldValueChangeAction": "entrylist-field-value-change-action"
+              }
+            },
+            "state": {
+              "next": "npi",
+              "type": "field",
+              "config": {
+                "id": "state",
+                "type": "select",
+                "name" : "state",
+                "label": "State",
+                "className": "form-control",
+                "fieldValueChangeAction": "entrylist-field-value-change-action",
+                "options": [
+                  {"label": "South Carolina", "value": "sc"}
+                ]
+              }
+            },
+            "npi": {
+              "next": "enrollmentDate",
+              "type": "field",
+              "config": {
+                "id": "npi",
+                "type": "text",
+                "name": "npi",
+                "label": "National Provider Identifier (NPI)",
+                "className": "form-control",
+                "fieldValueChangeAction": "entrylist-field-value-change-action"
+              }
+            },
+            "enrollmentDate": {
+              "type": "field",
+              "config": {
+                "id": "enrollment-date",
+                "type": "date",
+                "name" : "enrollmentDate",
+                "label": "Enrollment Date",
+                "className": "form-control",
+                "fieldValueChangeAction": "entrylist-field-value-change-action"
+              }
+            }
+          }
+        },
+        "emptyText": "Please add your Medicaid numbers.",
+        "addButtonText": "Add Medicaid Number",
+        "columns": [
+          {"header": "Medicaid #", "dataKey": "medicaidNumber"},
+          {"header": "NPI", "dataKey": "npi"},
+          {"header": "Enrollment Date", "dataKey": "enrollmentDate"},
+          {"header": "State", "dataKey": "state"}
+        ]
+      }
+    }
+  },
+  "model": {
+    "medicaidNumbers": [
+      {
+        "medicaidNumber": "113456789",
+        "npi": "0987654321",
+        "enrollmentDate": "01/01/2015",
+        "state": "NC"
+      },
+      {
+        "medicaidNumber": "223456789",
+        "npi": "9876543210",
+        "enrollmentDate": "01/01/2015",
+        "state": "SC"
+      }
+    ]
+  }
+}

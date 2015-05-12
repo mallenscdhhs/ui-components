@@ -30,6 +30,9 @@ module.exports = {
     "GET_FIELD_VALUE" : "getFieldValue",
     "FIELD_VALUE" : "fieldValue",
     "FIELD_BLUR": "blurField",
-    "MODAL_HIDE" : "hideModal"
+    "MODAL_HIDE" : "hideModal",
+    "ENTRYLIST_FORM_SHOW": "showEntryListForm",
+    "ENTRYLIST_ENTRY_REMOVE": "removeEntryListEntry",
+    "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry"
   }
 };
