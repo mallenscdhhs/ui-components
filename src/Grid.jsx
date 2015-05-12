@@ -1,7 +1,6 @@
 'use-strict';
 var React = require('react');
 var _ = require('lodash');
-var Immutable = require('immutable');
 var GridRow = require('./GridRow');
 var GridColumn = require('./GridColumn');
 var update = require('react/lib/update');
