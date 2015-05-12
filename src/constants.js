@@ -30,6 +30,7 @@ module.exports = {
     "GET_FIELD_VALUE" : "getFieldValue",
     "FIELD_VALUE" : "fieldValue",
     "FIELD_BLUR": "blurField",
-    "MODAL_HIDE" : "hideModal"
+    "MODAL_HIDE" : "hideModal",
+    "FILE_UPLOAD_PREVIEW_REMOVE": "removeFileUploadPreview"
   }
 };

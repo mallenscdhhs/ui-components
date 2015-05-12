@@ -18,6 +18,7 @@ var Input = require('./Input');
 var Textarea = require('./Textarea');
 var DateComponent = require('./Date');
 var AutoComplete = require('./AutoComplete');
+var File = require('./File');
 var ContentEditor = require('./ContentEditor');
 var FieldValueMixin = require('./FieldValueMixin');
 
@@ -122,6 +123,8 @@ module.exports = React.createClass({
         return AutoComplete;
       case 'date':
         return DateComponent;
+      case 'file':
+        return File;
       default:
         return Input;
     }
