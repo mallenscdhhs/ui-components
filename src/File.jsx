@@ -1,82 +1,67 @@
 'use-strict';
-var React = require('react');
-var Flux = require('fluxify');
-var Dispatcher = Flux.dispatcher;
-var constants = require('./constants');
-var _ = require('lodash');
-var Immutable = require('immutable');
-var Action = require('./Action');
+import React from 'react';
+import Flux, { dispatcher as Dispatcher } from 'fluxify';
+import constants from './constants';
+import _ from 'lodash';
+import Immutable from 'immutable';
+import FileListItem from './FileListItem';
 
 /**
 * Renders an <input> control with type of file and a file preview list.
 * @module File
  */
-module.exports = React.createClass({
-  displayName: 'File',
+class File extends React.Component {
 
-  propTypes: {
-    id: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string,
-    className: React.PropTypes.string
-  },
-
-  getDefaultProps: function(){
-    return {
-      id: '',
-      name: '',
-      value: '',
-      className: ''
-    };
-  },
-
-  getInitialState: function(){
-    return {
+  constructor() {
+    super();
+    this.state = {
       value: '',
       files: []
     };
-  },
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.buildChangeEvent = this.buildChangeEvent.bind(this);
+  }
 
-  componentWillMount: function(){
+  componentWillMount() {
     this.setState({value: this.props.value});
-  },
+  }
 
-  componentDidMount: function(){
+  componentDidMount() {
     // when the user clicks a remove link
     Dispatcher.register('remove-file-preview', function(action, data){
       if ( action === constants.actions.FILE_UPLOAD_PREVIEW_REMOVE ) {
-        var files = Immutable.List(this.state.files);
-        var remainingFiles = files.remove(data.removalId).toJSON();
+        let files = Immutable.List(this.state.files);
+        let remainingFiles = files.remove(data.removalId).toJSON();
         this.setState({ files: remainingFiles });
         this.buildChangeEvent(remainingFiles);
       }
     }.bind(this));
-  },
+  }
 
-  componentWillUnmount: function(){
+  componentWillUnmount() {
     Dispatcher.unregister('remove-file-preview');
-  },
+  }
 
-  handleInputChange: function(e) {
-    var self = this;
+  handleInputChange(e) {
+    let self = this;
     // get the latest file from FileList API
-    var file = e.target.files[0];
+    let file = e.target.files[0];
     // create a FileReader to get the binary data for displaying preview img
-    var reader = new FileReader();
+    let reader = new FileReader();
     // event handler, after all data has been read by FileReader
     reader.onloadend = function () {
       // add binary to the files object and build the change event
       _.merge(file, {binary: reader.result});
-      var files = self.state.files.concat(file);
+      let files = self.state.files.concat(file);
       self.buildChangeEvent(files);
     };
     // starts the file reading process
     reader.readAsDataURL(file);
-  },
+  }
 
-  buildChangeEvent: function(files) {
-    var self = this;
-    var event = {
+  buildChangeEvent(files) {
+    let self = this;
+    let event = {
       id: this.props.id,
       name: this.props.name,
       type: 'file',
@@ -85,39 +70,18 @@ module.exports = React.createClass({
     Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, event).then(function() {
       self.setState({files: files});
     });
-  },
+  }
 
-  renderPreview: function() {
-    var files = this.state.files;
+  renderPreview() {
+    let files = this.state.files;
     if(files.length) {
       return (
-        files.map(function(file, fileIdx) {
-          return (
-            <div key={'file-preview' + fileIdx} className="file-preview-list row mblg">
-              <div className="col-md-6">
-                <p className="text-left mbn">{file.name}</p>
-                <Action
-                  id="remove-link"
-                  type="link"
-                  name="remove"
-                  className="text-left"
-                  removalId={fileIdx}
-                  event={constants.actions.FILE_UPLOAD_PREVIEW_REMOVE} />
-              </div>
-              <div className="col-md-6">
-                <img
-                  className="text-right"
-                  width="100%"
-                  src={file.binary} />
-              </div>
-            </div>
-          );
-        })
+        <FileListItem files={files}/>
       );
     }
-  },
+  }
 
-  render: function(){
+  render() {
     return (
       <div>
         {this.renderPreview()}
@@ -129,5 +93,20 @@ module.exports = React.createClass({
       </div>
     );
   }
+}
 
-});
+File.propTypes = {
+  id: React.PropTypes.string.isRequired,
+  name: React.PropTypes.string.isRequired,
+  value: React.PropTypes.string,
+  className: React.PropTypes.string
+};
+
+File.getDefaultProps = {
+  id: '',
+  name: '',
+  value: '',
+  className: ''
+};
+
+export default File;
