@@ -1,29 +1,19 @@
 'use-strict';
-var React = require('react');
-var constants = require('./constants');
-var Action = require('./Action');
+import React from 'react';
+import constants from './constants';
+import Action from './Action';
 
-module.exports = React.createClass({
-  displayName: 'EntryListItem',
+class EntryListItem extends React.Component {
 
-  propTypes: {
-    entry: React.PropTypes.object,
-    entryIdx: React.PropTypes.number,
-    columns: React.PropTypes.array
-  },
-
-  getDefaultProps: function(){
-    return {
-      entry: {},
-      entryIdx: 0,
-      columns: []
+  render() {
+    let entry = this.props.entry;
+    let entryIdx = this.props.entryIdx;
+    let editActionConfig = {
+      name: 'edit',
+      type: 'link',
+      event: constants.actions.ENTRYLIST_ENTRY_EDIT
     };
-  },
-
-  render: function(){
-    var entry = this.props.entry;
-    var entryIdx = this.props.entryIdx;
-    var actionConfig = {
+    let removeActionConfig = {
       name: 'remove',
       type: 'link',
       event: constants.actions.ENTRYLIST_ENTRY_REMOVE
@@ -32,16 +22,36 @@ module.exports = React.createClass({
     return (
       <tr key={'entry-row-' + entryIdx}>
         {this.props.columns.map(function(col, colIdx) {
-          var data = entry[col.dataKey];
+          let data = entry[col.dataKey];
           return <td key={col.dataKey + '-' + entryIdx}>{data}</td>;
         })}
+        <td key={'edit-entry-' + entryIdx} className="entrylist-edit">
+          <Action
+            {...editActionConfig}
+            id={'edit-entry-' + entryIdx}
+            entryId={entryIdx} />
+        </td>
         <td key={'remove-entry-' + entryIdx} className="entrylist-remove">
           <Action
-            {...actionConfig}
+            {...removeActionConfig}
             id={'remove-entry-' + entryIdx}
-            removalId={entryIdx} />
+            entryId={entryIdx} />
         </td>
       </tr>
     );
   }
-});
+}
+
+EntryListItem.propTypes = {
+  entry: React.PropTypes.object,
+  entryIdx: React.PropTypes.number,
+  columns: React.PropTypes.array
+};
+
+EntryListItem.defaultProps = {
+  entry: {},
+  entryIdx: 0,
+  columns: []
+};
+
+export default EntryListItem;

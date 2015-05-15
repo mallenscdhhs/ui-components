@@ -19,12 +19,30 @@ describe('EntryList', function(){
 
   it('can facilitate removal of entries', function(done){
     // click Remove link on the first entry to remove it
-    let removeFirstEntry = TestUtils.scryRenderedDOMComponentsWithTag(dom, 'a')[0];
+    let removeFirstEntry = TestUtils.scryRenderedDOMComponentsWithTag(dom, 'a')[1];
     expect(entries.length).toEqual(config.model.medicaidNumbers.length);
     TestUtils.Simulate.click(removeFirstEntry);
     setTimeout(function() {
       expect(entries.length).toEqual(config.model.medicaidNumbers.length - 1);
       done();
+    }, 200);
+  });
+
+  it('can facilitate editing of entries', function(done){
+    // click Edit link on the first entry and update it
+    let editFirstEntry = TestUtils.scryRenderedDOMComponentsWithTag(dom, 'a')[0];
+    TestUtils.Simulate.click(editFirstEntry);
+    setTimeout(function() {
+      let firstInput = TestUtils.scryRenderedDOMComponentsWithTag(dom, 'input')[0].getDOMNode();
+      TestUtils.Simulate.change(firstInput, {target: {value: 'test-value'}});
+      // click Update button to update the entry
+      let updateEntry = TestUtils.findRenderedDOMComponentWithClass(dom, 'btn-default');
+      TestUtils.Simulate.click(updateEntry);
+      setTimeout(function() {
+        let firstEntryTd = entries[0].childNodes[0];
+        expect(firstEntryTd.textContent).toEqual(firstInput.value);
+        done();
+      }, 200);
     }, 200);
   });
 

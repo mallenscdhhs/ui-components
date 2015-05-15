@@ -32,6 +32,7 @@ module.exports = {
     "FIELD_BLUR": "blurField",
     "MODAL_HIDE" : "hideModal",
     "ENTRYLIST_FORM_SHOW": "showEntryListForm",
+    "ENTRYLIST_ENTRY_EDIT": "editEntryListEntry",
     "ENTRYLIST_ENTRY_REMOVE": "removeEntryListEntry",
     "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry"
   }
