@@ -76,7 +76,9 @@ class File extends React.Component {
     let files = this.state.files;
     if(files.length) {
       return (
-        <FileListItem files={files}/>
+        <ul className="file-preview-list man pan">
+          <FileListItem files={files}/>
+        </ul>
       );
     }
   }

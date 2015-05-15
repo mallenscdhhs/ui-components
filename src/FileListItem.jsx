@@ -12,7 +12,7 @@ class FileListItem extends React.Component {
   render() {
     let files = this.props.files;
     return (
-      <ul className="file-preview-list man pan">
+      <div>
         {files.map(function(file, fileIdx) {
           return (
             <li key={'file-preview' + fileIdx} className="file-preview-list-item row mblg">
@@ -35,7 +35,7 @@ class FileListItem extends React.Component {
             </li>
           );
         })}
-      </ul>
+      </div>
     );
   }
 }

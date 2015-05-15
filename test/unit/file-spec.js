@@ -11,7 +11,7 @@ describe('File', function() {
   let comp = TestUtils.renderIntoDocument(<File {...config}/>);
   comp.setState({files: fixture});
   let ul = React.findDOMNode(comp);
-  let previewElements = ul.childNodes[0].childNodes;
+  let previewElements = ul.childNodes[0].childNodes[0].childNodes;
   let previewCont = previewElements[0];
   let fileName = previewCont.childNodes[0].childNodes[0];
   let removeLink = previewCont.childNodes[0].childNodes[1];
