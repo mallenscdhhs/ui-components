@@ -1,5 +1,6 @@
 {
   "type": "workflow",
+  "lastSectionCompleted": "page1",
   "config": {
     "title": "Simple Workflow",
     "actions": [
