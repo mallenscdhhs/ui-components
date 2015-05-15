@@ -89,9 +89,9 @@ module.exports = React.createClass({
         <div className="grid-layout">
         {_.map(rows, function (row, i) {
           return (
-            <GridRow>
-              {_.map(row, function (col) {
-                return <GridColumn {...col}/>;
+            <GridRow key={'row-'+i}>
+              {_.map(row, function (col, n) {
+                return <GridColumn key={'col-'+n} {...col}/>;
               })}
             </GridRow>
           );

@@ -39,6 +39,8 @@ describe('utils', function(){
   describe('#getComputedInputAttr', function(){
     var fieldConfig = {
       id: 'first-name',
+      name: 'first-name',
+      label: 'First Name',
       type: 'input'
     };
     var dom = TestUtils.renderIntoDocument(<Field {...fieldConfig} {...utils.getComputedInputAttr('first-name')} />);

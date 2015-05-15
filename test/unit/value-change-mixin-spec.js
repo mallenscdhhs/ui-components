@@ -11,6 +11,7 @@ describe('ValueChangeMixin', function() {
     var textFieldConfig = {
       id: 'test-text',
       name: 'testText',
+      label: 'Test',
       type: 'text',
       value: ''
     };
@@ -38,6 +39,7 @@ describe('ValueChangeMixin', function() {
       id: 'test-text',
       name: 'testText',
       type: 'text',
+      label: 'Test',
       value: ''
     };
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig} fieldValueChangeAction="custom-field-value-change-action"/>);

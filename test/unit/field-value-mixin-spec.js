@@ -19,14 +19,13 @@ describe('FieldValueMixin', function(){
 
     var textField = TestUtils.renderIntoDocument(<Field {...textFieldConfig}/>);
 
-    Dispatcher.register( 'TEST-FIELD-SEND-VALUE-TEXT' , function(action,data){
-      if( action === constants.actions.FIELD_VALUE &&
-          data.id === textFieldConfig.id) {
+    Dispatcher.register('TEST-FIELD-SEND-VALUE-TEXT', function(action, data){
+      if( action === constants.actions.FIELD_VALUE && data.id === textFieldConfig.id) {
+        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-TEXT');
         expect(data.value).toEqual(textFieldConfig.value);
         expect(data.id).toEqual(textFieldConfig.id);
         expect(data.name).toEqual(textFieldConfig.name);
         done();
-        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-TEXT');
       }
     });
 
@@ -49,11 +48,11 @@ describe('FieldValueMixin', function(){
     Dispatcher.register( 'TEST-FIELD-SEND-VALUE-CHECKBOX' , function(action,data){
       if( action === constants.actions.FIELD_VALUE &&
           data.id === checkboxFieldConfig.id) {
+        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-CHECKBOX');
         expect(data.value).toEqual(checkboxFieldConfig.value);
         expect(data.id).toEqual(checkboxFieldConfig.id);
         expect(data.name).toEqual(checkboxFieldConfig.name);
         done();
-        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-CHECKBOX');
       }
     });
 
@@ -76,11 +75,11 @@ describe('FieldValueMixin', function(){
     Dispatcher.register( 'TEST-FIELD-SEND-VALUE-CHECKBOX-CHECKABLE' , function(action,data){
       if( action === constants.actions.FIELD_VALUE &&
           data.id === checkboxCheckableFieldConfig.id) {
+        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-CHECKBOX-CHECKABLE');
         expect(data.value).toEqual(checkboxCheckableFieldConfig.value);
         expect(data.id).toEqual(checkboxCheckableFieldConfig.id);
         expect(data.name).toEqual(checkboxCheckableFieldConfig.name);
         done();
-        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-CHECKBOX-CHECKABLE');
       }
     });
 
@@ -103,11 +102,11 @@ describe('FieldValueMixin', function(){
     Dispatcher.register( 'TEST-FIELD-SEND-VALUE-CHECKBOX-CHECKABLE-NOT-CHECKED' , function(action,data){
       if( action === constants.actions.FIELD_VALUE &&
           data.id === checkboxCheckableFieldNotCheckedConfig.id) {
+        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-CHECKBOX-CHECKABLE-NOT-CHECKED');
         expect(data.value).toEqual(null);
         expect(data.id).toEqual(checkboxCheckableFieldNotCheckedConfig.id);
         expect(data.name).toEqual(checkboxCheckableFieldNotCheckedConfig.name);
         done();
-        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-CHECKBOX-CHECKABLE-NOT-CHECKED');
       }
     });
 
@@ -130,11 +129,11 @@ describe('FieldValueMixin', function(){
     Dispatcher.register( 'TEST-FIELD-SEND-VALUE-RADIO' , function(action,data){
       if( action === constants.actions.FIELD_VALUE &&
           data.id === radioConfig.id) {
+        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-RADIO');
         expect(data.value).toEqual(radioConfig.value);
         expect(data.id).toEqual(radioConfig.id);
         expect(data.name).toEqual(radioConfig.name);
         done();
-        Dispatcher.unregister('TEST-FIELD-SEND-VALUE-RADIO');
       }
     });
 

@@ -167,6 +167,7 @@ module.exports = React.createClass({
             {this.state.entries.map(function(entry, entryIdx) {
               return (
                 <EntryListItem
+                  key={'entrylist-item-'+entryIdx}
                   entry={entry}
                   entryIdx={entryIdx}
                   columns={columns} />
