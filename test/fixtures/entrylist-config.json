@@ -52,7 +52,9 @@
                 "className": "form-control",
                 "fieldValueChangeAction": "entrylist-field-value-change-action",
                 "options": [
-                  {"label": "South Carolina", "value": "sc"}
+                  {"label": "North Carolina", "value": "NC"},
+                  {"label": "South Carolina", "value": "SC"}
+
                 ]
               }
             },
