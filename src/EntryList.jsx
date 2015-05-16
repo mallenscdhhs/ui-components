@@ -42,7 +42,6 @@ class EntryList extends React.Component {
       isEdit: false
     };
     this.showEmptyText = this.showEmptyText.bind(this);
-    this.getFormButtonName = this.getFormButtonName.bind(this);
     this.renderForm = this.renderForm.bind(this);
   }
 
@@ -131,14 +130,6 @@ class EntryList extends React.Component {
     }
   }
 
-  getFormButtonName(isEdit) {
-    if(isEdit) {
-      return this.props.formUpdateButtonText ? this.props.formUpdateButtonText : 'Update Entry';
-    } else {
-      return this.props.formAddButtonText ? this.props.formAddButtonText : 'Add Entry';
-    }
-  }
-
   renderForm(showForm, formConfig, isEdit) {
     var config = isEdit ? formConfig : this.props.form;
     if(showForm) {
@@ -151,7 +142,7 @@ class EntryList extends React.Component {
                 id="add-button"
                 type="button"
                 className="btn btn-default"
-                name={this.getFormButtonName(isEdit)}
+                name={isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText}
                 event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
             </div>
           </div>
@@ -219,7 +210,9 @@ EntryList.defaultProps = {
   model: '',
   entries: [],
   columns: [],
-  form: {}
+  form: {},
+  formAddButtonText: 'Add Entry',
+  formUpdateButtonText: 'Update Entry'
 };
 
 export default EntryList;
