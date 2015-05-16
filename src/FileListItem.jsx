@@ -10,42 +10,38 @@ import Action from './Action';
 class FileListItem extends React.Component {
 
   render() {
-    let files = this.props.files;
+    let file = this.props.file;
     return (
-      <div>
-        {files.map(function(file, fileIdx) {
-          return (
-            <li key={'file-preview' + fileIdx} className="file-preview-list-item row mblg">
-              <div className="col-md-6">
-                <p className="text-left mbn">{file.name}</p>
-                <Action
-                  id="remove-link"
-                  type="link"
-                  name="remove"
-                  className="text-left"
-                  removalId={fileIdx}
-                  event={constants.actions.FILE_UPLOAD_PREVIEW_REMOVE} />
-              </div>
-              <div className="col-md-6">
-                <img
-                  className="text-right"
-                  width="100%"
-                  src={file.binary} />
-              </div>
-            </li>
-          );
-        })}
-      </div>
+      <li className="file-preview-list-item row mblg">
+        <div className="col-md-6">
+          <p className="text-left mbn">{file.name}</p>
+          <Action
+            id="remove-link"
+            type="link"
+            name="remove"
+            className="text-left"
+            removalId={this.props.fileIdx}
+            event={constants.actions.FILE_UPLOAD_PREVIEW_REMOVE} />
+        </div>
+        <div className="col-md-6">
+          <img
+            className="text-right"
+            width="100%"
+            src={file.binary} />
+        </div>
+      </li>
     );
   }
 }
 
 FileListItem.propTypes = {
-  files: React.PropTypes.arrayOf(React.PropTypes.object)
+  file: React.PropTypes.object,
+  fileIdx: React.PropTypes.number
 };
 
-FileListItem.getDefaultProps = {
-  files: []
+FileListItem.defaultProps = {
+  file: {},
+  fileIdx: 0
 };
 
 export default FileListItem;

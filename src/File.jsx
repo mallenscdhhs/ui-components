@@ -77,7 +77,14 @@ class File extends React.Component {
     if(files.length) {
       return (
         <ul className="file-preview-list man pan">
-          <FileListItem files={files}/>
+          {files.map(function(file, fileIdx) {
+            return (
+              <FileListItem
+                key={'file-preview' + fileIdx}
+                file={file}
+                fileIdx={fileIdx} />
+            );
+          })}
         </ul>
       );
     }
