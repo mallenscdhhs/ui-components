@@ -34,6 +34,7 @@ module.exports = {
     "ENTRYLIST_FORM_SHOW": "showEntryListForm",
     "ENTRYLIST_ENTRY_EDIT": "editEntryListEntry",
     "ENTRYLIST_ENTRY_REMOVE": "removeEntryListEntry",
-    "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry"
+    "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry",
+    "FILE_UPLOAD_PREVIEW_REMOVE": "removeFileUploadPreview"
   }
 };

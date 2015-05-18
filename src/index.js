@@ -13,6 +13,7 @@ module.exports = {
 	fieldGroup: require('./FieldGroup'),
 	fieldLabel: require('./FieldLabel'),
 	fieldset : require('./Fieldset'),
+	file: require('./File'),
 	form: require('./Form'),
 	grid: require('./Grid'),
 	gridColumn: require('./GridColumn'),
