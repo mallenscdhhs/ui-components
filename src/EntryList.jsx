@@ -6,16 +6,7 @@ import _ from 'lodash';
 import Immutable from 'immutable';
 import Action from './Action';
 import EntryListItem from './EntryListItem';
-import Form from './Form';
-import Grid from './Grid';
-import Field from './Field';
-import Factory from './Factory';
-
-let elements = {
-  form: Form,
-  grid: Grid,
-  field: Field
-};
+import EntryListForm from './EntryListForm';
 
 class EntryList extends React.Component {
 
@@ -60,17 +51,11 @@ class EntryList extends React.Component {
     // when the user clicks the edit entry link
     Dispatcher.register('edit-entrylist-entry', function(action, data){
       if ( action === constants.actions.ENTRYLIST_ENTRY_EDIT ) {
-        let currEntry = this.state.entries[data.entryId];
-        let paired = _.pairs(currEntry);
-        let formConfig = _.cloneDeep(this.props.form);
-        // update the formConfig with currEntry values
-        _.forEach(paired, function(item) {
-          let path = 'components.' + item[0] + '.config.value';
-          _.set(formConfig, path, item[1]);
-        });
+        let currentEntry = Immutable.Map(this.state.entries[data.entryId]);
+        let formConfig = Immutable.fromJS(this.props.form).set('model', currentEntry).toJSON();
         this.setState({
           isEdit: true,
-          entry: currEntry,
+          entry: currentEntry.set('_id', data.entryId).toJSON(),
           formConfig: formConfig,
           showForm: true
         });
@@ -89,28 +74,29 @@ class EntryList extends React.Component {
     Dispatcher.register('entrylist-field-value-change', function(action, data) {
       if ( action === 'entrylist-field-value-change-action' ) {
         let value = data.dateString ? data.dateString : data.value;
-        this.setState({ entry: _.merge(this.state.entry, _.zipObject([data.name], [value])) });
+        let updatedEntry = Immutable.Map(this.state.entry).set(data.name, value).toJSON();
+        this.setState({entry: updatedEntry});
       }
     }.bind(this));
 
     // when the user clicks the #add-entry-btn
     Dispatcher.register('add-new-entrylist-entry', function(action){
       if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD ) {
-        if (!this.state.isEdit) {
-          this.setState({
-            entries: this.state.entries.concat(this.state.entry)
-          });
-        }
+        let currentEntries = Immutable.List(this.state.entries);
+        let updatedEntries = (!this.state.isEdit) ?
+          currentEntries.push(this.state.entry) :
+          currentEntries.set(this.state.entry._id, this.state.entry);
+        let entries = updatedEntries.toJSON();
         // fire FIELD_VALUE_CHANGE for the model
         let self = this;
         let entriesModel = {
           id: this.props.model,
           name: this.props.model,
           type: 'entrylist',
-          value: this.state.entries
+          value: entries
         };
         Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(function() {
-          self.setState({isEdit: false, entry: {}, showForm: false});
+          self.setState({isEdit: false, entry: {}, entries: entries, showForm: false});
         });
       }
     }.bind(this));
@@ -130,33 +116,14 @@ class EntryList extends React.Component {
     }
   }
 
-  renderForm(showForm, formConfig, isEdit) {
-    var config = isEdit ? formConfig : this.props.form;
-    if(showForm) {
-      return (
-        <div className="entrylist-form">
-          {Factory.build(elements, config, config)[0]}
-          <div className="row text-right">
-            <div className="col-md-12">
-              <Action
-                id="add-button"
-                type="button"
-                className="btn btn-default"
-                name={isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText}
-                event={constants.actions.ENTRYLIST_NEW_ENTRY_ADD} />
-            </div>
-          </div>
-        </div>
-      );
-    }
-  }
-
   /**
    * Render an EntryList component.
    * @returns {JSX}
    */
   render() {
     var columns = this.props.columns;
+    let formConfig = this.state.isEdit ? this.state.formConfig : this.props.form;
+    let actionName = this.state.isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText;
     return (
       <div className="entrylist mblg">
         <table className="table table-striped table-bordered table-hover">
@@ -182,7 +149,10 @@ class EntryList extends React.Component {
             {this.showEmptyText()}
           </tbody>
         </table>
-        {this.renderForm(this.state.showForm, this.state.formConfig, this.state.isEdit)}
+        <EntryListForm
+          show={this.state.showForm}
+          config={formConfig}
+          actionName={actionName}/>
         <Action
           id="add-entry-btn"
           type="button"
