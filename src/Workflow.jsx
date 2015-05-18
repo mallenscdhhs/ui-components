@@ -70,14 +70,15 @@ class Workflow extends React.Component {
     let rootSchema = { components: components.toJSON() };
     SchemaUtils.traverse(rootSchema, schema.get('child'), id => flatWorkflow.push(id));
     let currentPage = schema.get('child');
-    let lastSectionCompleted = schema.get('lastSectionCompleted');
+    let lastSectionCompleted = schema.getIn(['config','lastSectionCompleted']);
     if ( lastSectionCompleted ) {
       currentPage = Workflow.getNext(lastSectionCompleted, flatWorkflow);
     }
-    return schema.get('config')
-      .set('workflow', flatWorkflow)
-      .set('currentPage', currentPage)
-      .toJSON();
+    return schema.getIn(['config']).withMutations(function(mutableConfig) {
+      mutableConfig
+        .setIn(['workflow'], flatWorkflow)
+        .setIn(['currentPage'],currentPage);
+    }).toJSON();
   }
 
   /**
@@ -128,6 +129,7 @@ class Workflow extends React.Component {
       nextPage: Workflow.getNext(this.props.currentPage, this.props.workflow),
       previousPage: Workflow.getPrevious(this.props.currentPage, this.props.workflow)
     });
+    Flux.doAction(constants.actions.WORKFLOW_LOAD_PAGE, { page: this.props.currentPage });
   }
 
   /**
