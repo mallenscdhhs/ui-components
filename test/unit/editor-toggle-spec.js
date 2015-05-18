@@ -103,6 +103,7 @@ describe('EditorToggle', function(){
         type: 'field',
         id:'test-field',
         componentType: 'field',
+        label: "foobar",
         name : 'testField',
         initialState: 'visible',
         disabled : false,

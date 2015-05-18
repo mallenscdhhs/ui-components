@@ -1,312 +1,156 @@
 'use-strict';
-var React = require('react');
-var _ = require('lodash');
-var Page = require('./Page');
-var Tree = require('./Tree');
-var Action = require('./Action');
-var GridRow = require('./GridRow');
-var GridColumn = require('./GridColumn');
-var Flux = require('fluxify');
-var Dispatcher = Flux.dispatcher;
-var constants = require('./constants');
-var EditorToggle = require('./EditorToggle');
-var Immutable = require('immutable');
+import React from 'react';
+import _ from 'lodash';
+import Tree from './Tree';
+import Action from './Action';
+import Flux, { dispatcher as Dispatcher } from 'fluxify';
+import constants from './constants';
+import EditorToggle from './EditorToggle';
+import Immutable from 'immutable';
+import SchemaUtils from '@scdhhs/ui-component-schema-utils';
+import Factory from './Factory';
+import WorkflowItem from './WorkflowItem';
 
 /**
- * Return details for passed in itemId
- * @param {object} schema
- * @param {object} itemId
- * @return {{id: *, previous: *, parent: *, next: *}}
+ * Manages the flow of a user through a set of defined screens.
+ * @class Workflow
  */
-function getItemDetails(schema, itemId){
-  if(itemId && schema[itemId]) {
-    return {
-      'id': itemId,
-      'previous': _.findKey(schema, {'next': itemId}),
-      'parent': _.findKey(schema, {'child': itemId}),
-      'next': schema[itemId].next,
-      'child': schema[itemId].child
-    };
-  }else{
-    return {};
-  }
-}
-
-/**
- * Follow tree up from item, to find first parent encountered
- * @param schema
- * @param itemId
- * @return {object} updated schema
- */
-function getItemFirstParent(schema, itemId){
-  var item = getItemDetails(schema,itemId);
-  while(item && item.previous){
-    item = getItemDetails(schema,item.previous);
-  }
-  return item.parent;
-}
-
-/**
- * Follow tree down from item, to find last element in the tree
- * @param schema
- * @param itemId
- * @return {object}  Updated Schema
- */
-function getItemLastChild(schema, itemId){
-  var item = getItemDetails(schema,itemId);
-  while(item && item.next){
-    item = getItemDetails(schema,item.next);
-  }
-  return item.id;
-}
-
-/**
- * Set all items below pageId to disabled
- * @param schema
- * @param pageId
- * @return {*}
- */
-function updateFlowState(schema,pageId){
-  var list = Immutable.fromJS(schema);
-  var item = getItemDetails(list.toJSON(), pageId);
-  var parentItem;
-  if ( item.next ) {
-    list = list.setIn([item.next,'config','disabled'], true);
-    list = list.mergeDeep(updateFlowState(list.toJSON(), item.next));
-  }
-  if ( item.child ) {
-    list = list.setIn([item.child,'config','disabled'], true);
-    list = list.mergeDeep(updateFlowState(list.toJSON(), item.child));
-  }
-  if ( item.parent ) {
-    parentItem = getItemDetails(list.toJSON(), item.parent);
-    if(parentItem.next) {
-      list = list.setIn([parentItem.next,'config','disabled'], true);
-      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
-    }
-  }else if(item.previous){
-    parentItem = getItemDetails(list.toJSON(),getItemFirstParent(list.toJSON(), item.previous));
-    if(parentItem && parentItem.next){
-      list = list.setIn([parentItem.next,'config','disabled'], true);
-      list = list.mergeDeep(updateFlowState(list.toJSON(), parentItem.next));
-    }
-  }
-  return list.toJSON();
-}
-
-/**
- * Set 'disabled' and 'current' flag to false for all items.
- * PageId should be the very FIRST item in the schema
- * @param schema
- * @param pageId
- * @return {*}
- */
-function refreshFlowState(schema,pageId){
-  var list = Immutable.fromJS(schema);
-  var item = getItemDetails(list.toJSON(), pageId);
-  list = list.setIn([pageId,'config','disabled'], false).setIn([pageId,'config','current'], false);
-  if ( item.next ) {
-    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.next));
-  }
-  if ( item.child ) {
-    list = list.mergeDeep(refreshFlowState(list.toJSON(), item.child));
-  }
-  return list.toJSON();
-}
-
-/**
- * Sets flow item state(disabled) based on passed in pageId. All pages
- * below the passed in pageId will be disabled, while all those above (including the page itself) will
- * not be disabled.  Passed in page will be set to 'current' before returning updated flow.
- * @param {object} list - a linked list representing flow data
- * @param {string} pageId - a starting point
- * @param {string} startId - first item in list, not the current page, but the very first page
- */
-function setFlowState(list, pageId, startId) {
-  return Immutable.fromJS(updateFlowState(refreshFlowState(list, startId), pageId))
-    .setIn([pageId,'config','current'],true)
-    .toJSON();
-}
-
-/**
- * Determine which actions to show based on the current state of the workflow.
- * @param {array} actions
- * @param {object} state
- * @returns {array}
- */
-function getCurrentActionButtons(actions, state){
-  return _.filter(actions, function(action){
-    var hidePrevious = (action.id === 'workflow-previous-btn' && !state.previousPage);
-    var hideSaveAndExit = (action.id === 'workflow-exit-btn' && !state.nextPage );
-    return ! (hidePrevious || hideSaveAndExit);
-  });
-}
-
-/**
- * Locate the previous page in the list. Previous can be either a direct sibling,
- * or a parent, or a direct sibling's last child.
- * @param {object} list - this binary tree of page configs
- * @param {string} id - the id of the page who's previous you want to find
- * @returns {string} the id of the previous page
- */
-function findPrevious(list, id){
-  var item = getItemDetails(list,id);
-  var previousId;
-  var previousItem;
-  var parentItem;
-  if(item.previous){
-    previousItem = getItemDetails(list,item.previous);
-    if(previousItem.child){
-      previousId= getItemLastChild(list,previousItem.child);
-    }else{
-      previousId = previousItem.id;
-    }
-  }else if(item.parent){
-    parentItem = getItemDetails(list,item.parent);
-    previousId = parentItem.id;
-  }
-  return previousId;
-}
-
-/**
-* Locate the next page in the list. Next can be either a direct sibling,
-* or a parent's direct sibling.
-* @param {object} list - this binary tree of page configs
-* @param {string} id - the id of the page who's next you want to find
-* @returns {string} the id of the next page
-*/
-function findNext(list, id){
-  var item = getItemDetails(list,id);
-  var nextId;
-  var parentItem;
-  if(item.child) {
-    nextId = item.child;
-  }else if ( item.next ) {
-    nextId = item.next;
-  }else if( item.parent){
-    parentItem = getItemDetails(list,item.parent);
-    nextId = parentItem.next;
-  }else if(item.previous){
-    parentItem = getItemDetails(list,getItemFirstParent(list, item.previous));
-    if(parentItem && parentItem.next){
-      nextId = parentItem.next;
-    }
-  }
-  return nextId;
-}
-
-/**
- * Iterate over ReactComponents, and set their 'disabled' and 'current' status based on the value from the
- * 'items' object which is the state object containing current item values.
- * @param flowItems
- * @param components
- * @return {*}
- */
-function updateChildren(flowItems, components){
-  return Immutable.List(components).map(function(component) {
-    component.props.disabled = flowItems[component.props.id].config.disabled;
-    component.props.current = flowItems[component.props.id].config.current;
-    if(component.props.children){
-      component.props.children = updateChildren(flowItems, component.props.children);
-    }
-    return component;
-  }).toArray();
-}
-
-/**
- * Renders a workflow that contains a Tree navigation and a Page.
- * @module Workflow
- */
-module.exports = React.createClass({
-
-  displayName: 'Workflow',
-
-  propTypes: {
-    title: React.PropTypes.string,
-    items: React.PropTypes.object.isRequired,
-    lastSectionCompleted: React.PropTypes.string,
-    editMode: React.PropTypes.bool
-  },
-
+class Workflow extends React.Component {
   /**
-   * Used for unit testing.
+   * returns the index in the flattened workflow of the current page id
+   * @param {string} currentId
+   * @param {string[]} workflow
+   * @returns {number}
    */
-  statics: {
-    setFlowState: setFlowState,
-    getCurrentActionButtons: getCurrentActionButtons,
-    findPrevious: findPrevious,
-    findNext: findNext,
-    updateChildren: updateChildren,
-    getItemDetails : getItemDetails,
-    getItemFirstParent : getItemFirstParent,
-    getItemLastChild: getItemLastChild,
-    /**
-     * Provides configuration processing for Workflow.
-     * @param {Immutable.Map} schema - this components schema
-     * @param {Immutable.Map} [model] - the data model(if any)
-     * @param {Immutable.Map} components - the component list
-     * @returns {JSON}
-     */
-    configure: function(schema, model, components){
-      return schema.get('config')
-        .set('items', components)
-        .set('firstPage', schema.get('child', ''))
-        .toJSON();
-    }
-  },
-
-  getDefaultProps: function(){
-    return {
-      componentType: 'workflow'
-    };
-  },
+  static getCurrentIndex(currentId, workflow){
+    return _.findIndex(workflow, id => id === currentId);
+  }
 
   /**
-   * Determine the current state of the workflow by analyzing the passed in prop data.
+   * Search through the workflow list to find the next index.
+   * @static
+   * @param {string} currentId - the current item id
+   * @param {string[]} workflow - an array of id's
+   * @returns {string}
+   */
+  static getNext(currentId, workflow){
+    return workflow[Workflow.getCurrentIndex(currentId, workflow) + 1];
+  }
+
+  /**
+   * Search through the workflow list to find the previous index.
+   * @static
+   * @param {string} currentId - the current item id
+   * @param {string[]} workflow - an array of id's
+   * @returns {string}
+   */
+  static getPrevious(currentId, workflow){
+    return workflow[Workflow.getCurrentIndex(currentId, workflow) - 1];
+  }
+
+  /**
+   * Get a list of disabled workflowitem id's.
+   * @param {string[]} workflow - a list of workflowitem id's
+   * @param {string} currentId - the page to disable from
+   * @returns {string[]}
+   */
+  static getDisabledItems(workflow, currentId){
+    return workflow.slice(Workflow.getCurrentIndex(currentId, workflow) + 1);
+  }
+
+  /**
+   * Provides configuration processing for Workflow.
+   * @param {Immutable.Map} schema - this components schema
+   * @param {Immutable.Map} [model] - the data model(if any)
+   * @param {Immutable.Map} components - the component list
+   * @returns {JSON}
+   */
+  static configure(schema, model, components){
+    let flatWorkflow = [];
+    let rootSchema = { components: components.toJSON() };
+    SchemaUtils.traverse(rootSchema, schema.get('child'), id => flatWorkflow.push(id));
+    let currentPage = schema.get('child');
+    let lastSectionCompleted = schema.get('lastSectionCompleted');
+    if ( lastSectionCompleted ) {
+      currentPage = Workflow.getNext(lastSectionCompleted, flatWorkflow);
+    }
+    return schema.get('config')
+      .set('workflow', flatWorkflow)
+      .set('currentPage', currentPage)
+      .toJSON();
+  }
+
+  /**
+   * rebuild the children components using updated props from the worfklow state
+   * @param {object} children - the element's children
+   * @param {string[]} disabledItems
+   * @param {string} currentPage
    * @returns {object}
    */
-  getInitialState: function(){
-    var firstPage = this.props.firstPage;
-    var flow = this.props.items;
-    var current = ( this.props.lastSectionCompleted ) ?
-      findNext( flow, this.props.lastSectionCompleted ) :
-      firstPage;
+  static renderChildren(children, disabledItems, currentPage){
+    return React.Children.map(children, child => {
+      let isCurrent = child.props.id === currentPage;
+      let isDisabled = _.contains(disabledItems, child.props.id);
+      let children = [];
+      let props = Immutable.Map(child.props)
+        .set('disabled', isDisabled)
+        .set('current', isCurrent);
+      if ( child.props.children ) {
+        children = Workflow.renderChildren(child.props.children, disabledItems, currentPage);
+      }
+      return React.cloneElement(child, props.toJSON(), children);
+    });
+  }
 
-    if ( !this.props.editMode ) {
-      flow = setFlowState(flow, current, firstPage);
+  /**
+   * render a title if supplied in props
+   * @param {object} props
+   * @returns {?JSX}
+   */
+  static renderTitle(props){
+    if ( props.title ) {
+      return <h4>{props.title}</h4>;
     }
+  }
 
-    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : current }  );
-
-    return {
-      currentPage: current,
-      nextPage: findNext(flow, current),
-      previousPage: findPrevious(flow, current),
-      flow: flow
+  constructor(){
+    super();
+    this.state = {
+      currentPage: '',
+      nextPage: '',
+      previousPage: ''
     };
-  },
+  }
+
+  componentWillMount(){
+    this.setState({
+      currentPage: this.props.currentPage,
+      nextPage: Workflow.getNext(this.props.currentPage, this.props.workflow),
+      previousPage: Workflow.getPrevious(this.props.currentPage, this.props.workflow)
+    });
+  }
 
   /**
    * Subscribe to workflow events.
    */
-  componentDidMount: function(){
-    Dispatcher.register( this.props.id + '-WORKFLOW' , function(action,data){
-      if( action === constants.actions.TREE_LOAD_PAGE) {
+  componentDidMount(){
+    Dispatcher.register('workflow-actions', function(action, data){
+      if ( action === constants.actions.TREE_LOAD_PAGE) {
         this.handleDirect(data.id);
-      }else if( action === constants.actions.WORKFLOW_PREVIOUS_PAGE){
+      } else if ( action === constants.actions.WORKFLOW_PREVIOUS_PAGE ) {
         this.handlePrevious();
-      }else if( action === constants.actions.WORKFLOW_NEXT_PAGE){
+      } else if ( action === constants.actions.WORKFLOW_NEXT_PAGE) {
         this.handleNext();
       }
     }.bind(this));
-  },
+  }
 
   /**
   * Unsubscribe from all events.
   */
-  componentWillUnmount: function(){
-    Dispatcher.unregister( this.props.id + '-WORKFLOW' );
-  },
+  componentWillUnmount(){
+    Dispatcher.unregister('workflow-actions');
+  }
 
   /**
    * Update workflow state to passed in page, and rerender.
@@ -314,51 +158,74 @@ module.exports = React.createClass({
    * @fires workflow:load:page
    * @param {string} pageId
    */
-  handleDirect: function(pageId){
+  handleDirect(pageId){
     this.setState({
       currentPage: pageId,
-      nextPage: findNext(this.state.flow, pageId),
-      previousPage: findPrevious(this.state.flow, pageId),
-      flow: setFlowState(this.state.flow, pageId, this.props.firstPage)
+      nextPage: Workflow.getNext(pageId, this.props.workflow),
+      previousPage: Workflow.getPrevious(pageId, this.props.workflow)
     });
-    Flux.doAction( constants.actions.WORKFLOW_LOAD_PAGE , { 'page' : pageId }  );
-  },
+    Flux.doAction(constants.actions.WORKFLOW_LOAD_PAGE, { page: pageId });
+  }
 
   /**
    * Get the next page, if available, and update workflow.
    * @fires workflow:load:page
    */
-  handleNext: function(){
-    var next = findNext(this.state.flow, this.state.currentPage);
+  handleNext(){
+    var next = Workflow.getNext(this.state.currentPage, this.props.workflow);
     if( next ){
       this.handleDirect(next);
     }
-  },
+  }
 
   /**
    * Get the previous page, if available, and update workflow.
    * @fires workflow:load:page
    */
-  handlePrevious: function(){
-    var previous = findPrevious(this.state.flow, this.state.currentPage);
+  handlePrevious(){
+    var previous = Workflow.getPrevious(this.state.currentPage, this.props.workflow);
     if( previous ){
       this.handleDirect(previous);
     }
-  },
+  }
 
   /**
-   * @returns {React}
+   * Only re-render the tree if the current page has changed.
+   * @param {object} nextState
+   * @returns {boolean}
    */
-  render: function(){
-    var actions = getCurrentActionButtons(this.props.actions, this.state);
+  shouldComponentUpdate(nextProps, nextState){
+    return nextState.currentPage !== this.state.currentPage;
+  }
+
+  /**
+   * @returns {JSX}
+   */
+  render(){
+    let currentPage = this.state.currentPage;
+    let disabledItems = Workflow.getDisabledItems(this.props.workflow, currentPage);
     return (
       <div className="editable-component">
         <EditorToggle {...this.props}/>
-        <h4>{this.props.title}</h4>
+        {Workflow.renderTitle(this.props)}
         <Tree ref="outline">
-          { updateChildren(this.state.flow, this.props.children) }
+          {Workflow.renderChildren(this.props.children, disabledItems, currentPage)}
         </Tree>
       </div>
     );
   }
-});
+}
+
+Workflow.propTypes = {
+  title: React.PropTypes.string,
+  workflow: React.PropTypes.arrayOf(React.PropTypes.string),
+  currentPage: React.PropTypes.string,
+  lastSectionCompleted: React.PropTypes.string,
+  editMode: React.PropTypes.bool
+};
+
+Workflow.defaultProps = {
+  componentType: 'workflow'
+};
+
+export default Workflow;

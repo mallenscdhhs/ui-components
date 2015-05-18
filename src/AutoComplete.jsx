@@ -79,10 +79,14 @@ module.exports = React.createClass({
    */
   render: function(){
     var isBusy = this.state.options.length? false : true;
-    return <Combobox {...this.props}
-      onSelect={this.onOptionSelected}
-      busy={isBusy}
-      data={this.state.options}/>;
+    var props = _.omit(this.props, ['value']);
+    return (
+      <Combobox {...props}
+        onSelect={this.onOptionSelected}
+        defaultValue={this.props.value}
+        busy={isBusy}
+        data={this.state.options}/>
+    );
   }
 
 });
