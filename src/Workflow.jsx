@@ -74,10 +74,10 @@ class Workflow extends React.Component {
     if ( lastSectionCompleted ) {
       currentPage = Workflow.getNext(lastSectionCompleted, flatWorkflow);
     }
-    return schema.getIn(['config']).withMutations(function(mutableConfig) {
+    return schema.get('config').withMutations(function(mutableConfig) {
       mutableConfig
-        .setIn(['workflow'], flatWorkflow)
-        .setIn(['currentPage'],currentPage);
+        .set('workflow', flatWorkflow)
+        .set('currentPage',currentPage);
     }).toJSON();
   }
 
