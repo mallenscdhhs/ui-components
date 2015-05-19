@@ -61,6 +61,6 @@ EntryListForm.defaultProps = {
   config: {},
   actionName: '',
   actionEvent: constants.actions.ENTRYLIST_NEW_ENTRY_ADD
-}
+};
 
 export default EntryListForm;

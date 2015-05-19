@@ -33,7 +33,6 @@ class EntryList extends React.Component {
       isEdit: false
     };
     this.showEmptyText = this.showEmptyText.bind(this);
-    this.renderForm = this.renderForm.bind(this);
   }
 
   componentWillMount() {
