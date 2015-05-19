@@ -12,6 +12,7 @@
   "shadow": false,
   "undef": true,
   "scripturl": true,
+  "esnext": true,
   "globals": {
     "Pen": true
   }
