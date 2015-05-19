@@ -1,8 +1,8 @@
 {
   "type": "workflow",
-  "lastSectionCompleted": "page1",
   "config": {
     "title": "Simple Workflow",
+    "lastSectionCompleted": "page1",
     "actions": [
       {
         "id": "workflow-previous-btn",
