@@ -7,6 +7,7 @@ import Immutable from 'immutable';
 import Action from './Action';
 import EntryListItem from './EntryListItem';
 import EntryListForm from './EntryListForm';
+import EntryListAddBtn from './EntryListAddBtn';
 
 class EntryList extends React.Component {
 
@@ -152,13 +153,9 @@ class EntryList extends React.Component {
           show={this.state.showForm}
           config={formConfig}
           actionName={actionName}/>
-        <Action
-          id="add-entry-btn"
-          type="button"
-          iconClass="plus"
-          className="btn btn-primary"
-          name={this.props.addNewButtonText}
-          event={constants.actions.ENTRYLIST_FORM_SHOW} />
+        <EntryListAddBtn
+          show={this.state.showForm}
+          name={this.props.addNewButtonText} />
       </div>
     );
   }
@@ -178,6 +175,7 @@ EntryList.propTypes = {
 EntryList.defaultProps = {
   model: '',
   entries: [],
+  addNewButtonText: 'Add New',
   columns: [],
   form: {},
   formAddButtonText: 'Add Entry',
