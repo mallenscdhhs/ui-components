@@ -13,7 +13,8 @@ describe('ValueChangeMixin', function() {
       name: 'testText',
       label: 'Test',
       type: 'text',
-      value: ''
+      value: '',
+      customPropType: 'CustomType'
     };
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig}/>);
     var wrapperDiv = dom.getDOMNode();
@@ -27,6 +28,7 @@ describe('ValueChangeMixin', function() {
         expect(data.name).toEqual(textFieldConfig.name);
         expect(data.type).toEqual(textFieldConfig.type);
         expect(data.value).toEqual('value test');
+        expect(data.customPropType).toEqual(textFieldConfig.customPropType);
         done();
       }
     });

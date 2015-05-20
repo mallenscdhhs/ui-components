@@ -1,6 +1,7 @@
 var React = require('react');
 var Flux = require('fluxify');
 var constants = require('./constants');
+var Immutable = require('immutable');
 var _ = require('lodash');
 
 /**
@@ -19,19 +20,20 @@ module.exports = {
   onChange: function(event){
     var actionName = this.props.fieldValueChangeAction || event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     var state = event.stateChange || {value: event.target.value};
-    var payload = _.pick(this.props, ['id', 'name', 'rules', 'type','maxLength','required','persistInSession', 'disabled']);
-    payload.visible = this.state.visible;
-    if(this.props.mask) {
-      payload.value = state.value;
-      payload.unmasked = state.unmasked;
-    } else {
-      payload.value = event.target.value;
-      if(event.target.dateString) {
-        payload.dateString = event.target.dateString;
+    var payload = Immutable.fromJS(this.props).withMutations((mutablePayload) => {
+      mutablePayload.set('visible', this.state.visible);
+      if (this.props.mask) {
+        mutablePayload.set('value',state.value);
+        mutablePayload.set('unmasked', state.unmasked);
+      } else {
+        mutablePayload.set('value',event.target.value);
+        if (event.target.dateString) {
+          mutablePayload.set('dateString',event.target.dateString);
+        }
       }
-    }
+    });
     this.setState(state);
-    Flux.doAction(actionName, payload);
+    Flux.doAction(actionName, payload.toJSON());
   },
 
   /**
