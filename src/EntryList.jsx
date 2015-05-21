@@ -7,7 +7,7 @@ import Immutable from 'immutable';
 import Action from './Action';
 import EntryListItem from './EntryListItem';
 import EntryListForm from './EntryListForm';
-import EntryListAddBtn from './EntryListAddBtn';
+import EntryListBtn from './EntryListBtn';
 
 class EntryList extends React.Component {
 
@@ -121,7 +121,7 @@ class EntryList extends React.Component {
    * @returns {JSX}
    */
   render() {
-    var columns = this.props.columns;
+    let columns = this.props.columns;
     let formConfig = this.state.isEdit ? this.state.formConfig : this.props.form;
     let actionName = this.state.isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText;
     return (
@@ -153,9 +153,12 @@ class EntryList extends React.Component {
           show={this.state.showForm}
           config={formConfig}
           actionName={actionName}/>
-        <EntryListAddBtn
+        <EntryListBtn
+          id="add-entry-btn"
+          iconClass="plus"
           show={this.state.showForm}
-          name={this.props.addNewButtonText} />
+          name={this.props.addNewButtonText}
+          event={constants.actions.ENTRYLIST_FORM_SHOW} />
       </div>
     );
   }
