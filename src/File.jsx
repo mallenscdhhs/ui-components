@@ -16,14 +16,19 @@ class File extends React.Component {
     super();
     this.state = {
       value: '',
-      files: []
+      files: [],
+      limit: 20
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.buildChangeEvent = this.buildChangeEvent.bind(this);
+    this.renderInput = this.renderInput.bind(this);
   }
 
   componentWillMount() {
-    this.setState({value: this.props.value});
+    this.setState({
+      value: this.props.value,
+      limit: this.props.limit
+    });
   }
 
   componentDidMount() {
@@ -90,15 +95,21 @@ class File extends React.Component {
     }
   }
 
+  renderInput(len, limit) {
+    return (len < limit) ? (
+      <input
+        {...this.props}
+        type="file"
+        value={this.state.value}
+        onChange={this.handleInputChange} />
+    ) : <p id="limit-message" className="help-block">{this.props.limitMessage}</p>;
+  }
+
   render() {
     return (
       <div>
         {this.renderPreview()}
-        <input
-          {...this.props}
-          type="file"
-          value={this.state.value}
-          onChange={this.handleInputChange} />
+        {this.renderInput(this.state.files.length, this.state.limit)}
       </div>
     );
   }
@@ -108,14 +119,18 @@ File.propTypes = {
   id: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
   value: React.PropTypes.string,
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  limit: React.PropTypes.number,
+  limitMessage: React.PropTypes.string
 };
 
-File.getDefaultProps = {
+File.defaultProps = {
   id: '',
   name: '',
   value: '',
-  className: ''
+  className: '',
+  limit: 10,
+  limitMessage: 'The maximum limit of file uploads has been reached.'
 };
 
 export default File;
