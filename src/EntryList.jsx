@@ -48,6 +48,17 @@ class EntryList extends React.Component {
       }
     }.bind(this));
 
+    // when the user clicks the cancel button
+    Dispatcher.register('cancel-entrylist-entry', function(action){
+      if ( action === constants.actions.ENTRYLIST_ENTRY_CANCEL ) {
+        this.setState({
+          isEdit: false,
+          showForm: false,
+          entry: {}
+        });
+      }
+    }.bind(this));
+
     // when the user clicks the edit entry link
     Dispatcher.register('edit-entrylist-entry', function(action, data){
       if ( action === constants.actions.ENTRYLIST_ENTRY_EDIT ) {
@@ -104,6 +115,7 @@ class EntryList extends React.Component {
 
   componentWillUnmount() {
     Dispatcher.unregister('show-entrylist-form');
+    Dispatcher.unregister('cancel-entrylist-entry');
     Dispatcher.unregister('edit-entrylist-entry');
     Dispatcher.unregister('remove-entrylist-entry');
     Dispatcher.unregister('entrylist-field-value-change');
@@ -159,6 +171,11 @@ class EntryList extends React.Component {
           show={this.state.showForm}
           name={this.props.addNewButtonText}
           event={constants.actions.ENTRYLIST_FORM_SHOW} />
+        <EntryListBtn
+          id="cancel-entry-btn"
+          show={!this.state.showForm}
+          name={this.props.CancelButtonText}
+          event={constants.actions.ENTRYLIST_ENTRY_CANCEL} />
       </div>
     );
   }
@@ -179,6 +196,7 @@ EntryList.defaultProps = {
   model: '',
   entries: [],
   addNewButtonText: 'Add New',
+  CancelButtonText: 'Cancel',
   columns: [],
   form: {},
   formAddButtonText: 'Add Entry',
