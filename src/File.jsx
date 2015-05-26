@@ -17,7 +17,7 @@ class File extends React.Component {
     this.state = {
       value: '',
       files: [],
-      limit: 20
+      limit: 0
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.buildChangeEvent = this.buildChangeEvent.bind(this);
