@@ -1,8 +1,8 @@
 'use-strict';
-var React = require('react');
-var _ = require('lodash');
-var DateTimePicker = require('react-widgets').DateTimePicker;
-var ValueChangeMixin = require('./ValueChangeMixin');
+import React from 'react';
+import _ from 'lodash';
+import { DateTimePicker } from 'react-widgets';
+import ValueChangeMixin from './ValueChangeMixin';
 
 /**
  * Date input component
@@ -19,6 +19,7 @@ module.exports = React.createClass({
     name: React.PropTypes.string.isRequired,
     value: React.PropTypes.string,
     disabled: React.PropTypes.bool,
+    calendar: React.PropTypes.bool,
     time: React.PropTypes.bool,
     format: React.PropTypes.string,
     parse: React.PropTypes.string,
@@ -27,7 +28,8 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      inputProps: ['id', 'name', 'time', 'format', 'parse', 'aria-describedby'],
+      inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby'],
+      calendar: true,
       time: false,
       format: 'MM/dd/yyyy',
       parse: 'MM/dd/yyyy'
@@ -45,7 +47,7 @@ module.exports = React.createClass({
   },
 
   render: function(){
-    var props = _.pick(this.props, this.props.inputProps);
+    let props = _.pick(this.props, this.props.inputProps);
     return (
       <DateTimePicker
         onChange={this.handleDateChange}
