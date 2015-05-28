@@ -16,8 +16,7 @@ class File extends React.Component {
     super();
     this.state = {
       value: '',
-      files: [],
-      limit: 0
+      files: []
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.buildChangeEvent = this.buildChangeEvent.bind(this);
@@ -25,10 +24,7 @@ class File extends React.Component {
   }
 
   componentWillMount() {
-    this.setState({
-      value: this.props.value,
-      limit: this.props.limit
-    });
+    this.setState({value: this.props.value});
   }
 
   componentDidMount() {
@@ -109,7 +105,7 @@ class File extends React.Component {
     return (
       <div>
         {this.renderPreview()}
-        {this.renderInput(this.state.files.length, this.state.limit)}
+        {this.renderInput(this.state.files.length, this.props.limit)}
       </div>
     );
   }

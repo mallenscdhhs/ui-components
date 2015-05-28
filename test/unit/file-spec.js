@@ -27,8 +27,10 @@ describe('File', function() {
 
   it('can configure maximum number of files to be uploaded', function() {
       expect(wrapper.childNodes[1].id).toEqual('file-test');
-      //Set this.state.limit to 1 (file uploaded earlier will bring us up to max)
-      comp.setState({limit: 1});
+      // set this.props.limit to 1 (file uploaded earlier will bring us up to max)
+      comp.props.limit = 1;
+      // re-render with the new limit applied
+      comp.setState();
       expect(wrapper.childNodes[1].id).toEqual('limit-message');
   });
 
