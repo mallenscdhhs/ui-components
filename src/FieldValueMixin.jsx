@@ -27,11 +27,19 @@ module.exports = {
     return fieldValue;
   },
 
+  setFieldValue: function(newValue){
+    if(this.props.type === 'checkbox') {
+      this.setState({'checked': this.props.value === newValue });
+    }else {
+      this.setState({'value': newValue });
+    }
+  },
+
   /**
    * Registers listener that will fire event containing the field's current value.
    */
   componentDidMount: function(){
-    Dispatcher.register( this.props.id + '-FIELD-VALUE' , function(action,data){
+    Dispatcher.register( this.props.id + '-GET-FIELD-VALUE', (action,data) =>{
       if( action === constants.actions.GET_FIELD_VALUE &&
           (data.id === this.props.id || data.name === this.props.name )) {
         Flux.doAction(constants.actions.FIELD_VALUE, {
@@ -41,11 +49,19 @@ module.exports = {
           persistInSession: this.props.persistInSession
         });
       }
-    }.bind(this));
+    });
+
+    Dispatcher.register( this.props.id + '-SET-FIELD-VALUE', (action,data) =>{
+      if( action === constants.actions.SET_FIELD_VALUE &&
+          (data.id === this.props.id || data.name === this.props.name )) {
+        this.setFieldValue(data.value);
+      }
+    });
   },
 
   componentWillUnmount: function(){
-    Dispatcher.unregister( this.props.id + '-FIELD-VALUE');
+    Dispatcher.unregister( this.props.id + '-GET-FIELD-VALUE');
+    Dispatcher.unregister( this.props.id + '-SET-FIELD-VALUE');
   }
 
 };

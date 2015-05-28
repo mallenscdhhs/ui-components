@@ -57,7 +57,14 @@ module.exports = React.createClass({
     configure: function(schema, model, components){
       var props = schema.getIn(['config']).setIn(['className'], 'form-control');
       if ( model.has(props.get('id')) ) {
-        props = props.set('value', model.get(props.get('id')));
+        if(props.get('type') === 'checkbox') {
+          // if model value is "true", then set "checked" to true
+          if ( model.get(props.get('id')) === props.get('value') ) {
+            props = props.set('checked', true);
+          }
+        }else {
+          props = props.set('value', model.get(props.get('id')));
+        }
       }
       return props.toJSON();
     }
