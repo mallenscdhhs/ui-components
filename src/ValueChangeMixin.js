@@ -21,7 +21,7 @@ module.exports = {
     var actionName = this.props.fieldValueChangeAction || event.actionName || constants.actions.FIELD_VALUE_CHANGE;
     var state = event.stateChange || {value: event.target.value};
     var payload = Immutable.fromJS(this.props).withMutations((mutablePayload) => {
-      mutablePayload.set('visible', this.state.visible);
+      mutablePayload.set('visible', this.state.visible).set('disabled',this.state.disabled);
       if (this.props.mask) {
         mutablePayload.set('value',state.value);
         mutablePayload.set('unmasked', state.unmasked);

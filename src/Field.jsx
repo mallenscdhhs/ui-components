@@ -155,6 +155,9 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
+    var fieldProps = Immutable.fromJS(this.props)
+      .set('disabled',this.state.disabled)
+      .toJSON();
     var isFieldGroup = this.isFieldGroup();
     var isRadioOrCheckbox = this.isRadioOrCheckbox();
     var wrapperTag = isFieldGroup? 'fieldset' : 'div';
@@ -163,15 +166,16 @@ module.exports = React.createClass({
     var labelProps = _.pick(this.props, ['id', 'label', 'required','description','descriptionPlacement','descriptionTrigger']);
     var children = [];
 
+
     if ( isFieldGroup || !isRadioOrCheckbox ) {
       labelProps.isFieldGroup = isFieldGroup;
       children.push(<FieldLabel {...labelProps} key="field-label"/>);
     }
 
     children = children.concat([
-      <EditorToggle {...this.props} key="editor-toggle"/>,
-      <InputControl {...this.props} key="input-control"/>,
-      <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>
+      <EditorToggle {...fieldProps} key="editor-toggle"/>,
+      <InputControl {...fieldProps} key="input-control"/>,
+      <HelpBlock {...fieldProps} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);

@@ -27,6 +27,10 @@ module.exports = {
     return fieldValue;
   },
 
+  /**
+   * Update field value with passed in 'newValue'
+   * @param newValue
+   */
   setFieldValue: function(newValue){
     if(this.props.type === 'checkbox') {
       this.setState({'checked': this.props.value === newValue });
@@ -39,7 +43,7 @@ module.exports = {
    * Registers listener that will fire event containing the field's current value.
    */
   componentDidMount: function(){
-    Dispatcher.register( this.props.id + '-GET-FIELD-VALUE', (action,data) =>{
+    Dispatcher.register( this.props.id + '-GET-FIELD-VALUE', function(action,data) {
       if( action === constants.actions.GET_FIELD_VALUE &&
           (data.id === this.props.id || data.name === this.props.name )) {
         Flux.doAction(constants.actions.FIELD_VALUE, {
@@ -49,14 +53,14 @@ module.exports = {
           persistInSession: this.props.persistInSession
         });
       }
-    });
+    }.bind(this));
 
-    Dispatcher.register( this.props.id + '-SET-FIELD-VALUE', (action,data) =>{
+    Dispatcher.register( this.props.id + '-SET-FIELD-VALUE', function(action,data) {
       if( action === constants.actions.SET_FIELD_VALUE &&
           (data.id === this.props.id || data.name === this.props.name )) {
         this.setFieldValue(data.value);
       }
-    });
+    }.bind(this));
   },
 
   componentWillUnmount: function(){
