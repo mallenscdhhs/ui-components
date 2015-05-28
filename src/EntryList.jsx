@@ -7,6 +7,7 @@ import Immutable from 'immutable';
 import Action from './Action';
 import EntryListItem from './EntryListItem';
 import EntryListForm from './EntryListForm';
+import EntryListBtn from './EntryListBtn';
 
 class EntryList extends React.Component {
 
@@ -44,6 +45,17 @@ class EntryList extends React.Component {
     Dispatcher.register('show-entrylist-form', function(action){
       if ( action === constants.actions.ENTRYLIST_FORM_SHOW ) {
         this.setState({showForm: true});
+      }
+    }.bind(this));
+
+    // when the user clicks the cancel button
+    Dispatcher.register('cancel-entrylist-entry', function(action){
+      if ( action === constants.actions.ENTRYLIST_ENTRY_CANCEL ) {
+        this.setState({
+          isEdit: false,
+          showForm: false,
+          entry: {}
+        });
       }
     }.bind(this));
 
@@ -103,6 +115,7 @@ class EntryList extends React.Component {
 
   componentWillUnmount() {
     Dispatcher.unregister('show-entrylist-form');
+    Dispatcher.unregister('cancel-entrylist-entry');
     Dispatcher.unregister('edit-entrylist-entry');
     Dispatcher.unregister('remove-entrylist-entry');
     Dispatcher.unregister('entrylist-field-value-change');
@@ -120,7 +133,7 @@ class EntryList extends React.Component {
    * @returns {JSX}
    */
   render() {
-    var columns = this.props.columns;
+    let columns = this.props.columns;
     let formConfig = this.state.isEdit ? this.state.formConfig : this.props.form;
     let actionName = this.state.isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText;
     return (
@@ -152,13 +165,17 @@ class EntryList extends React.Component {
           show={this.state.showForm}
           config={formConfig}
           actionName={actionName}/>
-        <Action
+        <EntryListBtn
           id="add-entry-btn"
-          type="button"
           iconClass="plus"
-          className="btn btn-primary"
+          show={this.state.showForm}
           name={this.props.addNewButtonText}
           event={constants.actions.ENTRYLIST_FORM_SHOW} />
+        <EntryListBtn
+          id="cancel-entry-btn"
+          show={!this.state.showForm}
+          name={this.props.CancelButtonText}
+          event={constants.actions.ENTRYLIST_ENTRY_CANCEL} />
       </div>
     );
   }
@@ -178,6 +195,8 @@ EntryList.propTypes = {
 EntryList.defaultProps = {
   model: '',
   entries: [],
+  addNewButtonText: 'Add New',
+  CancelButtonText: 'Cancel',
   columns: [],
   form: {},
   formAddButtonText: 'Add Entry',
