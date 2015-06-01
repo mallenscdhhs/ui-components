@@ -45,7 +45,7 @@ module.exports = {
       var visible = this.state.visible;
       var disabled = this.state.disabled;
       var depName = this.props.dependencyName;
-      var depType = this.props.dependencyType || '';
+      var depType = _.includes(['enabled','disabled'],this.props.initialState) ? 'enablement' : 'visibility';
       var depValues = this.props.dependencyValue.split('|');
 
       Dispatcher.register( this.props.id + '-DEP-CHANGE' , (action,data)=>{
