@@ -5,6 +5,7 @@ deploy:
   provider: npm
   email: michael.allen@scdhhs.gov
   on:
-    tags: false
+    tags: true
+    branch: master
   api_key:
     secure: mLD/4m83KTb2cBD8eiszWfyoyt+uxU2vh7S1x0xUOrKkO3aAtpovFyU+erFjXP+kfidHppQYz03mNOsI8LJTSsDNHtRhOhwUhuPfhZgia108HGUeqs+F/ZHR3HECniiUhLNcjob++2atBxd8uJv6Ki3F+eOsXBHfguSM5tqxHq8=
