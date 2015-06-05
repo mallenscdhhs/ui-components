@@ -12,8 +12,8 @@ import FileListItem from './FileListItem';
  */
 class File extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       value: '',
       files: []
@@ -24,7 +24,7 @@ class File extends React.Component {
   }
 
   componentWillMount() {
-    this.setState({value: this.props.value});
+    this.setState({value: this.props.value, files: this.props.files});
   }
 
   componentDidMount() {
