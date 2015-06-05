@@ -24,7 +24,7 @@ class File extends React.Component {
   }
 
   componentWillMount() {
-    this.setState({value: this.props.value, files: this.props.files});
+    this.setState({value: this.props.value, files: Array.isArray(this.props.files) ? this.props.files : [] });
   }
 
   componentDidMount() {
