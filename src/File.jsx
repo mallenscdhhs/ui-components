@@ -61,15 +61,15 @@ class File extends React.Component {
   }
 
   buildChangeEvent(files) {
-    let self = this;
     let event = {
       id: this.props.id,
       name: this.props.name,
       type: 'file',
       value: files
     };
-    Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, event).then(function() {
-      self.setState({files: files});
+    var actionName = this.props.fieldValueChangeAction || constants.actions.FIELD_VALUE_CHANGE;
+    Flux.doAction(actionName, event).then(()=> {
+      this.setState({files: files});
     });
   }
 

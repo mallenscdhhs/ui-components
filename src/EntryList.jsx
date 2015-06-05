@@ -138,6 +138,21 @@ class EntryList extends React.Component {
     let actionName = this.state.isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText;
     return (
       <div className="entrylist mblg">
+        <EntryListForm
+            show={this.state.showForm}
+            config={formConfig}
+            actionName={actionName}/>
+        <EntryListBtn
+            id="add-entry-btn"
+            iconClass="plus"
+            show={this.state.showForm}
+            name={this.props.addNewButtonText}
+            event={constants.actions.ENTRYLIST_FORM_SHOW} />
+        <EntryListBtn
+            id="cancel-entry-btn"
+            show={!this.state.showForm}
+            name={this.props.CancelButtonText}
+            event={constants.actions.ENTRYLIST_ENTRY_CANCEL} />
         <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr>
@@ -161,21 +176,6 @@ class EntryList extends React.Component {
             {this.showEmptyText()}
           </tbody>
         </table>
-        <EntryListForm
-          show={this.state.showForm}
-          config={formConfig}
-          actionName={actionName}/>
-        <EntryListBtn
-          id="add-entry-btn"
-          iconClass="plus"
-          show={this.state.showForm}
-          name={this.props.addNewButtonText}
-          event={constants.actions.ENTRYLIST_FORM_SHOW} />
-        <EntryListBtn
-          id="cancel-entry-btn"
-          show={!this.state.showForm}
-          name={this.props.CancelButtonText}
-          event={constants.actions.ENTRYLIST_ENTRY_CANCEL} />
       </div>
     );
   }
