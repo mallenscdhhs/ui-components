@@ -62,13 +62,17 @@ module.exports = React.createClass({
           }
         }
         this.setState({'value': value});
-        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {
-          id: this.props.id,
-          name: this.props.name,
-          value: value,
-          rules : this.props.rules,
-          persistInSession: this.props.persistInSession
-        });
+        if(this.props.fieldValueChangeAction) {
+          Flux.doAction( this.props.fieldValueChangeAction, _.merge(this.props, {fieldGroupValue: value, value: data.value}) );
+        } else {
+          Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {
+            id: this.props.id,
+            name: this.props.name,
+            value: value,
+            rules : this.props.rules,
+            persistInSession: this.props.persistInSession
+          });
+        }
       }
     }.bind(this));
   },
