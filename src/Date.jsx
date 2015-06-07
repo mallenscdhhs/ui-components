@@ -28,7 +28,7 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby', 'placeholder'],
+      inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby', 'placeholder', 'visible', 'disabled'],
       calendar: true,
       time: false,
       format: 'MM/dd/yyyy',
