@@ -8,12 +8,14 @@ import Form from './Form';
 import Fieldset from './Fieldset';
 import Field from './Field';
 import Action from './Action';
+import Content from './Content';
 
 let elements = {
   grid: Grid,
   form: Form,
   fieldset: Fieldset,
-  field: Field
+  field: Field,
+  content: Content
 };
 
 class EntryListForm extends React.Component {
