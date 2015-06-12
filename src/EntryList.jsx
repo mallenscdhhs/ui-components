@@ -16,13 +16,6 @@ module.exports = React.createClass({
 
   mixins: [DependencyMixin],
 
-  /**
-   * Provides configuration processing for Field components.
-   * @param {Immutable.Map} schema - this components schema
-   * @param {Immutable.Map} [model] - the data model(if any)
-   * @param {Immutable.Map} components - the component list
-   * @returns {JSON}
-   */
   statics: {
     configure: function(schema, model, components) {
       let config = schema.get('config');
@@ -55,10 +48,6 @@ module.exports = React.createClass({
     };
   },
 
-  /**
-   * Init Field state
-   * @returns {object}
-   */
   getInitialState: function() {
     return {
       entries: [],
