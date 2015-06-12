@@ -9,6 +9,12 @@ module.exports = React.createClass({
     'content' : React.PropTypes.string
   },
 
+  statics: {
+    configure: function(schema, model, components){
+      return schema.get('config').toJSON();
+    }
+  },
+
   getDefaultProps: function(){
     return {
       'componentType': 'content'
