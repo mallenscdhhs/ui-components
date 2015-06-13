@@ -9,6 +9,7 @@ import EntryListItem from './EntryListItem';
 import EntryListForm from './EntryListForm';
 import EntryListBtn from './EntryListBtn';
 import DependencyMixin from './DependencyMixin';
+import setClassNames from 'classnames';
 
 module.exports = React.createClass({
 
@@ -150,6 +151,14 @@ module.exports = React.createClass({
     }
   },
 
+  getClassNames: function(){
+    return setClassNames({
+      'entrylist': true,
+      'mblg': true,
+      'hidden': !this.state.visible
+    });
+  },
+
   /**
    * Render an EntryList component.
    * @returns {JSX}
@@ -159,7 +168,7 @@ module.exports = React.createClass({
     let formConfig = this.state.isEdit ? this.state.formConfig : this.props.form;
     let actionName = this.state.isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText;
     return (
-      <div className="entrylist mblg">
+      <div className={this.getClassNames()}>
         <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr>
