@@ -155,7 +155,10 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
-    var fieldProps = Immutable.fromJS(this.props).set('disabled',this.state.disabled ? 'disabled' : false).toJSON();
+    var fieldProps = (this.props.dependencyValue) ? (
+      Immutable.fromJS(this.props).set('disabled',this.state.disabled ? 'disabled' : false).toJSON()
+    ) : this.props;
+
     var isFieldGroup = this.isFieldGroup();
     var isRadioOrCheckbox = this.isRadioOrCheckbox();
     var wrapperTag = isFieldGroup? 'fieldset' : 'div';
