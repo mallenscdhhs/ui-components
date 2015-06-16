@@ -8,39 +8,62 @@ import Action from './Action';
 import EntryListItem from './EntryListItem';
 import EntryListForm from './EntryListForm';
 import EntryListBtn from './EntryListBtn';
+import DependencyMixin from './DependencyMixin';
+import setClassNames from 'classnames';
 
-class EntryList extends React.Component {
+module.exports = React.createClass({
 
-  /**
-   * Provides configuration processing for Field components.
-   * @param {Immutable.Map} schema - this components schema
-   * @param {Immutable.Map} [model] - the data model(if any)
-   * @param {Immutable.Map} components - the component list
-   * @returns {JSON}
-   */
-  static configure(schema, model, components) {
-    let config = schema.get('config');
-    let entries = model.get(config.get('model'));
-    return entries ? config.set('entries', entries).toJSON() : config.toJSON();
-  }
+  displayName: 'EntryList',
 
-  constructor() {
-    super();
-    this.state = {
+  mixins: [DependencyMixin],
+
+  statics: {
+    configure: function(schema, model, components) {
+      let config = schema.get('config');
+      let entries = model.get(config.get('model'));
+      return entries ? config.set('entries', entries).toJSON() : config.toJSON();
+    }
+  },
+
+  propTypes: {
+    model: React.PropTypes.string,
+    entries: React.PropTypes.arrayOf(React.PropTypes.object),
+    emptyText: React.PropTypes.string,
+    addNewButtonText: React.PropTypes.string,
+    columns: React.PropTypes.arrayOf(React.PropTypes.object),
+    form: React.PropTypes.object,
+    formAddButtonText: React.PropTypes.string,
+    formUpdateButtonText: React.PropTypes.string
+  },
+
+  getDefaultProps: function(){
+    return {
+      model: '',
+      entries: [],
+      addNewButtonText: 'Add New',
+      CancelButtonText: 'Cancel',
+      columns: [],
+      form: {},
+      formAddButtonText: 'Add Entry',
+      formUpdateButtonText: 'Update Entry'
+    };
+  },
+
+  getInitialState: function() {
+    return {
       entries: [],
       entry: {},
       showForm: false,
       formConfig: {},
       isEdit: false
     };
-    this.showEmptyText = this.showEmptyText.bind(this);
-  }
+  },
 
-  componentWillMount() {
+  componentWillMount: function() {
     this.setState({entries: this.props.entries});
-  }
+  },
 
-  componentDidMount() {
+  componentDidMount: function() {
     // when the user clicks the show form button
     Dispatcher.register('show-entrylist-form', function(action){
       if ( action === constants.actions.ENTRYLIST_FORM_SHOW ) {
@@ -111,33 +134,41 @@ class EntryList extends React.Component {
         });
       }
     }.bind(this));
-  }
+  },
 
-  componentWillUnmount() {
+  componentWillUnmount: function() {
     Dispatcher.unregister('show-entrylist-form');
     Dispatcher.unregister('cancel-entrylist-entry');
     Dispatcher.unregister('edit-entrylist-entry');
     Dispatcher.unregister('remove-entrylist-entry');
     Dispatcher.unregister('entrylist-field-value-change');
     Dispatcher.unregister('add-new-entrylist-entry');
-  }
+  },
 
-  showEmptyText() {
+  showEmptyText: function() {
     if (!this.state.entries.length) {
-      return <tr><td colSpan={this.props.columns.length}>{this.props.emptyText}</td></tr>;
+      return <tr><td colSpan={this.props.columns.length + 2}>{this.props.emptyText}</td></tr>;
     }
-  }
+  },
+
+  getClassNames: function(){
+    return setClassNames({
+      'entrylist': true,
+      'mblg': true,
+      'hidden': !this.state.visible
+    });
+  },
 
   /**
    * Render an EntryList component.
    * @returns {JSX}
    */
-  render() {
+  render: function() {
     let columns = this.props.columns;
     let formConfig = this.state.isEdit ? this.state.formConfig : this.props.form;
     let actionName = this.state.isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText;
     return (
-      <div className="entrylist mblg">
+      <div className={this.getClassNames()}>
         <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr>
@@ -179,28 +210,5 @@ class EntryList extends React.Component {
       </div>
     );
   }
-}
+});
 
-EntryList.propTypes = {
-  model: React.PropTypes.string,
-  entries: React.PropTypes.arrayOf(React.PropTypes.object),
-  emptyText: React.PropTypes.string,
-  addNewButtonText: React.PropTypes.string,
-  columns: React.PropTypes.arrayOf(React.PropTypes.object),
-  form: React.PropTypes.object,
-  formAddButtonText: React.PropTypes.string,
-  formUpdateButtonText: React.PropTypes.string
-};
-
-EntryList.defaultProps = {
-  model: '',
-  entries: [],
-  addNewButtonText: 'Add New',
-  CancelButtonText: 'Cancel',
-  columns: [],
-  form: {},
-  formAddButtonText: 'Add Entry',
-  formUpdateButtonText: 'Update Entry'
-};
-
-export default EntryList;
