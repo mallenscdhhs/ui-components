@@ -68,7 +68,7 @@ module.exports = React.createClass({
           }
         }
         this.setState({'value': value});
-        Flux.doAction( this.props.fieldValueChangeAction, _.merge(this.props, {value: data.value}) );
+        Flux.doAction( this.props.fieldValueChangeAction, _.merge(this.props, {value: value}) );
       }
     }.bind(this));
   },
