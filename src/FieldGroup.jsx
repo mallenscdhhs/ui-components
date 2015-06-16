@@ -42,6 +42,12 @@ module.exports = React.createClass({
     persistInSession: React.PropTypes.bool
   },
 
+  getDefaultProps: function() {
+    return {
+      fieldValueChangeAction: constants.actions.FIELD_VALUE_CHANGE
+    };
+  },
+
   getInitialState: function(){
     return {
       'value' : this.props.value || (this.props.type === 'checkbox'? [] : '')
@@ -62,17 +68,7 @@ module.exports = React.createClass({
           }
         }
         this.setState({'value': value});
-        if(this.props.fieldValueChangeAction) {
-          Flux.doAction( this.props.fieldValueChangeAction, _.merge(this.props, {fieldGroupValue: value, value: data.value}) );
-        } else {
-          Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, {
-            id: this.props.id,
-            name: this.props.name,
-            value: value,
-            rules : this.props.rules,
-            persistInSession: this.props.persistInSession
-          });
-        }
+        Flux.doAction( this.props.fieldValueChangeAction, _.merge(this.props, {value: data.value}) );
       }
     }.bind(this));
   },
