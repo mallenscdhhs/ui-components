@@ -31,6 +31,32 @@ describe('Workflow', function(){
     });
   });
 
+  it('can skip the next section', function(done){
+    let config = childrenFixture;
+    let component = Factory.build(elements, config, config)[0];
+    let workflow = TestUtils.renderIntoDocument(component);
+    let dom = React.findDOMNode(workflow);
+    let ul = dom.childNodes[2];
+    let page1Link = ul.childNodes[0].childNodes[1];
+    let page2Link = ul.childNodes[1].childNodes[1];
+
+    expect(workflow.state.currentPage).toEqual('page1');
+    Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function() {
+      // page2 is skipped because page2 props.skip is true
+      expect(workflow.state.currentPage).toEqual('page3');
+      // navigate away to page5 to test again
+      workflow.setState({currentPage: 'page5'});
+      expect(workflow.state.currentPage).toEqual('page5');
+      // click on page2 link in nav-tree
+      TestUtils.Simulate.click(page2Link);
+      setTimeout(function() {
+        // page2 is skipped again
+        expect(workflow.state.currentPage).toEqual('page3');
+        done();
+      }, 300);
+    });
+  });
+
   it('can revert to the previous section', function(done){
     this.workflow.setState({currentPage: 'page2', previousPage: 'page1', nextPage: 'page3'});
     expect(this.workflow.state.currentPage).toEqual('page2');

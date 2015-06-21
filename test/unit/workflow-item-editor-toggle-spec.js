@@ -7,7 +7,7 @@ var constants = require('../../src/constants');
 describe('WorkflowEditorToggle', function(){
 
   beforeEach(function(){
-    this.fixture = {id:'page1', title: 'Page 1', active: true , disabled: false, current: false };
+    this.fixture = {id:'page1', title: 'Page 1', active: true , disabled: false, current: false, skip: false };
     this.item = React.createFactory(Components.elements.workflowitem);
     this.component = TestUtils.renderIntoDocument(this.item(this.fixture));
   });

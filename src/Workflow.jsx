@@ -67,8 +67,12 @@ class Workflow extends React.Component {
    */
   static configure(schema, model, components){
     let flatWorkflow = [];
+    let isSkip = [];
     let rootSchema = { components: components.toJSON() };
-    SchemaUtils.traverse(rootSchema, schema.get('child'), id => flatWorkflow.push(id));
+    SchemaUtils.traverse(rootSchema, schema.get('child'), function(id, head) {
+      flatWorkflow.push(id);
+      isSkip.push(head.config.skip || false);
+    });
     let currentPage = schema.get('child');
     let lastSectionCompleted = schema.getIn(['config','lastSectionCompleted']);
     if ( lastSectionCompleted ) {
@@ -77,7 +81,8 @@ class Workflow extends React.Component {
     return schema.get('config').withMutations(function(mutableConfig) {
       mutableConfig
         .set('workflow', flatWorkflow)
-        .set('currentPage',currentPage);
+        .set('currentPage', currentPage)
+        .set('skip', isSkip);
     }).toJSON();
   }
 
@@ -150,7 +155,7 @@ class Workflow extends React.Component {
         // when the user clicks Save & Continue, get the next page's skip property and skip if true
         let nextPageIndex = Workflow.getCurrentIndex(this.state.currentPage, this.props.workflow) + 1;
         let next = Workflow.getNext(this.state.currentPage, this.props.workflow);
-        let skip = this.props.children[nextPageIndex].props.skip;
+        let skip = this.props.skip[nextPageIndex];
         if(skip) {
           this.handleNext(next);
         } else {
