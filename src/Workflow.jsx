@@ -154,13 +154,9 @@ class Workflow extends React.Component {
       } else if ( action === constants.actions.WORKFLOW_NEXT_PAGE) {
         // when the user clicks Save & Continue, get the next page's skip property and skip if true
         let nextPageIndex = Workflow.getCurrentIndex(this.state.currentPage, this.props.workflow) + 1;
-        let next = Workflow.getNext(this.state.currentPage, this.props.workflow);
         let skip = this.props.skip[nextPageIndex];
-        if(skip) {
-          this.handleNext(next);
-        } else {
-          this.handleNext();
-        }
+        let next = skip ? Workflow.getNext(this.state.currentPage, this.props.workflow) : null;
+        this.handleNext(next);
       }
     }.bind(this));
   }
