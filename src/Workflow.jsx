@@ -67,11 +67,13 @@ class Workflow extends React.Component {
    */
   static configure(schema, model, components){
     let flatWorkflow = [];
-    let isSkip = [];
+    // create an array of booleans for each component's skip property value
+    let skipList = [];
     let rootSchema = { components: components.toJSON() };
-    SchemaUtils.traverse(rootSchema, schema.get('child'), function(id, head) {
+    SchemaUtils.traverse(rootSchema, schema.get('child'), (id, head) => {
       flatWorkflow.push(id);
-      isSkip.push(head.config.skip || false);
+      // push skip property to skipList
+      skipList.push(head.config.skip || false);
     });
     let currentPage = schema.get('child');
     let lastSectionCompleted = schema.getIn(['config','lastSectionCompleted']);
@@ -82,7 +84,7 @@ class Workflow extends React.Component {
       mutableConfig
         .set('workflow', flatWorkflow)
         .set('currentPage', currentPage)
-        .set('skip', isSkip);
+        .set('skip', skipList);
     }).toJSON();
   }
 
