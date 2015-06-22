@@ -19,20 +19,22 @@ module.exports = React.createClass({
     title: React.PropTypes.string.isRequired,
     active: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
-    current: React.PropTypes.bool
+    current: React.PropTypes.bool,
+    skip: React.PropTypes.bool
   },
 
   getDefaultProps: function(){
     return {
       active: true,
       disabled: false,
-      current : false
+      current : false,
+      skip: false
     };
   },
 
   handleClick: function(e){
     if(!this.props.disabled){
-      Flux.doAction( constants.actions.TREE_LOAD_PAGE , { 'id' : this.props.id } );
+      Flux.doAction( constants.actions.TREE_LOAD_PAGE , { 'id': this.props.id, 'skip': this.props.skip });
     }
   },
 

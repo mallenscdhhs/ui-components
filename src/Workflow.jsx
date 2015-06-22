@@ -67,8 +67,14 @@ class Workflow extends React.Component {
    */
   static configure(schema, model, components){
     let flatWorkflow = [];
+    // create an array of booleans for each component's skip property value
+    let skipList = [];
     let rootSchema = { components: components.toJSON() };
-    SchemaUtils.traverse(rootSchema, schema.get('child'), id => flatWorkflow.push(id));
+    SchemaUtils.traverse(rootSchema, schema.get('child'), (id, head) => {
+      flatWorkflow.push(id);
+      // push skip property to skipList
+      skipList.push(head.config.skip || false);
+    });
     let currentPage = schema.get('child');
     let lastSectionCompleted = schema.getIn(['config','lastSectionCompleted']);
     if ( lastSectionCompleted ) {
@@ -77,7 +83,8 @@ class Workflow extends React.Component {
     return schema.get('config').withMutations(function(mutableConfig) {
       mutableConfig
         .set('workflow', flatWorkflow)
-        .set('currentPage',currentPage);
+        .set('currentPage', currentPage)
+        .set('skip', skipList);
     }).toJSON();
   }
 
@@ -138,11 +145,20 @@ class Workflow extends React.Component {
   componentDidMount(){
     Dispatcher.register('workflow-actions', function(action, data){
       if ( action === constants.actions.TREE_LOAD_PAGE) {
-        this.handleDirect(data.id);
+        // when the user clicks a link in the tree, skip that page if its' skip property is true
+        if(data.skip) {
+          this.handleNext(data.id);
+        } else {
+          this.handleDirect(data.id);
+        }
       } else if ( action === constants.actions.WORKFLOW_PREVIOUS_PAGE ) {
         this.handlePrevious();
       } else if ( action === constants.actions.WORKFLOW_NEXT_PAGE) {
-        this.handleNext();
+        // when the user clicks Save & Continue, get the next page's skip property and skip if true
+        let nextPageIndex = Workflow.getCurrentIndex(this.state.currentPage, this.props.workflow) + 1;
+        let skip = this.props.skip[nextPageIndex];
+        let next = skip ? Workflow.getNext(this.state.currentPage, this.props.workflow) : null;
+        this.handleNext(next);
       }
     }.bind(this));
   }
@@ -170,11 +186,14 @@ class Workflow extends React.Component {
   }
 
   /**
-   * Get the next page, if available, and update workflow.
+   * Get the next page from the current page (or you can specify a pageId),
+   * if available, and update workflow.
    * @fires workflow:load:page
+   * @param {string} pageId
    */
-  handleNext(){
-    var next = Workflow.getNext(this.state.currentPage, this.props.workflow);
+  handleNext(pageId){
+    let currPage = pageId ? pageId : this.state.currentPage;
+    let next = Workflow.getNext(currPage, this.props.workflow);
     if( next ){
       this.handleDirect(next);
     }
@@ -185,7 +204,7 @@ class Workflow extends React.Component {
    * @fires workflow:load:page
    */
   handlePrevious(){
-    var previous = Workflow.getPrevious(this.state.currentPage, this.props.workflow);
+    let previous = Workflow.getPrevious(this.state.currentPage, this.props.workflow);
     if( previous ){
       this.handleDirect(previous);
     }

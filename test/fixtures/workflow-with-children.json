@@ -22,7 +22,8 @@
       "config": {
         "title": "Page Two",
         "id": "page2",
-        "active" : false
+        "active" : false,
+        "skip": true
       },
       "next": "page5",
       "child" : "page3"
