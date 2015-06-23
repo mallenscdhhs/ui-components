@@ -149,6 +149,7 @@ module.exports = React.createClass({
     Dispatcher.unregister('remove-entrylist-entry');
     Dispatcher.unregister('entrylist-field-value-change');
     Dispatcher.unregister('add-new-entrylist-entry');
+    Dispatcher.unregister('add-new-entrylist-entry-validated');
   },
 
   showEmptyText: function() {
