@@ -30,7 +30,7 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      inputProps: ['type', 'id', 'name', 'maxLength', 'disabled', 'className', 'aria-describedby']
+      inputProps: ['type', 'id', 'name', 'maxLength', 'disabled', 'className', 'aria-describedby', 'min', 'max']
     };
   },
 
