@@ -83,7 +83,7 @@ module.exports = React.createClass({
     }.bind(this));
 
     // when the user clicks the edit entry link
-    Dispatcher.register('edit-entrylist-entry', (action, data)=>{
+    Dispatcher.register('edit-entrylist-entry', (action, data) => {
       if ( action === constants.actions.ENTRYLIST_ENTRY_EDIT ) {
         let currentEntry = Immutable.Map(this.state.entries[data.entryId]);
         let formConfig = Immutable.fromJS(this.props.form).set('model', currentEntry).toJSON();
@@ -114,7 +114,7 @@ module.exports = React.createClass({
     }.bind(this));
 
     // when the user clicks the #add-entry-btn
-    Dispatcher.register('add-new-entrylist-entry',(action)=>{
+    Dispatcher.register('add-new-entrylist-entry',(action) => {
       if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD ) {
         let currentEntries = Immutable.List(this.state.entries);
         let updatedEntries = (!this.state.isEdit) ?
@@ -133,9 +133,9 @@ module.exports = React.createClass({
       }
     });
 
-    Dispatcher.register('add-new-entrylist-entry-validated',(action, entriesModel)=> {
+    Dispatcher.register('add-new-entrylist-entry-validated',(action, entriesModel) => {
       if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED ) {
-        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(()=> {
+        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(() => {
           this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false});
         });
       }
