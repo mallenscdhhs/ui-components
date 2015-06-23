@@ -126,7 +126,8 @@ module.exports = React.createClass({
           id: this.props.model,
           name: this.props.model,
           type: 'entrylist',
-          value: entries
+          value: entries,
+          latestEntry: this.state.entry
         };
         Flux.doAction(constants.actions.APPLICATION_VALIDATE_ENTRY, this.props.form, entriesModel);
       }
