@@ -66,9 +66,9 @@ describe('FieldGroup', function(){
     }.bind(this));
     setTimeout(function() {
       TestUtils.Simulate.change(radios[0].getDOMNode(), {target: {checked: true}});
-    },10);
+    },100);
     setTimeout(function() {
       TestUtils.Simulate.change(radios[1].getDOMNode(), {target: {checked: true}});
-    },20);
+    },200);
   });
 });
