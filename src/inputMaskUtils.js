@@ -12,7 +12,7 @@ module.exports = {
    * Masks the value of an input component if a 'mask' string is provided.
    * @fires FIELD_VALUE_CHANGE
    * @param {object} event - config object passed in containing new, unmasked, and/or pasted values
-   * @param {string} mask - format to be passed in for masking the input value. '0' represent
+   * @param {string} mask - format to be passed in for masking the input value. '0' represents
    * a character that should be masked, 'X' represents a character that should not be masked, and
    * any other character will be interpreted as a separator.
    * @param {string} customConfig.maskSymbol - optionally mask with a character other than
@@ -45,6 +45,10 @@ module.exports = {
 
   getRegEx: function(expressionString, stringType) {
     return new RegExp('[' + stringType + expressionString + ']', 'g');
+  },
+
+  filterSepChars: function(value, sep) {
+    return value.replace(sep, '');
   },
 
   applyMask: function(maskConfig, currentValue, allChars) {
@@ -120,7 +124,7 @@ module.exports = {
     var validChar = symb.test(event.target.value.slice(-1));
     if (validChar) {
       // filter out separators
-      var filtered = event.target.value.replace(sep, '');
+      var filtered = this.filterSepChars(event.target.value, sep);
       var newUnmasked = filtered.slice(-1);
       // mask filtered chars
       var currentValue = filtered.slice(0, -1) + maskConfig.symbol;
@@ -129,7 +133,9 @@ module.exports = {
         currentValue = filtered;
       }
       if(event.pasted) {
-        outputValue = this.applyMask(maskConfig, event.pasted, true);
+        // filter out pasted separators
+        filtered = this.filterSepChars(event.pasted, sep);
+        outputValue = this.applyMask(maskConfig, filtered, true);
         outputUnmasked = event.pasted;
       } else {
         outputValue = this.applyMask(maskConfig, currentValue);
