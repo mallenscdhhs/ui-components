@@ -15,12 +15,4 @@ describe('main component', function(){
     Components.configure({foo: 'bar'});
     expect(config.foo).toEqual('bar');
   });
-  describe('#factory', function(){
-    it('can build the ReactElement DOM from schema', function(){
-      var fixture = require('../fixtures/main.json');
-      var Comp = Components.factory(fixture);
-      var page = TestUtils.renderIntoDocument(Comp);
-      expect(page.getDOMNode()).toBeDefined();
-    });
-  });
 });

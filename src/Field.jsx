@@ -18,6 +18,7 @@ var Input = require('./Input');
 var Textarea = require('./Textarea');
 var DateComponent = require('./Date');
 var AutoComplete = require('./AutoComplete');
+var File = require('./File');
 var ContentEditor = require('./ContentEditor');
 var FieldValueMixin = require('./FieldValueMixin');
 
@@ -56,7 +57,14 @@ module.exports = React.createClass({
     configure: function(schema, model, components){
       var props = schema.getIn(['config']).setIn(['className'], 'form-control');
       if ( model.has(props.get('id')) ) {
-        props = props.set('value', model.get(props.get('id')));
+        if(props.get('type') === 'checkbox') {
+          // if model value is "true", then set "checked" to true
+          if ( model.get(props.get('id')) === props.get('value') ) {
+            props = props.set('checked', true);
+          }
+        }else {
+          props = props.set('value', model.get(props.get('id')));
+        }
       }
       return props.toJSON();
     }
@@ -122,6 +130,8 @@ module.exports = React.createClass({
         return AutoComplete;
       case 'date':
         return DateComponent;
+      case 'file':
+        return File;
       default:
         return Input;
     }
@@ -145,6 +155,10 @@ module.exports = React.createClass({
    * @returns {JSX}
    */
   render: function(){
+    var fieldProps = (this.props.dependencyValue) ? (
+      Immutable.fromJS(this.props).set('disabled',this.state.disabled ? 'disabled' : false).toJSON()
+    ) : this.props;
+
     var isFieldGroup = this.isFieldGroup();
     var isRadioOrCheckbox = this.isRadioOrCheckbox();
     var wrapperTag = isFieldGroup? 'fieldset' : 'div';
@@ -153,15 +167,16 @@ module.exports = React.createClass({
     var labelProps = _.pick(this.props, ['id', 'label', 'required','description','descriptionPlacement','descriptionTrigger']);
     var children = [];
 
+
     if ( isFieldGroup || !isRadioOrCheckbox ) {
       labelProps.isFieldGroup = isFieldGroup;
       children.push(<FieldLabel {...labelProps} key="field-label"/>);
     }
 
     children = children.concat([
-      <EditorToggle {...this.props} key="editor-toggle"/>,
-      <InputControl {...this.props} key="input-control"/>,
-      <HelpBlock {...this.props} key="help-block">{message}</HelpBlock>
+      <EditorToggle {...fieldProps} key="editor-toggle"/>,
+      <InputControl {...fieldProps} key="input-control"/>,
+      <HelpBlock {...fieldProps} key="help-block">{message}</HelpBlock>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);

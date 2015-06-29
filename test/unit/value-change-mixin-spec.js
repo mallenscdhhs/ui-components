@@ -11,8 +11,10 @@ describe('ValueChangeMixin', function() {
     var textFieldConfig = {
       id: 'test-text',
       name: 'testText',
+      label: 'Test',
       type: 'text',
-      value: ''
+      value: '',
+      customPropType: 'CustomType'
     };
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig}/>);
     var wrapperDiv = dom.getDOMNode();
@@ -26,6 +28,7 @@ describe('ValueChangeMixin', function() {
         expect(data.name).toEqual(textFieldConfig.name);
         expect(data.type).toEqual(textFieldConfig.type);
         expect(data.value).toEqual('value test');
+        expect(data.customPropType).toEqual(textFieldConfig.customPropType);
         done();
       }
     });
@@ -38,6 +41,7 @@ describe('ValueChangeMixin', function() {
       id: 'test-text',
       name: 'testText',
       type: 'text',
+      label: 'Test',
       value: ''
     };
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig} fieldValueChangeAction="custom-field-value-change-action"/>);

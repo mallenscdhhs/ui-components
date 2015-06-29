@@ -1,6 +1,7 @@
 'use-strict';
 import React from 'react';
 import Immutable from 'immutable';
+import _ from 'lodash';
 
 /**
  * An element/static method for creating a DOM structure from JSON.
@@ -20,11 +21,11 @@ class Factory extends React.Component {
     if ( !elements ) throw new TypeError('You must provide a list of elements to Factory#build.');
     if ( !schema ) throw new TypeError('You must provide a root schema to Factory#build.');
     if ( !head ) throw new TypeError('You must provide a head config to Factory#build.');
-
-    var tree = [];
-    var list = schema.components || {};
-    var iList = Immutable.Map(list);
-    var element, elementFactory, props, children, iHead, iModel;
+    
+    let tree = [];
+    let list = schema.components || {};
+    let iList = Immutable.Map(list);
+    let element, elementFactory, props, children, iHead, iModel;
     while(head){
       children = null;
       element = elements[head.type];
@@ -32,6 +33,7 @@ class Factory extends React.Component {
       iHead = Immutable.fromJS(head);
       iModel = Immutable.Map(schema.model);
       props = element.configure? element.configure(iHead, iModel, iList) : head.config;
+      props.key = _.uniqueId(head.type+'-');
       if ( head.child ) {
         children = Factory.build(elements, schema, list[head.child]);
       }

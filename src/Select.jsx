@@ -50,7 +50,7 @@ module.exports = React.createClass({
 
   getDefaultProps: function(){
     return {
-      inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby'],
+      inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby', 'disabled'],
       defaultOption: {
         value: '',
         label: 'select...'
