@@ -47,7 +47,12 @@ module.exports = {
     return new RegExp('[' + stringType + expressionString + ']', 'g');
   },
 
-  filterSepChars: function(value, sep) {
+  /**
+   * Filters out the seperator symbols from the masked value supplied.
+   * @param {string} value - current value which is masked and includes seperator symbols
+   * @param {string} sep - the mask's seperator symbol
+   */
+  filterSeperatorChars: function(value, sep) {
     return value.replace(sep, '');
   },
 
@@ -124,7 +129,7 @@ module.exports = {
     var validChar = symb.test(event.target.value.slice(-1));
     if (validChar) {
       // filter out separators
-      var filtered = this.filterSepChars(event.target.value, sep);
+      var filtered = this.filterSeperatorChars(event.target.value, sep);
       var newUnmasked = filtered.slice(-1);
       // mask filtered chars
       var currentValue = filtered.slice(0, -1) + maskConfig.symbol;
@@ -134,7 +139,7 @@ module.exports = {
       }
       if(event.pasted) {
         // filter out pasted separators
-        filtered = this.filterSepChars(event.pasted, sep);
+        filtered = this.filterSeperatorChars(event.pasted, sep);
         outputValue = this.applyMask(maskConfig, filtered, true);
         outputUnmasked = event.pasted;
       } else {
