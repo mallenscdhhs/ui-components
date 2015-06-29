@@ -9,6 +9,7 @@ import Fieldset from './Fieldset';
 import Field from './Field';
 import Action from './Action';
 import Content from './Content';
+import setClassNames from 'classnames';
 
 let elements = {
   grid: Grid,
@@ -19,6 +20,11 @@ let elements = {
 };
 
 class EntryListForm extends React.Component {
+
+  constructor(){
+    super();
+    this.getClassNames = this.getClassNames.bind(this);
+  }
   /**
    * Only update this component if a new form config is provided or the "show"
    * property is changed.
@@ -32,9 +38,16 @@ class EntryListForm extends React.Component {
     return !isSameConfig || (nextProps.show !== this.props.show);
   }
 
+  getClassNames(){
+    return setClassNames({
+      'entrylist-form': true,
+      'hidden': !this.props.show
+    });
+  }
+
   render(){
-    return ( this.props.show ) ? (
-      <div className="entrylist-form">
+    return (
+      <div className={this.getClassNames()}>
         {Factory.build(elements, this.props.config, this.props.config)[0]}
         <div className="row text-right">
           <div className="col-md-12">
@@ -47,7 +60,7 @@ class EntryListForm extends React.Component {
           </div>
         </div>
       </div>
-    ) : <div className="entry-list-form"/>;
+    );
   }
 }
 
