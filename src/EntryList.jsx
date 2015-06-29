@@ -83,7 +83,7 @@ module.exports = React.createClass({
     }.bind(this));
 
     // when the user clicks the edit entry link
-    Dispatcher.register('edit-entrylist-entry', function(action, data){
+    Dispatcher.register('edit-entrylist-entry', (action, data) => {
       if ( action === constants.actions.ENTRYLIST_ENTRY_EDIT ) {
         let currentEntry = Immutable.Map(this.state.entries[data.entryId]);
         let formConfig = Immutable.fromJS(this.props.form).set('model', currentEntry).toJSON();
@@ -94,7 +94,7 @@ module.exports = React.createClass({
           showForm: true
         });
       }
-    }.bind(this));
+    });
 
     // when the user clicks the remove entry link
     Dispatcher.register('remove-entrylist-entry', function(action, data){
@@ -114,7 +114,7 @@ module.exports = React.createClass({
     }.bind(this));
 
     // when the user clicks the #add-entry-btn
-    Dispatcher.register('add-new-entrylist-entry', function(action){
+    Dispatcher.register('add-new-entrylist-entry',(action) => {
       if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD ) {
         let currentEntries = Immutable.List(this.state.entries);
         let updatedEntries = (!this.state.isEdit) ?
@@ -122,18 +122,24 @@ module.exports = React.createClass({
           currentEntries.set(this.state.entry._id, this.state.entry);
         let entries = updatedEntries.toJSON();
         // fire FIELD_VALUE_CHANGE for the model
-        let self = this;
         let entriesModel = {
           id: this.props.model,
           name: this.props.model,
           type: 'entrylist',
-          value: entries
+          value: entries,
+          latestEntry: this.state.entry
         };
-        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(function() {
-          self.setState({isEdit: false, entry: {}, entries: entries, showForm: false});
+        Flux.doAction(constants.actions.APPLICATION_VALIDATE_ENTRY, this.props.form, entriesModel);
+      }
+    });
+
+    Dispatcher.register('add-new-entrylist-entry-validated',(action, entriesModel) => {
+      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED ) {
+        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(() => {
+          this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false});
         });
       }
-    }.bind(this));
+    });
   },
 
   componentWillUnmount: function() {
@@ -143,6 +149,7 @@ module.exports = React.createClass({
     Dispatcher.unregister('remove-entrylist-entry');
     Dispatcher.unregister('entrylist-field-value-change');
     Dispatcher.unregister('add-new-entrylist-entry');
+    Dispatcher.unregister('add-new-entrylist-entry-validated');
   },
 
   showEmptyText: function() {
