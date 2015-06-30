@@ -46,8 +46,8 @@ class EntryListForm extends React.Component {
   }
 
   render(){
-    return (
-      <div className={this.getClassNames()}>
+    return  this.props.show ? (
+      <div className="entrylist-form">
         {Factory.build(elements, this.props.config, this.props.config)[0]}
         <div className="row text-right">
           <div className="col-md-12">
@@ -60,7 +60,7 @@ class EntryListForm extends React.Component {
           </div>
         </div>
       </div>
-    );
+    ) : <div className="entrylist-form"></div>;
   }
 }
 
