@@ -203,15 +203,18 @@ module.exports = React.createClass({
           parentId={this.props.id}
           show={this.state.showForm}
           config={formConfig}
-          actionName={actionName}/>
+          actionName={actionName}
+          key={this.props.form.config.id+'-'+this.props.id} />
         <EntryListBtn
           id={this.props.id}
+          key={this.props.id-'-entrylist-form-show'}
           iconClass="plus"
           show={this.state.showForm}
           name={this.props.addNewButtonText}
           event={constants.actions.ENTRYLIST_FORM_SHOW} />
         <EntryListBtn
           id={this.props.id}
+          key={this.props.id+'-entrylist-entry-cancel'}
           show={!this.state.showForm}
           name={this.props.CancelButtonText}
           event={constants.actions.ENTRYLIST_ENTRY_CANCEL} />
