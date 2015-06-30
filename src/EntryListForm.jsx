@@ -66,7 +66,7 @@ class EntryListForm extends React.Component {
 }
 
 EntryListForm.propTypes = {
-  show: React.PropTypes.boolean,
+  show: React.PropTypes.bool,
   config: React.PropTypes.object,
   actionName: React.PropTypes.string,
   actionEvent: React.PropTypes.string
