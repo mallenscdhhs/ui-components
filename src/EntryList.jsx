@@ -135,7 +135,7 @@ module.exports = React.createClass({
           value: entries
         };
         Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(function() {
-          self.setState({isEdit: false, entry: {}, entries: entries, showForm: false});
+          _.defer(self.setState({isEdit: false, entry: {}, entries: entries, showForm: false}));
         });
       }
     }.bind(this));
