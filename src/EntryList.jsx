@@ -65,15 +65,17 @@ module.exports = React.createClass({
 
   componentDidMount: function() {
     // when the user clicks the show form button
-    Dispatcher.register('show-entrylist-form', function(action){
-      if ( action === constants.actions.ENTRYLIST_FORM_SHOW ) {
+    Dispatcher.register('show-entrylist-form-'+this.props.id, function(action, data){
+      if ( action === constants.actions.ENTRYLIST_FORM_SHOW &&
+           data.id === this.props.id) {
         this.setState({showForm: true});
       }
     }.bind(this));
 
     // when the user clicks the cancel button
-    Dispatcher.register('cancel-entrylist-entry', function(action){
-      if ( action === constants.actions.ENTRYLIST_ENTRY_CANCEL ) {
+    Dispatcher.register('cancel-entrylist-entry-'+this.props.id, function(action, data){
+      if ( action === constants.actions.ENTRYLIST_ENTRY_CANCEL &&
+           data.id === this.props.id) {
         this.setState({
           isEdit: false,
           showForm: false,
@@ -83,8 +85,9 @@ module.exports = React.createClass({
     }.bind(this));
 
     // when the user clicks the edit entry link
-    Dispatcher.register('edit-entrylist-entry', function(action, data){
-      if ( action === constants.actions.ENTRYLIST_ENTRY_EDIT ) {
+    Dispatcher.register('edit-entrylist-entry-'+this.props.id, function(action, data){
+      if ( action === constants.actions.ENTRYLIST_ENTRY_EDIT &&
+           data.id === this.props.id) {
         let currentEntry = Immutable.Map(this.state.entries[data.entryId]);
         let formConfig = Immutable.fromJS(this.props.form).set('model', currentEntry).toJSON();
         this.setState({
@@ -97,16 +100,18 @@ module.exports = React.createClass({
     }.bind(this));
 
     // when the user clicks the remove entry link
-    Dispatcher.register('remove-entrylist-entry', function(action, data){
-      if ( action === constants.actions.ENTRYLIST_ENTRY_REMOVE ) {
+    Dispatcher.register('remove-entrylist-entry-'+this.props.id, function(action, data){
+      if ( action === constants.actions.ENTRYLIST_ENTRY_REMOVE &&
+           data.id === this.props.id) {
         let entries = Immutable.List(this.state.entries);
         this.setState({ entries: entries.remove(data.entryId).toJSON() });
       }
     }.bind(this));
 
     // when the user fills out the add entry form
-    Dispatcher.register('entrylist-field-value-change', function(action, data) {
-      if ( action === 'entrylist-field-value-change-action' ) {
+    Dispatcher.register('entrylist-field-value-change-'+this.props.id, function(action, data) {
+      if ( action === 'entrylist-field-value-change-action' &&
+           data.id === this.props.id) {
         let value = data.dateString ? data.dateString : data.value;
         let updatedEntry = Immutable.Map(this.state.entry).set(data.name, value).toJSON();
         this.setState({entry: updatedEntry});
@@ -114,8 +119,9 @@ module.exports = React.createClass({
     }.bind(this));
 
     // when the user clicks the #add-entry-btn
-    Dispatcher.register('add-new-entrylist-entry', function(action){
-      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD ) {
+    Dispatcher.register('add-new-entrylist-entry-'+this.props.id, function(action, data){
+      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD &&
+           data.id === this.props.id) {
         let currentEntries = Immutable.List(this.state.entries);
         let updatedEntries = (!this.state.isEdit) ?
           currentEntries.push(this.state.entry) :
@@ -137,12 +143,12 @@ module.exports = React.createClass({
   },
 
   componentWillUnmount: function() {
-    Dispatcher.unregister('show-entrylist-form');
-    Dispatcher.unregister('cancel-entrylist-entry');
-    Dispatcher.unregister('edit-entrylist-entry');
-    Dispatcher.unregister('remove-entrylist-entry');
-    Dispatcher.unregister('entrylist-field-value-change');
-    Dispatcher.unregister('add-new-entrylist-entry');
+    Dispatcher.unregister('show-entrylist-form-'+this.props.id);
+    Dispatcher.unregister('cancel-entrylist-entry-'+this.props.id);
+    Dispatcher.unregister('edit-entrylist-entry-'+this.props.id);
+    Dispatcher.unregister('remove-entrylist-entry-'+this.props.id);
+    Dispatcher.unregister('entrylist-field-value-change-'+this.props.id);
+    Dispatcher.unregister('add-new-entrylist-entry-'+this.props.id);
   },
 
   showEmptyText: function() {
@@ -180,10 +186,11 @@ module.exports = React.createClass({
             </tr>
           </thead>
           <tbody>
-            {this.state.entries.map(function(entry, entryIdx) {
+            {this.state.entries.map((entry, entryIdx)=> {
               return (
                 <EntryListItem
-                  key={'entrylist-item-'+entryIdx}
+                  id={this.props.id}
+                  key={'entrylist-item-'+entryIdx+'-'+this.props.id}
                   entry={entry}
                   entryIdx={entryIdx}
                   columns={columns} />
@@ -193,17 +200,18 @@ module.exports = React.createClass({
           </tbody>
         </table>
         <EntryListForm
+          parentId={this.props.id}
           show={this.state.showForm}
           config={formConfig}
           actionName={actionName}/>
         <EntryListBtn
-          id="add-entry-btn"
+          id={this.props.id}
           iconClass="plus"
           show={this.state.showForm}
           name={this.props.addNewButtonText}
           event={constants.actions.ENTRYLIST_FORM_SHOW} />
         <EntryListBtn
-          id="cancel-entry-btn"
+          id={this.props.id}
           show={!this.state.showForm}
           name={this.props.CancelButtonText}
           event={constants.actions.ENTRYLIST_ENTRY_CANCEL} />

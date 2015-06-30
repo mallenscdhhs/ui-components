@@ -10,6 +10,8 @@
       "type": "entrylist",
       "config": {
         "model": "medicaidNumbers",
+        "id": "myEntryList",
+        "name": "myEntryList",
         "form": {
           "type": "form",
           "config": {

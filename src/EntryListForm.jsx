@@ -47,18 +47,16 @@ class EntryListForm extends React.Component {
 
   render(){
     return (
-      <div>
-        <div className={this.getClassNames()}>
-          {Factory.build(elements, this.props.config, this.props.config)[0]}
-          <div className="row text-right">
-            <div className="col-md-12">
-              <Action
-                id="add-button"
-                type="button"
-                className="btn btn-default"
-                name={this.props.actionName}
-                event={this.props.actionEvent} />
-            </div>
+      <div className={this.getClassNames()}>
+        {Factory.build(elements, this.props.config, this.props.config)[0]}
+        <div className="row text-right">
+          <div className="col-md-12">
+            <Action
+              id={this.props.parentId}
+              type="button"
+              className="btn btn-default"
+              name={this.props.actionName}
+              event={this.props.actionEvent} />
           </div>
         </div>
       </div>
