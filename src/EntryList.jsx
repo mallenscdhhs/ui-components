@@ -110,10 +110,10 @@ module.exports = React.createClass({
 
     // when the user fills out the add entry form
     Dispatcher.register('entrylist-field-value-change-'+this.props.id, function(action, data) {
-      if ( action === 'entrylist-field-value-change-action' &&
-           data.id === this.props.id) {
+      if ( action === 'entrylist-field-value-change-action') {
         let value = data.dateString ? data.dateString : data.value;
         let updatedEntry = Immutable.Map(this.state.entry).set(data.name, value).toJSON();
+        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE,_.merge(data,{'value':value}));
         this.setState({entry: updatedEntry});
       }
     }.bind(this));
