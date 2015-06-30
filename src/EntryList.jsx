@@ -110,7 +110,8 @@ module.exports = React.createClass({
 
     // when the user fills out the add entry form
     Dispatcher.register('entrylist-field-value-change-'+this.props.id, function(action, data) {
-      if ( action === 'entrylist-field-value-change-action') {
+      if ( action === constants.actions.ENTRYLIST_FIELD_VALUE_CHANGE &&
+           data.entryListId === this.props.id) {
         let value = data.dateString ? data.dateString : data.value;
         let updatedEntry = Immutable.Map(this.state.entry).set(data.name, value).toJSON();
         this.setState({entry: updatedEntry});

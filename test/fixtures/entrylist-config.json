@@ -40,7 +40,8 @@
                 "name": "medicaidNumber",
                 "label": "Medicaid #",
                 "className": "form-control",
-                "fieldValueChangeAction": "entrylist-field-value-change-action"
+                "fieldValueChangeAction": "entryListFieldValueChange",
+                "entryListId": "myEntryList"
               }
             },
             "state": {
@@ -52,7 +53,8 @@
                 "name" : "state",
                 "label": "State",
                 "className": "form-control",
-                "fieldValueChangeAction": "entrylist-field-value-change-action",
+                "fieldValueChangeAction": "entryListFieldValueChange",
+                "entryListId": "myEntryList",
                 "options": [
                   {"label": "North Carolina", "value": "NC"},
                   {"label": "South Carolina", "value": "SC"}
@@ -69,7 +71,8 @@
                 "name": "npi",
                 "label": "National Provider Identifier (NPI)",
                 "className": "form-control",
-                "fieldValueChangeAction": "entrylist-field-value-change-action"
+                "fieldValueChangeAction": "entryListFieldValueChange",
+                "entryListId": "myEntryList"
               }
             },
             "enrollmentDate": {
@@ -80,7 +83,8 @@
                 "name" : "enrollmentDate",
                 "label": "Enrollment Date",
                 "className": "form-control",
-                "fieldValueChangeAction": "entrylist-field-value-change-action"
+                "fieldValueChangeAction": "entryListFieldValueChange",
+                "entryListId": "myEntryList"
               }
             }
           }
