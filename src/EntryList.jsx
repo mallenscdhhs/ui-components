@@ -133,8 +133,17 @@ module.exports = React.createClass({
           id: this.props.model,
           name: this.props.model,
           type: 'entrylist',
-          value: entries
+          value: entries,
+          latestEntry: this.state.entry
         };
+        Flux.doAction(constants.actions.APPLICATION_VALIDATE_ENTRY, this.props.form, entriesModel);
+      }
+    });
+
+    Dispatcher.register('add-new-entrylist-entry-validated',(action, entriesModel) => {
+      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED ) {
+        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(() => {
+          this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false});
         Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(function() {
           _.defer(()=>{self.setState({isEdit: false, entry: {}, entries: entries, showForm: false})});
         });
@@ -149,6 +158,13 @@ module.exports = React.createClass({
     Dispatcher.unregister('remove-entrylist-entry-'+this.props.id);
     Dispatcher.unregister('entrylist-field-value-change-'+this.props.id);
     Dispatcher.unregister('add-new-entrylist-entry-'+this.props.id);
+    Dispatcher.unregister('show-entrylist-form');
+    Dispatcher.unregister('cancel-entrylist-entry');
+    Dispatcher.unregister('edit-entrylist-entry');
+    Dispatcher.unregister('remove-entrylist-entry');
+    Dispatcher.unregister('entrylist-field-value-change');
+    Dispatcher.unregister('add-new-entrylist-entry');
+    Dispatcher.unregister('add-new-entrylist-entry-validated');
   },
 
   showEmptyText: function() {

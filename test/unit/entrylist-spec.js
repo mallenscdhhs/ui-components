@@ -3,6 +3,9 @@ import Factory from '../../src/Factory';
 import elements from '../../src/index';
 import EntryList from '../../src/EntryList';
 import TestUtils from 'react/lib/ReactTestUtils';
+import Flux from 'fluxify';
+import {dispatcher as Dispatcher } from 'fluxify';
+import constants from '../../src/constants';
 
 let config = require('../fixtures/entrylist-config.json');
 
@@ -29,6 +32,12 @@ describe('EntryList', function(){
   });
 
   it('can facilitate editing of entries', function(done){
+    Dispatcher.register('add-new-entrylist-entry-validated-edit-test',(action, entryListForm, entriesModel)=> {
+      if ( action === constants.actions.APPLICATION_VALIDATE_ENTRY ) {
+        Flux.doAction(constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED, entriesModel);
+        Dispatcher.unregister('add-new-entrylist-entry-validated-edit-test');
+      }
+    });
     // click Edit link on the first entry and update it
     let editFirstEntry = TestUtils.scryRenderedDOMComponentsWithTag(dom, 'a')[0];
     TestUtils.Simulate.click(editFirstEntry);
@@ -47,6 +56,12 @@ describe('EntryList', function(){
   });
 
   it('can facilitate adding new entries', function(done){
+    Dispatcher.register('add-new-entrylist-entry-validated-add-test',(action, entryListForm, entriesModel)=> {
+      if ( action === constants.actions.APPLICATION_VALIDATE_ENTRY ) {
+        Flux.doAction(constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED, entriesModel);
+        Dispatcher.unregister('add-new-entrylist-entry-validated-add-test');
+      }
+    });
     // click Add New Entry button to show new entry form
     let addNewEntryBtn = TestUtils.findRenderedDOMComponentWithClass(dom, 'btn-primary');
     TestUtils.Simulate.click(addNewEntryBtn);
