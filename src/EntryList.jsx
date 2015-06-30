@@ -133,14 +133,16 @@ module.exports = React.createClass({
           name: this.props.model,
           type: 'entrylist',
           value: entries,
-          latestEntry: this.state.entry
+          latestEntry: this.state.entry,
+          entryListId: this.props.id
         };
         Flux.doAction(constants.actions.APPLICATION_VALIDATE_ENTRY, this.props.form, entriesModel);
       }
     });
 
     Dispatcher.register('add-new-entrylist-entry-validated-'+this.props.id,(action, entriesModel) => {
-      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED ) {
+      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED &&
+           entriesModel.entryListId === this.props.id) {
         Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(() => {
           _.defer(() => {this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false})});
         });
