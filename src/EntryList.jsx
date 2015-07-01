@@ -10,6 +10,17 @@ import EntryListForm from './EntryListForm';
 import EntryListBtn from './EntryListBtn';
 import DependencyMixin from './DependencyMixin';
 import setClassNames from 'classnames';
+let {
+  ENTRYLIST_FORM_SHOW,
+  ENTRYLIST_ENTRY_CANCEL,
+  ENTRYLIST_ENTRY_EDIT,
+  ENTRYLIST_ENTRY_REMOVE,
+  ENTRYLIST_FIELD_VALUE_CHANGE,
+  ENTRYLIST_NEW_ENTRY_ADD,
+  APPLICATION_VALIDATE_ENTRY,
+  ENTRYLIST_NEW_ENTRY_VALIDATED,
+  FIELD_VALUE_CHANGE
+} = constants.actions;
 
 module.exports = React.createClass({
 
@@ -66,7 +77,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
     // when the user clicks the show form button
     Dispatcher.register('show-entrylist-form-'+this.props.id, (action, data) => {
-      if ( action === constants.actions.ENTRYLIST_FORM_SHOW &&
+      if ( action === ENTRYLIST_FORM_SHOW &&
            data.id === this.props.id) {
         this.setState({showForm: true});
       }
@@ -74,7 +85,7 @@ module.exports = React.createClass({
 
     // when the user clicks the cancel button
     Dispatcher.register('cancel-entrylist-entry-'+this.props.id, (action, data) => {
-      if ( action === constants.actions.ENTRYLIST_ENTRY_CANCEL &&
+      if ( action === ENTRYLIST_ENTRY_CANCEL &&
            data.id === this.props.id) {
         this.setState({
           isEdit: false,
@@ -86,7 +97,7 @@ module.exports = React.createClass({
 
     // when the user clicks the edit entry link
     Dispatcher.register('edit-entrylist-entry-'+this.props.id, (action, data) => {
-      if ( action === constants.actions.ENTRYLIST_ENTRY_EDIT &&
+      if ( action === ENTRYLIST_ENTRY_EDIT &&
            data.id === this.props.id) {
         let currentEntry = Immutable.Map(this.state.entries[data.entryId]);
         let formConfig = Immutable.fromJS(this.props.form).set('model', currentEntry).toJSON();
@@ -101,7 +112,7 @@ module.exports = React.createClass({
 
     // when the user clicks the remove entry link
     Dispatcher.register('remove-entrylist-entry-'+this.props.id, (action, data) => {
-      if ( action === constants.actions.ENTRYLIST_ENTRY_REMOVE &&
+      if ( action === ENTRYLIST_ENTRY_REMOVE &&
            data.id === this.props.id) {
         let entries = Immutable.List(this.state.entries);
         this.setState({ entries: entries.remove(data.entryId).toJSON() });
@@ -110,7 +121,7 @@ module.exports = React.createClass({
 
     // when the user fills out the add entry form
     Dispatcher.register('entrylist-field-value-change-'+this.props.id, (action, data) => {
-      if ( action === constants.actions.ENTRYLIST_FIELD_VALUE_CHANGE &&
+      if ( action === ENTRYLIST_FIELD_VALUE_CHANGE &&
            data.entryListId === this.props.id) {
         let value = data.dateString ? data.dateString : data.value;
         let updatedEntry = Immutable.Map(this.state.entry).set(data.name, value).toJSON();
@@ -120,7 +131,7 @@ module.exports = React.createClass({
 
     // when the user clicks the #add-entry-btn
     Dispatcher.register('add-new-entrylist-entry-'+this.props.id, (action, data) => {
-      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_ADD &&
+      if ( action === ENTRYLIST_NEW_ENTRY_ADD &&
            data.id === this.props.id) {
         let currentEntries = Immutable.List(this.state.entries);
         let updatedEntries = (!this.state.isEdit) ?
@@ -136,15 +147,17 @@ module.exports = React.createClass({
           latestEntry: this.state.entry,
           entryListId: this.props.id
         };
-        Flux.doAction(constants.actions.APPLICATION_VALIDATE_ENTRY, this.props.form, entriesModel);
+        Flux.doAction(APPLICATION_VALIDATE_ENTRY, this.props.form, entriesModel);
       }
     });
 
     Dispatcher.register('add-new-entrylist-entry-validated-'+this.props.id,(action, entriesModel) => {
-      if ( action === constants.actions.ENTRYLIST_NEW_ENTRY_VALIDATED &&
+      if ( action === ENTRYLIST_NEW_ENTRY_VALIDATED &&
            entriesModel.entryListId === this.props.id) {
-        Flux.doAction(constants.actions.FIELD_VALUE_CHANGE, entriesModel).then(() => {
-          _.defer(() => {this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false})});
+        Flux.doAction(FIELD_VALUE_CHANGE, entriesModel).then(() => {
+          _.defer(() => {
+            this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false})
+          });
         });
       }
     });
@@ -195,7 +208,7 @@ module.exports = React.createClass({
             </tr>
           </thead>
           <tbody>
-            {this.state.entries.map((entry, entryIdx)=> {
+            {this.state.entries.map((entry, entryIdx) => {
               return (
                 <EntryListItem
                   id={this.props.id}
@@ -209,7 +222,7 @@ module.exports = React.createClass({
           </tbody>
         </table>
         <EntryListForm
-          parentId={this.props.id}
+          entryListId={this.props.id}
           show={this.state.showForm}
           config={formConfig}
           actionName={actionName}
@@ -220,13 +233,13 @@ module.exports = React.createClass({
           iconClass="plus"
           show={this.state.showForm}
           name={this.props.addNewButtonText}
-          event={constants.actions.ENTRYLIST_FORM_SHOW} />
+          event={ENTRYLIST_FORM_SHOW} />
         <EntryListBtn
           id={this.props.id}
           key={this.props.id+'-entrylist-entry-cancel'}
           show={!this.state.showForm}
           name={this.props.CancelButtonText}
-          event={constants.actions.ENTRYLIST_ENTRY_CANCEL} />
+          event={ENTRYLIST_ENTRY_CANCEL} />
       </div>
     );
   }

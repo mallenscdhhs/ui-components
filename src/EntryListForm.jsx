@@ -46,14 +46,14 @@ class EntryListForm extends React.Component {
   }
 
   render(){
-    let formData = Factory.build(elements, this.props.config, this.props.config)[0];
+    let formComponents = Factory.build(elements, this.props.config, this.props.config)[0];
     return  this.props.show ? (
       <div className="entrylist-form">
-        {formData}
+        {formComponents}
         <div className="row text-right">
           <div className="col-md-12">
             <Action
-              id={this.props.parentId}
+              id={this.props.entryListId}
               type="button"
               className="btn btn-default"
               name={this.props.actionName}
