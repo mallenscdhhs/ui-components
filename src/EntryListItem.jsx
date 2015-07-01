@@ -9,11 +9,13 @@ class EntryListItem extends React.Component {
     let entry = this.props.entry;
     let entryIdx = this.props.entryIdx;
     let editActionConfig = {
+      id: this.props.id,
       name: 'edit',
       type: 'link',
       event: constants.actions.ENTRYLIST_ENTRY_EDIT
     };
     let removeActionConfig = {
+      id: this.props.id,
       name: 'remove',
       type: 'link',
       event: constants.actions.ENTRYLIST_ENTRY_REMOVE
@@ -28,13 +30,13 @@ class EntryListItem extends React.Component {
         <td key={'edit-entry-' + entryIdx} className="entrylist-edit">
           <Action
             {...editActionConfig}
-            id={'edit-entry-' + entryIdx}
+            key={'edit-entry-' + entryIdx + '-' + this.props.id}
             entryId={entryIdx} />
         </td>
         <td key={'remove-entry-' + entryIdx} className="entrylist-remove">
           <Action
             {...removeActionConfig}
-            id={'remove-entry-' + entryIdx}
+            key={'remove-entry-' + entryIdx + '-' + this.props.id}
             entryId={entryIdx} />
         </td>
       </tr>
