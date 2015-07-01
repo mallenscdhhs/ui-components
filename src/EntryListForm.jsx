@@ -23,7 +23,6 @@ class EntryListForm extends React.Component {
 
   constructor(){
     super();
-    this.getClassNames = this.getClassNames.bind(this);
   }
   /**
    * Only update this component if a new form config is provided or the "show"
@@ -36,13 +35,6 @@ class EntryListForm extends React.Component {
     let nextConfig = Immutable.fromJS(nextProps.config);
     let isSameConfig = Immutable.is(currentConfig, nextConfig);
     return !isSameConfig || (nextProps.show !== this.props.show);
-  }
-
-  getClassNames(){
-    return setClassNames({
-      'entrylist-form': true,
-      'hidden': !this.props.show
-    });
   }
 
   render(){
