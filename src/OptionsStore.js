@@ -44,7 +44,6 @@ export default Flux.createStore({
       });
 
       request.fail((jqxhr, textStatus, error) => {
-        console.log('feelsbadman');
         Dispatcher.dispatch(
           API_COMMUNCATION_ERROR,
           _.merge(data, {
