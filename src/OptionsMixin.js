@@ -63,7 +63,7 @@ export default {
     if (this.props.optionsDependencyName) {
       this.props.optionsDependencyName.forEach((name) => {
         Dispatcher.register(`${name}-${this.props.id}-handler`, (action, data) => {
-          if (data.name === name && _.includes(valueChangeActions, action)) {
+          if (_.includes(valueChangeActions, action) && data.name === name) {
             dependencyStore.set(data.name, data.value);
             let dependencyFilter = JSON.stringify(dependencyStore.getAll());
             this.initOptions(_.extend({dependencyFilter}, this.props));
