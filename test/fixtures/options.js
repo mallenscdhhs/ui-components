@@ -2,7 +2,7 @@ import Response from './Response';
 
 export default {
   customField: {
-    id: 'test',
+    id: 'customField',
     name: 'test'
   },
   customPayload: [
@@ -10,8 +10,8 @@ export default {
     {label: 'Bar', value: 2}
   ],
   fieldWithOptions: {
-    id: 'fieldWithOpts',
-    name: 'fieldWithOpts',
+    id: 'fieldWithOptions',
+    name: 'fieldWithOptions',
     type: 'select',
     label: 'Test',
     options: [
@@ -19,8 +19,8 @@ export default {
     ]
   },
   fieldWithOptionsResource: {
-    id: 'test1',
-    name: 'test1',
+    id: 'fieldWithOptionsResource',
+    name: 'fieldWithOptionsResource',
     optionsResource: 'RTDTEST'
   },
   fieldWithOptionsResourceResponse: new Response({
@@ -34,20 +34,21 @@ export default {
     }
   }),
   dependentField1: {
-    id: 'field1',
-    name: 'field1',
-    value: 'foo'
+    id: 'dependentField1',
+    name: 'dependentField1',
+    value: 'foo',
+    optionsResource: 'REF_TEST'
   },
   dependentField2: {
-    id: 'field2',
-    name: 'field2',
+    id: 'dependentField2',
+    name: 'dependentField2',
     value: 'bar'
   },
   fieldWithDependency: {
-    id: 'test1',
-    name: 'test1',
+    id: 'fieldWithDependency',
+    name: 'fieldWithDependency',
     optionsResource: 'RTDTEST',
-    optionsDependencyName: ['field1']
+    optionsDependencyName: ['dependentField1']
   },
   fieldWithDependencyResponse: new Response({
     operationStatus: 'SUCCESS',
@@ -58,10 +59,10 @@ export default {
     }
   }),
   fieldWithMultipleDependencies: {
-    id: 'test1',
-    name: 'test1',
+    id: 'fieldWithMultipleDependencies',
+    name: 'fieldWithMultipleDependencies',
     optionsResource: 'RTDTEST',
-    optionsDependencyName: ['field1', 'field2']
+    optionsDependencyName: ['dependentField1', 'dependentField2']
   },
   fieldWithMultipleDependenciesResponse: new Response({
     operationStatus: 'SUCCESS',

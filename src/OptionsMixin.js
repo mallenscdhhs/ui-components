@@ -63,8 +63,11 @@ export default {
     if (this.props.optionsDependencyName) {
       this.props.optionsDependencyName.forEach((name) => {
         Dispatcher.register(`${name}-${this.props.id}-handler`, (action, data) => {
-          if (_.includes(valueChangeActions, action) && data.name === name) {
-            dependencyStore.set(data.name, data.value);
+          if (_.includes(valueChangeActions, action) && data && data.name === name) {
+            // by default we filter options by other fields with options as this
+            // is what the lookups API supports initially
+            let filterName = data.optionsResource || data.name;
+            dependencyStore.set(filterName, data.value);
             let dependencyFilter = JSON.stringify(dependencyStore.getAll());
             this.initOptions(_.extend({dependencyFilter}, this.props));
           }
