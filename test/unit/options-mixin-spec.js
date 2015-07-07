@@ -83,7 +83,8 @@ describe('OptionsMixin', () => {
 
   it('can load options based on a dependent field value', (done) => {
     let field = fixture.fieldWithDependency;
-    let dependency = field.optionsDependencyName[0];
+    let dependentFieldName = field.optionsDependencyName[0];
+    let dependency = fixture[dependentFieldName].optionsResource;
     let filter = JSON.stringify({[dependency]: fixture.dependentField1.value});
     let filterParam = encodeURIComponent(filter);
     let resourceName = field.optionsResource;
@@ -107,7 +108,8 @@ describe('OptionsMixin', () => {
 
   it('can load options from a dependent field that is part of an EntryListForm', (done) => {
     let field = fixture.fieldWithDependency;
-    let dependency = field.optionsDependencyName[0];
+    let dependentFieldName = field.optionsDependencyName[0];
+    let dependency = fixture[dependentFieldName].optionsResource;
     let filter = JSON.stringify({[dependency]: fixture.dependentField1.value});
     let filterParam = encodeURIComponent(filter);
     let resourceName = field.optionsResource;
@@ -139,13 +141,14 @@ describe('OptionsMixin', () => {
         let numFilters = Object.keys(filter).length;
         if (numFilters > 1) {
           Dispatcher.unregister(handler1);
+          console.log(filter);
           expect(numFilters).toEqual(2);
-          expect(filter[dependency1.name]).toEqual(dependency1.value);
+          expect(filter[dependency1.optionsResource]).toEqual(dependency1.value);
           expect(filter[dependency2.name]).toEqual(dependency2.value);
           done();
         } else {
           expect(numFilters).toEqual(1);
-          expect(filter[dependency1.name]).toEqual(dependency1.value);
+          expect(filter[dependency1.optionsResource]).toEqual(dependency1.value);
         }
       }
     });
