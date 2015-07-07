@@ -12,7 +12,8 @@ let {
   LOAD_OPTIONS,
   SEND_OPTIONS,
   SEND_RESOURCE_OPTIONS,
-  FIELD_VALUE_CHANGE
+  FIELD_VALUE_CHANGE,
+  ENTRYLIST_FIELD_VALUE_CHANGE
 } = constants.actions;
 
 describe('OptionsMixin', () => {
@@ -102,6 +103,30 @@ describe('OptionsMixin', () => {
 
     TestUtils.renderIntoDocument(<Select {...field}/>);
     Dispatcher.dispatch(FIELD_VALUE_CHANGE, fixture.dependentField1);
+  });
+
+  it('can load options from a dependent field that is part of an EntryListForm', (done) => {
+    let field = fixture.fieldWithDependency;
+    let dependency = field.optionsDependencyName[0];
+    let filter = JSON.stringify({[dependency]: fixture.dependentField1.value});
+    let filterParam = encodeURIComponent(filter);
+    let resourceName = field.optionsResource;
+    let stubUrl = `/api/resource/${resourceName}?filter=${filterParam}`;
+    let handler = Dispatcher.register((action, data) => {
+      if (action === LOAD_OPTIONS) {
+        Dispatcher.unregister(handler);
+        let result = fixture.fieldWithDependencyResponse.responseData.responsePayload.result;
+        expect(data.options.length).toEqual(result.length);
+        done();
+      }
+    });
+
+    jasmine.Ajax
+      .stubRequest(stubUrl)
+      .andReturn(fixture.fieldWithDependencyResponse);
+
+    TestUtils.renderIntoDocument(<Select {...field}/>);
+    Dispatcher.dispatch(ENTRYLIST_FIELD_VALUE_CHANGE, fixture.dependentField1);
   });
 
   it('can load options based on multiple dependent field values', (done) => {
