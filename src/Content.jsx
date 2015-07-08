@@ -3,14 +3,14 @@ import React from 'react';
 import setClassNames from 'classnames';
 import DependencyMixin from './DependencyMixin';
 
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'Content',
 
   mixins: [DependencyMixin],
 
   propTypes: {
-    'content' : React.PropTypes.string
+    content : React.PropTypes.string
   },
 
   statics: {
@@ -19,24 +19,24 @@ module.exports = React.createClass({
     }
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
       'componentType': 'content'
     };
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return null;
   },
 
-  getClassNames: function(){
+  getClassNames() {
     return setClassNames(
       'page-content',
-      {'hidden': !this.state.visible}
+      {hidden: !this.state.visible}
     );
   },
 
-  render: function(){
+  render() {
     return (
       <section className={this.getClassNames()} dangerouslySetInnerHTML={{__html: this.props.content }}></section>
     );
