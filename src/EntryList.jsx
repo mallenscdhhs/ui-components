@@ -22,7 +22,7 @@ let {
   FIELD_VALUE_CHANGE
 } = constants.actions;
 
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'EntryList',
 
@@ -47,7 +47,7 @@ module.exports = React.createClass({
     formUpdateButtonText: React.PropTypes.string
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
       model: '',
       entries: [],
@@ -60,7 +60,7 @@ module.exports = React.createClass({
     };
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       entries: [],
       entry: {},
@@ -70,24 +70,22 @@ module.exports = React.createClass({
     };
   },
 
-  componentWillMount: function() {
+  componentWillMount() {
     this.setState({entries: this.props.entries});
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     let propsId = this.props.id;
     // when the user clicks the show form button
     Dispatcher.register(`show-entrylist-form-${propsId}`, (action, data) => {
-      if( action === ENTRYLIST_FORM_SHOW &&
-           data.id === this.props.id) {
+      if( action === ENTRYLIST_FORM_SHOW && data.id === this.props.id) {
         this.setState({showForm: true});
       }
     });
 
     // when the user clicks the cancel button
     Dispatcher.register(`cancel-entrylist-entry-${propsId}`, (action, data) => {
-      if( action === ENTRYLIST_ENTRY_CANCEL &&
-           data.id === this.props.id) {
+      if( action === ENTRYLIST_ENTRY_CANCEL && data.id === this.props.id) {
         this.setState({
           isEdit: false,
           showForm: false,
@@ -152,14 +150,14 @@ module.exports = React.createClass({
       if( action === ENTRYLIST_NEW_ENTRY_VALIDATED && entriesModel.entryListId === this.props.id) {
         Flux.doAction(FIELD_VALUE_CHANGE, entriesModel).then(() => {
           _.defer(() => {
-            this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false})
+            this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false});
           });
         });
       }
     });
   },
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     let propsId = this.props.id;
     Dispatcher.unregister(`show-entrylist-form-${propsId}`);
     Dispatcher.unregister(`cancel-entrylist-entry-${propsId}`);
@@ -170,17 +168,17 @@ module.exports = React.createClass({
     Dispatcher.unregister(`add-new-entrylist-entry-validated-${propsId}`);
   },
 
-  showEmptyText: function() {
+  showEmptyText() {
     if (!this.state.entries.length) {
       return <tr><td colSpan={this.props.columns.length + 2}>{this.props.emptyText}</td></tr>;
     }
   },
 
-  getClassNames: function(){
+  getClassNames(){
     return setClassNames({
-      'entrylist': true,
-      'mblg': true,
-      'hidden': !this.state.visible
+      entrylist: true,
+      mblg: true,
+      hidden: !this.state.visible
     });
   },
 
@@ -188,7 +186,7 @@ module.exports = React.createClass({
    * Render an EntryList component.
    * @returns {JSX}
    */
-  render: function() {
+  render() {
     let columns = this.props.columns;
     let formConfig = this.state.isEdit ? this.state.formConfig : this.props.form;
     let actionName = this.state.isEdit ? this.props.formUpdateButtonText : this.props.formAddButtonText;
@@ -200,8 +198,8 @@ module.exports = React.createClass({
               {columns.map(function(col) {
                 return <th key={col.dataKey}>{col.header}</th>;
               })}
-              <th key="edit"></th>
-              <th key="remove"></th>
+              <th key="actions" colSpan="2">Actions</th>
+
             </tr>
           </thead>
           <tbody>
@@ -223,17 +221,17 @@ module.exports = React.createClass({
           show={this.state.showForm}
           config={formConfig}
           actionName={actionName}
-          key={this.props.form.config.id+'-'+this.props.id} />
+          key={`${this.props.form.config.id}-${this.props.id}`} />
         <EntryListBtn
           id={this.props.id}
-          key={this.props.id-'-entrylist-form-show'}
+          key={`${this.props.id}-entrylist-form-show`}
           iconClass="plus"
           show={this.state.showForm}
           name={this.props.addNewButtonText}
           event={ENTRYLIST_FORM_SHOW} />
         <EntryListBtn
           id={this.props.id}
-          key={this.props.id+'-entrylist-entry-cancel'}
+          key={`${this.props.id}-entrylist-entry-cancel`}
           show={!this.state.showForm}
           name={this.props.CancelButtonText}
           event={ENTRYLIST_ENTRY_CANCEL} />
@@ -241,4 +239,3 @@ module.exports = React.createClass({
     );
   }
 });
-
