@@ -1,12 +1,16 @@
 'use-strict';
-var React = require('react');
+import React from 'react';
+import setClassNames from 'classnames';
+import DependencyMixin from './DependencyMixin';
 
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'Content',
 
+  mixins: [DependencyMixin],
+
   propTypes: {
-    'content' : React.PropTypes.string
+    content : React.PropTypes.string
   },
 
   statics: {
@@ -15,19 +19,26 @@ module.exports = React.createClass({
     }
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
-      'componentType': 'content'
+      componentType: 'content'
     };
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return null;
   },
 
-  render: function(){
+  getClassNames() {
+    return setClassNames(
+      'page-content',
+      {hidden: !this.state.visible}
+    );
+  },
+
+  render() {
     return (
-      <section className="page-content" dangerouslySetInnerHTML={{__html: this.props.content }}></section>
+      <section className={this.getClassNames()} dangerouslySetInnerHTML={{__html: this.props.content }}></section>
     );
   }
 
