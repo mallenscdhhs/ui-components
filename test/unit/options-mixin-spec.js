@@ -141,7 +141,6 @@ describe('OptionsMixin', () => {
         let numFilters = Object.keys(filter).length;
         if (numFilters > 1) {
           Dispatcher.unregister(handler1);
-          console.log(filter);
           expect(numFilters).toEqual(2);
           expect(filter[dependency1.optionsResource]).toEqual(dependency1.value);
           expect(filter[dependency2.name]).toEqual(dependency2.value);
