@@ -21,7 +21,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      'componentType': 'content'
+      componentType: 'content'
     };
   },
 
