@@ -78,14 +78,14 @@ export default React.createClass({
     let propsId = this.props.id;
     // when the user clicks the show form button
     Dispatcher.register(`show-entrylist-form-${propsId}`, (action, data) => {
-      if(action === ENTRYLIST_FORM_SHOW && data.id === this.props.id) {
+      if (action === ENTRYLIST_FORM_SHOW && data.id === this.props.id) {
         this.setState({showForm: true});
       }
     });
 
     // when the user clicks the cancel button
     Dispatcher.register(`cancel-entrylist-entry-${propsId}`, (action, data) => {
-      if(action === ENTRYLIST_ENTRY_CANCEL && data.id === this.props.id) {
+      if (action === ENTRYLIST_ENTRY_CANCEL && data.id === this.props.id) {
         this.setState({
           isEdit: false,
           showForm: false,
@@ -96,7 +96,7 @@ export default React.createClass({
 
     // when the user clicks the edit entry link
     Dispatcher.register(`edit-entrylist-entry-${propsId}`, (action, data) => {
-      if(action === ENTRYLIST_ENTRY_EDIT && data.id === this.props.id) {
+      if (action === ENTRYLIST_ENTRY_EDIT && data.id === this.props.id) {
         let currentEntry = Immutable.Map(this.state.entries[data.entryId]);
         let formConfig = Immutable.fromJS(this.props.form).set('model', currentEntry).toJSON();
         this.setState({
@@ -110,7 +110,7 @@ export default React.createClass({
 
     // when the user clicks the remove entry link
     Dispatcher.register(`remove-entrylist-entry-${propsId}`, (action, data) => {
-      if(action === ENTRYLIST_ENTRY_REMOVE && data.id === this.props.id) {
+      if (action === ENTRYLIST_ENTRY_REMOVE && data.id === this.props.id) {
         let entries = Immutable.List(this.state.entries);
         this.setState({ entries: entries.remove(data.entryId).toJSON() });
       }
@@ -118,7 +118,7 @@ export default React.createClass({
 
     // when the user fills out the add entry form
     Dispatcher.register(`entrylist-field-value-change-${propsId}`, (action, data) => {
-      if(action === ENTRYLIST_FIELD_VALUE_CHANGE && data.entryListId === this.props.id) {
+      if (action === ENTRYLIST_FIELD_VALUE_CHANGE && data.entryListId === this.props.id) {
         let value = data.dateString ? data.dateString : data.value;
         let updatedEntry = Immutable.Map(this.state.entry).set(data.name, value).toJSON();
         this.setState({entry: updatedEntry});
@@ -127,7 +127,7 @@ export default React.createClass({
 
     // when the user clicks the #add-entry-btn
     Dispatcher.register(`add-new-entrylist-entry-${propsId}`, (action, data) => {
-      if(action === ENTRYLIST_NEW_ENTRY_ADD && data.id === this.props.id) {
+      if (action === ENTRYLIST_NEW_ENTRY_ADD && data.id === this.props.id) {
         let currentEntries = Immutable.List(this.state.entries);
         let updatedEntries = (!this.state.isEdit) ?
           currentEntries.push(this.state.entry) :
@@ -147,7 +147,7 @@ export default React.createClass({
     });
 
     Dispatcher.register(`add-new-entrylist-entry-validated-${propsId}`, (action, entriesModel) => {
-      if(action === ENTRYLIST_NEW_ENTRY_VALIDATED && entriesModel.entryListId === this.props.id) {
+      if (action === ENTRYLIST_NEW_ENTRY_VALIDATED && entriesModel.entryListId === this.props.id) {
         Flux.doAction(FIELD_VALUE_CHANGE, entriesModel).then(() => {
           _.defer(() => {
             this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false});
