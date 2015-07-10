@@ -50,7 +50,7 @@ export default Flux.createStore({
       // Verify API has validation endpoint AND has rules associated with the field
       if (!(configuration.API && configuration.API.validation)) throw new Error('API endpoint for validation not configured.');
       if (data.rules) {
-        let input = {[data.name]: data.value};
+        let input = {[data.name]: data.value || ''};
         let requestPayload = {
           input,
           sessionData,
