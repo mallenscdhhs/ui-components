@@ -86,10 +86,12 @@ export default React.createClass({
     // when the user clicks the cancel button
     Dispatcher.register(`cancel-entrylist-entry-${propsId}`, (action, data) => {
       if (action === ENTRYLIST_ENTRY_CANCEL && data.id === this.props.id) {
-        this.setState({
-          isEdit: false,
-          showForm: false,
-          entry: {}
+        _.defer(() => {
+          this.setState({
+            isEdit: false,
+            showForm: false,
+            entry: {}
+          });
         });
       }
     });
