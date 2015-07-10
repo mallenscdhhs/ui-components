@@ -10,6 +10,14 @@ export default {
       rule2: true
     }
   },
+  emptyField: {
+    id: 'test',
+    name: 'test',
+    required: true,
+    rules: {
+      '/VR_InputRequiredCheck': true
+    }
+  },
   fieldResponse: new Response({
     module: 'PE',
     operationStatus: 'SUCCESS',
