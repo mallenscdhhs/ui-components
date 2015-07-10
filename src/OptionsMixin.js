@@ -1,20 +1,49 @@
-var React = require('react');
-var Flux = require('fluxify');
-var Dispatcher = Flux.dispatcher;
-var constants = require('./constants');
-var _ = require('lodash');
+'use-strict';
+import React from 'react';
+import { dispatcher as Dispatcher } from 'fluxify';
+import constants from './constants';
+import _ from 'lodash';
+
+let {
+  LOAD_OPTIONS,
+  SEND_RESOURCE_OPTIONS,
+  SEND_OPTIONS,
+  FIELD_VALUE_CHANGE,
+  ENTRYLIST_FIELD_VALUE_CHANGE
+} = constants.actions;
+
+let valueChangeActions = [ENTRYLIST_FIELD_VALUE_CHANGE, FIELD_VALUE_CHANGE];
+
+/**
+ * Manages the accumulated dependent field values for build the filter param.
+ * @class DependencyStore
+ */
+class DependencyStore {
+  constructor(){
+    this.values = {};
+  }
+  get(name){
+    return this.values[name];
+  }
+  getAll(){
+    return this.values;
+  }
+  set(name, value){
+    this.values[name] = value;
+  }
+}
 
 /**
  * Manages component options
  * @module OptionsMixins
  * @type {{propTypes: {options: (isRequired|*)}, componentDidMount: Function, componentWillUnmount: Function}}
  */
-module.exports = {
+export default {
 
   propTypes: {
     options: React.PropTypes.arrayOf(React.PropTypes.object),
     optionsResource: React.PropTypes.string,
-    optionsDependencyName: React.PropTypes.string
+    optionsDependencyName: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
   /**
@@ -22,39 +51,65 @@ module.exports = {
    * ask the parent app to load them from the server.
    * @fires SEND_RESOURCE_OPTIONS
    */
-  componentDidMount: function(){
+  componentDidMount() {
+    let dependencyStore = new DependencyStore();
     // if a client is sending us new options...
-    Dispatcher.register(this.props.id + '-LOAD-OPTIONS', function (action, data) {
-      if (action === constants.actions.LOAD_OPTIONS &&
-          data.id === this.props.id) {
-        this.setState({'options': data.options});
+    Dispatcher.register(`${this.props.id}-LOAD-OPTIONS`, (action, data) => {
+      if (action === LOAD_OPTIONS && data.id === this.props.id) {
+        this.setState({options: data.options});
       }
-    }.bind(this));
+    });
+
+    if (this.props.optionsDependencyName) {
+      this.props.optionsDependencyName.forEach((name) => {
+        Dispatcher.register(`${name}-${this.props.id}-handler`, (action, data) => {
+          if (_.includes(valueChangeActions, action) && data && data.name === name) {
+            // by default we filter options by other fields with options as this
+            // is what the lookups API supports initially
+            let filterName = data.optionsResource || data.name;
+            dependencyStore.set(filterName, data.value);
+            let dependencyFilter = JSON.stringify(dependencyStore.getAll());
+            this.initOptions(_.extend({dependencyFilter}, this.props));
+          }
+        });
+      });
+    }
 
     this.initOptions(this.props);
   },
 
-  componentWillUnmount: function(){
-    Dispatcher.unregister( this.props.id + '-LOAD-OPTIONS');
+  componentWillUnmount() {
+    Dispatcher.unregister(`${this.props.id}-LOAD-OPTIONS`);
+    if (this.props.optionsDependencyName) {
+      this.props.optionsDependencyName.forEach((name) => {
+        Dispatcher.unregister(`${name}-${this.props.id}-handler`);
+      });
+    }
   },
 
-  componentWillReceiveProps: function(nextProps){
+  componentWillReceiveProps(nextProps) {
     if ( !_.isEqual(nextProps, this.props) ) {
       this.initOptions(nextProps);
     }
   },
 
-  initOptions: function(props){
-    if ( props.options ) {
-      this.setState({'options': props.options});
-    } else if ( props.optionsResource ) {
-      Flux.doAction(constants.actions.SEND_RESOURCE_OPTIONS, {
-        'resourceName': props.optionsResource,
-        'fieldId' : props.id,
-        'fieldName' : props.name
+  /**
+   * Load in options from passed in props, an API, or from a parent application.
+   * @param {object} props - this components properties
+   * @fires SEND_OPTIONS, SEND_RESOURCE_OPTIONS
+   */
+  initOptions(props) {
+    if (props.options) {
+      this.setState({options: props.options});
+    } else if (props.optionsResource) {
+      Dispatcher.dispatch(SEND_RESOURCE_OPTIONS, {
+        resourceFilter: props.dependencyFilter,
+        resourceName: props.optionsResource,
+        fieldId: props.id,
+        fieldName: props.name
       });
     } else {
-      Flux.doAction(constants.actions.SEND_OPTIONS, props);
+      Dispatcher.dispatch(SEND_OPTIONS, props);
     }
   }
 };

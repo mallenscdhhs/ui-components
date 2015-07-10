@@ -1,7 +1,6 @@
 'use-strict';
 
 var React = require('react');
-var update = require('react/lib/update');
 var Combobox = require('react-widgets').Combobox;
 var OptionsMixin = require('./OptionsMixin');
 var Flux = require('fluxify');

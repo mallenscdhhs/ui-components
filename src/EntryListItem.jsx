@@ -9,32 +9,34 @@ class EntryListItem extends React.Component {
     let entry = this.props.entry;
     let entryIdx = this.props.entryIdx;
     let editActionConfig = {
+      id: this.props.id,
       name: 'edit',
       type: 'link',
       event: constants.actions.ENTRYLIST_ENTRY_EDIT
     };
     let removeActionConfig = {
+      id: this.props.id,
       name: 'remove',
       type: 'link',
       event: constants.actions.ENTRYLIST_ENTRY_REMOVE
     };
 
     return (
-      <tr key={'entry-row-' + entryIdx}>
+      <tr key={`entry-row-${entryIdx}`}>
         {this.props.columns.map(function(col, colIdx) {
           let data = entry[col.dataKey];
-          return <td key={col.dataKey + '-' + entryIdx}>{data}</td>;
+          return <td key={`${col.dataKey}-${entryIdx}`}>{data}</td>;
         })}
-        <td key={'edit-entry-' + entryIdx} className="entrylist-edit">
+        <td key={`edit-entry-${entryIdx}`} className="entrylist-edit">
           <Action
             {...editActionConfig}
-            id={'edit-entry-' + entryIdx}
+            key={`edit-entry-${entryIdx}-${this.props.id}`}
             entryId={entryIdx} />
         </td>
-        <td key={'remove-entry-' + entryIdx} className="entrylist-remove">
+        <td key={`remove-entry-${entryIdx}`} className="entrylist-remove">
           <Action
             {...removeActionConfig}
-            id={'remove-entry-' + entryIdx}
+            key={`remove-entry-${entryIdx}-${this.props.id}`}
             entryId={entryIdx} />
         </td>
       </tr>
