@@ -114,6 +114,10 @@ export default React.createClass({
     Dispatcher.register(`remove-entrylist-entry-${propsId}`, (action, data) => {
       if (action === ENTRYLIST_ENTRY_REMOVE && data.id === this.props.id) {
         let entries = Immutable.List(this.state.entries);
+        // If we're currently editing the entry we wish to remove, make sure to close the editor.
+        if(this.state.isEdit && this.state.entry._id === data.entryId){
+          Dispatcher.dispatch(ENTRYLIST_ENTRY_CANCEL, data);
+        }
         this.setState({ entries: entries.remove(data.entryId).toJSON() });
       }
     });
