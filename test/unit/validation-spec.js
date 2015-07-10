@@ -120,7 +120,6 @@ describe('Validation', () => {
       if (action === FIELD_VALIDATION_ERROR) {
         Dispatcher.unregister(handler);
         let request = jasmine.Ajax.requests.mostRecent();
-        console.log(request.data());
         expect(request.data().input[fixture.emptyField.name]).toEqual('');
         done();
       }
