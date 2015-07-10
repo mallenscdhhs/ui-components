@@ -79,6 +79,7 @@ export default React.createClass({
   },
 
   handleInputChange(event) {
+    let changeEvent = event;
     if(this.props.mask) {
       let customConfig = {
         maskSymbol: this.props.maskSymbol,
@@ -89,12 +90,11 @@ export default React.createClass({
         evt
           .set('keyPressed', this.state.keyPressed)
           .set('unmasked', this.state.unmasked)
-          .set('stateChange', inputMaskUtils.getMaskedOutput( maskConfig, evt.toJSON() ));
+          .set('stateChange', inputMaskUtils.getMaskedOutput(maskConfig, evt.toJSON()));
       });
-      this.onChange( _event.toJSON() );
-    } else {
-      this.onChange(event);
+      changeEvent = _event.toJSON();
     }
+    this.onChange(changeEvent);
   },
 
   render() {
