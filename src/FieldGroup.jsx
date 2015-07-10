@@ -29,15 +29,6 @@ let isOptionChecked = function(props, value) {
 };
 
 /**
- * Retrieve the field value from passed in props.
- * @param {object} props - field properties
- * @returns {?} value
- */
-let getValueFromProps = function(props) {
-  return props.value || (props.type === 'checkbox' ? [] : '');
-};
-
-/**
  * Represents a group of Checkable instances. Will manage value changes and blurs.
  * @class FieldGroup
  */
@@ -48,8 +39,7 @@ export default React.createClass({
   mixins: [OptionsMixin, ValueChangeMixin],
 
   statics: {
-    isOptionChecked,
-    getValueFromProps
+    isOptionChecked
   },
 
   propTypes: {
@@ -67,13 +57,8 @@ export default React.createClass({
     };
   },
 
-  componentWillReceiveProps(nextProps) {
-    let value = getValueFromProps(nextProps);
-    this.setState({value});
-  },
-
   componentWillMount() {
-    let value = getValueFromProps(this.props);
+    let value = this.props.value || (this.props.type === 'checkbox' ? [] : '');
     this.setState({value});
   },
 
