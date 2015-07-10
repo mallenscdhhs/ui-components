@@ -86,8 +86,8 @@ module.exports = React.createClass({
       var maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
       event.keyPressed = this.state.keyPressed;
       event.unmasked = this.state.unmasked;
-      event.stateChange = inputMaskUtils.getMaskedOutput(maskConfig, event);
     }
+    event.stateChange = this.props.mask ? inputMaskUtils.getMaskedOutput(maskConfig, event) : null;
     this.onChange(event);
   },
 
