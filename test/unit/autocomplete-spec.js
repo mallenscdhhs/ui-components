@@ -1,48 +1,40 @@
-var React = require('react');
-var TestUtils = require('react/lib/ReactTestUtils');
-var AutoComplete = require('../../src/AutoComplete');
-var constants = require('../../src/constants');
-var Dispatcher = require('fluxify').dispatcher;
+import React from 'react';
+import TestUtils from 'react/lib/ReactTestUtils';
+import AutoComplete from '../../src/AutoComplete';
+import constants from '../../src/constants';
+import { dispatcher as Dispatcher } from 'fluxify';
 
-describe('AutoComplete', function(){
-  var fixture = require('../fixtures/autocomplete.json');
-  var component = TestUtils.renderIntoDocument(<AutoComplete {...fixture.config}/>);
-  var dom = component.getDOMNode();
-  var inpt = TestUtils.findRenderedDOMComponentWithClass(component, 'rw-input');
-  var inptDom = inpt.getDOMNode();
+let { FIELD_VALUE_CHANGE } = constants.actions;
+let fixture = require('../fixtures/autocomplete.json');
+let renderer = TestUtils.createRenderer();
 
-  it('can render', function(done){
-    expect(dom.className).toEqual('field-autocomplete rw-combobox rw-widget');
-    expect(inptDom.className).toEqual('rw-input rw-input');
-    setTimeout(function(){
-      expect(component.state.options.length).toEqual(5);
-      done();
-    }, 300);
+describe('AutoComplete', () => {
+
+  it('can render', () => {
+    renderer.render(<AutoComplete {...fixture.config}/>);
+    let output = renderer.getRenderOutput();
+    expect(output.props.className).toEqual('field-autocomplete');
+    expect(output.props.id).toEqual(fixture.config.id);
+    expect(output.props.name).toEqual(fixture.config.name);
+    expect(output.props.label).toEqual(fixture.config.label);
+    expect(output.props.type).toEqual(fixture.config.type);
+    expect(output.props.options.length).toEqual(fixture.config.options.length);
   });
 
-  it('will update options based on input value', function(){
-    component = TestUtils.renderIntoDocument(<AutoComplete {...fixture.config} value='f'/>);
-    var compBtn = TestUtils.findRenderedDOMComponentWithClass(component, 'rw-select');
-    TestUtils.Simulate.click(compBtn);
-    var listItems = TestUtils.scryRenderedDOMComponentsWithClass(component, 'rw-list-option');
-
-    expect(listItems.length).toEqual(2);
-  });
-
-  it('will call FIELD_VALUE_CHANGE action after user selection', function(done){
-    var node = inptDom;
-    node.value = 'f';
-    TestUtils.Simulate.change(node);
-    var listItems = TestUtils.scryRenderedDOMComponentsWithClass(component, 'rw-list-option');
-
-    Dispatcher.register('ac-test', function(action,data){
-      if ( action === constants.actions.FIELD_VALUE_CHANGE ) {
-        expect(data.value).toEqual('four');
-        done();
+  it('can handle user selection', (done) => {
+    let valueFixture = 'four';
+    renderer.render(<AutoComplete {...fixture.config} />);
+    let output = renderer.getRenderOutput();
+    Dispatcher.register('ac-test', (action, data) => {
+      if (action === FIELD_VALUE_CHANGE) {
         Dispatcher.unregister('ac-test');
+        expect(data.name).toEqual(fixture.config.name);
+        expect(data.id).toEqual(fixture.config.id);
+        expect(data.value).toEqual(valueFixture);
+        done();
       }
     });
 
-    TestUtils.Simulate.click(listItems[0].getDOMNode());
+    output.props.onSelect({value: valueFixture})
   });
 });

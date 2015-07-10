@@ -1,166 +1,135 @@
-var React = require('react');
-var Components = require('../../src/main');
-var _ = require('lodash');
-var TestUtils = require('react/lib/ReactTestUtils');
-var constants = require('../../src/constants');
-var ValidationStore = require('../../src/ValidationStore');
-var Flux = require('fluxify');
-var Dispatcher = Flux.dispatcher;
-var successPayload = require('../fixtures/validation-success-payload.json');
+import React from 'react';
+import Components from '../../src/main';
+import _ from 'lodash';
+import TestUtils from 'react/lib/ReactTestUtils';
+import constants from '../../src/constants';
+import ValidationStore from '../../src/ValidationStore';
+import Flux, { dispatcher as Dispatcher } from 'fluxify';
+import fixture from '../fixtures/validation';
 
+let {
+  FIELD_VALIDATION_ERROR,
+  GET_SESSION_VALUES,
+  SESSION_VALUES_LOADED,
+  FIELD_VALUE_CHANGE
+} = constants.actions;
 
-describe('Validation', function() {
+describe('Validation', () => {
 
-  beforeEach(function(){
-    Components.configure({"API":{"validation":"/api/rules"}});
+  beforeEach(() => {
+    Components.configure({
+      API: {
+        validation: '/api/rules'
+      }
+    });
     jasmine.Ajax.install();
   });
 
-  afterEach(function() {
+  afterEach(() => {
     jasmine.Ajax.uninstall();
   });
 
 
-  it('call validation rules and get SUCCESS', function (done) {
+  it('call validation rules and get SUCCESS', (done) => {
+    jasmine.Ajax
+      .stubRequest('/api/rules')
+      .andReturn(fixture.fieldResponse);
 
-    var fixture = {
-      'id': 'idtest',
-      'name': 'nameTest',
-      'value': 'valueTest',
-      'rules' : {
-        'rule1': true,
-        'rule2': false
-      }
-    };
-
-    spyOn($, 'ajax').and.callFake(function(params){
-      var ajaxMock = $.Deferred();
-      var data = JSON.parse(params.data);
-      expect(params.url).toEqual("/api/rules");
-      expect(params.contentType).toEqual('application/json; charset=UTF-8');
-      expect(data.rules.length).toEqual(1);
-      expect(data.rules[0].ruleName).toEqual('rule1');
-      expect(data.input[fixture.name]).toEqual(fixture.value);
-      ajaxMock.resolve(successPayload);
-      return ajaxMock.promise();
-    });
-
-    Dispatcher.register('field-validation-success-test',function(action,data) {
-      if( action === constants.actions.FIELD_VALIDATION_ERROR &&
-          data.id === fixture.id){
+    Dispatcher.register('field-validation-success-test', (action, data) => {
+      if( action === FIELD_VALIDATION_ERROR && data.id === fixture.field.id){
+        Dispatcher.unregister('field-validation-success-test');
+        let req = jasmine.Ajax.requests.mostRecent();
+        let params = req.data();
+        // inspect the request data
+        expect(params.rules.length).toEqual(2);
+        expect(params.input[fixture.field.name]).toEqual(fixture.field.value);
+        // inspect response
         expect(data.hasError).toEqual(false);
         expect(data.errorMessage).toEqual('');
         done();
-        Dispatcher.unregister('field-validation-success-test');
       }
     });
 
-    Dispatcher.register('session-store-success-test',function(action,data){
-      if(action === constants.actions.GET_SESSION_VALUES && data.id === fixture.id){
-        var sessions = [
-          {'sessionField1':'value1'},
-          {'sessionField2':'value2'}
-        ];
-        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions, data );
+    Dispatcher.register('session-store-success-test', (action, data) => {
+      if(action === GET_SESSION_VALUES && data.id === fixture.field.id){
         Dispatcher.unregister('session-store-success-test');
+        let sessions = [
+          {sessionField1: 'value1'},
+          {sessionField2: 'value2'}
+        ];
+        Dispatcher.dispatch(SESSION_VALUES_LOADED, sessions, data);
       }
     });
 
-    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixture);
-
+    Dispatcher.dispatch(FIELD_VALUE_CHANGE, fixture.field);
   });
 
-  it('call validation rules and get FAILURE', function (done) {
-    var sessionCallback = 'session-store-failure-test';
-    var validationCallback = 'field-validation-failure-test';
-    var failurePayload = require('../fixtures/validation-failure-payload.json');
-    var fixture = {
-      'id': 'idtest',
-      'name': 'nameTest',
-      'value': 'valueTest',
-      'rules' : {
-        'rule1': true,
-        'rule2': true
-      }
-    };
-
-    spyOn($, 'ajax').and.callFake(function(params){
-      var ajaxMock = $.Deferred();
-      var data = JSON.parse(params.data);
-      expect(params.url).toEqual("/api/rules");
-      expect(params.contentType).toEqual('application/json; charset=UTF-8');
-      expect(data.rules.length).toEqual(2);
-      expect(data.rules[0].ruleName).toEqual('rule1');
-      expect(data.rules[1].ruleName).toEqual('rule2');
-      expect(data.input[fixture.name]).toEqual(fixture.value);
-      ajaxMock.resolve(failurePayload);
-      return ajaxMock.promise();
-    });
-
-    Dispatcher.register(validationCallback, function(action, data) {
-      if( action === constants.actions.FIELD_VALIDATION_ERROR && data.id === fixture.id){
-        var errorMessage = failurePayload.operationMessages[0].description + '<br>' + failurePayload.operationMessages[1].description;
+  it('call validation rules and get FAILURE', (done) => {
+    let handler1 = Dispatcher.register((action, data) => {
+      if( action === FIELD_VALIDATION_ERROR && data.id === fixture.field.id){
+        Dispatcher.unregister(handler1);
+        let messages = fixture.failureResponse.responseData.operationMessages;
+        let errorMessage = messages.map(msg => msg.description).join('<br>');
+        let req = jasmine.Ajax.requests.mostRecent();
+        let params = req.data();
         expect(data.hasError).toEqual(true);
         expect(data.errorMessage).toEqual(errorMessage);
-        Dispatcher.unregister(validationCallback);
+        // inspect request
+        expect(params.rules.length).toEqual(2);
+        expect(params.input[fixture.field.name]).toEqual(fixture.field.value);
         done();
       }
     });
 
-    Dispatcher.register(sessionCallback, function(action, data){
-      if(action === constants.actions.GET_SESSION_VALUES && data.id === fixture.id){
-        var sessions = [
-          {'sessionField1':'value1'},
-          {'sessionField2':'value2'}
+    let handler2 = Dispatcher.register((action, data) => {
+      if(action === GET_SESSION_VALUES && data.id === fixture.field.id){
+        Dispatcher.unregister(handler2);
+        let sessions = [
+          {sessionField1: 'value1'},
+          {sessionField2: 'value2'}
         ];
-        Dispatcher.unregister(sessionCallback);
-        Flux.doAction( constants.actions.SESSION_VALUES_LOADED , sessions , data );
+        Dispatcher.dispatch(SESSION_VALUES_LOADED, sessions , data);
       }
     });
 
-    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixture);
+    jasmine.Ajax
+      .stubRequest('/api/rules')
+      .andReturn(fixture.failureResponse);
+
+    Dispatcher.dispatch(FIELD_VALUE_CHANGE, fixture.field);
   });
 
-  it('will not call validation if disabled or not visible', function (done) {
+  it('will not call validation if disabled or not visible', (done) => {
+    jasmine.Ajax
+      .stubRequest('/api/rules')
+      .andReturn(fixture.fieldResponse);
 
-    var fixtureDisabled = {
-      'id': 'idtest',
-      'name': 'nameTest',
-      'value': 'valueTest',
-      'rules' : {
-        'rule1': true,
-        'rule2': false
-      },
-      'disabled' : true
-    };
+    Dispatcher.dispatch(FIELD_VALUE_CHANGE, fixture.disabledField).then(() => {
+      let request = jasmine.Ajax.requests.mostRecent();
+      expect(request).not.toBeDefined();
+      Dispatcher.dispatch(FIELD_VALUE_CHANGE, fixture.hiddenField).then(() => {
+        let request = jasmine.Ajax.requests.mostRecent();
+        expect(request).not.toBeDefined();
+        done();
+      });
+    });
+  });
 
-    var fixtureVisibile = {
-      'id': 'idtest',
-      'name': 'nameTest',
-      'value': 'valueTest',
-      'rules' : {
-        'rule1': true,
-        'rule2': false
-      },
-      'visible' : 'hidden'
-    };
+  it('will pass an empty string as input if no value is supplied', (done) => {
+    let handler = Dispatcher.register((action, data) => {
+      if (action === FIELD_VALIDATION_ERROR) {
+        Dispatcher.unregister(handler);
+        let request = jasmine.Ajax.requests.mostRecent();
+        expect(request.data().input[fixture.emptyField.name]).toEqual('');
+        done();
+      }
+    });
 
     jasmine.Ajax
       .stubRequest('/api/rules')
-      .andReturn(successPayload);
+      .andReturn(fixture.fieldResponse);
 
-    Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureDisabled)
-      .then(function(){
-        var request = jasmine.Ajax.requests.mostRecent();
-        expect(request).not.toBeDefined();
-
-        Flux.doAction( constants.actions.FIELD_VALUE_CHANGE , fixtureVisibile)
-          .then(function(){
-            var request = jasmine.Ajax.requests.mostRecent();
-            expect(request).not.toBeDefined();
-            done();
-          });
-      });
+    Dispatcher.dispatch(SESSION_VALUES_LOADED, {}, fixture.emptyField);
   });
 
 });

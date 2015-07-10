@@ -1,0 +1,25 @@
+@label-size: 14px;
+
+fieldset {
+  padding-top: @padding-large-horizontal;
+
+  > legend .glyphicon-info-sign {
+    position: relative;
+    top: -6px;
+    font-size: 14px;
+  }
+
+  fieldset {
+    padding-top: 0px;
+
+    legend {
+      font-size: @label-size;
+    }
+  }
+
+  label {
+    font-size: @label-size;
+  }
+}
+
+input[type="file"] { padding: 0; }

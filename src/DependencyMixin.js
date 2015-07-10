@@ -42,6 +42,13 @@ module.exports = {
    */
   componentDidMount: function(){
     if(this.hasDependency()){
+      let {
+        FIELD_VALUE_CHANGE,
+        FIELD_VALUE,
+        ENTRYLIST_FIELD_VALUE_CHANGE,
+        COMPONENT_VISIBILITY,
+        GET_FIELD_VALUE
+      } = constants.actions;
       var visible = this.state.visible;
       var disabled = this.state.disabled;
       var depName = this.props.dependencyName;
@@ -49,7 +56,7 @@ module.exports = {
       var depValues = this.props.dependencyValue.split('|');
 
       Dispatcher.register( this.props.id + '-DEP-CHANGE' , (action,data)=>{
-        if( _.includes([constants.actions.FIELD_VALUE_CHANGE,constants.actions.FIELD_VALUE],action) &&
+        if( _.includes([FIELD_VALUE_CHANGE, FIELD_VALUE, ENTRYLIST_FIELD_VALUE_CHANGE] , action) &&
           data.name === depName){
           var value = _.isArray(data.value)? data.value : [data.value];
           var changeState = utils.containsOneOf(depValues, value);
@@ -61,14 +68,14 @@ module.exports = {
             // Update VISIBLE
             var visibility = changeState ? !visible : visible;
             this.setState({'visible': visibility});
-            Flux.doAction(constants.actions.COMPONENT_VISIBILITY, this.props, visibility);
+            Flux.doAction(COMPONENT_VISIBILITY, this.props, visibility);
           }
         }
       });
 
       // Request inital value for dependent field
-      Flux.doAction(constants.actions.GET_FIELD_VALUE, {
-        'name' : depName
+      Flux.doAction(GET_FIELD_VALUE, {
+        name: depName
       });
     }
   },

@@ -4,6 +4,7 @@ module.exports = {
   },
   "actions" : {
     "ALERT_MESSAGES_CLEAR": "clearAlertMessages",
+    "APPLICATION_VALIDATE_ENTRY": "applicationValidateEntry",
     "FIELD_VALUE_CHANGE": "fieldValueChange",
     "FIELD_GROUP_VALUE_CHANGE": "fieldGroupItemChange",
     "FIELD_VALIDATION_ERROR": "fieldValidationError",
@@ -11,6 +12,7 @@ module.exports = {
     "COMPONENT_EDIT": "componentEdit",
     "COMPONENT_ADD": "componentAdd",
     "COMPONENT_VISIBILITY" : "componentVisibility",
+    "ENTRYLIST_NEW_ENTRY_VALIDATED": "entryListNewEntryValidated",
     "SEND_OPTIONS": "sendOptions",
     "SEND_RESOURCE_OPTIONS": "sendResourceOptions",
     "SEND_CUSTOM_OPTIONS": "sendCustomOptions",
@@ -36,6 +38,7 @@ module.exports = {
     "ENTRYLIST_ENTRY_EDIT": "editEntryListEntry",
     "ENTRYLIST_ENTRY_REMOVE": "removeEntryListEntry",
     "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry",
+    "ENTRYLIST_FIELD_VALUE_CHANGE": "entryListFieldValueChange",
     "FILE_UPLOAD_PREVIEW_REMOVE": "removeFileUploadPreview"
   }
 };
