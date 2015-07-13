@@ -22,21 +22,21 @@ class EntryListItem extends React.Component {
     };
 
     return (
-      <tr key={'entry-row-' + entryIdx}>
+      <tr key={`entry-row-${entryIdx}`}>
         {this.props.columns.map(function(col, colIdx) {
           let data = entry[col.dataKey];
-          return <td key={col.dataKey + '-' + entryIdx}>{data}</td>;
+          return <td key={`${col.dataKey}-${entryIdx}`}>{data}</td>;
         })}
-        <td key={'edit-entry-' + entryIdx} className="entrylist-edit">
+        <td key={`edit-entry-${entryIdx}`} className="entrylist-edit">
           <Action
             {...editActionConfig}
-            key={'edit-entry-' + entryIdx + '-' + this.props.id}
+            key={`edit-entry-${entryIdx}-${this.props.id}`}
             entryId={entryIdx} />
         </td>
-        <td key={'remove-entry-' + entryIdx} className="entrylist-remove">
+        <td key={`remove-entry-${entryIdx}`} className="entrylist-remove">
           <Action
             {...removeActionConfig}
-            key={'remove-entry-' + entryIdx + '-' + this.props.id}
+            key={`remove-entry-${entryIdx}-${this.props.id}`}
             entryId={entryIdx} />
         </td>
       </tr>

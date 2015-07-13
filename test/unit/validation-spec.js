@@ -115,4 +115,21 @@ describe('Validation', () => {
     });
   });
 
+  it('will pass an empty string as input if no value is supplied', (done) => {
+    let handler = Dispatcher.register((action, data) => {
+      if (action === FIELD_VALIDATION_ERROR) {
+        Dispatcher.unregister(handler);
+        let request = jasmine.Ajax.requests.mostRecent();
+        expect(request.data().input[fixture.emptyField.name]).toEqual('');
+        done();
+      }
+    });
+
+    jasmine.Ajax
+      .stubRequest('/api/rules')
+      .andReturn(fixture.fieldResponse);
+
+    Dispatcher.dispatch(SESSION_VALUES_LOADED, {}, fixture.emptyField);
+  });
+
 });

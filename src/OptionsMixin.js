@@ -8,8 +8,11 @@ let {
   LOAD_OPTIONS,
   SEND_RESOURCE_OPTIONS,
   SEND_OPTIONS,
-  FIELD_VALUE_CHANGE
+  FIELD_VALUE_CHANGE,
+  ENTRYLIST_FIELD_VALUE_CHANGE
 } = constants.actions;
+
+let valueChangeActions = [ENTRYLIST_FIELD_VALUE_CHANGE, FIELD_VALUE_CHANGE];
 
 /**
  * Manages the accumulated dependent field values for build the filter param.
@@ -60,8 +63,11 @@ export default {
     if (this.props.optionsDependencyName) {
       this.props.optionsDependencyName.forEach((name) => {
         Dispatcher.register(`${name}-${this.props.id}-handler`, (action, data) => {
-          if (data.name === name && action === FIELD_VALUE_CHANGE) {
-            dependencyStore.set(data.name, data.value);
+          if (_.includes(valueChangeActions, action) && data && data.name === name) {
+            // by default we filter options by other fields with options as this
+            // is what the lookups API supports initially
+            let filterName = data.optionsResource || data.name;
+            dependencyStore.set(filterName, data.value);
             let dependencyFilter = JSON.stringify(dependencyStore.getAll());
             this.initOptions(_.extend({dependencyFilter}, this.props));
           }
