@@ -58,6 +58,7 @@ class Terms extends React.Component {
           type="checkbox"
           disabled={!this.state.termsRead}
           label={this.props.fieldLabel}
+          required={this.props.required}
           value={false} />
       </div>
     );
@@ -68,14 +69,18 @@ Terms.propTypes = {
   id: React.PropTypes.string.isRequired,
   value: React.PropTypes.string.isRequired,
   fieldLabel: React.PropTypes.string.isRequired,
-  className: React.PropTypes.string
+  className: React.PropTypes.string,
+  required: React.PropTypes.bool,
+  rules: React.PropTypes.object
 };
 
 Terms.defaultProps = {
   id: '',
   value: '',
   fieldLabel: '',
-  className: 'mbmd'
+  className: 'mbmd',
+  required: true,
+  rules: {}
 };
 
 export default Terms;
