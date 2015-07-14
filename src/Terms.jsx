@@ -41,6 +41,7 @@ class Terms extends React.Component {
         <textarea
           id={this.props.id}
           ref="terms"
+          className="form-control mbmd"
           readOnly
           value={this.props.value} />
         <Field
