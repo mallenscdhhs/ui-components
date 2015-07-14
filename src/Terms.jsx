@@ -1,5 +1,6 @@
 'use-strict';
 import React from 'react';
+import setClassNames from 'classnames';
 import Field from './Field';
 
 class Terms extends React.Component {
@@ -35,14 +36,21 @@ class Terms extends React.Component {
     }
   }
 
+  getClassNames() {
+    return setClassNames(
+      'form-control',
+      this.props.className
+    );
+  }
+
   render() {
     return (
       <div>
         <textarea
           id={this.props.id}
           ref="terms"
-          className="form-control mbmd"
           readOnly
+          className={this.getClassNames()}
           value={this.props.value} />
         <Field
           id={`agree-to-${this.props.id}`}
@@ -59,13 +67,15 @@ class Terms extends React.Component {
 Terms.propTypes = {
   id: React.PropTypes.string.isRequired,
   value: React.PropTypes.string.isRequired,
-  fieldLabel: React.PropTypes.string.isRequired
+  fieldLabel: React.PropTypes.string.isRequired,
+  className: React.PropTypes.string
 };
 
 Terms.defaultProps = {
   id: '',
   value: '',
-  fieldLabel: ''
+  fieldLabel: '',
+  className: 'mbmd'
 };
 
 export default Terms;
