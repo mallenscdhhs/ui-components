@@ -1,7 +1,6 @@
 'use-strict';
 import React from 'react';
 import Field from './Field';
-import config from '../test/fixtures/terms.json';
 
 class Terms extends React.Component {
   constructor() {
@@ -24,7 +23,7 @@ class Terms extends React.Component {
   handleScroll(event, scrollTop, offsetHeight, scrollHeight) {
     // handleScroll args are passed in mainly for testing, these will never be used in practice
     let $terms = this.refs.terms.getDOMNode();
-    scrollTop =  scrollTop || $terms.scrollTop;
+    scrollTop = scrollTop || $terms.scrollTop;
     offsetHeight = offsetHeight || $terms.offsetHeight;
     scrollHeight = scrollHeight || $terms.scrollHeight;
 
@@ -45,11 +44,12 @@ class Terms extends React.Component {
           readOnly
           value={this.props.value} />
         <Field
-          id={'agree-to-' + this.props.id}
-          name={'agree-to-' + this.props.id}
+          id={`agree-to-${this.props.id}`}
+          name={`agree-to-${this.props.id}`}
           type="checkbox"
           disabled={!this.state.termsRead}
-          label={this.props.fieldLabel} />
+          label={this.props.fieldLabel}
+          value={false} />
       </div>
     );
   }
@@ -62,9 +62,9 @@ Terms.propTypes = {
 };
 
 Terms.defaultProps = {
-  id: config.value,
-  value: config.value,
-  fieldLabel: config.fieldLabel
+  id: '',
+  value: '',
+  fieldLabel: ''
 };
 
 export default Terms;
