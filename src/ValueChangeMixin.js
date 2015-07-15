@@ -29,8 +29,8 @@ export default {
         .set('disabled', this.state.disabled);
       if (this.props.mask) {
         mutablePayload
-          .set('value', state.value)
-          .set('unmasked', state.unmasked);
+          .set('value', state.unmasked)
+          .set('masked', state.value);
       } else {
         mutablePayload.set('value', event.target.value);
         if (event.target.dateString) {
