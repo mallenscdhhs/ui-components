@@ -50,10 +50,10 @@ describe('Input', function(){
     Dispatcher.register( 'test-ssn-change' , function(action, data){
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
           data.id === 'test-ssn') {
-        if(data.unmasked === '012345678') {
+        if(data.value === '012345678') {
           Dispatcher.unregister('test-ssn-change');
-          expect(data.value).toEqual('***-**-5678');
-          expect(data.unmasked).toEqual('012345678');
+          expect(data.masked).toEqual('***-**-5678');
+          expect(data.value).toEqual('012345678');
           done();
         } else {
           numCount++;
@@ -79,8 +79,8 @@ describe('Input', function(){
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
           data.id === 'test-date') {
         Dispatcher.unregister('test-date-change');
-        expect(data.value).toEqual('**/**/1979');
-        expect(data.unmasked).toEqual(date);
+        expect(data.masked).toEqual('**/**/1979');
+        expect(data.value).toEqual(date);
         done();
       }
     });
@@ -102,8 +102,8 @@ describe('Input', function(){
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
           data.id === 'test-cc') {
         Dispatcher.unregister('test-cc-change');
-        expect(data.value).toEqual('$$$$ $$$$ $$$$ 0101');
-        expect(data.unmasked).toEqual(ccNum);
+        expect(data.masked).toEqual('$$$$ $$$$ $$$$ 0101');
+        expect(data.value).toEqual(ccNum);
         done();
       }
     });
