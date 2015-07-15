@@ -63,7 +63,7 @@ describe('Input', function(){
     });
   });
 
-  it('can support masking pasted input values', function(done){
+  it('can support masking pasted input values', function(done) {
     var config = update(fixture, {id: {$set: 'test-date'}, mask: {$set: '00/00/XXXX'}});
     var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
     var dom = comp.getDOMNode();
@@ -84,6 +84,21 @@ describe('Input', function(){
         done();
       }
     });
+  });
+
+  it('can support masking default input values', function() {
+    // rendering the component with prepopulated value works as expected
+    var date = '01011979';
+    var config = update(fixture, {id: {$set: 'test-prepop-date'}, value: {$set: date}});
+    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
+    var dom = comp.getDOMNode();
+    expect(dom.value).toEqual(date);
+
+    // add a mask to config and render the component, value is masked
+    var configWithMask = update(config, {mask: {$set: '00/00/XXXX'}});
+    var compWithMask = TestUtils.renderIntoDocument(<Input {...configWithMask}/>);
+    var domWithMask = compWithMask.getDOMNode();
+    expect(domWithMask.value).toEqual('**/**/1979');
   });
 
   it('can support suppyling a custom MaskSymbol', function(done){

@@ -59,7 +59,12 @@ export default React.createClass({
   },
 
   componentWillMount() {
-    this.setState({value: this.props.value});
+    let props = this.props;
+    if (props.value && props.mask) {
+      this.handleInputChange({target: {value: props.value}, pasted: props.value});
+    } else {
+      this.setState({value: this.props.value});
+    }
   },
 
   handleComputedInput(e) {
