@@ -1,12 +1,13 @@
 import React from 'react';
+import update from 'react/lib/update';
 import DateComponent from '../../src/Date';
 import TestUtils from 'react/lib/ReactTestUtils';
 import _ from 'lodash';
 import fixture from '../fixtures/field-date.json';
 
-describe('Date input', function(){
+describe('Date input', function() {
 
-  it('can render a date input', function(){
+  it('can render a date input', function() {
     let comp = TestUtils.renderIntoDocument(<DateComponent {...fixture}/>);
     let container = comp.getDOMNode();
     let dom = container.childNodes[0];
@@ -17,7 +18,28 @@ describe('Date input', function(){
     expect(dom.getAttribute('disabled')).toBeNull();
   });
 
-  it('can update date input value', function(){
+  it('can render an input with today\'s date', function() {
+    let config = update(fixture, {value: {$set: 'today'}});
+    let comp = TestUtils.renderIntoDocument(<DateComponent {...config}/>);
+    let container = comp.getDOMNode();
+    let dom = container.childNodes[0];
+    // get today's date for comparison
+    let today = new Date();
+    let dd = today.getDate();
+    // January is 0
+    let mm = today.getMonth() + 1;
+    let yyyy = today.getFullYear();
+    if(dd < 10) {
+      dd = '0' + dd;
+    }
+    if(mm < 10) {
+      mm = '0' + mm
+    }
+    today = `${mm}/${dd}/${yyyy}`;
+    expect(dom.value).toEqual(today);
+  });
+
+  it('can update date input value', function() {
     let comp = TestUtils.renderIntoDocument(<DateComponent {...fixture}/>);
     let container = comp.getDOMNode();
     let dom = container.childNodes[0];
@@ -26,7 +48,7 @@ describe('Date input', function(){
     expect(dom.value).toEqual('03/15/2013');
   });
 
-  it('can update time input value', function(){
+  it('can update time input value', function() {
     let timeFixture = _.merge(fixture, {calendar: false, time: true, format: 'HH:mm'});
     let comp = TestUtils.renderIntoDocument(<DateComponent {...timeFixture}/>);
     let container = comp.getDOMNode();
