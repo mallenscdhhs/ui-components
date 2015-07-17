@@ -50,10 +50,10 @@ describe('Input', function(){
     Dispatcher.register( 'test-ssn-change' , function(action, data){
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
           data.id === 'test-ssn') {
-        if(data.unmasked === '012345678') {
+        if(data.value === '012345678') {
           Dispatcher.unregister('test-ssn-change');
-          expect(data.value).toEqual('***-**-5678');
-          expect(data.unmasked).toEqual('012345678');
+          expect(data.masked).toEqual('***-**-5678');
+          expect(data.value).toEqual('012345678');
           done();
         } else {
           numCount++;
@@ -63,7 +63,7 @@ describe('Input', function(){
     });
   });
 
-  it('can support masking pasted input values', function(done){
+  it('can support masking pasted input values', function(done) {
     var config = update(fixture, {id: {$set: 'test-date'}, mask: {$set: '00/00/XXXX'}});
     var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
     var dom = comp.getDOMNode();
@@ -79,11 +79,26 @@ describe('Input', function(){
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
           data.id === 'test-date') {
         Dispatcher.unregister('test-date-change');
-        expect(data.value).toEqual('**/**/1979');
-        expect(data.unmasked).toEqual(date);
+        expect(data.masked).toEqual('**/**/1979');
+        expect(data.value).toEqual(date);
         done();
       }
     });
+  });
+
+  it('can support masking default input values', function() {
+    // rendering the component with prepopulated value works as expected
+    var date = '01011979';
+    var config = update(fixture, {id: {$set: 'test-prepop-date'}, value: {$set: date}});
+    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
+    var dom = comp.getDOMNode();
+    expect(dom.value).toEqual(date);
+
+    // add a mask to config and render the component, value is masked
+    var configWithMask = update(config, {mask: {$set: '00/00/XXXX'}});
+    var compWithMask = TestUtils.renderIntoDocument(<Input {...configWithMask}/>);
+    var domWithMask = compWithMask.getDOMNode();
+    expect(domWithMask.value).toEqual('**/**/1979');
   });
 
   it('can support suppyling a custom MaskSymbol', function(done){
@@ -102,8 +117,8 @@ describe('Input', function(){
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
           data.id === 'test-cc') {
         Dispatcher.unregister('test-cc-change');
-        expect(data.value).toEqual('$$$$ $$$$ $$$$ 0101');
-        expect(data.unmasked).toEqual(ccNum);
+        expect(data.masked).toEqual('$$$$ $$$$ $$$$ 0101');
+        expect(data.value).toEqual(ccNum);
         done();
       }
     });
