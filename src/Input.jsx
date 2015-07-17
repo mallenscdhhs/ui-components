@@ -1,14 +1,15 @@
 'use-strict';
-var React = require('react');
-var _ = require('lodash');
-var ValueChangeMixin = require('./ValueChangeMixin');
-var inputMaskUtils = require('./inputMaskUtils');
+let React = require('react');
+let _ = require('lodash');
+let Immutable = require('immutable');
+let ValueChangeMixin = require('./ValueChangeMixin');
+let inputMaskUtils = require('./inputMaskUtils');
 
 /**
  * Renders an <input> control.
  * @module Input
  */
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'Input',
 
@@ -28,17 +29,17 @@ module.exports = React.createClass({
     forceManualInput: React.PropTypes.bool
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
       inputProps: ['type', 'id', 'name', 'maxLength', 'disabled', 'className', 'aria-describedby', 'min', 'max']
     };
   },
 
-  getMaskProps: function() {
-    return {'onKeyDown': this.handleKeyDown, 'onPaste': this.handlePaste};
+  getMaskProps() {
+    return {onKeyDown: this.handleKeyDown, onPaste: this.handlePaste};
   },
 
-  getManualInputProps: function() {
+  getManualInputProps() {
     return {
       onPaste: this.handleComputedInput,
       onCopy: this.handleComputedInput,
@@ -49,7 +50,7 @@ module.exports = React.createClass({
     };
   },
 
-  getInitialState: function(){
+  getInitialState() {
     return {
       value: '',
       unmasked: '',
@@ -57,41 +58,50 @@ module.exports = React.createClass({
     };
   },
 
-  componentWillMount: function(){
-    this.setState({value: this.props.value});
+  componentWillMount() {
+    if (this.props.value && this.props.mask) {
+      this.handleInputChange({target: {value: this.props.value}, pasted: this.props.value});
+    } else {
+      this.setState({value: this.props.value});
+    }
   },
 
-  handleComputedInput: function(e) {
+  handleComputedInput(e) {
     e.preventDefault();
   },
 
-  handleKeyDown: function(e) {
+  handleKeyDown(e) {
     this.setState({
       keyPressed: e.which
     });
   },
 
-  handlePaste: function(e) {
+  handlePaste(e) {
     var pasted = e.clipboardData.getData('Text');
     e.preventDefault();
     this.handleInputChange({target: {value: pasted}, pasted: pasted});
   },
 
-  handleInputChange: function(event){
+  handleInputChange(event) {
+    let changeEvent = event;
     if(this.props.mask) {
-      var customConfig = {
+      let customConfig = {
         maskSymbol: this.props.maskSymbol,
         maskAllowedStringType: this.props.maskAllowedStringType
       };
-      var maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
-      event.keyPressed = this.state.keyPressed;
-      event.unmasked = this.state.unmasked;
-      event.stateChange = inputMaskUtils.getMaskedOutput(maskConfig, event);
+      let maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
+      let _event = Immutable.Map(event).withMutations(evt => {
+        evt
+          .set('keyPressed', this.state.keyPressed)
+          .set('unmasked', this.state.unmasked)
+          .set('stateChange', inputMaskUtils.getMaskedOutput(maskConfig, evt.toJSON()));
+      });
+      changeEvent = _event.toJSON();
     }
-    this.onChange(event);
+    this.onChange(changeEvent);
   },
 
-  render: function(){
+  render() {
     var props = _.pick(this.props, this.props.inputProps);
     var maskProps = (this.props.mask) ? this.getMaskProps() : null;
     var manualInputProps = (this.props.forceManualInput) ? this.getManualInputProps() : null;

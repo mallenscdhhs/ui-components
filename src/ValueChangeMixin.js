@@ -29,8 +29,8 @@ export default {
         .set('disabled', this.state.disabled);
       if (this.props.mask) {
         mutablePayload
-          .set('value', state.value)
-          .set('unmasked', state.unmasked);
+          .set('value', state.unmasked)
+          .set('masked', state.value);
       } else {
         mutablePayload.set('value', event.target.value);
         if (event.target.dateString) {
@@ -50,7 +50,15 @@ export default {
    * @fires FIELD_BLUR
    */
   onBlur(event) {
-    let payload = _.extend({value: this.state.value}, this.props);
-    Dispatcher.dispatch(FIELD_BLUR, payload);
+    let payload = Immutable.fromJS(this.props).withMutations((mutablePayload) => {
+      if (this.props.mask) {
+        mutablePayload
+          .set('value', this.state.unmasked)
+          .set('masked', this.state.value);
+      } else {
+        mutablePayload.set('value', this.state.value);
+      }
+    });
+    Dispatcher.dispatch(FIELD_BLUR, payload.toJSON());
   }
 };

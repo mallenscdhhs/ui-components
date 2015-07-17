@@ -24,6 +24,7 @@ module.exports = {
 	page: require('./Page'),
 	requiredIndicator: require('./RequiredIndicator'),
 	select: require('./Select'),
+	terms: require('./Terms'),
 	textarea: require('./Textarea'),
 	tree: require('./Tree'),
 	workflow: require('./Workflow'),
