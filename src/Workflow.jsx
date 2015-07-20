@@ -5,7 +5,6 @@ import Tree from './Tree';
 import Action from './Action';
 import Flux, { dispatcher as Dispatcher } from 'fluxify';
 import constants from './constants';
-import EditorToggle from './EditorToggle';
 import Immutable from 'immutable';
 import SchemaUtils from '@scdhhs/ui-component-schema-utils';
 import Factory from './Factory';
@@ -226,8 +225,7 @@ class Workflow extends React.Component {
     let currentPage = this.state.currentPage;
     let disabledItems = Workflow.getDisabledItems(this.props.workflow, currentPage);
     return (
-      <div className="editable-component">
-        <EditorToggle {...this.props}/>
+      <div>
         {Workflow.renderTitle(this.props)}
         <Tree ref="outline">
           {Workflow.renderChildren(this.props.children, disabledItems, currentPage)}

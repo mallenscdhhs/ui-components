@@ -36,7 +36,7 @@ describe('Workflow', function(){
     let component = Factory.build(elements, config, config)[0];
     let workflow = TestUtils.renderIntoDocument(component);
     let dom = React.findDOMNode(workflow);
-    let ul = dom.childNodes[2];
+    let ul = dom.childNodes[1];
     let page1Link = ul.childNodes[0].childNodes[1];
     let page2Link = ul.childNodes[1].childNodes[1];
 
@@ -79,12 +79,7 @@ describe('Workflow', function(){
   it('can render a workflow', function(){
     let dom = React.findDOMNode(this.workflow);
     let items = this.workflow.refs.outline.getDOMNode().childNodes;
-    expect(dom.className).toEqual('editable-component');
-    expect(dom.childNodes[0].className).toEqual('config-editor');
-    expect(dom.childNodes[0].childNodes[0].className).toEqual('config-editor-label');
-    expect(dom.childNodes[0].childNodes[1].className).toEqual('edit-component');
     expect(items.length).toBe(2);
-    expect(items[0].className).toEqual('editable-component');
     expect(/disabled/.test(items[1].className)).toBe(true);
     expect(/current/.test(items[0].childNodes[2].childNodes[0].className)).toBe(true);
   });
