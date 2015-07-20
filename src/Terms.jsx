@@ -2,6 +2,7 @@
 import React from 'react';
 import setClassNames from 'classnames';
 import Field from './Field';
+import Content from './Content';
 
 class Terms extends React.Component {
   constructor() {
@@ -10,6 +11,8 @@ class Terms extends React.Component {
       termsRead: false
     };
     this.handleScroll = this.handleScroll.bind(this);
+    this.renderLegend = this.renderLegend.bind(this);
+    this.renderCheckboxHeader = this.renderCheckboxHeader.bind(this);
   }
 
   componentDidMount() {
@@ -39,28 +42,46 @@ class Terms extends React.Component {
   getClassNames() {
     return setClassNames(
       'form-control',
+      'terms-and-conditions',
       this.props.className
+    );
+  }
+
+  renderLegend() {
+    return this.props.legend ? <legend>{this.props.legend}</legend> : null;
+  }
+
+  renderCheckboxHeader() {
+    return this.props.checkboxHeader ? (
+      <Content
+        id={`${this.props.id}-checkbox-header`}
+        name={`${this.props.id}-checkbox-header`}
+        content={this.props.checkboxHeader} />
+    ) : (
+      null
     );
   }
 
   render() {
     return (
-      <div>
+      <fieldset className="form-group">
+        {this.renderLegend()}
         <textarea
           id={this.props.id}
           ref="terms"
           readOnly
           className={this.getClassNames()}
           value={this.props.value} />
+        {this.renderCheckboxHeader()}
         <Field
           id={`agree-to-${this.props.id}`}
           name={`agree-to-${this.props.id}`}
           type="checkbox"
           disabled={!this.state.termsRead}
-          label={this.props.fieldLabel}
+          label={this.props.checkboxLabel}
           required={this.props.required}
           value={false} />
-      </div>
+      </fieldset>
     );
   }
 }
@@ -68,7 +89,9 @@ class Terms extends React.Component {
 Terms.propTypes = {
   id: React.PropTypes.string.isRequired,
   value: React.PropTypes.string.isRequired,
-  fieldLabel: React.PropTypes.string.isRequired,
+  legend: React.PropTypes.string,
+  checkboxHeader: React.PropTypes.string,
+  checkboxLabel: React.PropTypes.string.isRequired,
   className: React.PropTypes.string,
   required: React.PropTypes.bool,
   rules: React.PropTypes.object
@@ -77,8 +100,10 @@ Terms.propTypes = {
 Terms.defaultProps = {
   id: '',
   value: '',
-  fieldLabel: '',
-  className: 'mbmd',
+  legend: '',
+  checkboxHeader: '',
+  checkboxLabel: '',
+  className: '',
   required: true,
   rules: {}
 };
