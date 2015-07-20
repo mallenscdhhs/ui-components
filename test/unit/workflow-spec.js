@@ -37,8 +37,7 @@ describe('Workflow', function(){
     let workflow = TestUtils.renderIntoDocument(component);
     let dom = React.findDOMNode(workflow);
     let ul = dom.childNodes[1];
-    let page1Link = ul.childNodes[0].childNodes[1];
-    let page2Link = ul.childNodes[1].childNodes[1];
+    let page2Link = ul.childNodes[1].childNodes[0];
 
     expect(workflow.state.currentPage).toEqual('page1');
     Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function() {
@@ -81,7 +80,7 @@ describe('Workflow', function(){
     let items = this.workflow.refs.outline.getDOMNode().childNodes;
     expect(items.length).toBe(2);
     expect(/disabled/.test(items[1].className)).toBe(true);
-    expect(/current/.test(items[0].childNodes[2].childNodes[0].className)).toBe(true);
+    expect(/current/.test(items[0].childNodes[1].childNodes[0].className)).toBe(true);
   });
 
   let iSchema = Immutable.fromJS(fixture);
