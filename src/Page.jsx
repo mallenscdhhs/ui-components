@@ -25,8 +25,7 @@ module.exports = React.createClass({
    */
   render: function(){
     return (
-      <article className="editable-component">
-        <EditorToggle {...this.props}/>
+      <article>
         <header>
           <h2>{this.props.title}</h2>
         </header>
