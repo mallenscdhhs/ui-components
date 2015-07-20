@@ -8,7 +8,7 @@ import ValueChangeMixin from './ValueChangeMixin';
  * Date input component
  * @module Date Date component
  */
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'Date',
 
@@ -26,7 +26,7 @@ module.exports = React.createClass({
     inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
       inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby', 'placeholder', 'visible', 'disabled'],
       calendar: true,
@@ -36,17 +36,27 @@ module.exports = React.createClass({
     };
   },
 
-  getInitialState: function(){
-    return {
-      value: this.props.value ? new Date(this.props.value) : null
-    };
+  /**
+   * Populate the default value of the Date component with either today's date,
+   * a specific date, or render it empty.
+   * @param {string} today - results in populating with today's date
+   * @param {string} format - if this.props.value is supplied, and not 'today',
+   * you can provide any other date in the format corresponding to the pattern
+   * passed into this.props.format
+   */
+  getInitialState() {
+    return this.props.value === 'today' ? (
+      {value: new Date()}
+    ) : (
+      {value: this.props.value ? new Date(this.props.value) : null}
+    );
   },
 
-  handleDateChange : function(date, dateString){
+  handleDateChange(date, dateString) {
     this.onChange({ target: {value: date, dateString: dateString}});
   },
 
-  render: function(){
+  render() {
     let props = _.pick(this.props, this.props.inputProps);
     return (
       <DateTimePicker
