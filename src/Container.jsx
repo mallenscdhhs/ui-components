@@ -1,6 +1,5 @@
 'use-strict';
 var React = require('react');
-var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
 	displayName: 'Container',
@@ -16,8 +15,7 @@ module.exports = React.createClass({
 	*/
 	render: function(){
 		return (
-      <div id={this.props.id} className={this.props.classes+' editable-component'}>
-        <EditorToggle {...this.props}/>
+      <div id={this.props.id} className={this.props.classes}>
         {this.props.children}
       </div>
     );
