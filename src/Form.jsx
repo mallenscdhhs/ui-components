@@ -3,7 +3,6 @@ var React = require('react');
 var _ = require('lodash');
 var Container = require('./Container');
 var Action = require('./Action');
-var EditorToggle = require('./EditorToggle');
 
 module.exports = React.createClass({
   displayName: 'Form',
@@ -26,8 +25,7 @@ module.exports = React.createClass({
    */
   render: function(){
     return (
-      <form name={this.props.name} id={this.props.id} key={this.props.id+"-form"} className="editable-component">
-        <EditorToggle {...this.props}/>
+      <form name={this.props.name} id={this.props.id} key={this.props.id+"-form"}>
         {this.props.children}
       </form>
     );

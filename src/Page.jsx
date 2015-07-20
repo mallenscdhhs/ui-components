@@ -1,6 +1,5 @@
 'use-strict';
 var React = require('react');
-var EditorToggle = require('./EditorToggle');
 var Content = require('./Content');
 
 module.exports = React.createClass({
