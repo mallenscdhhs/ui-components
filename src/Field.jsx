@@ -6,7 +6,6 @@ var _ = require('lodash');
 var Immutable = require('immutable');
 var Flux = require('fluxify');
 var constants = require('./constants');
-var EditorToggle = require('./EditorToggle');
 var FieldLabel = require('./FieldLabel');
 var HelpBlock = require('./HelpBlock');
 var FieldGroup = require('./FieldGroup');
