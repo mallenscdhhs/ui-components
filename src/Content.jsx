@@ -10,7 +10,8 @@ export default React.createClass({
   mixins: [DependencyMixin],
 
   propTypes: {
-    content : React.PropTypes.string
+    content : React.PropTypes.string,
+    className : React.PropTypes.string
   },
 
   statics: {
@@ -21,7 +22,8 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      componentType: 'content'
+      componentType: 'content',
+      className: ''
     };
   },
 
@@ -32,7 +34,8 @@ export default React.createClass({
   getClassNames() {
     return setClassNames(
       'page-content',
-      {hidden: !this.state.visible}
+      {hidden: !this.state.visible},
+      this.props.className
     );
   },
 
