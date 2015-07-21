@@ -104,7 +104,8 @@ export default React.createClass({
               .set('type', this.props.type)
               .set('checked', isOptionChecked(this.state, option.value))
               .set('isFieldGroup', true)
-              .set('key', id);
+              .set('key', id)
+              .set('inline', this.props.inline);
           }).toJSON();
 
           return <Checkable {...config}/>;
