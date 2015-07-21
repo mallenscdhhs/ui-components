@@ -27,6 +27,5 @@ module.exports = {
 	textarea: require('./Textarea'),
 	tree: require('./Tree'),
 	workflow: require('./Workflow'),
-	workflowitem: require('./WorkflowItem'),
-	workflowitemEditorToggle: require('./WorkflowItemEditorToggle')
+	workflowitem: require('./WorkflowItem')
 };
