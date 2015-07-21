@@ -4,7 +4,6 @@ var Flux = require('fluxify');
 var setClassNames = require('classnames');
 var Tree = require('./Tree');
 var constants = require('./constants');
-var WorkflowItemEditorToggle = require('./WorkflowItemEditorToggle');
 
 /**
  * Renders a single item in a Workflow Tree.
@@ -42,12 +41,10 @@ module.exports = React.createClass({
     var liClassNames = setClassNames({
       'inactive': !this.props.active,
       'current' : this.props.current,
-      'disabled': this.props.disabled,
-      'editable-component' : true
+      'disabled': this.props.disabled
     });
     return (
       <li className={liClassNames} role="presentation">
-        <WorkflowItemEditorToggle {...this.props} />
         <a href="javascript:void(0)" data-disabled={this.props.disabled} onClick={this.handleClick}>{this.props.title}</a>
         <Tree>{this.props.children}</Tree>
       </li>

@@ -21,8 +21,8 @@ describe('Grid', function(){
 		expect(cols.length).toEqual(2);
 		expect(cols[0].className).toEqual('col-md-6 col-sm-4');
 		expect(cols[1].className).toEqual('col-md-12 col-sm-12 col-xs-12');
-		expect(cols[0].childNodes[0].textContent).toEqual('Test oneField');
-		expect(cols[1].childNodes[0].textContent).toEqual('Test twoField');
+		expect(cols[0].childNodes[0].textContent).toEqual('Test one');
+		expect(cols[1].childNodes[0].textContent).toEqual('Test two');
 	});
 
 	it('can render multiple rows', function(){

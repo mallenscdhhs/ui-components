@@ -45,8 +45,8 @@ describe('utils', function(){
     };
     var dom = TestUtils.renderIntoDocument(<Field {...fieldConfig} {...utils.getComputedInputAttr('first-name')} />);
     var wrapperDiv = dom.getDOMNode();
-    var input = wrapperDiv.childNodes[2];
-    var helpBlock = wrapperDiv.childNodes[3];
+    var input = wrapperDiv.childNodes[1];
+    var helpBlock = wrapperDiv.childNodes[2];
 
     it('assigns form-control className', function(){
       expect(input.className).toEqual('form-control');
