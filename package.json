@@ -18,6 +18,9 @@
       "babelify"
     ]
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@scdhhs/ui-component-schema-utils": "^1.0.0",
     "babelify": "^6.0.2",
