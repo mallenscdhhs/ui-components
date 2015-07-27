@@ -17,7 +17,7 @@ class WorkflowItem extends React.Component {
     console.log(schema.getIn(['config','id']));
     console.log(JSON.stringify({components: components}));
 
-    let hasParent = false; //SchemaUtils.getRootId({components: components}, schema.getIn(['config','id']));
+    let hasParent = SchemaUtils.getRootId({components: components}, schema.getIn(['config','id']));
     let isNestable = !schema.get('child') && !hasParent;
     let isUnNestable = hasParent;
     let config = Immutable.fromJS(schema.get('config')).withMutations((mutableConfig) => {
