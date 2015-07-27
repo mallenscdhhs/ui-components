@@ -5,6 +5,7 @@ import configuration from './configuration';
 import _ from 'lodash';
 
 let {
+  API_COMMUNCATION_ERROR,
   FIELD_VALUE_CHANGE,
   FIELD_BLUR,
   SESSION_VALUES_LOADED,
@@ -90,7 +91,7 @@ export default Flux.createStore({
         // Error reaching API endpoint, throw generic error
         request.fail(() => {
           Dispatcher.dispatch(
-            API_COMMUNCATION_ERROR ,
+            API_COMMUNCATION_ERROR,
             _.merge(data, {hasError: true , errorMessage: 'Error calling validation API.'})
           );
         });
