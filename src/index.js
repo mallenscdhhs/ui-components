@@ -7,7 +7,6 @@ module.exports = {
 	content: require('./Content'),
 	contentEditor: require('./ContentEditor'),
 	date: require('./Date'),
-	editorToggle: require('./EditorToggle'),
 	entrylist: require('./EntryList'),
 	field: require('./Field'),
 	fieldGroup: require('./FieldGroup'),
@@ -28,6 +27,5 @@ module.exports = {
 	textarea: require('./Textarea'),
 	tree: require('./Tree'),
 	workflow: require('./Workflow'),
-	workflowitem: require('./WorkflowItem'),
-	workflowitemEditorToggle: require('./WorkflowItemEditorToggle')
+	workflowitem: require('./WorkflowItem')
 };

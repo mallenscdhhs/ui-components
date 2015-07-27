@@ -1,6 +1,5 @@
 'use-strict';
 var React = require('react');
-var EditorToggle = require('./EditorToggle');
 var DependencyMixin = require('./DependencyMixin');
 var Description = require('./Description');
 var setClassNames = require('classnames');
@@ -47,7 +46,6 @@ module.exports = React.createClass({
 
   getClassNames: function(){
     return setClassNames({
-      'editable-component' : true,
       'hidden': !this.state.visible
     });
   },
@@ -59,7 +57,6 @@ module.exports = React.createClass({
   render: function(){
     return (
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className={this.getClassNames()}>
-        <EditorToggle {...this.props}/>
         {this.getLabel()}
         {this.getHelpText()}
         {this.props.children}

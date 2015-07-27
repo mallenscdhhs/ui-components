@@ -4,8 +4,9 @@ node_js:
 deploy:
   provider: npm
   email: michael.allen@scdhhs.gov
-  on:
-    tags: true
-    branch: master
   api_key:
-    secure: mLD/4m83KTb2cBD8eiszWfyoyt+uxU2vh7S1x0xUOrKkO3aAtpovFyU+erFjXP+kfidHppQYz03mNOsI8LJTSsDNHtRhOhwUhuPfhZgia108HGUeqs+F/ZHR3HECniiUhLNcjob++2atBxd8uJv6Ki3F+eOsXBHfguSM5tqxHq8=
+    secure: rmLiZYeUaWUw1aTwV52wJR4CwMkp+2gTVzsFPJ8Ai1C7a/DCaXazvSJ7jr+pmPGxbkRbQcA4/rwiE4g9Qd2MipbAZCs7jqidVQt1/zg2v8q1J/NDTaGPmy1vW4Zt6aqy1wwL3/BNCe3a4tStbMotlQ7GRT3Y24WG+Vx4TKqDaQs=
+  on:
+    branch: master
+    tags: true
+    repo: scdhhs/ui-components

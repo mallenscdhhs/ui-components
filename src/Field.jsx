@@ -6,7 +6,6 @@ var _ = require('lodash');
 var Immutable = require('immutable');
 var Flux = require('fluxify');
 var constants = require('./constants');
-var EditorToggle = require('./EditorToggle');
 var FieldLabel = require('./FieldLabel');
 var HelpBlock = require('./HelpBlock');
 var FieldGroup = require('./FieldGroup');
@@ -144,7 +143,6 @@ module.exports = React.createClass({
   getClassNames: function(){
     return setClassNames({
       'form-group': true,
-      'editable-component': true,
       'has-error': this.state.hasError,
       'hidden': !this.state.visible
     });
@@ -174,7 +172,6 @@ module.exports = React.createClass({
     }
 
     children = children.concat([
-      <EditorToggle {...fieldProps} key="editor-toggle"/>,
       <InputControl {...fieldProps} key="input-control"/>,
       <HelpBlock {...fieldProps} key="help-block">{message}</HelpBlock>
     ]);

@@ -18,7 +18,7 @@ describe('ValueChangeMixin', function() {
     };
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig}/>);
     var wrapperDiv = dom.getDOMNode();
-    var input = wrapperDiv.childNodes[2];
+    var input = wrapperDiv.childNodes[1];
 
     Dispatcher.register( 'test-field-value-change', function(action, data) {
       if( action === constants.actions.FIELD_VALUE_CHANGE &&
@@ -46,7 +46,7 @@ describe('ValueChangeMixin', function() {
     };
     var dom = TestUtils.renderIntoDocument(<Field {...textFieldConfig} fieldValueChangeAction="custom-field-value-change-action"/>);
     var wrapperDiv = dom.getDOMNode();
-    var input = wrapperDiv.childNodes[2];
+    var input = wrapperDiv.childNodes[1];
 
     Dispatcher.register( 'custom-field-value-change-action-event', function(action, data) {
       if( action === 'custom-field-value-change-action' &&
