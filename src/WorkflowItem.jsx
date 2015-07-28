@@ -7,18 +7,28 @@ import Immutable from 'immutable';
 import SchemaUtils from '@scdhhs/ui-component-schema-utils';
 import constants from './constants';
 
+/**
+ * Used to represent a page in a Workflow
+ * @module WorkflowItem
+ */
 class WorkflowItem extends React.Component {
 
   constructor(props){
     super(props);
   }
 
+  /**
+   * Determine WorkflowItem's nestable/unNestable props
+   * @param {immutable} schema
+   * @param {object} model
+   * @param {object} components
+   * @returns {object}
+   */
   static configure(schema, model, components){
-    console.log(schema.getIn(['config','id']));
-    console.log(JSON.stringify({components: components}));
-
-    let hasParent = SchemaUtils.getRootId({components: components}, schema.getIn(['config','id']));
-    let isNestable = !schema.get('child') && !hasParent;
+    let itemId = schema.getIn(['config','id']);
+    let hasParent = !!SchemaUtils.getRootId({components: components}, itemId);
+    let hasPrevious = !!SchemaUtils.getMetaData({components: components}, itemId).previous;
+    let isNestable = !schema.get('child') && !hasParent && hasPrevious;
     let isUnNestable = hasParent;
     let config = Immutable.fromJS(schema.get('config')).withMutations((mutableConfig) => {
       mutableConfig.set('nestable', isNestable).set('unNestable', isUnNestable);
