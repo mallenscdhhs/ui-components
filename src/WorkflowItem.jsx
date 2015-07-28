@@ -26,8 +26,8 @@ class WorkflowItem extends React.Component {
    */
   static configure(schema, model, components){
     let itemId = schema.getIn(['config','id']);
-    let hasParent = !!SchemaUtils.getRootId({components: components}, itemId);
-    let hasPrevious = !!SchemaUtils.getMetaData({components: components}, itemId).previous;
+    let hasParent = !!SchemaUtils.getRootId({components: components.toJSON()}, itemId);
+    let hasPrevious = !!SchemaUtils.getMetaData({components: components.toJSON()}, itemId).previous;
     let isNestable = !schema.get('child') && !hasParent && hasPrevious;
     let isUnNestable = hasParent;
     let config = Immutable.fromJS(schema.get('config')).withMutations((mutableConfig) => {

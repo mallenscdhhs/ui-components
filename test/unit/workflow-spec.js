@@ -141,7 +141,7 @@ describe('Workflow', function(){
 
   describe('WorkflowItem#configure', function(){
     it('will properly set `nestable` and `unNestable` props for each page', function(){
-      let components = childrenFixture.components;
+      let components = Immutable.fromJS(childrenFixture.components);
       let schema = Immutable.fromJS(childrenFixture.components);
       let pageOne = WorkflowItem.configure(schema.get('page1'),{},components);
       let pageTwo = WorkflowItem.configure(schema.get('page2'),{},components);
