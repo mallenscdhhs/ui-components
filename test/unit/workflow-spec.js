@@ -4,6 +4,7 @@ import elements from '../../src/index';
 import Factory from '../../src/Factory';
 import TestUtils from 'react/lib/ReactTestUtils';
 import Workflow from '../../src/Workflow';
+import WorkflowItem from '../../src/WorkflowItem';
 import Flux from 'fluxify';
 import constants from '../../src/constants';
 import Immutable from 'immutable';
@@ -135,6 +136,34 @@ describe('Workflow', function(){
       expect(fromPage2.length).toBe(1);
       expect(fromPage2[0]).toBe('page3');
       expect(fromPage3.length).toBe(0);
+    });
+  });
+
+  describe('WorkflowItem#configure', function(){
+    it('will properly set `nestable` and `unNestable` props for each page', function(){
+      let components = childrenFixture.components;
+      let schema = Immutable.fromJS(childrenFixture.components);
+      let pageOne = WorkflowItem.configure(schema.get('page1'),{},components);
+      let pageTwo = WorkflowItem.configure(schema.get('page2'),{},components);
+      let pageThree = WorkflowItem.configure(schema.get('page3'),{},components);
+      let pageFour = WorkflowItem.configure(schema.get('page4'),{},components);
+      let pageSix = WorkflowItem.configure(schema.get('page6'),{},components);
+      let pageSeven = WorkflowItem.configure(schema.get('page7'),{},components);
+      let pageFive = WorkflowItem.configure(schema.get('page5'),{},components);
+      expect(pageOne.nestable).toBe(false);
+      expect(pageOne.unNestable).toBe(false);
+      expect(pageTwo.nestable).toBe(false);
+      expect(pageTwo.unNestable).toBe(false);
+      expect(pageThree.nestable).toBe(false);
+      expect(pageThree.unNestable).toBe(true);
+      expect(pageFour.nestable).toBe(false);
+      expect(pageFour.unNestable).toBe(true);
+      expect(pageSix.nestable).toBe(false);
+      expect(pageSix.unNestable).toBe(true);
+      expect(pageSeven.nestable).toBe(false);
+      expect(pageSeven.unNestable).toBe(true);
+      expect(pageFive.nestable).toBe(true);
+      expect(pageFive.unNestable).toBe(false);
     });
   });
 });
