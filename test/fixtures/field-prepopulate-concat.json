@@ -3,7 +3,7 @@
     "id": "tiName",
     "type": "text",
     "name": "tiName",
-    "appInputOperationConfig": {
+    "inputOperationConfig": {
       "action": "composeFromFields",
       "actionType": "model",
       "fieldsArray": [

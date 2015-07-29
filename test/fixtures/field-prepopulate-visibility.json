@@ -3,7 +3,7 @@
     "id": "dbaName",
     "type": "text",
     "name": "dbaName",
-    "appInputOperationConfig": {
+    "inputOperationConfig": {
       "action": "getDependentVisibility",
       "actionType": "props",
       "dependencyName": "usingDba",
