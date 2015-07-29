@@ -1,31 +1,32 @@
 'use-strict';
 
-var React = require('react');
-var setClassNames = require('classnames');
-var _ = require('lodash');
-var Immutable = require('immutable');
-var Flux = require('fluxify');
-var constants = require('./constants');
-var FieldLabel = require('./FieldLabel');
-var HelpBlock = require('./HelpBlock');
-var FieldGroup = require('./FieldGroup');
-var ValidationMixin = require('./ValidationMixin');
-var DependencyMixin = require('./DependencyMixin');
-var Checkable = require('./Checkable');
-var Select = require('./Select');
-var Input = require('./Input');
-var Textarea = require('./Textarea');
-var DateComponent = require('./Date');
-var AutoComplete = require('./AutoComplete');
-var File = require('./File');
-var ContentEditor = require('./ContentEditor');
-var FieldValueMixin = require('./FieldValueMixin');
+import React from 'react';
+import setClassNames from 'classnames';
+import _ from 'lodash';
+import Immutable from 'immutable';
+import Flux from 'fluxify';
+import constants from './constants';
+import FieldLabel from './FieldLabel';
+import HelpBlock from './HelpBlock';
+import FieldGroup from './FieldGroup';
+import ValidationMixin from './ValidationMixin';
+import DependencyMixin from './DependencyMixin';
+import Checkable from './Checkable';
+import Select from './Select';
+import Input from './Input';
+import Textarea from './Textarea';
+import DateComponent from './Date';
+import AutoComplete from './AutoComplete';
+import File from './File';
+import ContentEditor from './ContentEditor';
+import FieldValueMixin from './FieldValueMixin';
+import utils from './utils.js';
 
 /**
  * Field component
  * @module Field
  */
-module.exports = React.createClass({
+export default React.createClass ({
 
   displayName: 'Field',
 
@@ -53,15 +54,35 @@ module.exports = React.createClass({
      * @param {Immutable.Map} components - the component list
      * @returns {JSON}
      */
-    configure: function(schema, model, components){
-      var props = schema.getIn(['config']).setIn(['className'], 'form-control');
-      if ( model.has(props.get('id')) ) {
+    configure(schema, model, components) {
+      let config = schema.get('config');
+      let props = config.setIn(['className'], 'form-control');
+
+      /**
+       * Provides configuration for performing operations on a field dependent on previous
+       * pages' field values.
+       * @param {object} opConfig - Operation config must include an action and an actionType
+       * along with any other relevant information needed to perform the operation
+       * @param {object} action - The name of the operation to peform
+       * @param {object} actionType - Define what kind of object should be returned from
+       * the operation action
+       */
+      if (config.has('appInputOperationConfig')) {
+        let opConfig = config.get('appInputOperationConfig');
+        let action = opConfig.get('action');
+        let actionType = opConfig.get('actionType');
+        let updates = utils[action](props, model, opConfig);
+        props = (updates && actionType === 'props') ? updates : props;
+        model = (updates && actionType === 'model') ? updates : model;
+      }
+
+      if (model.has(props.get('id'))) {
         if(props.get('type') === 'checkbox') {
           // if model value is "true", then set "checked" to true
           if ( model.get(props.get('id')) === props.get('value') ) {
             props = props.set('checked', true);
           }
-        }else {
+        } else {
           props = props.set('value', model.get(props.get('id')));
         }
       }
@@ -69,7 +90,7 @@ module.exports = React.createClass({
     }
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
       componentType: 'field',
       initialState: 'visible',
@@ -83,7 +104,7 @@ module.exports = React.createClass({
    * Init Field state
    * @returns {object}
    */
-  getInitialState: function() {
+  getInitialState() {
     return {
       hasError: false,
       errorMessage: ''
@@ -94,7 +115,7 @@ module.exports = React.createClass({
    * Returns whether or not the Field type is "radio" or "checkbox".
    * @returns {bool}
    */
-  isRadioOrCheckbox: function(){
+  isRadioOrCheckbox() {
     return /radio|checkbox/.test(this.props.type);
   },
 
@@ -104,8 +125,8 @@ module.exports = React.createClass({
    * Check the type AND if there are available items to show.
    * @returns {object}
    */
-  isFieldGroup: function () {
-    var hasOptions = !!(this.props.options || this.props.optionsResource);
+  isFieldGroup() {
+    let hasOptions = !!(this.props.options || this.props.optionsResource);
     return this.isRadioOrCheckbox() && hasOptions;
   },
 
@@ -114,8 +135,8 @@ module.exports = React.createClass({
    * @param {string} type
    * @returns {JSX}
    */
-  getInputControl : function(type, isFieldGroup){
-    switch(type){
+  getInputControl(type, isFieldGroup) {
+    switch(type) {
       case 'contenteditor':
         return ContentEditor;
       case 'textarea':
@@ -140,11 +161,11 @@ module.exports = React.createClass({
    * Return the CSS class names to apply to the Field wrapper element.
    * @returns {object}
    */
-  getClassNames: function(){
+  getClassNames() {
     return setClassNames({
       'form-group': true,
       'has-error': this.state.hasError,
-      'hidden': !this.state.visible
+      hidden: !this.state.visible
     });
   },
 
@@ -152,19 +173,18 @@ module.exports = React.createClass({
    * Render a Field component.
    * @returns {JSX}
    */
-  render: function(){
-    var fieldProps = (this.props.dependencyValue) ? (
+  render() {
+    let fieldProps = (this.props.dependencyValue) ? (
       Immutable.fromJS(this.props).set('disabled',this.state.disabled ? 'disabled' : false).toJSON()
     ) : this.props;
 
-    var isFieldGroup = this.isFieldGroup();
-    var isRadioOrCheckbox = this.isRadioOrCheckbox();
-    var wrapperTag = isFieldGroup? 'fieldset' : 'div';
-    var message = this.state.hasError? this.state.errorMessage : this.props.helpText;
-    var InputControl = this.getInputControl(this.props.type, isFieldGroup);
-    var labelProps = _.pick(this.props, ['id', 'label', 'required','description','descriptionPlacement','descriptionTrigger']);
-    var children = [];
-
+    let isFieldGroup = this.isFieldGroup();
+    let isRadioOrCheckbox = this.isRadioOrCheckbox();
+    let wrapperTag = isFieldGroup ? 'fieldset' : 'div';
+    let message = this.state.hasError ? this.state.errorMessage : this.props.helpText;
+    let InputControl = this.getInputControl(this.props.type, isFieldGroup);
+    let labelProps = _.pick(this.props, ['id', 'label', 'required', 'description', 'descriptionPlacement', 'descriptionTrigger']);
+    let children = [];
 
     if ( isFieldGroup || !isRadioOrCheckbox ) {
       labelProps.isFieldGroup = isFieldGroup;

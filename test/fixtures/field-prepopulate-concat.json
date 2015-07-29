@@ -1,0 +1,18 @@
+{
+  "config": {
+    "id": "tiName",
+    "type": "text",
+    "name": "tiName",
+    "appInputOperationConfig": {
+      "action": "composeFromFields",
+      "actionType": "model",
+      "fieldsArray": [
+        "title",
+        "nameFirst",
+        "nameMiddle",
+        "nameLast",
+        "suffix"
+      ]
+    }
+  }
+}
