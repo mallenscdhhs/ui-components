@@ -22,7 +22,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@scdhhs/ui-component-schema-utils": "^1.0.0",
+    "@scdhhs/ui-component-schema-utils": "1.0.14",
     "babelify": "^6.0.2",
     "classnames": "^1.2.0",
     "es6-promise": "^2.0.1",
