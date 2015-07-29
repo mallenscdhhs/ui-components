@@ -67,8 +67,8 @@ export default React.createClass ({
        * @param {object} actionType - Define what kind of object should be returned from
        * the operation action
        */
-      if (config.has('appInputOperationConfig')) {
-        let opConfig = config.get('appInputOperationConfig');
+      if (config.has('inputOperationConfig')) {
+        let opConfig = config.get('inputOperationConfig');
         let action = opConfig.get('action');
         let actionType = opConfig.get('actionType');
         let updates = utils[action](props, model, opConfig);

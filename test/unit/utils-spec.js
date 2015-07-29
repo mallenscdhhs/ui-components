@@ -64,7 +64,7 @@ describe('utils', () => {
     let schema = Immutable.fromJS(prepopVisibilityFixture);
     let config = schema.get('config');
     let model = Immutable.fromJS({usingDba: 'no'});
-    let opConfig = config.get('appInputOperationConfig');
+    let opConfig = config.get('inputOperationConfig');
     let action = opConfig.get('action');
     let result = utils[action](config, model, opConfig);
 
@@ -76,7 +76,7 @@ describe('utils', () => {
   describe('#composeFromFields', () => {
     let schema = Immutable.fromJS(prepopConcatFixture);
     let config = schema.get('config');
-    let opConfig = config.get('appInputOperationConfig');
+    let opConfig = config.get('inputOperationConfig');
     let action = opConfig.get('action');
     let model = Immutable.fromJS({
       title: 'Mr.',
