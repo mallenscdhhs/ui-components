@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "@scdhhs/ui-form-validator": "^1.2.0",
-    "@scdhhs/ui-component-schema-utils": "^1.0.0",
+    "@scdhhs/ui-component-schema-utils": "^1.0.14",
     "classnames": "^1.2.0",
     "fluxify": "0.2.2",
     "immutable": "^3.7.2",
