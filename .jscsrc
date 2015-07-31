@@ -1,0 +1,15 @@
+{
+  "fileExtensions": [".js", ".jsx"],
+  "esnext": true,
+  "disallowMultipleSpaces": true,
+  "disallowQuotedKeysInObjects": "allButReserved",
+  "disallowSpaceAfterObjectKeys": true,
+  "disallowSpacesInsideObjectBrackets": true,
+  "disallowSpacesInsideParentheses": true,
+  "requireCamelCaseOrUpperCaseIdentifiers": true,
+  "requireSpaceAfterKeywords": ["if", "else", "catch", "try"],
+  "requireSpaceBeforeBlockStatements": true,
+  "requireSpaceBeforeKeywords": ["else", "catch"],
+  "requireSpaceBetweenArguments": true,
+  "validateParameterSeparator": ", "
+}

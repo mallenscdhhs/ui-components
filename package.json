@@ -4,10 +4,13 @@
   "description": "A UI component library.",
   "main": "src/main.js",
   "scripts": {
-    "test": "./node_modules/.bin/jsxhint src && ./node_modules/.bin/testem ci",
-    "test-dev": "./node_modules/.bin/jsxhint src && ./node_modules/.bin/testem dev",
+    "test": "npm run lint && npm run test-ci",
+    "test-ci": "node_modules/.bin/testem ci",
+    "test-dev": "node_modules/.bin/testem dev",
     "build": "./node_modules/.bin/gulp build",
-    "assets": "./node_modules/.bin/gulp assets"
+    "assets": "./node_modules/.bin/gulp assets",
+    "lint": "node_modules/.bin/jsxhint src",
+    "jscs": "node_modules/.bin/jscs src"
   },
   "repository": {
     "type": "git",
@@ -21,33 +24,46 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@scdhhs/ui-component-schema-utils": "1.0.14",
-    "babelify": "^6.0.2",
+  "peerDependencies": {
+    "@scdhhs/ui-form-validator": "^1.2.0",
+    "@scdhhs/ui-component-schema-utils": "^1.0.14",
     "classnames": "^1.2.0",
-    "es6-promise": "^2.0.1",
     "fluxify": "0.2.2",
     "immutable": "^3.7.2",
+    "lodash": "^3.0.0",
+    "react": "^0.13.0",
     "react-bootstrap": "^0.21.0",
     "react-widgets": "^2.2.2"
   },
+  "dependencies": {
+    "babelify": "^6.0.2"
+  },
   "devDependencies": {
+    "@scdhhs/ui-component-schema-utils": "^1.0.0",
+    "@scdhhs/ui-form-validator": "^1.2.0",
     "bootstrap": "^3.3.4",
     "browserify": "^10.1.0",
+    "classnames": "^1.2.0",
     "del": "^0.1.3",
     "es5-shim": "^4.0.3",
+    "es6-promise": "^2.0.1",
+    "fluxify": "0.2.2",
     "gulp": "^3.8.9",
     "gulp-copy": "0.0.2",
     "gulp-less": "^3.0.0",
     "gulp-util": "^3.0.1",
+    "immutable": "^3.7.2",
     "jasmine": "^2.0.1",
     "jasmine-ajax": "^3.1.1",
     "jasmine-core": "^2.3.0",
     "jquery": "^2.1.3",
+    "jscs": "^2.0.0",
     "jsxhint": "^0.12.1",
     "lodash": "^3.0.0",
     "pen": "sofish/pen",
     "react": "^0.13.0",
+    "react-bootstrap": "^0.21.0",
+    "react-widgets": "^2.2.2",
     "testem": "^0.8.3",
     "vinyl-source-stream": "^1.0.0"
   }
