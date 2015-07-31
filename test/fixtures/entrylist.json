@@ -72,7 +72,10 @@
                 "label": "National Provider Identifier (NPI)",
                 "className": "form-control",
                 "fieldValueChangeAction": "entryListFieldValueChange",
-                "entryListId": "myEntryList"
+                "entryListId": "myEntryList",
+                "rules": {
+                  "required": true
+                }
               }
             },
             "enrollmentDate": {
