@@ -154,10 +154,8 @@ describe('EntryList', () => {
     });
 
     let errorHandler = Dispatcher.register((action, data) => {
-      console.log(action, data);
       if (action === FIELD_VALIDATION_ERROR && data.name === 'npi') {
         Dispatcher.unregister(errorHandler);
-        console.log(data);
         expect(data.hasError).toBe(true);
         done();
       }
