@@ -3,6 +3,8 @@ import React from 'react';
 import constants from './constants';
 import Action from './Action';
 
+let { FILE_UPLOAD_PREVIEW_REMOVE } = constants.actions;
+
 /**
 * Renders file preview list items for the File component.
 * @module FileListItem
@@ -21,7 +23,8 @@ class FileListItem extends React.Component {
             name="remove"
             className="text-left"
             removalId={this.props.fileIdx}
-            event={constants.actions.FILE_UPLOAD_PREVIEW_REMOVE} />
+            dataParent={this.props.dataParent}
+            event={FILE_UPLOAD_PREVIEW_REMOVE} />
         </div>
         <div className="col-md-6">
           <img
