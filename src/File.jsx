@@ -40,22 +40,22 @@ class File extends React.Component {
 
   componentDidMount() {
     // on fetch of file preview list on intial render
-    Dispatcher.register(`${this.props.id}-load-file-preview-list`, function(action, data) {
+    Dispatcher.register(`${this.props.id}-load-file-preview-list`, (action, data) => {
       if (action === FILE_PREVIEW_LIST_LOAD && data.fieldId === this.props.id) {
         // remember not to set value here, only files (will get security errors from file reader api)
         this.setState({files: Array.isArray(data.value) ? data.value : []});
       }
-    }.bind(this));
+    });
 
     // when the user clicks a remove link
-    Dispatcher.register(`${this.props.id}-remove-file-preview`, function(action, data) {
+    Dispatcher.register(`${this.props.id}-remove-file-preview`, (action, data) => {
       if (action === FILE_UPLOAD_PREVIEW_REMOVE && data.dataParent === this.props.id) {
         let files = Immutable.List(this.state.files);
         let remainingFiles = files.remove(data.removalId).toJSON();
         this.setState({files: remainingFiles});
         this.buildChangeEvent(remainingFiles);
       }
-    }.bind(this));
+    });
   }
 
   componentWillUnmount() {
@@ -87,7 +87,7 @@ class File extends React.Component {
       type: 'file',
       value: files
     };
-    var actionName = this.props.fieldValueChangeAction || FIELD_VALUE_CHANGE;
+    let actionName = this.props.fieldValueChangeAction || FIELD_VALUE_CHANGE;
     Flux.doAction(actionName, event).then(() => {
       this.setState({files: files});
     });
@@ -95,17 +95,16 @@ class File extends React.Component {
 
   renderPreview() {
     let files = this.state.files;
-    let self = this;
     if(files.length) {
       return (
         <ul className="file-preview-list man pan">
-          {files.map(function(file, fileIdx) {
+          {files.map((file, fileIdx) => {
             return (
               <FileListItem
                 key={`file-preview-${fileIdx}`}
                 file={file}
                 fileIdx={fileIdx}
-                dataParent={self.props.id} />
+                dataParent={this.props.id} />
             );
           })}
         </ul>

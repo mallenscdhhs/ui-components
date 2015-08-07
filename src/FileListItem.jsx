@@ -3,7 +3,7 @@ import React from 'react';
 import constants from './constants';
 import Action from './Action';
 
-let { FILE_UPLOAD_PREVIEW_REMOVE } = constants.actions;
+let {FILE_UPLOAD_PREVIEW_REMOVE} = constants.actions;
 
 /**
 * Renders file preview list items for the File component.
