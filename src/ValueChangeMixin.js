@@ -5,7 +5,7 @@ import constants from './constants';
 import Immutable from 'immutable';
 import _ from 'lodash';
 
-let { FIELD_BLUR } = constants.actions;
+let {FIELD_BLUR} = constants.actions;
 
 /**
  * Provides a default onChange handler for Field.

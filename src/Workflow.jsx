@@ -10,6 +10,13 @@ import SchemaUtils from '@scdhhs/ui-component-schema-utils';
 import Factory from './Factory';
 import WorkflowItem from './WorkflowItem';
 
+let {
+  WORKFLOW_LOAD_PAGE,
+  WORKFLOW_NEXT_PAGE,
+  WORKFLOW_PREVIOUS_PAGE,
+  TREE_LOAD_PAGE
+} = constants.actions;
+
 /**
  * Manages the flow of a user through a set of defined screens.
  * @class Workflow
@@ -21,7 +28,7 @@ class Workflow extends React.Component {
    * @param {string[]} workflow
    * @returns {number}
    */
-  static getCurrentIndex(currentId, workflow){
+  static getCurrentIndex(currentId, workflow) {
     return _.findIndex(workflow, id => id === currentId);
   }
 
@@ -32,7 +39,7 @@ class Workflow extends React.Component {
    * @param {string[]} workflow - an array of id's
    * @returns {string}
    */
-  static getNext(currentId, workflow){
+  static getNext(currentId, workflow) {
     return workflow[Workflow.getCurrentIndex(currentId, workflow) + 1];
   }
 
@@ -43,7 +50,7 @@ class Workflow extends React.Component {
    * @param {string[]} workflow - an array of id's
    * @returns {string}
    */
-  static getPrevious(currentId, workflow){
+  static getPrevious(currentId, workflow) {
     return workflow[Workflow.getCurrentIndex(currentId, workflow) - 1];
   }
 
@@ -53,7 +60,7 @@ class Workflow extends React.Component {
    * @param {string} currentId - the page to disable from
    * @returns {string[]}
    */
-  static getDisabledItems(workflow, currentId){
+  static getDisabledItems(workflow, currentId) {
     return workflow.slice(Workflow.getCurrentIndex(currentId, workflow) + 1);
   }
 
@@ -64,22 +71,22 @@ class Workflow extends React.Component {
    * @param {Immutable.Map} components - the component list
    * @returns {JSON}
    */
-  static configure(schema, model, components){
+  static configure(schema, model, components) {
     let flatWorkflow = [];
     // create an array of booleans for each component's skip property value
     let skipList = [];
-    let rootSchema = { components: components.toJSON() };
+    let rootSchema = {components: components.toJSON()};
     SchemaUtils.traverse(rootSchema, schema.get('child'), (id, head) => {
       flatWorkflow.push(id);
       // push skip property to skipList
       skipList.push(head.config.skip || false);
     });
     let currentPage = schema.get('child');
-    let lastSectionCompleted = schema.getIn(['config','lastSectionCompleted']);
-    if ( lastSectionCompleted ) {
+    let lastSectionCompleted = schema.getIn(['config', 'lastSectionCompleted']);
+    if (lastSectionCompleted) {
       currentPage = Workflow.getNext(lastSectionCompleted, flatWorkflow);
     }
-    return schema.get('config').withMutations(function(mutableConfig) {
+    return schema.get('config').withMutations(mutableConfig => {
       mutableConfig
         .set('workflow', flatWorkflow)
         .set('currentPage', currentPage)
@@ -94,7 +101,7 @@ class Workflow extends React.Component {
    * @param {string} currentPage
    * @returns {object}
    */
-  static renderChildren(children, disabledItems, currentPage){
+  static renderChildren(children, disabledItems, currentPage) {
     return React.Children.map(children, child => {
       let isCurrent = child.props.id === currentPage;
       let isDisabled = _.contains(disabledItems, child.props.id);
@@ -102,7 +109,7 @@ class Workflow extends React.Component {
       let props = Immutable.Map(child.props)
         .set('disabled', isDisabled)
         .set('current', isCurrent);
-      if ( child.props.children ) {
+      if (child.props.children) {
         children = Workflow.renderChildren(child.props.children, disabledItems, currentPage);
       }
       return React.cloneElement(child, props.toJSON(), children);
@@ -114,13 +121,13 @@ class Workflow extends React.Component {
    * @param {object} props
    * @returns {?JSX}
    */
-  static renderTitle(props){
-    if ( props.title ) {
+  static renderTitle(props) {
+    if (props.title) {
       return <h4>{props.title}</h4>;
     }
   }
 
-  constructor(){
+  constructor() {
     super();
     this.state = {
       currentPage: '',
@@ -129,43 +136,44 @@ class Workflow extends React.Component {
     };
   }
 
-  componentWillMount(){
+  componentWillMount() {
     this.setState({
       currentPage: this.props.currentPage,
       nextPage: Workflow.getNext(this.props.currentPage, this.props.workflow),
       previousPage: Workflow.getPrevious(this.props.currentPage, this.props.workflow)
     });
-    Flux.doAction(constants.actions.WORKFLOW_LOAD_PAGE, { page: this.props.currentPage });
   }
 
   /**
    * Subscribe to workflow events.
    */
-  componentDidMount(){
-    Dispatcher.register('workflow-actions', function(action, data){
-      if ( action === constants.actions.TREE_LOAD_PAGE) {
+  componentDidMount() {
+    Dispatcher.register('workflow-actions', (action, data) => {
+      if (action === TREE_LOAD_PAGE) {
         // when the user clicks a link in the tree, skip that page if its' skip property is true
-        if(data.skip) {
+        if (data.skip) {
           this.handleNext(data.id);
         } else {
           this.handleDirect(data.id);
         }
-      } else if ( action === constants.actions.WORKFLOW_PREVIOUS_PAGE ) {
+      } else if (action === WORKFLOW_PREVIOUS_PAGE) {
         this.handlePrevious();
-      } else if ( action === constants.actions.WORKFLOW_NEXT_PAGE) {
+      } else if (action === WORKFLOW_NEXT_PAGE) {
         // when the user clicks Save & Continue, get the next page's skip property and skip if true
         let nextPageIndex = Workflow.getCurrentIndex(this.state.currentPage, this.props.workflow) + 1;
         let skip = this.props.skip[nextPageIndex];
         let next = skip ? Workflow.getNext(this.state.currentPage, this.props.workflow) : null;
         this.handleNext(next);
       }
-    }.bind(this));
+    });
+
+    Flux.doAction(WORKFLOW_LOAD_PAGE, {page: this.props.currentPage});
   }
 
   /**
   * Unsubscribe from all events.
   */
-  componentWillUnmount(){
+  componentWillUnmount() {
     Dispatcher.unregister('workflow-actions');
   }
 
@@ -175,13 +183,14 @@ class Workflow extends React.Component {
    * @fires workflow:load:page
    * @param {string} pageId
    */
-  handleDirect(pageId){
+  handleDirect(pageId) {
     this.setState({
       currentPage: pageId,
       nextPage: Workflow.getNext(pageId, this.props.workflow),
       previousPage: Workflow.getPrevious(pageId, this.props.workflow)
     });
-    Flux.doAction(constants.actions.WORKFLOW_LOAD_PAGE, { page: pageId });
+
+    Flux.doAction(WORKFLOW_LOAD_PAGE, {page: pageId});
   }
 
   /**
@@ -190,10 +199,10 @@ class Workflow extends React.Component {
    * @fires workflow:load:page
    * @param {string} pageId
    */
-  handleNext(pageId){
+  handleNext(pageId) {
     let currPage = pageId ? pageId : this.state.currentPage;
     let next = Workflow.getNext(currPage, this.props.workflow);
-    if( next ){
+    if (next) {
       this.handleDirect(next);
     }
   }
@@ -202,9 +211,9 @@ class Workflow extends React.Component {
    * Get the previous page, if available, and update workflow.
    * @fires workflow:load:page
    */
-  handlePrevious(){
+  handlePrevious() {
     let previous = Workflow.getPrevious(this.state.currentPage, this.props.workflow);
-    if( previous ){
+    if (previous) {
       this.handleDirect(previous);
     }
   }
@@ -214,14 +223,14 @@ class Workflow extends React.Component {
    * @param {object} nextState
    * @returns {boolean}
    */
-  shouldComponentUpdate(nextProps, nextState){
+  shouldComponentUpdate(nextProps, nextState) {
     return nextState.currentPage !== this.state.currentPage;
   }
 
   /**
    * @returns {JSX}
    */
-  render(){
+  render() {
     let currentPage = this.state.currentPage;
     let disabledItems = Workflow.getDisabledItems(this.props.workflow, currentPage);
     return (
