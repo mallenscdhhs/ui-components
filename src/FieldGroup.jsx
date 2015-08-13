@@ -21,7 +21,7 @@ let {
  * @returns {boolean}
  */
 let isOptionChecked = function(props, value) {
-  if ( _.isArray(props.value) ) {
+  if (_.isArray(props.value)) {
     return _.contains(props.value, value);
   } else {
     return value === props.value;
@@ -64,7 +64,7 @@ export default React.createClass({
 
   componentDidMount() {
     Dispatcher.register(`${this.props.id}-FIELD-GROUP-CHANGE`, (action, data) => {
-      if(action === FIELD_GROUP_VALUE_CHANGE &&
+      if (action === FIELD_GROUP_VALUE_CHANGE &&
         data.name === this.props.name &&
         data.id.lastIndexOf(this.props.id) >= 0) {
 
@@ -86,6 +86,17 @@ export default React.createClass({
         );
       }
     });
+  },
+
+  /**
+   * When re-rendering a view with new values, allow the rendered field to
+   * update its internal value with the new props.
+   * @param {object} nextProps - new prop values
+   */
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value) {
+      this.setState({value: nextProps.value});
+    }
   },
 
   componentWillUnmount() {

@@ -1,15 +1,20 @@
 'use-strict';
-var React = require('react');
-var FieldLabel = require('./FieldLabel');
-var _ = require('lodash');
-var constants = require('./constants');
-var ValueChangeMixin = require('./ValueChangeMixin');
+import React from 'react';
+import FieldLabel from './FieldLabel';
+import _ from 'lodash';
+import constants from './constants';
+import ValueChangeMixin from './ValueChangeMixin';
+
+let {
+  FIELD_VALUE_CHANGE,
+  FIELD_GROUP_VALUE_CHANGE
+} = constants.actions;
 
 /**
  * Renders either a radio|checkbox input control.
  * @module Checkable
  */
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'Checkable',
 
@@ -31,7 +36,7 @@ module.exports = React.createClass({
     required: React.PropTypes.bool
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
       componentType: 'field',
       inline: true,
@@ -40,10 +45,14 @@ module.exports = React.createClass({
     };
   },
 
-  getInitialState: function(){
-    return {
-      'checked' : !!this.props.checked
-    };
+  componentWillMount() {
+    let checked = !!this.props.checked;
+    this.setState({checked});
+  },
+
+  componentWillReceiveProps(nextProps) {
+    let checked = !!nextProps.checked;
+    this.setState({checked});
   },
 
   /**
@@ -54,21 +63,21 @@ module.exports = React.createClass({
    * @param {object} e - event object
    * @fires FIELD_VALUE_CHANGE | FIELD_GROUP_VALUE_CHANGE
    */
-  handleChange: function(e){
-    var value = e.target.checked? this.props.value : null;
-    var action = this.props.isFieldGroup ? constants.actions.FIELD_GROUP_VALUE_CHANGE : constants.actions.FIELD_VALUE_CHANGE;
+  handleChange(e) {
+    let value = e.target.checked? this.props.value : null;
+    let action = this.props.isFieldGroup ? FIELD_GROUP_VALUE_CHANGE : FIELD_VALUE_CHANGE;
     this.onChange({
-      target: { value: value },
-      stateChange: { checked: e.target.checked },
+      target: {value: value},
+      stateChange: {checked: e.target.checked},
       actionName: action
     });
   },
 
-  render: function(){
-    var props = _.pick(this.props, this.props.inputProps);
-    var labelProps = _.pick(this.props, this.props.labelProps);
-    var className = this.props.type;
-    if ( this.props.inline ) {
+  render() {
+    let props = _.pick(this.props, this.props.inputProps);
+    let labelProps = _.pick(this.props, this.props.labelProps);
+    let className = this.props.type;
+    if (this.props.inline) {
       className += '-inline';
     }
     return (

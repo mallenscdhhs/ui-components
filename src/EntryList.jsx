@@ -79,6 +79,11 @@ export default React.createClass({
     this.setState({entries: this.props.entries});
   },
 
+  componentWillReceiveProps(nextProps) {
+    let entries = nextProps.entries;
+    this.setState({entries});
+  },
+
   componentDidMount() {
     let validator = new FormValidator({
       dispatcher: Dispatcher,
@@ -129,10 +134,10 @@ export default React.createClass({
       if (action === ENTRYLIST_ENTRY_REMOVE && data.id === this.props.id) {
         let entries = Immutable.List(this.state.entries);
         // If we're currently editing the entry we wish to remove, make sure to close the editor.
-        if(this.state.isEdit && this.state.entry._id === data.entryId){
+        if (this.state.isEdit && this.state.entry._id === data.entryId) {
           Dispatcher.dispatch(ENTRYLIST_ENTRY_CANCEL, data);
         }
-        this.setState({ entries: entries.remove(data.entryId).toJSON() });
+        this.setState({entries: entries.remove(data.entryId).toJSON()});
       }
     });
 

@@ -66,6 +66,10 @@ export default React.createClass({
     }
   },
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({value: nextProps.value});
+  },
+
   handleComputedInput(e) {
     e.preventDefault();
   },
@@ -84,7 +88,7 @@ export default React.createClass({
 
   handleInputChange(event) {
     let changeEvent = event;
-    if(this.props.mask) {
+    if (this.props.mask) {
       let customConfig = {
         maskSymbol: this.props.maskSymbol,
         maskAllowedStringType: this.props.maskAllowedStringType

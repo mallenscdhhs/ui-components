@@ -38,6 +38,12 @@ class File extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    let files = nextProps.value || nextProps.files;
+    let value = nextProps.value;
+    this.setState({files, value});
+  }
+
   componentDidMount() {
     // on fetch of file preview list on intial render
     Dispatcher.register(`${this.props.id}-load-file-preview-list`, (action, data) => {
@@ -95,7 +101,7 @@ class File extends React.Component {
 
   renderPreview() {
     let files = this.state.files;
-    if(files.length) {
+    if (files.length) {
       return (
         <ul className="file-preview-list man pan">
           {files.map((file, fileIdx) => {
