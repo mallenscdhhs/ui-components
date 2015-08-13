@@ -19,16 +19,16 @@ let valueChangeActions = [ENTRYLIST_FIELD_VALUE_CHANGE, FIELD_VALUE_CHANGE];
  * @class DependencyStore
  */
 class DependencyStore {
-  constructor(){
+  constructor() {
     this.values = {};
   }
-  get(name){
+  get(name) {
     return this.values[name];
   }
-  getAll(){
+  getAll() {
     return this.values;
   }
-  set(name, value){
+  set(name, value) {
     this.values[name] = value;
   }
 }
@@ -88,7 +88,7 @@ export default {
   },
 
   componentWillReceiveProps(nextProps) {
-    if ( !_.isEqual(nextProps, this.props) ) {
+    if (!_.isEqual(nextProps, this.props)) {
       this.initOptions(nextProps);
     }
   },

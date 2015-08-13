@@ -18,6 +18,8 @@ export default Flux.createStore({
 
   id: 'OptionsStore',
 
+  initialState: {},
+
   actionCallbacks: {
     /**
      * Calls an API to retrieve options data. Optionally filters data with passed
@@ -26,32 +28,43 @@ export default Flux.createStore({
      * @param {object} data
      */
     [SEND_RESOURCE_OPTIONS](updater, data) {
-      if ( !configuration.API || !configuration.API.options ) {
+      if (!configuration.API || !configuration.API.options) {
         throw new Error('API endpoint for options not configured.');
       }
 
-      let uri = `${configuration.API.options}/${data.resourceName}`;
-      let params = {filter: data.resourceFilter};
-      let request = $.getJSON(uri, params);
-
-      request.done(resp => {
-        let options = [];
+      // inspect internal state first to see if we have already loaded the
+      // requested options data
+      if (!data.resourceFilter && updater.props[data.resourceName]) {
         let id = data.fieldId;
-        if (resp && resp.responsePayload.result.length) {
-          options = resp.responsePayload.result;
-        }
+        let options = updater.props[data.resourceName];
         Dispatcher.dispatch(LOAD_OPTIONS, {id, options});
-      });
+      } else {
+        let uri = `${configuration.API.options}/${data.resourceName}`;
+        let params = {filter: data.resourceFilter};
+        let request = $.getJSON(uri, params);
 
-      request.fail((jqxhr, textStatus, error) => {
-        Dispatcher.dispatch(
-          API_COMMUNCATION_ERROR,
-          _.merge(data, {
-            hasError: true,
-            errorMessage: 'Error calling options API.'
-          })
-        );
-      });
+        request.done(resp => {
+          let options = [];
+          let id = data.fieldId;
+          if (resp && resp.responsePayload.result.length) {
+            options = resp.responsePayload.result;
+            if (!data.resourceFilter) {
+              updater.set({[data.resourceName]: options});
+            }            
+          }
+          Dispatcher.dispatch(LOAD_OPTIONS, {id, options});
+        });
+
+        request.fail((jqxhr, textStatus, error) => {
+          Dispatcher.dispatch(
+            API_COMMUNCATION_ERROR,
+            _.merge(data, {
+              hasError: true,
+              errorMessage: 'Error calling options API.'
+            })
+          );
+        });
+      }
     }
   }
 });

@@ -67,4 +67,17 @@ describe('OptionsStore', () => {
 
     Dispatcher.dispatch(SEND_RESOURCE_OPTIONS, actionPayload);
   });
+
+  it('will store any options loaded by resource id', (done) => {
+    let field = fixture.fieldWithOptionsResource;
+    let fieldId = field.id;
+    let resourceName = field.optionsResource;
+    let actionPayload = {fieldId, resourceName};
+    Dispatcher
+      .dispatch(SEND_RESOURCE_OPTIONS, actionPayload)
+      .then(() => {
+        expect(jasmine.Ajax.requests.count()).toBe(0);
+        done();
+      });
+  });
 });
