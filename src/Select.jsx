@@ -1,33 +1,15 @@
 'use-strict';
-var React = require('react');
-var OptionsMixin = require('./OptionsMixin');
-var _ = require('lodash');
-var update = require('react/lib/update');
-var ValueChangeMixin = require('./ValueChangeMixin');
-
-/**
- * Returns the selected state of an <option>. Used in filter.
- * @param {ReactDOMElement} option
- * @returns {boolean}
- */
-function isOptionSelected(option){
-  return option.selected;
-}
-
-/**
- * Returns the value of the passed-in <option>. Used in map.
- * @param {ReactDOMElement} option
- * @returns {string}
- */
-function getOptionValue(option){
-  return option.value;
-}
+import React from 'react';
+import OptionsMixin from './OptionsMixin';
+import _ from 'lodash';
+import update from 'react/lib/update';
+import ValueChangeMixin from './ValueChangeMixin';
 
 /**
  * Renders a <select> and manages its state.
  * @module Select
  */
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'Select',
 
@@ -48,7 +30,7 @@ module.exports = React.createClass({
     ])
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
       inputProps: ['id', 'name', 'multiple', 'className', 'aria-describedby', 'disabled'],
       defaultOption: {
@@ -58,37 +40,42 @@ module.exports = React.createClass({
     };
   },
 
-  getInitialState: function(){
-    return {
-      options: [],
-      value: this.props.value || (this.props.multiple? [] : '')
-    };
+  componentWillMount() {
+    let value = this.props.value || (this.props.multiple ? [] : '');
+    let options = [];
+    this.setState({options, value});
+  },
+
+  componentWillReceiveProps(nextProps) {
+    let options = nextProps.options;
+    let value = nextProps.value;
+    this.setState({options, value});
   },
 
   /**
    * Return default 'option' if not a multiselect, so dropdowns will not have 'default' selected options
    * @return {jsx}
    */
-  getEmptyOption: function(){
+  getEmptyOption() {
     var defaultOption;
-    if(this.props.multiple !== true){
+    if (this.props.multiple !== true) {
       defaultOption = <option value={this.props.defaultOption.value} key={"option-default-option"}>{this.props.defaultOption.label}</option>;
     }
     return defaultOption;
   },
 
-  handleSelection: function(event){
-    var opts;
-    var e = { target: { value: event.target.value }};
-    if ( this.props.multiple === true ) {
+  handleSelection(event) {
+    let opts;
+    let e = {target: {value: event.target.value}};
+    if (this.props.multiple === true) {
       opts = _.toArray(event.target.options);
-      e.target.value = _.map(_.filter(opts, isOptionSelected), getOptionValue);
+      e.target.value = _.map(_.filter(opts, option => option.selected), option => option.value);
     }
     this.onChange(e);
   },
 
-  render: function(){
-    var props = _.pick(this.props, this.props.inputProps);
+  render() {
+    let props = _.pick(this.props, this.props.inputProps);
     return (
       <select
         value={this.state.value}
@@ -96,9 +83,7 @@ module.exports = React.createClass({
         onBlur={this.onBlur}
         {...props}>
         {this.getEmptyOption()}
-        {_.map(this.state.options, function(opt){
-          return <option value={opt.value} key={"option-"+opt.value}>{opt.label}</option>;
-        })}
+        {_.map(this.state.options, opt => <option value={opt.value} key={"option-"+opt.value}>{opt.label}</option>)}
       </select>
     );
   }
