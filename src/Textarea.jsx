@@ -34,8 +34,10 @@ export default React.createClass({
     this.setState({value: this.props.value});
   },
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({value: nextProps.value});
+  componentWillReceiveProps({value}) {
+    if (value) {
+      this.setState({value});
+    }
   },
 
   render() {
