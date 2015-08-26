@@ -38,10 +38,15 @@ class File extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    let files = nextProps.value || nextProps.files;
-    let value = nextProps.value;
-    this.setState({files, value});
+  componentWillReceiveProps({files, value}) {
+    let _files = files || value;
+    if (_files) {
+      this.setState({files: _files});
+    }
+
+    if (value) {
+      this.setState({value});
+    }
   }
 
   componentDidMount() {

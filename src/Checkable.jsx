@@ -51,8 +51,10 @@ export default React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    let checked = !!nextProps.checked;
-    this.setState({checked});
+    if (nextProps.hasOwnProperty('checked')) {
+      let checked = !!nextProps.checked;
+      this.setState({checked});
+    }
   },
 
   /**
