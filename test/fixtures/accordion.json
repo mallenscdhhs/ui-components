@@ -1,0 +1,57 @@
+{
+  "type": "page",
+  "child": "accordion",
+  "config": {
+    "title": "Accordion Test",
+    "content": ""
+  },
+  "components": {
+    "accordion": {
+      "child": "panel1",
+      "type": "accordion",
+      "config": {
+        "id": "accordion",
+        "name": "accordion"
+      }
+    },
+    "panel1": {
+      "child": "panelBody1",
+      "next": "panel2",
+      "type": "panel",
+      "config": {
+        "id": "panel1",
+        "name": "panel1",
+        "header": "Panel 1",
+        "eventKey": 0
+      }
+    },
+    "panelBody1": {
+      "type": "content",
+      "config": {
+        "id": "panelBody1",
+        "name": "panelBody1",
+        "content": "<p>Example Paragraph</p>"
+      }
+    },
+    "panel2": {
+      "child": "panelBody2",
+      "type": "panel",
+      "config": {
+        "id": "panel2",
+        "name": "panel2",
+        "header": "Panel 2",
+        "eventKey": 1
+      }
+    },
+    "panelBody2": {
+      "type": "action",
+      "config": {
+        "name" : "panelBody2",
+        "url" : "testing.html",
+        "id" : "panelBody2",
+        "type": "link",
+        "event": "test:event"
+      }
+    }
+  }
+}
