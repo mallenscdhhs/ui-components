@@ -1,5 +1,3 @@
-/* jshint node:true */
-
 import React from 'react';
 import {Accordion as RBAccordion} from 'react-bootstrap';
 import Immutable from 'immutable';
@@ -36,7 +34,6 @@ class Accordion extends React.Component {
   }
 
   render() {
-    console.log('state', this.state);
     return (
       <RBAccordion
         id={this.props.id}
