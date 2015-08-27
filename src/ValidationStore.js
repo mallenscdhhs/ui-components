@@ -10,7 +10,8 @@ let {
   FIELD_BLUR,
   SESSION_VALUES_LOADED,
   GET_SESSION_VALUES,
-  FIELD_VALIDATION_ERROR
+  FIELD_VALIDATION_ERROR,
+  VALIDATION_CONFIG_FIELDS
 } = constants.actions;
 
 export default Flux.createStore({
@@ -58,7 +59,7 @@ export default Flux.createStore({
           rules: _.compact(_.map(data.rules, (enabled, ruleName) => {
             return !enabled ? null : {
               ruleName,
-              config: _.pick(data, ['type', 'name', 'id', 'maxLength', 'required'])
+              config: _.pick(data, VALIDATION_CONFIG_FIELDS)
             };
           }))
         };
