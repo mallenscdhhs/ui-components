@@ -80,7 +80,7 @@ class Terms extends React.Component {
           disabled={!this.state.termsRead}
           label={this.props.checkboxLabel}
           required={this.props.required}
-          value={false} />
+          value="attested" />
       </fieldset>
     );
   }
