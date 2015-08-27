@@ -32,8 +32,7 @@ export default {
           .set('value', state.unmasked)
           .set('masked', state.value);
       } else {
-        let value = _.isEqual(this.props.type, 'checkbox') && !this.props.isFieldGroup ? state.checked : event.target.value;
-        mutablePayload.set('value', value);
+        mutablePayload.set('value', event.target.value);
         if (event.target.dateString) {
           mutablePayload.set('dateString', event.target.dateString);
         }
