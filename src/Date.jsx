@@ -65,7 +65,7 @@ let DateField = React.createClass({
 
   componentDidMount() {
     let dateString = utils.getDateString(this.state.value);
-    this.onChange({target: {value: this.state.value, dateString: dateString}});
+    this.onChange({target: {value: this.state.value, dateString}});
   },
 
   componentWillReceiveProps(nextProps) {
