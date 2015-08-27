@@ -10,9 +10,12 @@ let {
   FIELD_BLUR,
   SESSION_VALUES_LOADED,
   GET_SESSION_VALUES,
-  FIELD_VALIDATION_ERROR,
-  VALIDATION_CONFIG_FIELDS
+  FIELD_VALIDATION_ERROR
 } = constants.actions;
+
+let {
+  VALIDATION_CONFIG_FIELDS
+} = constants;
 
 export default Flux.createStore({
   id: 'ValidationStore',
