@@ -46,10 +46,14 @@ export default React.createClass({
     this.setState({options, value});
   },
 
-  componentWillReceiveProps(nextProps) {
-    let options = nextProps.options;
-    let value = nextProps.value;
-    this.setState({options, value});
+  componentWillReceiveProps({options, value}) {
+    if (options) {
+      this.setState({options});
+    }
+
+    if (value) {
+      this.setState({value});
+    }
   },
 
   /**

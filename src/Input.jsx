@@ -66,8 +66,10 @@ export default React.createClass({
     }
   },
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({value: nextProps.value});
+  componentWillReceiveProps({value}) {
+    if (value) {
+      this.setState({value});  
+    }
   },
 
   handleComputedInput(e) {

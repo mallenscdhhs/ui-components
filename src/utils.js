@@ -66,3 +66,23 @@ exports.composeFromFields = (props, model, opConfig) => {
   // set the current field's value to the concatonated values in the fieldsArray
   return model.set(props.get('id'), fieldValues.join(' '));
 };
+
+/**
+* Returns an 'mm/dd/yyyy' formatted date string from the JS Date
+* @param {string} currentValue - Pass in the JS Date
+* @return {string}
+*/
+exports.getDateString = (currentValue) => {
+  let value = new Date(currentValue);
+  let dd = value.getDate();
+  // January is 0
+  let mm = value.getMonth() + 1;
+  let yyyy = value.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd;
+  }
+  if (mm < 10) {
+    mm = '0' + mm;
+  }
+  return `${mm}/${dd}/${yyyy}`;
+};

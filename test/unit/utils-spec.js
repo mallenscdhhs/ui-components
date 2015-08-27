@@ -93,4 +93,11 @@ describe('utils', () => {
     });
   });
 
+  describe('#getDateString', () => {
+    let result = utils.getDateString('2015-08-11T17:27:25.201Z');
+    it('returns an mm/dd/yyyy formatted date string from a unix time stamp', () => {
+      expect(result).toEqual('08/11/2015');
+    });
+  });
+
 });
