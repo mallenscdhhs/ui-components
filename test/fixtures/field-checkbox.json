@@ -1,6 +1,7 @@
 {
-  "id" : "test-checkbox",
-  "type" : "checkbox",
-  "name" : "test-checkbox",
-  "label" : "Test Checkbox"
+  "id": "test-checkbox",
+  "type": "checkbox",
+  "name": "test-checkbox",
+  "label": "Test Checkbox",
+  "value": "totally-agree"
 }

@@ -27,11 +27,11 @@ describe('Checkable', () => {
     expect(input.checked).toBe(false);
   });
 
-  it('can render a single checkbox input and return boolean FIELD_VALUE_CHANGE values upon checking', (done) => {
+  it('can render a single checkbox input and persist the value upon checking', (done) => {
     Dispatcher.register('CHECKABLE-TEST-0', (action, data) => {
       if (action === FIELD_VALUE_CHANGE && data.id === checkboxFixture.id) {
         Dispatcher.unregister('CHECKABLE-TEST-0');
-        expect(data.value).toBe(true);
+        expect(data.value).toEqual(checkboxFixture.value);
         done();
       }
     });
