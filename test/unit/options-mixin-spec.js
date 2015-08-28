@@ -15,7 +15,7 @@ let {
   ENTRYLIST_FIELD_VALUE_CHANGE
 } = constants.actions;
 
-xdescribe('OptionsMixin', () => {
+describe('OptionsMixin', () => {
 
   beforeEach(() => {
     Components.configure({

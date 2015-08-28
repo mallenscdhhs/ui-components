@@ -16,7 +16,7 @@ let DateField = React.createClass({
 
   statics: {
     getDateValue(input) {
-      let value = '';
+      let value = null;
       if (input === 'today') {
         value = new Date();
       } else if (input) {
