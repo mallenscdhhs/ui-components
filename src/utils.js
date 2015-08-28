@@ -8,7 +8,7 @@ import setClassNames from 'classnames';
  * @returns {boolean}
  */
 exports.containsOneOf = (list, values) => {
-  if ( !values.length ) return false;
+  if (!values.length) return false;
   return _.contains(list, _.first(values)) || exports.containsOneOf(list, _.rest(values));
 };
 
@@ -74,15 +74,9 @@ exports.composeFromFields = (props, model, opConfig) => {
 */
 exports.getDateString = (currentValue) => {
   let value = new Date(currentValue);
-  let dd = value.getDate();
+  let dd = _.padLeft(value.getDate(), 2, '0');
   // January is 0
-  let mm = value.getMonth() + 1;
-  let yyyy = value.getFullYear();
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
+  let mm = _.padLeft(value.getMonth() + 1, 2, '0');
+  let yyyy = value.getFullYear();  
   return `${mm}/${dd}/${yyyy}`;
 };
