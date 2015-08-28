@@ -29,10 +29,10 @@ describe('Date input', function() {
     // January is 0
     let mm = today.getMonth() + 1;
     let yyyy = today.getFullYear();
-    if(dd < 10) {
+    if (dd < 10) {
       dd = '0' + dd;
     }
-    if(mm < 10) {
+    if (mm < 10) {
       mm = '0' + mm
     }
     today = `${mm}/${dd}/${yyyy}`;
@@ -56,6 +56,20 @@ describe('Date input', function() {
     expect(dom.value).toEqual('00:00');
     TestUtils.Simulate.change(dom, {target: {value: '02:00'}});
     expect(dom.value).toEqual('02:00');
+  });
+
+  describe('#getDateValue', () => {
+    it('will return today\'s date if value is "today"', () => {
+      let result = DateComponent.getDateValue('today').toDateString();
+      let now = new Date().toDateString();
+      expect(result).toBe(now);
+    });
+
+    it('will parse and return a UTC timestamp', () => {
+      let result = DateComponent.getDateValue('09/24/1981').toDateString();
+      let fixture = new Date('9/24/1981').toDateString();
+      expect(result).toBe(fixture);
+    });
   });
 
 });
