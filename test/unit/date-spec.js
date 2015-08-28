@@ -65,7 +65,11 @@ describe('Date input', function() {
       expect(result).toBe(now);
     });
 
-    it('will parse and return a UTC timestamp');
+    it('will parse and return a UTC timestamp', () => {
+      let result = DateComponent.getDateValue('09/24/1981').toDateString();
+      let fixture = new Date('9/24/1981').toDateString();
+      expect(result).toBe(fixture);
+    });
   });
 
 });
