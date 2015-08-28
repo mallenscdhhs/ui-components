@@ -10,6 +10,9 @@ import EntryListForm from './EntryListForm';
 import EntryListBtn from './EntryListBtn';
 import DependencyMixin from './DependencyMixin';
 import setClassNames from 'classnames';
+import FormValidator from '@scdhhs/ui-form-validator';
+import Config from './configuration';
+
 let {
   ENTRYLIST_FORM_SHOW,
   ENTRYLIST_ENTRY_CANCEL,
@@ -19,7 +22,9 @@ let {
   ENTRYLIST_NEW_ENTRY_ADD,
   APPLICATION_VALIDATE_ENTRY,
   ENTRYLIST_NEW_ENTRY_VALIDATED,
-  FIELD_VALUE_CHANGE
+  FIELD_VALUE_CHANGE,
+  FIELD_VALIDATION_ERROR,
+  API_COMMUNCATION_ERROR
 } = constants.actions;
 
 export default React.createClass({
@@ -74,8 +79,22 @@ export default React.createClass({
     this.setState({entries: this.props.entries});
   },
 
+  componentWillReceiveProps(nextProps) {
+    let entries = nextProps.entries;
+    this.setState({entries});
+  },
+
   componentDidMount() {
+    let validator = new FormValidator({
+      dispatcher: Dispatcher,
+      url: Config.API.validation,
+      data: this.props.form,
+      postValidationAction: FIELD_VALIDATION_ERROR,
+      apiCommunicationErrorAction: API_COMMUNCATION_ERROR
+    });
+
     let propsId = this.props.id;
+
     // when the user clicks the show form button
     Dispatcher.register(`show-entrylist-form-${propsId}`, (action, data) => {
       if (action === ENTRYLIST_FORM_SHOW && data.id === this.props.id) {
@@ -115,10 +134,10 @@ export default React.createClass({
       if (action === ENTRYLIST_ENTRY_REMOVE && data.id === this.props.id) {
         let entries = Immutable.List(this.state.entries);
         // If we're currently editing the entry we wish to remove, make sure to close the editor.
-        if(this.state.isEdit && this.state.entry._id === data.entryId){
+        if (this.state.isEdit && this.state.entry._id === data.entryId) {
           Dispatcher.dispatch(ENTRYLIST_ENTRY_CANCEL, data);
         }
-        this.setState({ entries: entries.remove(data.entryId).toJSON() });
+        this.setState({entries: entries.remove(data.entryId).toJSON()});
       }
     });
 
@@ -139,26 +158,25 @@ export default React.createClass({
           currentEntries.push(this.state.entry) :
           currentEntries.set(this.state.entry._id, this.state.entry);
         let entries = updatedEntries.toJSON();
-        // fire FIELD_VALUE_CHANGE for the model
-        let entriesModel = {
-          id: this.props.model,
-          name: this.props.model,
-          type: 'entrylist',
-          value: entries,
-          latestEntry: this.state.entry,
-          entryListId: this.props.id
-        };
-        Flux.doAction(APPLICATION_VALIDATE_ENTRY, this.props.form, entriesModel);
-      }
-    });
+        validator
+          .validate(this.state.entry, this.props.form.config.id)
+          .then((response) => {
+            if (!validator.hasError) {
+              let entriesModel = {
+                id: this.props.model,
+                name: this.props.model,
+                type: 'entrylist',
+                value: entries,
+                latestEntry: this.state.entry,
+                entryListId: this.props.id
+              };
 
-    Dispatcher.register(`add-new-entrylist-entry-validated-${propsId}`, (action, entriesModel) => {
-      if (action === ENTRYLIST_NEW_ENTRY_VALIDATED && entriesModel.entryListId === this.props.id) {
-        Flux.doAction(FIELD_VALUE_CHANGE, entriesModel).then(() => {
-          _.defer(() => {
-            this.setState({isEdit: false, entry: {}, entries: entriesModel.value, showForm: false});
+              this.setState({isEdit: false, entry: {}, entries, showForm: false});
+
+              // update the model
+              Flux.doAction(FIELD_VALUE_CHANGE, entriesModel);
+            }
           });
-        });
       }
     });
   },
@@ -171,7 +189,6 @@ export default React.createClass({
     Dispatcher.unregister(`remove-entrylist-entry-${propsId}`);
     Dispatcher.unregister(`entrylist-field-value-change-${propsId}`);
     Dispatcher.unregister(`add-new-entrylist-entry-${propsId}`);
-    Dispatcher.unregister(`add-new-entrylist-entry-validated-${propsId}`);
   },
 
   showEmptyText() {

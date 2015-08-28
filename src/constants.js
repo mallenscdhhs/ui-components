@@ -2,7 +2,8 @@ module.exports = {
   "keyCodes": {
     "BACKSPACE": 8
   },
-  "actions" : {
+  "VALIDATION_CONFIG_FIELDS": ['type', 'name', 'id', 'label', 'maxLength', 'min', 'max', 'required'],
+  "actions": {
     "ALERT_MESSAGES_CLEAR": "clearAlertMessages",
     "APPLICATION_VALIDATE_ENTRY": "applicationValidateEntry",
     "FIELD_VALUE_CHANGE": "fieldValueChange",
@@ -11,7 +12,7 @@ module.exports = {
     "COMPONENT_REMOVE": "componentRemove",
     "COMPONENT_EDIT": "componentEdit",
     "COMPONENT_ADD": "componentAdd",
-    "COMPONENT_VISIBILITY" : "componentVisibility",
+    "COMPONENT_VISIBILITY": "componentVisibility",
     "ENTRYLIST_NEW_ENTRY_VALIDATED": "entryListNewEntryValidated",
     "SEND_OPTIONS": "sendOptions",
     "SEND_RESOURCE_OPTIONS": "sendResourceOptions",
@@ -25,20 +26,22 @@ module.exports = {
     "VALIDATE": "validate",
     "SESSION_VALUES_LOADED": "sessionValuesLoaded",
     "API_COMMUNCATION_ERROR": "apiCommunicationError",
-    "TOGGLE_DISABLE_WORKFLOW_PAGE" : "toggleDisableWorkflowPage",
-    "MOVE_WORKFLOW_PAGE" : "moveWorkflowPage",
-    "NEST_WORKFLOW_PAGE" : "nestWorkflowPage",
-    "UNNEST_WORKFLOW_PAGE" : "unNestWorkflowPage",
-    "GET_FIELD_VALUE" : "getFieldValue",
-    "FIELD_VALUE" : "fieldValue",
+    "TOGGLE_DISABLE_WORKFLOW_PAGE": "toggleDisableWorkflowPage",
+    "MOVE_WORKFLOW_PAGE": "moveWorkflowPage",
+    "NEST_WORKFLOW_PAGE": "nestWorkflowPage",
+    "UNNEST_WORKFLOW_PAGE": "unNestWorkflowPage",
+    "GET_FIELD_VALUE": "getFieldValue",
+    "FIELD_VALUE": "fieldValue",
     "FIELD_BLUR": "blurField",
-    "MODAL_HIDE" : "hideModal",
+    "MODAL_HIDE": "hideModal",
     "ENTRYLIST_FORM_SHOW": "showEntryListForm",
     "ENTRYLIST_ENTRY_CANCEL": "cancelEntryListEntry",
     "ENTRYLIST_ENTRY_EDIT": "editEntryListEntry",
     "ENTRYLIST_ENTRY_REMOVE": "removeEntryListEntry",
     "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry",
     "ENTRYLIST_FIELD_VALUE_CHANGE": "entryListFieldValueChange",
-    "FILE_UPLOAD_PREVIEW_REMOVE": "removeFileUploadPreview"
+    "FILE_UPLOAD_PREVIEW_REMOVE": "removeFileUploadPreview",
+    "FILE_PREVIEW_LIST_GET": "getFilePreviewList",
+    "FILE_PREVIEW_LIST_LOAD": "loadFilePreviewList"
   }
 };

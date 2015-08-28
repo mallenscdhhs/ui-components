@@ -3,16 +3,30 @@ import React from 'react';
 import _ from 'lodash';
 import { DateTimePicker } from 'react-widgets';
 import ValueChangeMixin from './ValueChangeMixin';
+import utils from './utils';
 
 /**
  * Date input component
  * @module Date Date component
  */
-export default React.createClass({
+let DateField = React.createClass({
 
   displayName: 'Date',
 
   mixins: [ValueChangeMixin],
+
+  statics: {
+    getDateValueFromProps(props) {
+      let value = null;
+      if (props.value === 'today') {
+        value = new Date();
+      } else if (props.value) {
+        value = new Date(props.value);
+      }
+
+      return value;
+    }
+  },
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -44,16 +58,23 @@ export default React.createClass({
    * you can provide any other date in the format corresponding to the pattern
    * passed into this.props.format
    */
-  getInitialState() {
-    return this.props.value === 'today' ? (
-      {value: new Date()}
-    ) : (
-      {value: this.props.value ? new Date(this.props.value) : null}
-    );
+  componentWillMount() {
+    let value = DateField.getDateValueFromProps(this.props);
+    this.setState({value});
+  },
+
+  componentDidMount() {
+    let dateString = utils.getDateString(this.state.value);
+    this.onChange({target: {value: this.state.value, dateString}});
+  },
+
+  componentWillReceiveProps(nextProps) {
+    let value = DateField.getDateValueFromProps(nextProps);
+    this.setState({value});
   },
 
   handleDateChange(date, dateString) {
-    this.onChange({ target: {value: date, dateString: dateString}});
+    this.onChange({target: {value: date, dateString: dateString}});
   },
 
   render() {
@@ -66,5 +87,6 @@ export default React.createClass({
         {...props} />
     );
   }
-
 });
+
+export default DateField;

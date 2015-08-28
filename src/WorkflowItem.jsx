@@ -1,43 +1,48 @@
 'use-strict';
-var React = require('react');
-var Flux = require('fluxify');
-var setClassNames = require('classnames');
-var Tree = require('./Tree');
-var constants = require('./constants');
+import React from 'react';
+import Flux from 'fluxify';
+import setClassNames from 'classnames';
+import Tree from './Tree';
+import Immutable from 'immutable';
+import SchemaUtils from '@scdhhs/ui-component-schema-utils';
+import constants from './constants';
 
 /**
- * Renders a single item in a Workflow Tree.
+ * Used to represent a page in a Workflow
  * @module WorkflowItem
  */
-module.exports = React.createClass({
+class WorkflowItem extends React.Component {
 
-  displayName: 'WorkflowItem',
+  constructor(props){
+    super(props);
+  }
 
-  propTypes: {
-    id: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
-    active: React.PropTypes.bool,
-    disabled: React.PropTypes.bool,
-    current: React.PropTypes.bool,
-    skip: React.PropTypes.bool
-  },
+  /**
+   * Determine WorkflowItem's nestable/unNestable props
+   * @param {immutable} schema
+   * @param {object} model
+   * @param {object} components
+   * @returns {object}
+   */
+  static configure(schema, model, components){
+    let itemId = schema.getIn(['config','id']);
+    let hasParent = !!SchemaUtils.getRootId({components: components.toJSON()}, itemId);
+    let hasPrevious = !!SchemaUtils.getMetaData({components: components.toJSON()}, itemId).previous;
+    let isNestable = hasPrevious;
+    let isUnNestable = hasParent;
+    let config = Immutable.fromJS(schema.get('config')).withMutations((mutableConfig) => {
+      mutableConfig.set('nestable', isNestable).set('unNestable', isUnNestable);
+    }).toJSON();
+    return config;
+  }
 
-  getDefaultProps: function(){
-    return {
-      active: true,
-      disabled: false,
-      current : false,
-      skip: false
-    };
-  },
-
-  handleClick: function(e){
+  handleClick(e){
     if(!this.props.disabled){
       Flux.doAction( constants.actions.TREE_LOAD_PAGE , { 'id': this.props.id, 'skip': this.props.skip });
     }
-  },
+  }
 
-  render: function(){
+  render(){
     var liClassNames = setClassNames({
       'inactive': !this.props.active,
       'current' : this.props.current,
@@ -45,10 +50,28 @@ module.exports = React.createClass({
     });
     return (
       <li className={liClassNames} role="presentation">
-        <a href="javascript:void(0)" data-disabled={this.props.disabled} onClick={this.handleClick}>{this.props.title}</a>
+        <a href="javascript:void(0)" data-disabled={this.props.disabled} onClick={this.handleClick.bind(this)}>{this.props.title}</a>
         <Tree>{this.props.children}</Tree>
       </li>
     );
   }
 
-});
+};
+
+WorkflowItem.defaultProps = {
+  active: true,
+  disabled: false,
+  current : false,
+  skip: false
+};
+
+WorkflowItem.propTypes = {
+  id: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string.isRequired,
+  active: React.PropTypes.bool,
+  disabled: React.PropTypes.bool,
+  current: React.PropTypes.bool,
+  skip: React.PropTypes.bool
+};
+
+export default WorkflowItem;

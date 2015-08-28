@@ -6,6 +6,13 @@ import _ from 'lodash';
 import Immutable from 'immutable';
 import FileListItem from './FileListItem';
 
+let {
+  FILE_PREVIEW_LIST_GET,
+  FILE_PREVIEW_LIST_LOAD,
+  FILE_UPLOAD_PREVIEW_REMOVE,
+  FIELD_VALUE_CHANGE
+} = constants.actions;
+
 /**
 * Renders an <input> control with type of file and a file preview list.
 * @module File
@@ -24,23 +31,47 @@ class File extends React.Component {
   }
 
   componentWillMount() {
-    this.setState({value: this.props.value, files: Array.isArray(this.props.value) ? this.props.value : [] });
+    if (Array.isArray(this.props.value)) {
+      this.setState({files: this.props.value});
+    } else {
+      Flux.doAction(FILE_PREVIEW_LIST_GET, {fieldId: this.props.id});
+    }
+  }
+
+  componentWillReceiveProps({files, value}) {
+    let _files = files || value;
+    if (_files) {
+      this.setState({files: _files});
+    }
+
+    if (value) {
+      this.setState({value});
+    }
   }
 
   componentDidMount() {
+    // on fetch of file preview list on intial render
+    Dispatcher.register(`${this.props.id}-load-file-preview-list`, (action, data) => {
+      if (action === FILE_PREVIEW_LIST_LOAD && data.fieldId === this.props.id) {
+        // remember not to set value here, only files (will get security errors from file reader api)
+        this.setState({files: Array.isArray(data.value) ? data.value : []});
+      }
+    });
+
     // when the user clicks a remove link
-    Dispatcher.register('remove-file-preview', function(action, data){
-      if ( action === constants.actions.FILE_UPLOAD_PREVIEW_REMOVE ) {
+    Dispatcher.register(`${this.props.id}-remove-file-preview`, (action, data) => {
+      if (action === FILE_UPLOAD_PREVIEW_REMOVE && data.dataParent === this.props.id) {
         let files = Immutable.List(this.state.files);
         let remainingFiles = files.remove(data.removalId).toJSON();
-        this.setState({ files: remainingFiles });
+        this.setState({files: remainingFiles});
         this.buildChangeEvent(remainingFiles);
       }
-    }.bind(this));
+    });
   }
 
   componentWillUnmount() {
-    Dispatcher.unregister('remove-file-preview');
+    Dispatcher.unregister(`${this.props.id}-load-file-preview-list`);
+    Dispatcher.unregister(`${this.props.id}-remove-file-preview`);
   }
 
   handleInputChange(e) {
@@ -50,7 +81,7 @@ class File extends React.Component {
     // create a FileReader to get the binary data for displaying preview img
     let reader = new FileReader();
     // event handler, after all data has been read by FileReader
-    reader.onloadend = function () {
+    reader.onloadend = () => {
       // add binary to the files object and build the change event
       _.merge(file, {binary: reader.result});
       let files = self.state.files.concat(file);
@@ -67,23 +98,24 @@ class File extends React.Component {
       type: 'file',
       value: files
     };
-    var actionName = this.props.fieldValueChangeAction || constants.actions.FIELD_VALUE_CHANGE;
-    Flux.doAction(actionName, event).then(()=> {
+    let actionName = this.props.fieldValueChangeAction || FIELD_VALUE_CHANGE;
+    Flux.doAction(actionName, event).then(() => {
       this.setState({files: files});
     });
   }
 
   renderPreview() {
     let files = this.state.files;
-    if(files.length) {
+    if (files.length) {
       return (
         <ul className="file-preview-list man pan">
-          {files.map(function(file, fileIdx) {
+          {files.map((file, fileIdx) => {
             return (
               <FileListItem
-                key={'file-preview' + fileIdx}
+                key={`file-preview-${fileIdx}`}
                 file={file}
-                fileIdx={fileIdx} />
+                fileIdx={fileIdx}
+                dataParent={this.props.id} />
             );
           })}
         </ul>

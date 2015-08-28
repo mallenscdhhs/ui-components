@@ -1,13 +1,13 @@
 'use-strict';
-var React = require('react');
-var _ = require('lodash');
-var ValueChangeMixin = require('./ValueChangeMixin');
+import React from 'react';
+import _ from 'lodash';
+import ValueChangeMixin from './ValueChangeMixin';
 
 /**
  * Renders a <textarea> input control.
  * @module Textarea
  */
-module.exports = React.createClass({
+export default React.createClass({
 
   displayName: 'Textarea',
 
@@ -23,20 +23,25 @@ module.exports = React.createClass({
     inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
   },
 
-  getDefaultProps: function(){
+  getDefaultProps() {
     return {
+      value: '',
       inputProps: ['id', 'name', 'value', 'cols', 'rows', 'maxLength', 'className', 'aria-describedby']
     };
   },
 
-  getInitialState: function(){
-    return {
-      value: this.props.value || ''
-    };
+  componentWillMount() {
+    this.setState({value: this.props.value});
   },
 
-  render: function(){
-    var props = _.pick(this.props, this.props.inputProps);
+  componentWillReceiveProps({value}) {
+    if (value) {
+      this.setState({value});
+    }
+  },
+
+  render() {
+    let props = _.pick(this.props, this.props.inputProps);
     return (
       <textarea
         value={this.state.value}

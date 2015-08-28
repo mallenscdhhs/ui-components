@@ -5,7 +5,10 @@ import constants from './constants';
 import Immutable from 'immutable';
 import _ from 'lodash';
 
-let { FIELD_BLUR } = constants.actions;
+let {
+  FIELD_VALUE_CHANGE,
+  FIELD_BLUR
+} = constants.actions;
 
 /**
  * Provides a default onChange handler for Field.
@@ -21,7 +24,7 @@ export default {
    * action name rather than the default FIELD_VALUE_CHANGE action.
    */
   onChange(event) {
-    let actionName = this.props.fieldValueChangeAction || event.actionName || constants.actions.FIELD_VALUE_CHANGE;
+    let actionName = this.props.fieldValueChangeAction || event.actionName || FIELD_VALUE_CHANGE;
     let state = event.stateChange || {value: event.target.value};
     let payload = Immutable.fromJS(this.props).withMutations((mutablePayload) => {
       mutablePayload

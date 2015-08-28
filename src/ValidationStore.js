@@ -13,6 +13,10 @@ let {
   FIELD_VALIDATION_ERROR
 } = constants.actions;
 
+let {
+  VALIDATION_CONFIG_FIELDS
+} = constants;
+
 export default Flux.createStore({
   id: 'ValidationStore',
   actionCallbacks: {
@@ -58,7 +62,7 @@ export default Flux.createStore({
           rules: _.compact(_.map(data.rules, (enabled, ruleName) => {
             return !enabled ? null : {
               ruleName,
-              config: _.pick(data, ['type', 'name', 'id', 'maxLength', 'required'])
+              config: _.pick(data, VALIDATION_CONFIG_FIELDS)
             };
           }))
         };

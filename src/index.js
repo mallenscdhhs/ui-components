@@ -1,4 +1,5 @@
 module.exports = {
+	accordion: require('./Accordion'),
 	action: require('./Action'),
 	alertMessage: require('./AlertMessage'),
 	autoComplete: require('./AutoComplete'),
@@ -21,6 +22,7 @@ module.exports = {
 	input: require('./Input'),
 	modal: require('./Modal'),
 	page: require('./Page'),
+	panel: require('react-bootstrap').Panel,
 	requiredIndicator: require('./RequiredIndicator'),
 	select: require('./Select'),
 	terms: require('./Terms'),
