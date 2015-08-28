@@ -3,6 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import { DateTimePicker } from 'react-widgets';
 import ValueChangeMixin from './ValueChangeMixin';
+import utils from './utils';
 
 /**
  * Date input component
@@ -62,7 +63,12 @@ let DateField = React.createClass({
     this.setState({value});
   },
 
-  componentWillReceiveProps(nextProps) {    
+  componentDidMount() {
+    let dateString = utils.getDateString(this.state.value);
+    this.onChange({target: {value: this.state.value, dateString}});
+  },
+
+  componentWillReceiveProps(nextProps) {
     let value = DateField.getDateValueFromProps(nextProps);
     this.setState({value});
   },
