@@ -59,7 +59,7 @@ export default React.createClass({
   },
 
   componentWillMount() {
-    if (this.props.mask) {
+    if (this.props.value && this.props.mask) {
       this.handleInputChange({target: {value: this.props.value}, pasted: this.props.value});
     } else {
       this.setState({value: this.props.value});
