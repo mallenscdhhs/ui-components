@@ -66,9 +66,11 @@ export default React.createClass({
     }
   },
 
-  componentWillReceiveProps({value}) {
-    if (value) {
-      this.handleInputChange({target: {value: value}, pasted: value});
+  componentWillReceiveProps(newProps) {
+    if (newProps.value && newProps.mask) {
+      this.handleInputChange({target: {value: newProps.value}, pasted: newProps.value});
+    } else {
+      this.setState({value: newProps.value});
     }
   },
 
