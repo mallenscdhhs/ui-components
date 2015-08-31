@@ -71,9 +71,9 @@ describe('OptionsMixin', () => {
 
     let handler2Id = Dispatcher.register((action, data) => {
       if (action === SEND_OPTIONS) {
+        Dispatcher.unregister(handler2Id);
         expect(data.id).toEqual(fixture.customField.id);
         Dispatcher.dispatch(LOAD_OPTIONS, fixture.customPayload);
-        Dispatcher.unregister(handler2Id);
       }
     });
 

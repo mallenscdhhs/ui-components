@@ -16,12 +16,12 @@ let DateField = React.createClass({
   mixins: [ValueChangeMixin],
 
   statics: {
-    getDateValueFromProps(props) {
+    getDateValue(input) {
       let value = null;
-      if (props.value === 'today') {
+      if (input === 'today') {
         value = new Date();
-      } else if (props.value) {
-        value = new Date(props.value);
+      } else if (input) {
+        value = new Date(input);
       }
 
       return value;
@@ -59,7 +59,7 @@ let DateField = React.createClass({
    * passed into this.props.format
    */
   componentWillMount() {
-    let value = DateField.getDateValueFromProps(this.props);
+    let value = DateField.getDateValue(this.props.value);
     this.setState({value});
   },
 
@@ -68,9 +68,11 @@ let DateField = React.createClass({
     this.onChange({target: {value: this.state.value, dateString}});
   },
 
-  componentWillReceiveProps(nextProps) {
-    let value = DateField.getDateValueFromProps(nextProps);
-    this.setState({value});
+  componentWillReceiveProps({value}) {
+    if (value) {
+      let date = DateField.getDateValue(value);
+      this.setState({value: date});
+    }
   },
 
   handleDateChange(date, dateString) {
