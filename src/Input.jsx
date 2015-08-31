@@ -68,7 +68,7 @@ export default React.createClass({
 
   componentWillReceiveProps({value}) {
     if (value) {
-      this.setState({value});  
+      this.setState({value});
     }
   },
 
@@ -99,12 +99,21 @@ export default React.createClass({
       let _event = Immutable.Map(event).withMutations(evt => {
         evt
           .set('keyPressed', this.state.keyPressed)
-          .set('unmasked', this.state.unmasked)
-          .set('stateChange', inputMaskUtils.getMaskedOutput(maskConfig, evt.toJSON()));
+          .set('unmasked', this.state.unmasked);
+        let maskedState = inputMaskUtils.getMaskedOutput(maskConfig, evt.toJSON());
+        maskedState.unmasked = this.forceMaxLength(maskedState.unmasked);
+        evt.set('stateChange', maskedState);
       });
       changeEvent = _event.toJSON();
+    } else {
+      changeEvent.target.value = this.forceMaxLength(event.target.value);
     }
     this.onChange(changeEvent);
+  },
+
+  forceMaxLength(value) {
+    let max = Number(this.props.max);
+    return max? value.slice(0, max) : value;
   },
 
   render() {

@@ -1,18 +1,23 @@
-var React = require('react');
-var update = require('react/lib/update');
-var Flux = require('fluxify');
-var Dispatcher = Flux.dispatcher;
-var constants = require('../../src/constants');
-var Input = require('../../src/Input');
-var fixture = require('../fixtures/field-text.json');
-var TestUtils = require('react/lib/ReactTestUtils');
-var _ = require('lodash');
+import React from 'react';
+import Immutable from 'immutable';
+import Flux, {dispatcher as Dispatcher} from 'fluxify';
+import constants from '../../src/constants';
+import Input from '../../src/Input';
+import fixture from '../fixtures/field-text.json';
+import TestUtils from 'react/lib/ReactTestUtils';
+import _ from 'lodash';
 
-describe('Input', function(){
+let {
+  FIELD_VALUE_CHANGE
+} = constants.actions;
 
-  it('can render a text input', function(){
-    var comp = TestUtils.renderIntoDocument(<Input {...fixture}/>);
-    var dom = comp.getDOMNode();
+let fixtureMap = Immutable.Map(fixture);
+
+describe('Input', () => {
+
+  it('can render a text input', () => {
+    let comp = TestUtils.renderIntoDocument(<Input {...fixture}/>);
+    let dom = comp.getDOMNode();
     expect(dom.tagName.toLowerCase()).toEqual('input');
     expect(dom.type).toEqual(fixture.type);
     expect(dom.name).toEqual(fixture.name);
@@ -20,37 +25,45 @@ describe('Input', function(){
     expect(dom.getAttribute('disabled')).toBeNull();
   });
 
-  it('can render a disabled text input', function(){
-    var config = update(fixture, {disabled: {$set: true}});
-    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
-    var dom = comp.getDOMNode();
+  it('can render a disabled text input', () => {
+    let config = fixtureMap.set('disabled', true);
+    let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
+    let dom = comp.getDOMNode();
     expect(dom.getAttribute('disabled')).toBeDefined();
   });
 
-  it('can set a "maxLength" attribute', function(){
-    var max = 10;
-    var config = update(fixture, {maxLength: {$set: max}});
-    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
-    var dom = comp.getDOMNode();
-    expect(dom.maxLength).toEqual(max);
+  it('can enforce max length', (done) => {
+    let max = 10;
+    let config = fixtureMap.set('max', max).set('value', '1234567890');
+    let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
+    let dom = comp.getDOMNode();
+    let handler = Dispatcher.register((action, data) => {
+      if (action === FIELD_VALUE_CHANGE && data.id === fixture.id) {
+        Dispatcher.unregister(handler);
+        expect(data.value.length).toEqual(max);
+        done();
+      }
+    });
+
+    TestUtils.Simulate.change(dom, {target: {value: '12345678901111'}});
   });
 
-  it('can partially mask an input field', function(done){
-    var config = update(fixture, {id: {$set: 'test-ssn'}, mask: {$set: '000-00-XXXX'}});
-    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
+  it('can partially mask an input field', (done) => {
+    let mask = '000-00-XXXX';
+    let config = fixtureMap.set('id', 'test-ssn').set('mask', mask);
+    let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
     var dom = comp.getDOMNode();
     var numCount = 0;
     // simulate entering a single character at a time
-    setTimeout(function() {
+    setTimeout(() => {
       // initial value change
       TestUtils.Simulate.change(dom, {target: {value: '0'}});
     }, 100);
 
     // listen for FIELD_VALUE_CHANGE and test final value and unmasked value
-    Dispatcher.register( 'test-ssn-change' , function(action, data){
-      if( action === constants.actions.FIELD_VALUE_CHANGE &&
-          data.id === 'test-ssn') {
-        if(data.value === '012345678') {
+    Dispatcher.register('test-ssn-change', (action, data) => {
+      if (action === FIELD_VALUE_CHANGE && data.id === 'test-ssn') {
+        if (data.value === '012345678') {
           Dispatcher.unregister('test-ssn-change');
           expect(data.masked).toEqual('***-**-5678');
           expect(data.value).toEqual('012345678');
@@ -63,11 +76,11 @@ describe('Input', function(){
     });
   });
 
-  it('can support masking pasted input values', function(done) {
-    var config = update(fixture, {id: {$set: 'test-date'}, mask: {$set: '00/00/XXXX'}});
-    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
-    var dom = comp.getDOMNode();
-    var date = '01011979';
+  it('can support masking pasted input values', (done) => {
+    let config = fixtureMap.set('id', 'test-date').set('mask', '00/00/XXXX');
+    let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
+    let dom = comp.getDOMNode();
+    let date = '01011979';
     // simulate pasting a full length string
     setTimeout(function() {
       // initial value change
@@ -75,9 +88,8 @@ describe('Input', function(){
     }, 100);
 
     // listen for FIELD_VALUE_CHANGE and test final value and unmasked value
-    Dispatcher.register( 'test-date-change' , function(action, data){
-      if( action === constants.actions.FIELD_VALUE_CHANGE &&
-          data.id === 'test-date') {
+    Dispatcher.register('test-date-change', (action, data) => {
+      if (action === FIELD_VALUE_CHANGE && data.id === 'test-date') {
         Dispatcher.unregister('test-date-change');
         expect(data.masked).toEqual('**/**/1979');
         expect(data.value).toEqual(date);
@@ -86,50 +98,49 @@ describe('Input', function(){
     });
   });
 
-  it('can support masking default input values', function() {
+  it('can support masking default input values', () => {
     // rendering the component with prepopulated value works as expected
-    var date = '01011979';
-    var config = update(fixture, {id: {$set: 'test-prepop-date'}, value: {$set: date}});
-    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
-    var dom = comp.getDOMNode();
+    let date = '01011979';
+    let config = fixtureMap.set('value', date);
+    let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
+    let dom = comp.getDOMNode();
     expect(dom.value).toEqual(date);
 
     // add a mask to config and render the component, value is masked
-    var configWithMask = update(config, {mask: {$set: '00/00/XXXX'}});
-    var compWithMask = TestUtils.renderIntoDocument(<Input {...configWithMask}/>);
-    var domWithMask = compWithMask.getDOMNode();
+    let configWithMask = config.set('mask', '00/00/XXXX');
+    let compWithMask = TestUtils.renderIntoDocument(<Input {...configWithMask.toJS()}/>);
+    let domWithMask = compWithMask.getDOMNode();
     expect(domWithMask.value).toEqual('**/**/1979');
   });
 
-  it('can support suppyling a custom MaskSymbol', function(done){
-    var config = update(fixture, {id: {$set: 'test-cc'}, mask: {$set: '0000 0000 0000 XXXX'}, maskSymbol: {$set: '$'}});
-    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
-    var dom = comp.getDOMNode();
-    var ccNum = '0101010101010101';
-    // simulate pasting a full length string
-    setTimeout(function() {
-      // initial value change
-      TestUtils.Simulate.change(dom, {target: {value: ccNum}, pasted: ccNum});
-    }, 100);
+  it('can support suppyling a custom MaskSymbol', (done) => {
+    let config = fixtureMap
+      .set('id', 'test-cc')
+      .set('mask', '0000 0000 0000 XXXX')
+      .set('maskSymbol', '$');
+    let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
+    let dom = comp.getDOMNode();
+    let ccNum = '0101010101010101';
 
     // listen for FIELD_VALUE_CHANGE and test final value and unmasked value
-    Dispatcher.register( 'test-cc-change' , function(action, data){
-      if( action === constants.actions.FIELD_VALUE_CHANGE &&
-          data.id === 'test-cc') {
+    Dispatcher.register('test-cc-change', (action, data) => {
+      if (action === FIELD_VALUE_CHANGE && data.id === config.get('id')) {
         Dispatcher.unregister('test-cc-change');
         expect(data.masked).toEqual('$$$$ $$$$ $$$$ 0101');
         expect(data.value).toEqual(ccNum);
         done();
       }
     });
+
+    TestUtils.Simulate.change(dom, {target: {value: ccNum}, pasted: ccNum});
   });
 
-  it('can force manual input', function(){
-    var config = update(fixture, {forceManualInput: {$set: true}});
-    var comp = TestUtils.renderIntoDocument(<Input {...config}/>);
-    var dom = comp.getDOMNode();
+  it('can force manual input', () => {
+    let config = fixtureMap.set('forceManualInput', true);
+    let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
+    let dom = comp.getDOMNode();
     // verify that autocomplete attribute (along with the other internal helper props that don't render in the dom) is added to the input
-    expect( dom.getAttribute('autocomplete') ).toEqual('off');
+    expect(dom.getAttribute('autocomplete')).toEqual('off');
   });
 
 });
