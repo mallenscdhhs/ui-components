@@ -75,7 +75,7 @@ export default React.createClass({
       };
       let maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
       let maskedValue = inputMaskUtils.getMaskedOutput(maskConfig, payload);
-      if (maskedValue !== this.state.value) {
+      if (maskedValue.value !== this.state.value) {
         this.handleInputChange(payload);
       }
     } else if(newProps.value) {
