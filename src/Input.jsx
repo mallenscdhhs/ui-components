@@ -112,7 +112,7 @@ export default React.createClass({
   },
 
   forceMaxLength(value) {
-    let max = Number(this.props.max);
+    let max = Number(this.props.maxLength);
     return max? value.slice(0, max) : value;
   },
 

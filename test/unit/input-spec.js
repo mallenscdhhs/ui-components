@@ -34,7 +34,7 @@ describe('Input', () => {
 
   it('can enforce max length', (done) => {
     let max = 10;
-    let config = fixtureMap.set('max', max).set('value', '1234567890');
+    let config = fixtureMap.set('maxLength', max).set('value', '1234567890');
     let comp = TestUtils.renderIntoDocument(<Input {...config.toJS()}/>);
     let dom = comp.getDOMNode();
     let handler = Dispatcher.register((action, data) => {
