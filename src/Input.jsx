@@ -68,7 +68,16 @@ export default React.createClass({
 
   componentWillReceiveProps(newProps) {
     if (newProps.value && this.props.mask) {
-      this.handleInputChange({target: {value: newProps.value}, pasted: newProps.value});
+      let payload = {target: {value: newProps.value}, pasted: newProps.value};
+      let customConfig = {
+        maskSymbol: this.props.maskSymbol,
+        maskAllowedStringType: this.props.maskAllowedStringType
+      };
+      let maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
+      let maskedValue = inputMaskUtils.getMaskedOutput(maskConfig, payload);
+      if (maskedValue !== this.state.value) {
+        this.handleInputChange(payload);
+      }
     } else if(newProps.value) {
       this.setState({value: newProps.value});
     }
