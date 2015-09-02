@@ -22,17 +22,21 @@ let obfuscateFormatChars = {
  */
 let masks = {
   ssn: {
-    pattern: 'xxx-xx-1111',
+    pattern: 'xxx-xx-****',
     formatCharacters: obfuscateFormatChars,
     placeholderChar
   },
   ein: {
-    pattern: 'xx-xxx1111',
+    pattern: 'xx-xxx****',
     formatCharacters: obfuscateFormatChars,
     placeholderChar
   },
   phone: {
-    pattern: '111-111-1111',
+    pattern: '***-***-****',
+    placeholderChar
+  },
+  zip: {
+    pattern: '*****-****',
     placeholderChar
   }
 };
