@@ -69,8 +69,8 @@ export default React.createClass({
     let value = e.target.checked? this.props.value : null;
     let action = this.props.isFieldGroup ? FIELD_GROUP_VALUE_CHANGE : FIELD_VALUE_CHANGE;
     this.onChange({
-      target: {value: value},
-      stateChange: {checked: e.target.checked},
+      target: {},
+      stateChange: {value, checked: e.target.checked},
       actionName: action
     });
   },
