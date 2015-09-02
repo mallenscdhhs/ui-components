@@ -22,4 +22,11 @@ describe('input-masker', () => {
     let incompleteResult = masker.mask('phone', '8883');
     expect(incompleteResult).toBe('888-3');
   });
+
+  it('can mask zip codes', () => {
+    let result = masker.mask('zip', '123451234');
+    expect(result).toBe('12345-1234');
+    let incompleteResult = masker.mask('zip', '123456');
+    expect(incompleteResult).toBe('12345-6');
+  });
 });
