@@ -174,12 +174,12 @@ export default React.createClass ({
    * @returns {JSX}
    */
   render() {
-    let immutableFieldProps = Immutable.fromJS(this.props);
-    if (this.props.dependencyValue) {
-      immutableFieldProps = immutableFieldProps.set('disabled', this.state.disabled ? 'disabled' : false);
+    let iFieldProps = Immutable.fromJS(this.props);
+    if (!!this.props.dependencyValue) {
+      iFieldProps = iFieldProps.set('disabled', this.state.disabled ? 'disabled' : false);
     }
-    if (this.state.value) {
-      immutableFieldProps = immutableFieldProps.set('value', this.state.value);
+    if (!!this.state.value) {
+      iFieldProps = iFieldProps.set('value', this.state.value);
     }
 
     let isFieldGroup = this.isFieldGroup();
@@ -195,7 +195,7 @@ export default React.createClass ({
       children.push(<FieldLabel {...labelProps} key="field-label"/>);
     }
 
-    let fieldProps = immutableFieldProps.toJS();
+    let fieldProps = iFieldProps.toJS();
     children = children.concat([
       <InputControl {...fieldProps} key="input-control"/>,
       <HelpBlock {...fieldProps} key="help-block">{message}</HelpBlock>
