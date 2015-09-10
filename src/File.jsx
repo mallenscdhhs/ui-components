@@ -9,7 +9,8 @@ import FileListItem from './FileListItem';
 let {
   FILE_PREVIEW_LIST_GET,
   FILE_PREVIEW_LIST_LOAD,
-  FILE_UPLOAD_PREVIEW_REMOVE,
+  FILE_PREVIEW_LIST_SEND,
+  FILE_PREVIEW_LIST_REMOVE,
   FIELD_VALUE_CHANGE
 } = constants.actions;
 
@@ -60,7 +61,7 @@ class File extends React.Component {
 
     // when the user clicks a remove link
     Dispatcher.register(`${this.props.id}-remove-file-preview`, (action, data) => {
-      if (action === FILE_UPLOAD_PREVIEW_REMOVE && data.dataParent === this.props.id) {
+      if (action === FILE_PREVIEW_LIST_REMOVE && data.dataParent === this.props.id) {
         let files = Immutable.List(this.state.files);
         let remainingFiles = files.remove(data.removalId).toJSON();
         this.setState({files: remainingFiles});
@@ -100,7 +101,12 @@ class File extends React.Component {
     };
     let actionName = this.props.fieldValueChangeAction || FIELD_VALUE_CHANGE;
     Flux.doAction(actionName, event).then(() => {
+      let previousStateLength = this.state.files.length;
       this.setState({files: files});
+      // upon FVC, send files to API if new files were added
+      if (this.state.files.length > previousStateLength) {
+        Flux.doAction(FILE_PREVIEW_LIST_SEND, event);
+      }
     });
   }
 
@@ -115,7 +121,8 @@ class File extends React.Component {
                 key={`file-preview-${fileIdx}`}
                 file={file}
                 fileIdx={fileIdx}
-                dataParent={this.props.id} />
+                dataParent={this.props.id}
+                readOnly={this.props.readOnly} />
             );
           })}
         </ul>
@@ -124,13 +131,15 @@ class File extends React.Component {
   }
 
   renderInput(len, limit) {
-    return (len < limit) ? (
-      <input
-        {...this.props}
-        type="file"
-        value={this.state.value}
-        onChange={this.handleInputChange} />
-    ) : <p id="limit-message" className="help-block">{this.props.limitMessage}</p>;
+    if (!this.props.readOnly) {
+      return (len < limit) ? (
+        <input
+          {...this.props}
+          type="file"
+          value={this.state.value}
+          onChange={this.handleInputChange} />
+      ) : <p id="limit-message" className="help-block">{this.props.limitMessage}</p>;
+    }
   }
 
   render() {
@@ -149,7 +158,8 @@ File.propTypes = {
   value: React.PropTypes.string,
   className: React.PropTypes.string,
   limit: React.PropTypes.number,
-  limitMessage: React.PropTypes.string
+  limitMessage: React.PropTypes.string,
+  readOnly: React.PropTypes.bool
 };
 
 File.defaultProps = {
@@ -158,7 +168,8 @@ File.defaultProps = {
   value: '',
   className: '',
   limit: 10,
-  limitMessage: 'The maximum limit of file uploads has been reached.'
+  limitMessage: 'The maximum limit of file uploads has been reached.',
+  readOnly: false
 };
 
 export default File;

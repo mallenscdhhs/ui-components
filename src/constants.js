@@ -40,8 +40,9 @@ module.exports = {
     "ENTRYLIST_ENTRY_REMOVE": "removeEntryListEntry",
     "ENTRYLIST_NEW_ENTRY_ADD": "addNewEntryListEntry",
     "ENTRYLIST_FIELD_VALUE_CHANGE": "entryListFieldValueChange",
-    "FILE_UPLOAD_PREVIEW_REMOVE": "removeFileUploadPreview",
     "FILE_PREVIEW_LIST_GET": "getFilePreviewList",
-    "FILE_PREVIEW_LIST_LOAD": "loadFilePreviewList"
+    "FILE_PREVIEW_LIST_LOAD": "loadFilePreviewList",
+    "FILE_PREVIEW_LIST_SEND": "sendFilePreviewList",
+    "FILE_PREVIEW_LIST_REMOVE": "removeFilePreviewList"
   }
 };
