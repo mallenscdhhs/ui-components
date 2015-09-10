@@ -8,7 +8,7 @@ module.exports = {
     Dispatcher.register( this.props.id + '-VALIDATE-FIELD' , function(action,data){
       if( action === constants.actions.FIELD_VALIDATION_ERROR &&
           data.id === this.props.id) {
-        this.setState({'hasError': data.hasError, 'errorMessage': data.errorMessage});
+        this.setState({'hasError': data.hasError, 'errorMessage': data.errorMessage, 'value': data.value});
       }
     }.bind(this));
   },

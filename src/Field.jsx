@@ -174,9 +174,13 @@ export default React.createClass ({
    * @returns {JSX}
    */
   render() {
-    let fieldProps = (this.props.dependencyValue) ? (
-      Immutable.fromJS(this.props).set('disabled',this.state.disabled ? 'disabled' : false).toJSON()
-    ) : this.props;
+    let fieldProps = this.props;
+    if (this.props.dependencyValue) {
+      fieldProps = Immutable.fromJS(fieldProps).set('disabled', this.state.disabled ? 'disabled' : false).toJSON();
+    }
+    if (this.state.value) {
+      fieldProps = Immutable.fromJS(fieldProps).set('value', this.state.value).toJSON();
+    }
 
     let isFieldGroup = this.isFieldGroup();
     let isRadioOrCheckbox = this.isRadioOrCheckbox();
