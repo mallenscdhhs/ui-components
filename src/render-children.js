@@ -9,4 +9,4 @@ export default function renderChildren(props) {
     let childProps = Immutable.fromJS(childConfig).set('schema', props.schema);
     return React.cloneElement(child, childProps.toJS(), child.props.children);
   });
-};
+}
