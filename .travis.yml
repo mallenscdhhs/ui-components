@@ -7,6 +7,6 @@ deploy:
   api_key:
     secure: rmLiZYeUaWUw1aTwV52wJR4CwMkp+2gTVzsFPJ8Ai1C7a/DCaXazvSJ7jr+pmPGxbkRbQcA4/rwiE4g9Qd2MipbAZCs7jqidVQt1/zg2v8q1J/NDTaGPmy1vW4Zt6aqy1wwL3/BNCe3a4tStbMotlQ7GRT3Y24WG+Vx4TKqDaQs=
   on:
-    branch: master
+    all_branches: true
     tags: true
     repo: scdhhs/ui-components
