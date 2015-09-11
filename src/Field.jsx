@@ -175,10 +175,10 @@ export default React.createClass ({
    */
   render() {
     let iFieldProps = Immutable.fromJS(this.props);
-    if (!!this.props.dependencyValue) {
+    if (this.props.dependencyValue !== undefined) {
       iFieldProps = iFieldProps.set('disabled', this.state.disabled ? 'disabled' : false);
     }
-    if (!!this.state.value) {
+    if (this.state.value !== undefined) {
       iFieldProps = iFieldProps.set('value', this.state.value);
     }
 
