@@ -1,12 +1,9 @@
 'use-strict';
-import React from 'react';
-import _ from 'lodash';
-import Immutable from 'immutable';
-import ValueChangeMixin from './ValueChangeMixin';
-import masker from './input-masker';
-import constants from './constants';
-
-let {BACKSPACE} = constants.keyCodes;
+let React = require('react');
+let _ = require('lodash');
+let Immutable = require('immutable');
+let ValueChangeMixin = require('./ValueChangeMixin');
+let inputMaskUtils = require('./inputMaskUtils');
 
 /**
  * Renders an <input> control.
@@ -34,39 +31,58 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      inputProps: ['type', 'id', 'name', 'disabled', 'className', 'aria-describedby']
+      inputProps: ['type', 'id', 'name', 'maxLength', 'disabled', 'className', 'aria-describedby', 'min', 'max']
     };
   },
 
+  getMaskProps() {
+    return {onKeyDown: this.handleKeyDown, onPaste: this.handlePaste};
+  },
+
   getManualInputProps() {
-    return this.props.forceManualInput ? {
+    return {
       onPaste: this.handleComputedInput,
       onCopy: this.handleComputedInput,
       onCut: this.handleComputedInput,
       onDrag: this.handleComputedInput,
       onDrop: this.handleComputedInput,
       autoComplete: 'off'
-    } : {
-      onPaste: this.handlePaste
     };
   },
 
   getInitialState() {
     return {
-      value: ''
+      value: '',
+      unmasked: '',
+      keyPressed: ''
     };
   },
 
   componentWillMount() {
-    let {value} = this.props;
-    if (value) {
-      this.setState({value});
+    if (this.props.value && this.props.mask) {
+      this.handleInputChange({target: {value: this.props.value}, pasted: this.props.value});
+    } else {
+      this.setState({value: this.props.value});
     }
   },
 
-  componentWillReceiveProps({value}) {
-    if (value) {
-      this.setState({value});
+  componentWillReceiveProps(newProps) {
+    // Determine if new value is being sent to input, and if it als has a mask, determine if the newly masked value
+    // is different from the current value. If so, kick off the 'onChange' flow for the input, which includes properly
+    // masking the value, validating it and updating the application data.
+    if (newProps.value !== undefined && this.props.mask) {
+      let payload = {target: {value: newProps.value}, pasted: newProps.value};
+      let customConfig = {
+        maskSymbol: this.props.maskSymbol,
+        maskAllowedStringType: this.props.maskAllowedStringType
+      };
+      let maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
+      let maskedValue = inputMaskUtils.getMaskedOutput(maskConfig, payload);
+      if (maskedValue.value !== this.state.value) {
+        this.handleInputChange(payload);
+      }
+    } else if(newProps.value !== undefined) {
+      this.setState({value: newProps.value});
     }
   },
 
@@ -74,77 +90,47 @@ export default React.createClass({
     e.preventDefault();
   },
 
-  handlePaste(e) {
-    let pasted = e.clipboardData.getData('Text');
-    let value = this.forceMaxLength(pasted);
-    this.onChange({target: {value}});
-    e.preventDefault();
-  },
-
   handleKeyDown(e) {
-    if (this.props.mask && e.keyCode === BACKSPACE) {
-      let value = this.state.value.slice(0, -1);
-      this.onChange({target: {value}});
-      e.preventDefault();
-    }
+    this.setState({
+      keyPressed: e.which
+    });
   },
 
-  handleInputChange(e) {
-    let nextValue = e.target.value;
+  handlePaste(e) {
+    var pasted = e.clipboardData.getData('Text');
+    e.preventDefault();
+    this.handleInputChange({target: {value: pasted}, pasted: pasted});
+  },
 
-    // e.target.value will contain mask chars, we just want the new unmasked char
+  handleInputChange(event) {
+    let changeEvent = event;
     if (this.props.mask) {
-      let newChar = nextValue.slice(-1);
-      nextValue = this.state.value + newChar;
+      let customConfig = {
+        maskSymbol: this.props.maskSymbol,
+        maskAllowedStringType: this.props.maskAllowedStringType
+      };
+      let maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
+      let _event = Immutable.Map(event).withMutations(evt => {
+        evt
+          .set('keyPressed', this.state.keyPressed)
+          .set('unmasked', this.state.unmasked)
+          .set('stateChange', inputMaskUtils.getMaskedOutput(maskConfig, evt.toJSON()));
+      });
+      changeEvent = _event.toJSON();
     }
-
-    // masking will cause issues with max length, so enforce it here
-    let value = this.forceMaxLength(nextValue);
-
-    // dont fire a change event if the value didnt actually change
-    if (value !== this.state.value) {
-      this.onChange({target: {value}});
-    }
-  },
-
-  /**
-   * Returns a masked value if "mask" property is configured.
-   * @returns {string}
-   */
-  getDisplayValue() {
-    var value = this.state.value;
-    if (this.props.mask && !_.isEmpty(value)) {
-      value = masker.mask(this.props.mask, value);
-    }
-    return value;
-  },
-
-  /**
-   * Will slice off any trailing characters that are over max length. If min &
-   * max properties are the same it is treated like a max length in Bosch.
-   * @param {string} value
-   * @returns {string}
-   */
-  forceMaxLength(value) {
-    let max = Number(this.props.max);
-    let min = Number(this.props.min);
-    let result = value;
-    if (min && max && (min === max)) {
-      result = value.slice(0, max);
-    }
-    return result;
+    this.onChange(changeEvent);
   },
 
   render() {
-    let props = _.pick(this.props, this.props.inputProps);
-    let manualInputProps = this.getManualInputProps();
-    let displayValue = this.getDisplayValue();
+    var props = _.pick(this.props, this.props.inputProps);
+    var maskProps = (this.props.mask) ? this.getMaskProps() : null;
+    var manualInputProps = (this.props.forceManualInput) ? this.getManualInputProps() : null;
     return (
       <input
         {...props}
+        {...maskProps}
         {...manualInputProps}
-        value={displayValue}
-        onKeyDown={this.handleKeyDown}
+        value={this.state.value}
         onChange={this.handleInputChange}
         onBlur={this.onBlur}/>
     );

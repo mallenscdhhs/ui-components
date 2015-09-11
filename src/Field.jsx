@@ -174,9 +174,13 @@ export default React.createClass ({
    * @returns {JSX}
    */
   render() {
-    let fieldProps = (this.props.dependencyValue) ? (
-      Immutable.fromJS(this.props).set('disabled',this.state.disabled ? 'disabled' : false).toJSON()
-    ) : this.props;
+    let iFieldProps = Immutable.fromJS(this.props);
+    if (this.props.dependencyValue !== undefined) {
+      iFieldProps = iFieldProps.set('disabled', this.state.disabled ? 'disabled' : false);
+    }
+    if (this.state.value !== undefined) {
+      iFieldProps = iFieldProps.set('value', this.state.value);
+    }
 
     let isFieldGroup = this.isFieldGroup();
     let isRadioOrCheckbox = this.isRadioOrCheckbox();
@@ -191,6 +195,7 @@ export default React.createClass ({
       children.push(<FieldLabel {...labelProps} key="field-label"/>);
     }
 
+    let fieldProps = iFieldProps.toJS();
     children = children.concat([
       <InputControl {...fieldProps} key="input-control"/>,
       <HelpBlock {...fieldProps} key="help-block">{message}</HelpBlock>
