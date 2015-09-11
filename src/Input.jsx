@@ -66,9 +66,23 @@ export default React.createClass({
     }
   },
 
-  componentWillReceiveProps({value}) {
-    if (value) {
-      this.setState({value});  
+  componentWillReceiveProps(newProps) {
+    // Determine if new value is being sent to input, and if it als has a mask, determine if the newly masked value
+    // is different from the current value. If so, kick off the 'onChange' flow for the input, which includes properly
+    // masking the value, validating it and updating the application data.
+    if (newProps.value !== undefined && this.props.mask) {
+      let payload = {target: {value: newProps.value}, pasted: newProps.value};
+      let customConfig = {
+        maskSymbol: this.props.maskSymbol,
+        maskAllowedStringType: this.props.maskAllowedStringType
+      };
+      let maskConfig = inputMaskUtils.getMaskConfig(this.props.mask, customConfig);
+      let maskedValue = inputMaskUtils.getMaskedOutput(maskConfig, payload);
+      if (maskedValue.value !== this.state.value) {
+        this.handleInputChange(payload);
+      }
+    } else if(newProps.value !== undefined) {
+      this.setState({value: newProps.value});
     }
   },
 
