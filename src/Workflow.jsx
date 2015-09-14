@@ -188,8 +188,8 @@ class Workflow extends React.Component {
    */
   handleDirect(pageId) {
     let workflow = this.props.workflow;
-    let currentIndex = workflow[Workflow.getCurrentIndex(pageId, workflow)];
-    let lscIndex = workflow[Workflow.getCurrentIndex(this.state.lastSectionCompleted, workflow)];
+    let currentIndex = Workflow.getCurrentIndex(pageId, workflow);
+    let lscIndex = Workflow.getCurrentIndex(this.state.lastSectionCompleted, workflow);
     this.setState({
       currentPage: pageId,
       lastSectionCompleted: currentIndex > lscIndex ? pageId : this.state.lastSectionCompleted,
