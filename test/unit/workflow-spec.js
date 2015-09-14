@@ -11,6 +11,7 @@ import Immutable from 'immutable';
 
 let Dispatcher = Flux.dispatcher;
 let fixture = require('../fixtures/workflow-simple.json');
+let longerWorkflow = require('../fixtures/workflow-simple-more-pages.json');
 let childrenFixture = require('../fixtures/workflow-with-children.json');
 
 describe('Workflow', function(){
@@ -29,6 +30,19 @@ describe('Workflow', function(){
       expect(workflow.state.previousPage).toEqual('page2');
       expect(workflow.state.nextPage).not.toBeDefined();
       done();
+    });
+  });
+
+  it('can progress to the next section and update lastSectionCompleted', function(done){
+    let config = longerWorkflow;
+    let component = Factory.build(elements, config, config)[0];
+    let workflow = TestUtils.renderIntoDocument(component);
+    Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function(){
+      expect(workflow.state.lastSectionCompleted).toEqual('page3');
+      Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function(){
+        expect(workflow.state.lastSectionCompleted).toEqual('page4');
+        done();
+      });
     });
   });
 

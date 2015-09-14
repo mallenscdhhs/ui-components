@@ -90,6 +90,7 @@ class Workflow extends React.Component {
       mutableConfig
         .set('workflow', flatWorkflow)
         .set('currentPage', currentPage)
+        .set('lastSectionCompleted', lastSectionCompleted)
         .set('skip', skipList);
     }).toJSON();
   }
@@ -131,6 +132,7 @@ class Workflow extends React.Component {
     super();
     this.state = {
       currentPage: '',
+      lastSectionCompleted: '',
       nextPage: '',
       previousPage: ''
     };
@@ -139,6 +141,7 @@ class Workflow extends React.Component {
   componentWillMount() {
     this.setState({
       currentPage: this.props.currentPage,
+      lastSectionCompleted: this.props.lastSectionCompleted ? this.props.lastSectionCompleted : this.props.currentPage,
       nextPage: Workflow.getNext(this.props.currentPage, this.props.workflow),
       previousPage: Workflow.getPrevious(this.props.currentPage, this.props.workflow)
     });
@@ -184,10 +187,14 @@ class Workflow extends React.Component {
    * @param {string} pageId
    */
   handleDirect(pageId) {
+    let workflow = this.props.workflow;
+    let currentIndex = Workflow.getCurrentIndex(pageId, workflow);
+    let lscIndex = Workflow.getCurrentIndex(this.state.lastSectionCompleted, workflow);
     this.setState({
       currentPage: pageId,
-      nextPage: Workflow.getNext(pageId, this.props.workflow),
-      previousPage: Workflow.getPrevious(pageId, this.props.workflow)
+      lastSectionCompleted: currentIndex > lscIndex ? pageId : this.state.lastSectionCompleted,
+      nextPage: Workflow.getNext(pageId, workflow),
+      previousPage: Workflow.getPrevious(pageId, workflow)
     });
 
     Flux.doAction(WORKFLOW_LOAD_PAGE, {page: pageId});
@@ -232,7 +239,8 @@ class Workflow extends React.Component {
    */
   render() {
     let currentPage = this.state.currentPage;
-    let disabledItems = Workflow.getDisabledItems(this.props.workflow, currentPage);
+    let lastSectionCompleted = this.state.lastSectionCompleted;
+    let disabledItems = Workflow.getDisabledItems(this.props.workflow, lastSectionCompleted);
     return (
       <div>
         {Workflow.renderTitle(this.props)}
