@@ -1,7 +1,6 @@
 import React from 'react';
 import Checkable from '../../src/Checkable';
 import TestUtils from 'react/lib/ReactTestUtils';
-import FieldLabel from '../../src/FieldLabel';
 
 let renderer = TestUtils.createRenderer();
 
