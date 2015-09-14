@@ -28,7 +28,7 @@ describe('Workflow', function(){
     expect(workflow.state.lastSectionCompleted).toEqual('page1');
     Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function(){
       expect(workflow.state.currentPage).toEqual('page3');
-      expect(workflow.state.lastSectionCompleted).toEqual('page2');
+      expect(workflow.state.lastSectionCompleted).toEqual('page3');
       expect(workflow.state.previousPage).toEqual('page2');
       expect(workflow.state.nextPage).not.toBeDefined();
       done();
@@ -39,14 +39,10 @@ describe('Workflow', function(){
     let config = longerWorkflow;
     let component = Factory.build(elements, config, config)[0];
     let workflow = TestUtils.renderIntoDocument(component);
-    expect(workflow.state.currentPage).toEqual('page2');
-    expect(workflow.state.lastSectionCompleted).toEqual('page1');
     Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function(){
-      expect(workflow.state.currentPage).toEqual('page3');
-      expect(workflow.state.lastSectionCompleted).toEqual('page2');
+      expect(workflow.state.lastSectionCompleted).toEqual('page3');
       Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function(){
-        expect(workflow.state.currentPage).toEqual('page4');
-        expect(workflow.state.lastSectionCompleted).toEqual('page3');
+        expect(workflow.state.lastSectionCompleted).toEqual('page4');
         done();
       });
     });
