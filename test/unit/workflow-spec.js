@@ -25,10 +25,8 @@ describe('Workflow', function(){
   it('can progress to the next section', function(done){
     let workflow = this.workflow;
     expect(workflow.state.currentPage).toEqual('page2');
-    expect(workflow.state.lastSectionCompleted).toEqual('page1');
     Flux.doAction(constants.actions.WORKFLOW_NEXT_PAGE).then(function(){
       expect(workflow.state.currentPage).toEqual('page3');
-      expect(workflow.state.lastSectionCompleted).toEqual('page3');
       expect(workflow.state.previousPage).toEqual('page2');
       expect(workflow.state.nextPage).not.toBeDefined();
       done();
