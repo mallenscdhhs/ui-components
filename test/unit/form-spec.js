@@ -1,22 +1,15 @@
 import React from 'react';
-import elements from '../../src/index';
-import Factory from '../../src/Factory';
 import TestUtils from 'react/lib/ReactTestUtils';
-import fixture from '../fixtures/form.json';
 
-describe('Form component', function() {
+describe('Form component', () => {
 
-  it('Renders form container', function(){
-    let Form = elements.form;
-    let formPage = TestUtils.renderIntoDocument(<Form {...fixture.config}/>);
-    let inputText = TestUtils.scryRenderedDOMComponentsWithTag(formPage, 'form');
-    expect(inputText.length).toEqual(1);
+  it('Renders a form', () => {
+    let shallowRenderer = TestUtils.createRenderer();
+    let Form = React.createElement('form', {type: 'form', id: 'test_form', name: 'Test Form'});
+    shallowRenderer.render(Form);
+    let comp = shallowRenderer.getRenderOutput();
+    expect(comp.type).toEqual('form');
+    expect(comp.props.id).toEqual('test_form');
   });
 
-  it('can render a fieldset', function(){
-    let Form = Factory.build(elements, fixture, fixture)[0];
-    let form = TestUtils.renderIntoDocument(Form);
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(form, 'fieldset').length).toEqual(1);
-    expect(TestUtils.scryRenderedDOMComponentsWithTag(form, 'input').length).toEqual(1);
-  });
 });
