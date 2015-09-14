@@ -78,4 +78,23 @@ describe('Action component', () => {
     expect(event.component.name).toEqual(fixture.name);
     expect(event.component.formId).toEqual(fixture.formId);
   });
+
+  it('will block click event if disabled', () => {
+    let fixture = {
+      id: 'test',
+      label: 'Test',
+      name: 'submit',
+      formId: 'form1',
+      disabled: true
+    };
+
+    let dom = TestUtils.renderIntoDocument(<Action {...fixture}/>);
+    let event = {
+      stopPropagation() {}
+    };
+    spyOn(event, 'stopPropagation');
+    dom.handleClick(event);
+    expect(event.component).not.toBeDefined();
+    expect(event.stopPropagation).toHaveBeenCalled();
+  });
 });
