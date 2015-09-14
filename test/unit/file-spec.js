@@ -8,7 +8,9 @@ let fixture = require('../fixtures/file.json');
 let {
   FIELD_VALUE_CHANGE,
   FILE_PREVIEW_LIST_GET,
-  FILE_PREVIEW_LIST_LOAD
+  FILE_PREVIEW_LIST_LOAD,
+  FILE_PREVIEW_LIST_SEND,
+  FILE_PREVIEW_LIST_REMOVE
 } = constants.actions;
 
 describe('File', () => {
@@ -39,21 +41,39 @@ describe('File', () => {
       expect(wrapper.childNodes[1].id).toEqual('limit-message');
   });
 
-  it('can facilitate removal of files and update the preview', () => {
-    // click the Remove link
-    TestUtils.Simulate.click(removeLink);
-    expect(ul.class).not.toBeDefined();
-  });
-
-  it('fires FIELD_VALUE_CHANGE with an array of uploaded files', (done) => {
-    Dispatcher.register( 'file-upload-change' , (action, data) => {
+  it('fires FIELD_VALUE_CHANGE with an array of uploaded files and attempts to persist via API', (done) => {
+    let fvcEvent = [
+      {
+        "name": "tiny2.png",
+        "size": 101,
+        "lastModified": 1431441313001,
+        "lastModifiedDate": "Date 2015-05-12T14:35:13.000Z",
+        "type": "image/png",
+        "binary": ""
+      },
+      {
+        "name": "tiny3.jpg",
+        "size": 1101,
+        "lastModified": 1431441313002,
+        "lastModifiedDate": "Date 2015-05-12T14:35:13.000Z",
+        "type": "image/jpg",
+        "binary": ""
+      }
+    ];
+    Dispatcher.register('file-upload-change' , (action, data) => {
       if ( action === FIELD_VALUE_CHANGE && data.id === 'file-test') {
         Dispatcher.unregister('file-upload-change');
-        expect(data.value).toEqual(fixture);
+        expect(data.value).toEqual(fvcEvent);
+      }
+    });
+    Dispatcher.register('send-file-preview-list', (action, data) => {
+      if (action === FILE_PREVIEW_LIST_SEND) {
+        Dispatcher.unregister('send-file-preview-list');
+        expect(action).toEqual('sendFilePreviewList');
         done();
       }
     });
-    comp.buildChangeEvent(fixture);
+    comp.buildChangeEvent(fvcEvent);
   });
 
   it('will attempt to fetch files via an API if none are supplied in props', (done) => {
@@ -82,4 +102,36 @@ describe('File', () => {
     // Action called in PE on successful response from FILE_PREVIEW_LIST_GET
     Flux.doAction(FILE_PREVIEW_LIST_LOAD, {fieldId: 'file-test2', value: fixture});
   });
+
+  it('will not allow field value changes or API operations to occur if readOnly is true', () => {
+    let removalFVCEvent = {id: 'remove-link', type: 'link', name: 'remove', className: 'text-left', fileId: undefined, removalId: 0, dataParent: 'file-test', event: 'removeFilePreviewList', componentType: 'action'};
+
+    spyOn(Flux, 'doAction');
+    comp.props.readOnly = true;
+    // re-render with readOnly applied
+    comp.setState();
+    // click the Remove link
+    TestUtils.Simulate.click(removeLink);
+    expect(ul.class).not.toBeDefined();
+    expect(Flux.doAction).not.toHaveBeenCalledWith('removeFilePreviewList', removalFVCEvent);
+    //reset readOnly to default for other tests
+    comp.props.readOnly = false;
+    // re-render with readOnly applied
+    comp.setState();
+  });
+
+  it('can facilitate removal of files, update the preview, and attempt to persist removal via API', (done) => {
+    Dispatcher.register('remove-file-preview-list', (action, data) => {
+      if (action === FILE_PREVIEW_LIST_REMOVE) {
+        Dispatcher.unregister('remove-file-preview-list');
+        expect(action).toEqual('removeFilePreviewList');
+        done();
+      }
+    });
+
+    // click the Remove link
+    TestUtils.Simulate.click(removeLink);
+    expect(ul.class).not.toBeDefined();
+  });
+
 });

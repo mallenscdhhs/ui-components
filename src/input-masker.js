@@ -1,6 +1,8 @@
 'use-strict';
 import InputMask from 'inputmask-core';
+import _ from 'lodash';
 
+let placeholderChar = ' ';
 /**
  * An internal dictionary of format characters to use
  * with any mask that requires partial obfuscation.
@@ -8,7 +10,7 @@ import InputMask from 'inputmask-core';
  */
 let obfuscateFormatChars = {
   'x': {
-    validate: char => /[0-9]/.test(char),
+    validate: char => char,
     transform: char => '*'
   }
 };
@@ -20,18 +22,28 @@ let obfuscateFormatChars = {
  */
 let masks = {
   ssn: {
-    pattern: 'xxx-xx-1111',
-    formatCharacters: obfuscateFormatChars
+    pattern: 'xxx-xx-****',
+    formatCharacters: obfuscateFormatChars,
+    placeholderChar
   },
   ein: {
-    pattern: 'xx-xxx1111',
-    formatCharacters: obfuscateFormatChars
+    pattern: 'xx-xxx****',
+    formatCharacters: obfuscateFormatChars,
+    placeholderChar
   },
   phone: {
-    pattern: '111-111-1111'
+    pattern: '***-***-****',
+    placeholderChar
+  },
+  zip: {
+    pattern: '*****-****',
+    placeholderChar
   }
 };
 
+/**
+ * @module input-masker
+ */
 export default {
   /**
    * Uses the given maskName to create the appropriate InputMask instance and
@@ -43,7 +55,10 @@ export default {
   mask(maskName, value) {
     let maskConfig = masks[maskName];
     let mask = new InputMask(maskConfig);
-    mask.paste(value);
-    return mask.getValue();
+    mask.setValue(value);
+    let maskedValueBuffer = mask.value;
+    let sliceIndex = _.indexOf(maskedValueBuffer, placeholderChar);
+    let maskedValue = mask.getValue();
+    return sliceIndex >= 0 ? maskedValue.slice(0, sliceIndex) : maskedValue;
   }
 };
