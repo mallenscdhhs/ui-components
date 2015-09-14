@@ -190,11 +190,12 @@ class Workflow extends React.Component {
     let workflow = this.props.workflow;
     let currentIndex = Workflow.getCurrentIndex(pageId, workflow);
     let lscIndex = Workflow.getCurrentIndex(this.state.lastSectionCompleted, workflow);
+    let previousPage = Workflow.getPrevious(pageId, workflow);
     this.setState({
       currentPage: pageId,
-      lastSectionCompleted: currentIndex > lscIndex ? pageId : this.state.lastSectionCompleted,
+      lastSectionCompleted: currentIndex > lscIndex ? previousPage : this.state.lastSectionCompleted,
       nextPage: Workflow.getNext(pageId, workflow),
-      previousPage: Workflow.getPrevious(pageId, workflow)
+      previousPage
     });
 
     Flux.doAction(WORKFLOW_LOAD_PAGE, {page: pageId});
