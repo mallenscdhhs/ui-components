@@ -17,7 +17,9 @@ class WorkflowItem extends React.Component {
   }
 
   handleClick(e){
-    e.component = this.props;
+    if (!this.props.disabled) {
+      e.component = this.props;
+    }
   }
 
   render(){
