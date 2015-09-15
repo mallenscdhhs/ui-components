@@ -1,3 +1,4 @@
+'use-strict';
 import React from 'react';
 import {Panel} from 'react-bootstrap';
 import renderChildren from './render-children';
@@ -21,7 +22,7 @@ class AccordionPanel extends React.Component {
       <Panel
         {...this.props}
         onClick={this.handleClick}
-        bsStyle={this.props.expanded ? 'info' : 'default'} >
+        bsStyle={this.props.expanded ? 'info' : 'default'}>
           {renderChildren(this.props)}
       </Panel>
     );

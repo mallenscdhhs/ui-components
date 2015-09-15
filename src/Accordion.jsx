@@ -1,3 +1,4 @@
+'use-strict';
 import React from 'react';
 import {Accordion as RBAccordion} from 'react-bootstrap';
 import renderChildren from './render-children';
@@ -29,7 +30,7 @@ class Accordion extends React.Component {
       <RBAccordion
         id={this.props.id}
         defaultActiveKey={this.props.defaultActiveKey}
-        onClick={this.handleClick} >
+        onClick={this.handleClick}>
           {renderChildren(this.props)}
       </RBAccordion>
     );
