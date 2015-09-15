@@ -1,48 +1,40 @@
 'use-strict';
 import React from 'react';
 import setClassNames from 'classnames';
-import DependencyMixin from './DependencyMixin';
 
-export default React.createClass({
-
-  displayName: 'Content',
-
-  mixins: [DependencyMixin],
-
-  propTypes: {
-    content : React.PropTypes.string,
-    className : React.PropTypes.string
-  },
-
-  statics: {
-    configure: function(schema, model, components){
-      return schema.get('config').toJSON();
-    }
-  },
-
-  getDefaultProps() {
-    return {
-      componentType: 'content',
-      className: ''
-    };
-  },
-
-  getInitialState() {
-    return null;
-  },
+/**
+ * Render a Content component.
+ * @returns {JSX}
+ */
+ class Content extends React.Component {
+  constructor() {
+    super();
+    this.getClassNames = this.getClassNames.bind(this);
+  }
 
   getClassNames() {
     return setClassNames(
       'page-content',
-      {hidden: !this.state.visible},
+      {hidden: !this.props.visible},
       this.props.className
-    );
-  },
-
-  render() {
-    return (
-      <section className={this.getClassNames()} dangerouslySetInnerHTML={{__html: this.props.content }}></section>
     );
   }
 
-});
+  render() {
+    return (
+      <section className={this.getClassNames()} dangerouslySetInnerHTML={{__html: this.props.content}}></section>
+    );
+  }
+}
+
+Content.propTypes = {
+  content: React.PropTypes.string,
+  className: React.PropTypes.string
+};
+
+Content.defaultProps = {
+  componentType: 'content',
+  className: ''
+};
+
+export default Content;

@@ -1,18 +1,18 @@
 import React from 'react';
-import elements from '../../src/index';
-import Factory from '../../src/Factory';
 import TestUtils from 'react/lib/ReactTestUtils';
+import Content from '../../src/Content';
 
-describe('Content component', function() {
+describe('Content component', () => {
+  let config = {
+    content: 'I am some <b>content</b>.',
+    visible: true
+  };
+  let content = TestUtils.renderIntoDocument(<Content {...config}/>);
+  let dom = React.findDOMNode(content);
 
-  it('renders a content', function () {
-    let fixture = require('../fixtures/page-with-content.json');
-    let Page = Factory.build(elements, fixture, fixture)[0];
-    let page = TestUtils.renderIntoDocument(Page);
-    let section = TestUtils.findRenderedDOMComponentWithTag(page, 'section');
-    expect(section.getDOMNode().childNodes[0].textContent).toEqual('I am some ');
-    expect(section.getDOMNode().childNodes[1].textContent).toEqual('content');
-    expect(section.getDOMNode().childNodes[1].tagName).toEqual('B');
+  it('renders a bootstrap accordion', () => {
+    expect(dom.childNodes[0].textContent).toEqual('I am some ');
+    expect(dom.childNodes[1].textContent).toEqual('content');
+    expect(dom.childNodes[1].tagName).toEqual('B');
   });
-
 });
