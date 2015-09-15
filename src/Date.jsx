@@ -2,7 +2,6 @@
 import React from 'react';
 import _ from 'lodash';
 import { DateTimePicker } from 'react-widgets';
-import ValueChangeMixin from './ValueChangeMixin';
 import utils from './utils';
 
 /**
@@ -12,8 +11,6 @@ import utils from './utils';
 let DateField = React.createClass({
 
   displayName: 'Date',
-
-  mixins: [ValueChangeMixin],
 
   statics: {
     getDateValue(input) {

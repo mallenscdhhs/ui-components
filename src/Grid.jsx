@@ -1,8 +1,8 @@
 'use-strict';
 var React = require('react');
 var _ = require('lodash');
-var GridRow = require('./GridRow');
-var GridColumn = require('./GridColumn');
+var GridRow = require('react-bootstrap').Row;
+var GridColumn = require('react-bootstrap').Col;
 var update = require('react/lib/update');
 
 /**

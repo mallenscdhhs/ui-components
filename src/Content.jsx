@@ -1,13 +1,10 @@
 'use-strict';
 import React from 'react';
 import setClassNames from 'classnames';
-import DependencyMixin from './DependencyMixin';
 
 export default React.createClass({
 
   displayName: 'Content',
-
-  mixins: [DependencyMixin],
 
   propTypes: {
     content : React.PropTypes.string,
