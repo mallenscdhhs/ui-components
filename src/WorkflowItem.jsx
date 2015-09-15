@@ -19,6 +19,8 @@ class WorkflowItem extends React.Component {
   handleClick(e){
     if (!this.props.disabled) {
       e.component = this.props;
+    } else {
+      e.stopPropagation();
     }
   }
 
