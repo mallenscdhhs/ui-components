@@ -1,5 +1,6 @@
 'use-strict';
 var React = require('react');
+import renderChildren from './render-children';
 
 /**
  * A tree navigation component.
