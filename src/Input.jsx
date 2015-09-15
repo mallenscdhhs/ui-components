@@ -2,7 +2,6 @@
 let React = require('react');
 let _ = require('lodash');
 let Immutable = require('immutable');
-let ValueChangeMixin = require('./ValueChangeMixin');
 let inputMaskUtils = require('./inputMaskUtils');
 
 /**
@@ -12,8 +11,6 @@ let inputMaskUtils = require('./inputMaskUtils');
 export default React.createClass({
 
   displayName: 'Input',
-
-  mixins: [ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

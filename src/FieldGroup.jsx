@@ -4,9 +4,7 @@ import Immutable from 'immutable';
 import Checkable from './Checkable';
 import { dispatcher as Dispatcher } from 'fluxify';
 import constants from './constants';
-import OptionsMixin from './OptionsMixin';
 import _ from 'lodash';
-import ValueChangeMixin from './ValueChangeMixin';
 
 let {
   FIELD_VALUE_CHANGE,
@@ -35,8 +33,6 @@ let isOptionChecked = function(props, value) {
 export default React.createClass({
 
   displayName: 'FieldGroup',
-
-  mixins: [OptionsMixin, ValueChangeMixin],
 
   statics: {
     isOptionChecked

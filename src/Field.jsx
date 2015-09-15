@@ -7,19 +7,13 @@ import Immutable from 'immutable';
 import Flux from 'fluxify';
 import constants from './constants';
 import FieldLabel from './FieldLabel';
-import HelpBlock from './HelpBlock';
 import FieldGroup from './FieldGroup';
-import ValidationMixin from './ValidationMixin';
-import DependencyMixin from './DependencyMixin';
 import Checkable from './Checkable';
 import Select from './Select';
 import Input from './Input';
-import Textarea from './Textarea';
 import DateComponent from './Date';
-import AutoComplete from './AutoComplete';
 import File from './File';
 import ContentEditor from './ContentEditor';
-import FieldValueMixin from './FieldValueMixin';
 import utils from './utils.js';
 
 /**
@@ -29,8 +23,6 @@ import utils from './utils.js';
 export default React.createClass ({
 
   displayName: 'Field',
-
-  mixins: [ValidationMixin, DependencyMixin, FieldValueMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,
@@ -139,15 +131,11 @@ export default React.createClass ({
     switch(type) {
       case 'contenteditor':
         return ContentEditor;
-      case 'textarea':
-        return Textarea;
       case 'radio':
       case 'checkbox':
         return isFieldGroup? FieldGroup : Checkable;
       case 'select':
         return Select;
-      case 'autocomplete':
-        return AutoComplete;
       case 'date':
         return DateComponent;
       case 'file':
@@ -197,8 +185,7 @@ export default React.createClass ({
 
     let fieldProps = iFieldProps.toJS();
     children = children.concat([
-      <InputControl {...fieldProps} key="input-control"/>,
-      <HelpBlock {...fieldProps} key="help-block">{message}</HelpBlock>
+      <InputControl {...fieldProps} key="input-control"/>
     ]);
 
     return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
