@@ -1,115 +1,23 @@
 'use-strict';
-
 import React from 'react';
-import setClassNames from 'classnames';
+import {Input} from 'react-bootstrap';
+import classNames from 'classnames';
 import _ from 'lodash';
-import Immutable from 'immutable';
-import Flux from 'fluxify';
-import constants from './constants';
 import FieldLabel from './FieldLabel';
-import HelpBlock from './HelpBlock';
 import FieldGroup from './FieldGroup';
-import ValidationMixin from './ValidationMixin';
-import DependencyMixin from './DependencyMixin';
-import Checkable from './Checkable';
-import Select from './Select';
-import Input from './Input';
-import Textarea from './Textarea';
 import DateComponent from './Date';
-import AutoComplete from './AutoComplete';
 import File from './File';
-import ContentEditor from './ContentEditor';
-import FieldValueMixin from './FieldValueMixin';
-import utils from './utils.js';
+import masker from './input-masker';
 
 /**
- * Field component
- * @module Field
+ * @class Field
  */
-export default React.createClass ({
-
-  displayName: 'Field',
-
-  mixins: [ValidationMixin, DependencyMixin, FieldValueMixin],
-
-  propTypes: {
-    id: React.PropTypes.string.isRequired,
-    type: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    label: React.PropTypes.string.isRequired,
-    required: React.PropTypes.bool,
-    helpText: React.PropTypes.string,
-    visible: React.PropTypes.string,
-    persistInSession: React.PropTypes.bool,
-    disabled: React.PropTypes.bool,
-    mask: React.PropTypes.string,
-    forceManualInput: React.PropTypes.bool
-  },
-
-  statics: {
-    /**
-     * Provides configuration processing for Field components.
-     * @param {Immutable.Map} schema - this components schema
-     * @param {Immutable.Map} model - the data model(if any)
-     * @param {Immutable.Map} components - the component list
-     * @returns {JSON}
-     */
-    configure(schema, model, components) {
-      let config = schema.get('config');
-      let props = config.setIn(['className'], 'form-control');
-
-      /**
-       * Provides configuration for performing operations on a field dependent on previous
-       * pages' field values.
-       * @param {object} opConfig - Operation config must include an action and an actionType
-       * along with any other relevant information needed to perform the operation
-       * @param {object} action - The name of the operation to peform
-       * @param {object} actionType - Define what kind of object should be returned from
-       * the operation action
-       */
-      if (config.has('inputOperationConfig')) {
-        let opConfig = config.get('inputOperationConfig');
-        let action = opConfig.get('action');
-        let actionType = opConfig.get('actionType');
-        let updates = utils[action](props, model, opConfig);
-        props = (updates && actionType === 'props') ? updates : props;
-        model = (updates && actionType === 'model') ? updates : model;
-      }
-
-      if (model.has(props.get('id'))) {
-        if(props.get('type') === 'checkbox') {
-          // if model value is "true", then set "checked" to true
-          if ( model.get(props.get('id')) === props.get('value') ) {
-            props = props.set('checked', true);
-          }
-        } else {
-          props = props.set('value', model.get(props.get('id')));
-        }
-      }
-      return props.toJSON();
-    }
-  },
-
-  getDefaultProps() {
-    return {
-      componentType: 'field',
-      initialState: 'visible',
-      disabled: false,
-      mask: '',
-      forceManualInput: false
-    };
-  },
-
-  /**
-   * Init Field state
-   * @returns {object}
-   */
-  getInitialState() {
-    return {
-      hasError: false,
-      errorMessage: ''
-    };
-  },
+class Field extends React.Component {
+  constructor() {
+    super();
+    this.handleChange = this.handleChange.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+  }
 
   /**
    * Returns whether or not the Field type is "radio" or "checkbox".
@@ -117,7 +25,7 @@ export default React.createClass ({
    */
   isRadioOrCheckbox() {
     return /radio|checkbox/.test(this.props.type);
-  },
+  }
 
   /**
    * Boolean helper if type is radio or checkbox.  Used to determine if we
@@ -128,80 +36,110 @@ export default React.createClass ({
   isFieldGroup() {
     let hasOptions = !!(this.props.options || this.props.optionsResource);
     return this.isRadioOrCheckbox() && hasOptions;
-  },
+  }
 
   /**
    * Creates specified field type component.
    * @param {string} type
    * @returns {JSX}
    */
-  getInputControl(type, isFieldGroup) {
-    switch(type) {
-      case 'contenteditor':
-        return ContentEditor;
-      case 'textarea':
-        return Textarea;
+  getInputControl() {
+    switch(this.props.type) {
       case 'radio':
       case 'checkbox':
-        return isFieldGroup? FieldGroup : Checkable;
-      case 'select':
-        return Select;
-      case 'autocomplete':
-        return AutoComplete;
+        return this.isFieldGroup()? FieldGroup : Input;
       case 'date':
         return DateComponent;
       case 'file':
         return File;
       default:
         return Input;
-    }
-  },
+    };
+  }
 
-  /**
-   * Return the CSS class names to apply to the Field wrapper element.
-   * @returns {object}
-   */
-  getClassNames() {
-    return setClassNames({
-      'form-group': true,
-      'has-error': this.state.hasError,
-      hidden: !this.state.visible
-    });
-  },
+  getInputProps() {
+    let props = _.pick(this.props, this.props.inputProps);
+    let help = this.props.message || this.props.helpText;
+    props.value = this.getDisplayValue();
+    props.help = help;
+    props.onChange = this.handleChange;
+    props.onBlur = this.handleBlur;
+    props.bsStyle = classNames({error: this.props.hasError});
+    props.label = <FieldLabel {...this.props}/>;
+    if (this.props.type === 'select') {
+      let options = this.props.options || [];
+      let renderOption = opt => <option value={opt.value}>{opt.label}</option>;
+      props.children = _.map(options, renderOption);
+    }
+
+    return props;
+  }
+
+  getDisplayValue() {
+    let value = this.props.value;
+    if (this.props.mask && !_.isEmpty(value)) {
+      value = masker.mask(this.props.mask, value);
+    }
+
+    return value;
+  }
+
+  handleChange(e) {
+    let value = e.target.value;
+    let schemaUpdates = {};
+    if (this.isRadioOrCheckbox()) {
+      value = e.target.checked? this.props.value : null;
+      schemaUpdates.checked = e.target.checked;
+    }
+
+    e.component = {
+      id: this.props.id,
+      schemaUpdates,
+      modelUpdates: {
+        id: this.props.name,
+        value
+      }
+    };
+  }
+
+  handleBlur(e) {
+    e.component = this.props;
+  }
 
   /**
    * Render a Field component.
    * @returns {JSX}
    */
   render() {
-    let iFieldProps = Immutable.fromJS(this.props);
-    if (this.props.dependencyValue !== undefined) {
-      iFieldProps = iFieldProps.set('disabled', this.state.disabled ? 'disabled' : false);
-    }
-    if (this.state.value !== undefined) {
-      iFieldProps = iFieldProps.set('value', this.state.value);
-    }
-
-    let isFieldGroup = this.isFieldGroup();
-    let isRadioOrCheckbox = this.isRadioOrCheckbox();
-    let wrapperTag = isFieldGroup ? 'fieldset' : 'div';
-    let message = this.state.hasError ? this.state.errorMessage : this.props.helpText;
-    let InputControl = this.getInputControl(this.props.type, isFieldGroup);
-    let labelProps = _.pick(this.props, ['id', 'label', 'required', 'description', 'descriptionPlacement', 'descriptionTrigger']);
-    let children = [];
-
-    if ( isFieldGroup || !isRadioOrCheckbox ) {
-      labelProps.isFieldGroup = isFieldGroup;
-      children.push(<FieldLabel {...labelProps} key="field-label"/>);
-    }
-
-    let fieldProps = iFieldProps.toJS();
-    children = children.concat([
-      <InputControl {...fieldProps} key="input-control"/>,
-      <HelpBlock {...fieldProps} key="help-block">{message}</HelpBlock>
-    ]);
-
-    return React.createElement(wrapperTag, {className: this.getClassNames()}, children);
+    let Control = this.getInputControl()
+    let props = this.getInputProps();
+    return this.props.visible? <Control {...props}/> : null;
   }
+}
 
-});
+Field.propTypes = {
+  id: React.PropTypes.string.isRequired,
+  type: React.PropTypes.string.isRequired,
+  name: React.PropTypes.string.isRequired,
+  label: React.PropTypes.string.isRequired,
+  required: React.PropTypes.bool,
+  helpText: React.PropTypes.string,
+  visible: React.PropTypes.bool,
+  disabled: React.PropTypes.bool,
+  mask: React.PropTypes.string,
+  forceManualInput: React.PropTypes.bool
+};
+
+Field.defaultProps = {
+  inputProps: ['id', 'name', 'type', 'disabled', 'checked', 'multiple'],
+  componentType: 'field',
+  initialState: 'visible',
+  disabled: false,
+  visible: true,
+  mask: '',
+  forceManualInput: false,
+  hasError: false,
+  errorMessage: ''
+};
+
+export default Field;
