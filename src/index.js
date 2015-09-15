@@ -1,5 +1,6 @@
 module.exports = {
 	accordion: require('./Accordion'),
+  accordionpanel: require('./AccordionPanel'),
 	action: require('./Action'),
 	alertMessage: require('./AlertMessage'),
 	autoComplete: require('./AutoComplete'),
