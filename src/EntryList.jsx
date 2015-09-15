@@ -8,10 +8,8 @@ import Action from './Action';
 import EntryListItem from './EntryListItem';
 import EntryListForm from './EntryListForm';
 import EntryListBtn from './EntryListBtn';
-import DependencyMixin from './DependencyMixin';
 import setClassNames from 'classnames';
 import FormValidator from '@scdhhs/ui-form-validator';
-import Config from './configuration';
 
 let {
   ENTRYLIST_FORM_SHOW,
@@ -30,8 +28,6 @@ let {
 export default React.createClass({
 
   displayName: 'EntryList',
-
-  mixins: [DependencyMixin],
 
   statics: {
     configure: function(schema, model, components) {
@@ -87,7 +83,7 @@ export default React.createClass({
   componentDidMount() {
     let validator = new FormValidator({
       dispatcher: Dispatcher,
-      url: Config.API.validation,
+      url: '',
       data: this.props.form,
       postValidationAction: FIELD_VALIDATION_ERROR,
       apiCommunicationErrorAction: API_COMMUNCATION_ERROR

@@ -26,7 +26,7 @@ function testNonRenderedOutputFromElement(el){
   expect(divs.length).toEqual(1);
 }
 
-
+/*
 describe('Factory', function(){
 
   describe('#build', function(){
@@ -65,3 +65,4 @@ describe('Factory', function(){
   })
 
 });
+*/

@@ -2,7 +2,6 @@
   "camelcase": true,
   "eqeqeq": true,
   "forin": true,
-  "jquery": true,
   "jasmine": true,
   "browserify": true,
   "indent": 2,
