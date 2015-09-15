@@ -1,0 +1,85 @@
+{
+  "type": "workflow",
+  "config": {
+    "title": "Simple Workflow",
+    "lastSectionCompleted": "page1",
+    "actions": [
+      {
+        "id": "workflow-previous-btn",
+        "name": "Previous",
+        "type": "button",
+        "classNames": ["btn-default"],
+        "event": "workflowPreviousPage"
+      },
+      {
+        "id": "workflow-cancel-btn",
+        "name": "Cancel",
+        "type": "button",
+        "classNames": ["btn-default"],
+        "event": "workflow:cancel"
+      },
+      {
+        "id": "workflow-next-btn",
+        "name": "Next",
+        "type": "button",
+        "classNames": ["btn-primary"],
+        "event": "workflowNextPage"
+      },
+      {
+        "id": "workflow-exit-btn",
+        "name": "Save and Exit",
+        "type": "button",
+        "classNames": ["btn-default"],
+        "event": "workflow:exit"
+      }
+    ]
+  },
+  "child": "page1",
+  "components": {
+    "page1": {
+      "type": "workflowitem",
+      "config": {
+        "id": "page1",
+        "title": "Page One",
+        "active": true,
+        "current": false,
+        "disabled": false
+      },
+      "next": "page3",
+      "child": "page2"
+    },
+    "page2": {
+      "type": "workflowitem",
+      "config": {
+        "id": "page2",
+        "title": "Page Two"
+      }
+    },
+    "page3": {
+      "type": "workflowitem",
+      "next": "page4",
+      "config": {
+        "id": "page3",
+        "title": "Page Three",
+        "active": false,
+        "current": true,
+        "disabled": false
+      }
+    },
+    "page4": {
+      "type": "workflowitem",
+      "next": "page5",
+      "config": {
+        "id": "page4",
+        "title": "Page Four"
+      }
+    },
+    "page5": {
+      "type": "workflowitem",
+      "config": {
+        "id": "page5",
+        "title": "Page Five"
+      }
+    }
+  }
+}
