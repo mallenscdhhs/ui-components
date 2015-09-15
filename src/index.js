@@ -1,5 +1,6 @@
 module.exports = {
 	accordion: require('./Accordion'),
+	accordionpanel: require('./AccordionPanel'),
 	action: require('./Action'),
 	alert: require('react-bootstrap').Alert,
 	checkable: require('./Checkable'),
