@@ -13,6 +13,7 @@ class WorkflowItem extends React.Component {
 
   constructor(props){
     super(props);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(e){
@@ -22,14 +23,14 @@ class WorkflowItem extends React.Component {
   }
 
   render(){
-    let iClassNames = classnames({
+    let liClassNames = classnames({
       'inactive': !this.props.active,
       'current' : this.props.current,
       'disabled': this.props.disabled
     });
     return (
-      <li className={iClassNames} role="presentation">
-        <a href="javascript:void(0)" data-disabled={this.props.disabled} onClick={this.handleClick.bind(this)}>{this.props.title}</a>
+      <li className={liClassNames} role="presentation">
+        <a href="javascript:void(0)" data-disabled={this.props.disabled} onClick={this.handleClick}>{this.props.title}</a>
         <Tree>{renderChildren(this.props)}</Tree>
       </li>
     );
