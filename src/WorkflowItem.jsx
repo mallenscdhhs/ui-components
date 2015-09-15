@@ -17,16 +17,14 @@ class WorkflowItem extends React.Component {
   }
 
   handleClick(e){
-    e.component = {
-      id: this.props.id
-    }
+    e.component = this.props;
   }
 
   render(){
     let liClassNames = classnames({
-      'inactive': !this.props.active,
-      'current' : this.props.current,
-      'disabled': this.props.disabled
+      inactive: !this.props.active,
+      current: this.props.current,
+      disabled: this.props.disabled
     });
     return (
       <li className={liClassNames} role="presentation">
