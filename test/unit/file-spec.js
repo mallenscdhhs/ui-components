@@ -120,6 +120,5 @@ describe('File', () => {
     comp.setState();
   });
 
-  it('can facilitate removal of files, update the preview, and attempt to persist removal via API');
 
 });

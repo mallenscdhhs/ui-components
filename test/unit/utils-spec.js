@@ -54,10 +54,6 @@ describe('utils', () => {
     it('assigns form-control className', () => {
       expect(input.className).toEqual('form-control');
     });
-    it('accepts the fieldId as an argument and assigns the proper aria-describedby attr to correspond with the help-block that follows the input', () => {
-      expect(input.getAttribute('aria-describedby')).toEqual('first-name-help-block');
-      expect(helpBlock.id).toEqual('first-name-help-block');
-    });
   });
 
   describe('#getDependentVisibility', () => {

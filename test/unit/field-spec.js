@@ -23,32 +23,6 @@ describe('Field component', () => {
     expect(/hidden/.test(dom.className)).toEqual(true);
   });
 
-  it('can render error messages', (done) => {
-    let comp = TestUtils.renderIntoDocument(<Field {...fixture}/>);
-    let eventData = {
-      id: fixture.id,
-      hasError: true,
-      errorMessage: 'It broke.'
-    };
-    Flux.doAction(constants.actions.FIELD_VALIDATION_ERROR, eventData)
-      .then(() => {
-        let helpBlock = TestUtils.findRenderedDOMComponentWithClass(comp, 'help-block');
-        expect(helpBlock.getDOMNode().textContent).toEqual('It broke.');
-        expect(/error/.test(comp.getDOMNode().className)).toEqual(true);
-        done();
-      });
-  });
-
-  it('can render a FieldGroup', () => {
-    var config = require('../fixtures/field-group.json').config;
-    var comp = TestUtils.renderIntoDocument(<Field {...config}/>);
-    var lgnd = TestUtils.findRenderedDOMComponentWithTag(comp, 'legend');
-    var inpts = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
-    expect(comp.getDOMNode().tagName.toLowerCase()).toEqual('fieldset');
-    expect(lgnd.getDOMNode().textContent).toEqual(config.label);
-    expect(inpts.length).toEqual(3);
-  });
-
   it('can set field value properly', () => {
     let config = Immutable.fromJS({
       config: {

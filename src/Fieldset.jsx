@@ -1,6 +1,5 @@
 'use-strict';
 var React = require('react');
-var DependencyMixin = require('./DependencyMixin');
 var Description = require('./Description');
 var setClassNames = require('classnames');
 
@@ -11,8 +10,6 @@ var setClassNames = require('classnames');
 module.exports = React.createClass({
 
   displayName: 'Fieldset',
-
-  mixins: [DependencyMixin],
 
   getDefaultProps: function(){
     return {
