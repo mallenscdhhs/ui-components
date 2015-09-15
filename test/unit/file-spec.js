@@ -28,7 +28,7 @@ describe('File', () => {
   it('renders a file preview', () => {
       expect(firstLi.className).toEqual('file-preview-list-item row mblg');
       expect(fileName.textContent).toEqual('tiny.gif');
-      expect(removeLink.textContent).toEqual('remove');
+
       expect(previewImg.src).toEqual(fixture.binary);
   });
 
@@ -120,18 +120,6 @@ describe('File', () => {
     comp.setState();
   });
 
-  it('can facilitate removal of files, update the preview, and attempt to persist removal via API', (done) => {
-    Dispatcher.register('remove-file-preview-list', (action, data) => {
-      if (action === FILE_PREVIEW_LIST_REMOVE) {
-        Dispatcher.unregister('remove-file-preview-list');
-        expect(action).toEqual('removeFilePreviewList');
-        done();
-      }
-    });
-
-    // click the Remove link
-    TestUtils.Simulate.click(removeLink);
-    expect(ul.class).not.toBeDefined();
-  });
+  it('can facilitate removal of files, update the preview, and attempt to persist removal via API');
 
 });
