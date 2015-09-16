@@ -1,64 +1,75 @@
 'use-strict';
-var React = require('react');
-var Description = require('./Description');
-var setClassNames = require('classnames');
+import React from 'react';
+import Description from './Description';
+import classnames from 'classnames';
+import renderChildren from './render-children';
 
 /**
  * Fieldset component
  * @module Fieldset
  */
-module.exports = React.createClass({
+class Fieldset extends React.Component {
 
-  displayName: 'Fieldset',
+  constructor(props) {
+    super(props);
+  }
 
-  getDefaultProps: function(){
-    return {
-      componentType: 'fieldset'
-    };
-  },
-
-  getHelpText: function(){
-    var helpText;
+  renderHelpText(){
     if(this.props.helpText){
-      helpText = <p key="help-block">{this.props.helpText}</p>;
+      return <p key="help-block">{this.props.helpText}</p>;
     }
-    return helpText;
-  },
+  }
 
-  getDescription: function(){
-    var description;
-    if(this.props.description){
-      description = <Description key="description-text" {...this.props} />;
+  renderDescription() {
+    if (this.props.description) {
+      let popover = <Popover title={this.props.descriptionTitle}>{this.props.description}</Popover>;
+      return (
+        <span className="field-description">
+          <OverlayTrigger
+            trigger={this.descriptionTrigger}
+            placement={this.descriptionPlacement}
+            overlay={popover}>
+            <Glyphicon glyph="info-sign" aria-hidden="true"/>
+          </OverlayTrigger>
+        </span>
+      );
     }
-    return description;
-  },
+  }
 
-  getLabel: function(){
-    var fieldSetLabel = null;
+  renderLabel(){
     if(this.props.name){
-      fieldSetLabel = <legend className="field-label" key={this.props.name+"Legend"}>{this.props.legend}{this.getDescription()}</legend>;
+      return <legend className="field-label" key={`${this.props.name}Legend`}>{this.props.legend}{this.renderDescription()}</legend>;
     }
-    return fieldSetLabel;
-  },
+  }
 
-  getClassNames: function(){
-    return setClassNames({
-      'hidden': !this.state.visible
+  getClassNames(){
+    return classnames({
+      hidden: !this.props.visible
     });
-  },
+  }
 
   /**
    * Render a Fieldset component.
    * @returns {JSX}
    */
-  render: function(){
+  render(){
     return (
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className={this.getClassNames()}>
-        {this.getLabel()}
-        {this.getHelpText()}
-        {this.props.children}
+        {this.renderLabel()}
+        {this.renderHelpText()}
+        {renderChildren(this.props)}
       </fieldset>
     );
   }
 
-});
+};
+
+Fieldset.propTypes = {
+  title: React.PropTypes.string
+};
+
+Fieldset.defaultProps = {
+  componentType: 'fieldset'
+};
+
+export default Fieldset;
