@@ -14,28 +14,32 @@ class Fieldset extends React.Component {
     super(props);
   }
 
-  getHelpText(){
-    let helpText;
+  renderHelpText(){
     if(this.props.helpText){
-      helpText = <p key="help-block">{this.props.helpText}</p>;
+      return <p key="help-block">{this.props.helpText}</p>;
     }
-    return helpText;
   }
 
-  getDescription(){
-    let description;
-    if(this.props.description){
-      description = <Description key="description-text" {...this.props} />;
+  renderDescription() {
+    if (this.props.description) {
+      let popover = <Popover title={this.props.descriptionTitle}>{this.props.description}</Popover>;
+      return (
+        <span className="field-description">
+          <OverlayTrigger
+            trigger={this.descriptionTrigger}
+            placement={this.descriptionPlacement}
+            overlay={popover}>
+            <Glyphicon glyph="info-sign" aria-hidden="true"/>
+          </OverlayTrigger>
+        </span>
+      );
     }
-    return description;
   }
 
-  getLabel(){
-    let fieldSetLabel = null;
+  renderLabel(){
     if(this.props.name){
-      fieldSetLabel = <legend className="field-label" key={`${this.props.name}Legend`}>{this.props.legend}{this.getDescription()}</legend>;
+      return <legend className="field-label" key={`${this.props.name}Legend`}>{this.props.legend}{this.renderDescription()}</legend>;
     }
-    return fieldSetLabel;
   }
 
   getClassNames(){
@@ -51,8 +55,8 @@ class Fieldset extends React.Component {
   render(){
     return (
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className={this.getClassNames()}>
-        {this.getLabel()}
-        {this.getHelpText()}
+        {this.renderLabel()}
+        {this.renderHelpText()}
         {renderChildren(this.props)}
       </fieldset>
     );
