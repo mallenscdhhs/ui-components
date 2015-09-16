@@ -1,7 +1,7 @@
 'use-strict';
 import React from 'react';
 import Immutable from 'immutable';
-import Checkable from './Checkable';
+import {Input} from 'react-bootstrap';
 import { dispatcher as Dispatcher } from 'fluxify';
 import constants from './constants';
 import _ from 'lodash';
@@ -115,7 +115,7 @@ export default React.createClass({
               .set('inline', this.props.inline);
           }).toJSON();
 
-          return <Checkable {...config}/>;
+          return <Input {...config}/>;
         })}
       </div>
     );
