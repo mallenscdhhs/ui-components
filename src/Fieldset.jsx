@@ -1,64 +1,71 @@
 'use-strict';
-var React = require('react');
-var Description = require('./Description');
-var setClassNames = require('classnames');
+import React from 'react';
+import Description from './Description';
+import classnames from 'classnames';
+import renderChildren from './render-children';
 
 /**
  * Fieldset component
  * @module Fieldset
  */
-module.exports = React.createClass({
+class Fieldset extends React.Component {
 
-  displayName: 'Fieldset',
+  constructor(props) {
+    super(props);
+  }
 
-  getDefaultProps: function(){
-    return {
-      componentType: 'fieldset'
-    };
-  },
-
-  getHelpText: function(){
-    var helpText;
+  getHelpText(){
+    let helpText;
     if(this.props.helpText){
       helpText = <p key="help-block">{this.props.helpText}</p>;
     }
     return helpText;
-  },
+  }
 
-  getDescription: function(){
-    var description;
+  getDescription(){
+    let description;
     if(this.props.description){
       description = <Description key="description-text" {...this.props} />;
     }
     return description;
-  },
+  }
 
-  getLabel: function(){
-    var fieldSetLabel = null;
+  getLabel(){
+    let fieldSetLabel = null;
     if(this.props.name){
       fieldSetLabel = <legend className="field-label" key={this.props.name+"Legend"}>{this.props.legend}{this.getDescription()}</legend>;
     }
     return fieldSetLabel;
-  },
+  }
 
-  getClassNames: function(){
-    return setClassNames({
-      'hidden': !this.state.visible
+  getClassNames(){
+    return classnames({
+      'hidden': !this.props.visible
     });
-  },
+  }
 
   /**
    * Render a Fieldset component.
    * @returns {JSX}
    */
-  render: function(){
+  render(){
     return (
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className={this.getClassNames()}>
         {this.getLabel()}
         {this.getHelpText()}
-        {this.props.children}
+        {renderChildren(this.props)}
       </fieldset>
     );
   }
 
-});
+};
+
+Fieldset.propTypes = {
+  title: React.PropTypes.string
+};
+
+Fieldset.defaultProps = {
+  componentType: 'fieldset'
+};
+
+export default Fieldset;
