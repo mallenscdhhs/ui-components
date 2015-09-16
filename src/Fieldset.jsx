@@ -40,7 +40,7 @@ class Fieldset extends React.Component {
 
   getClassNames(){
     return classnames({
-      'hidden': !this.props.visible
+      hidden: !this.props.visible
     });
   }
 
