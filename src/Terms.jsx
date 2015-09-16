@@ -4,12 +4,13 @@ import setClassNames from 'classnames';
 import Field from './Field';
 import Content from './Content';
 
+/**
+ * Render a Terms component.
+ * @returns {JSX}
+ */
 class Terms extends React.Component {
-  constructor() {
+   constructor() {
     super();
-    this.state = {
-      termsRead: false
-    };
     this.handleScroll = this.handleScroll.bind(this);
     this.renderLegend = this.renderLegend.bind(this);
     this.renderCheckboxHeader = this.renderCheckboxHeader.bind(this);
@@ -17,25 +18,23 @@ class Terms extends React.Component {
 
   componentDidMount() {
     //Add Scroll listener to the DOM
-    this.refs.terms.getDOMNode().addEventListener('scroll', this.handleScroll);
+    React.findDOMNode(this.refs.terms).addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {
-    this.refs.terms.getDOMNode().removeEventListener('scroll', this.handleScroll);
+    React.findDOMNode(this.refs.terms).removeEventListener('scroll', this.handleScroll);
   }
 
-  handleScroll(event, scrollTop, offsetHeight, scrollHeight) {
-    // handleScroll args are passed in mainly for testing, these will never be used in practice
-    let $terms = this.refs.terms.getDOMNode();
-    scrollTop = scrollTop || $terms.scrollTop;
-    offsetHeight = offsetHeight || $terms.offsetHeight;
-    scrollHeight = scrollHeight || $terms.scrollHeight;
-
+  handleScroll(e) {
+    let $terms = e.target;
     // enable Agree checkbox upon scrolling to the bottom of the terms textarea
-    if (scrollTop >= scrollHeight - offsetHeight) {
-      this.setState({
-        termsRead: true
-      });
+    if ($terms.scrollTop >= $terms.scrollHeight - $terms.offsetHeight) {
+      e.component = {
+        id: this.props.id,
+        schemaUpdates: {
+          termsRead: true
+        }
+      };
     }
   }
 
@@ -70,6 +69,7 @@ class Terms extends React.Component {
           id={this.props.id}
           ref="terms"
           readOnly
+          onScroll={this.handleScroll}
           className={this.getClassNames()}
           value={this.props.value} />
         {this.renderCheckboxHeader()}
@@ -77,7 +77,7 @@ class Terms extends React.Component {
           id={`agree-to-${this.props.id}`}
           name={`agree-to-${this.props.id}`}
           type="checkbox"
-          disabled={!this.state.termsRead}
+          disabled={!this.props.termsRead}
           label={this.props.checkboxLabel}
           required={this.props.required}
           value="attested" />
@@ -94,7 +94,7 @@ Terms.propTypes = {
   checkboxLabel: React.PropTypes.string.isRequired,
   className: React.PropTypes.string,
   required: React.PropTypes.bool,
-  rules: React.PropTypes.object
+  termsRead: React.PropTypes.bool
 };
 
 Terms.defaultProps = {
@@ -105,7 +105,7 @@ Terms.defaultProps = {
   checkboxLabel: '',
   className: '',
   required: true,
-  rules: {}
+  termsRead: false
 };
 
 export default Terms;
