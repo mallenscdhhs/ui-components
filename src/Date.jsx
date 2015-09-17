@@ -8,44 +8,18 @@ import utils from './utils';
  * Date input component
  * @module Date Date component
  */
-let DateField = React.createClass({
+class DateField extends React.Component {
 
-  displayName: 'Date',
-
-  statics: {
-    getDateValue(input) {
-      let value = null;
-      if (input === 'today') {
-        value = new Date();
-      } else if (input) {
-        value = new Date(input);
-      }
-
-      return value;
+  static getDateValue(input) {
+    let value = null;
+    if (input === 'today') {
+      value = new Date();
+    } else if (input) {
+      value = new Date(input);
     }
-  },
 
-  propTypes: {
-    id: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string,
-    disabled: React.PropTypes.bool,
-    calendar: React.PropTypes.bool,
-    time: React.PropTypes.bool,
-    format: React.PropTypes.string,
-    parse: React.PropTypes.string,
-    inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
-  },
-
-  getDefaultProps() {
-    return {
-      inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby', 'placeholder', 'visible', 'disabled'],
-      calendar: true,
-      time: false,
-      format: 'MM/dd/yyyy',
-      parse: 'MM/dd/yyyy'
-    };
-  },
+    return value;
+  }
 
   /**
    * Populate the default value of the Date component with either today's date,
@@ -58,23 +32,23 @@ let DateField = React.createClass({
   componentWillMount() {
     let value = DateField.getDateValue(this.props.value);
     this.setState({value});
-  },
+  }
 
   componentDidMount() {
-    let dateString = utils.getDateString(this.state.value);
-    this.onChange({target: {value: this.state.value, dateString}});
-  },
+    let dateString = utils.getDateString(this.props.value);
+    this.onChange({target: {value: this.props.value, dateString}});
+  }
 
   componentWillReceiveProps({value}) {
     if (value) {
       let date = DateField.getDateValue(value);
       this.setState({value: date});
     }
-  },
+  }
 
   handleDateChange(date, dateString) {
     this.onChange({target: {value: date, dateString: dateString}});
-  },
+  }
 
   render() {
     let props = _.pick(this.props, this.props.inputProps);
@@ -82,10 +56,31 @@ let DateField = React.createClass({
       <DateTimePicker
         onChange={this.handleDateChange}
         onBlur={this.onBlur}
-        value={this.state.value}
+        value={this.props.value}
         {...props} />
     );
   }
-});
+};
+
+DateField.propTypes = {
+  id: React.PropTypes.string.isRequired,
+  name: React.PropTypes.string.isRequired,
+  value: React.PropTypes.string,
+  disabled: React.PropTypes.bool,
+  calendar: React.PropTypes.bool,
+  time: React.PropTypes.bool,
+  format: React.PropTypes.string,
+  parse: React.PropTypes.string,
+  inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
+};
+
+DateField.defaultProps = {
+  componentType: 'date',
+  inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby', 'placeholder', 'visible', 'disabled'],
+  calendar: true,
+  time: false,
+  format: 'MM/dd/yyyy',
+  parse: 'MM/dd/yyyy'
+};
 
 export default DateField;
