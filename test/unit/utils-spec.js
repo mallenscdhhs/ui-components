@@ -47,7 +47,7 @@ describe('utils', () => {
       type: 'input'
     };
     let dom = TestUtils.renderIntoDocument(<Field {...fieldConfig} {...utils.getComputedInputAttr('first-name')} />);
-    let wrapperDiv = dom.getDOMNode();
+    let wrapperDiv = React.findDOMNode(dom);
     let input = wrapperDiv.childNodes[1];
     let helpBlock = wrapperDiv.childNodes[2];
 
