@@ -9,14 +9,18 @@ import DateComponent from './Date';
 import File from './File';
 import masker from './input-masker';
 
+import {keyCodes} from './constants';
+let {BACKSPACE} = keyCodes;
+
 /**
  * @class Field
  */
 class Field extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   /**
@@ -57,13 +61,36 @@ class Field extends React.Component {
     };
   }
 
+  /**
+   * Returns a dictionary of event handlers allowed for this field.
+   * @returns {object}
+   */
+  getEventHandlers() {
+    let preventDefault = e => e.preventDefault();
+    let manualInputEvents = this.props.forceManualInput ? {
+      onPaste: preventDefault,
+      onCopy: preventDefault,
+      onCut: preventDefault,
+      onDrag: preventDefault,
+      onDrop: preventDefault,
+      autoComplete: 'off'
+    } : {};
+    return _.merge({
+      onChange: this.handleChange,
+      onBlur: this.handleBlur,
+      onKeyDown: this.handleKeyDown
+    }, manualInputEvents);
+  }
+
+  /**
+   * Create the Input props.
+   * @returns {object}
+   */
   getInputProps() {
     let props = _.pick(this.props, this.props.inputProps);
     let help = this.props.message || this.props.helpText;
     props.value = this.getDisplayValue();
     props.help = help;
-    props.onChange = this.handleChange;
-    props.onBlur = this.handleBlur;
     props.bsStyle = classNames({error: this.props.hasError});
     props.label = <FieldLabel {...this.props}/>;
     if (this.props.type === 'select') {
@@ -75,6 +102,10 @@ class Field extends React.Component {
     return props;
   }
 
+  /**
+   * Effectively masks the input value.
+   * @returns {string} masked value
+   */
   getDisplayValue() {
     let value = this.props.value;
     if (this.props.mask && !_.isEmpty(value)) {
@@ -82,6 +113,22 @@ class Field extends React.Component {
     }
 
     return value;
+  }
+
+  /**
+   * Ensure that value is not greater than specified max.
+   * @param {string} value
+   * @returns {string}
+   */
+  forceMaxLength(value) {
+    let max = Number(this.props.max);
+    let min = Number(this.props.min);
+    let result = value;
+    if (min && max && (min === max)) {
+      result = value.slice(0, max);
+    }
+
+    return result;
   }
 
   handleChange(e) {
@@ -92,6 +139,13 @@ class Field extends React.Component {
       schemaUpdates.checked = e.target.checked;
     }
 
+    if (this.props.mask) {
+      let newChar = value.slice(-1);
+      value = this.props.value + newChar;
+    }
+
+    value = this.forceMaxLength(value);
+
     e.component = {
       id: this.props.id,
       schemaUpdates,
@@ -100,6 +154,24 @@ class Field extends React.Component {
         value
       }
     };
+  }
+
+  /**
+   * Masked inputs will not respect the BACKSPACE key, so we must
+   * manually handle that action here.
+   */
+  handleKeyDown(e) {
+    if (this.props.mask && e.keyCode === BACKSPACE) {
+      let value = this.props.value.slice(0, -1);
+      e.preventDefault();
+      e.component = {
+        id: this.props.id,
+        modelUpdates: {
+          id: this.props.name,
+          value
+        }
+      };
+    }
   }
 
   handleBlur(e) {
@@ -113,7 +185,8 @@ class Field extends React.Component {
   render() {
     let Control = this.getInputControl()
     let props = this.getInputProps();
-    return this.props.visible? <Control {...props}/> : null;
+    let handlers = this.getEventHandlers();
+    return this.props.visible? <Control ref="field" {...props} {...handlers}/> : null;
   }
 }
 

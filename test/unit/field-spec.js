@@ -205,7 +205,7 @@ describe('Field', () => {
     expect(message.textContent).toEqual(fixture.message);
   });
 
-  it('can handle change event', () => {
+  it('can handle change event', (done) => {
     let fixture = {
       type: 'text',
       id: 'test',
@@ -214,17 +214,27 @@ describe('Field', () => {
       value: 'John'
     };
 
-    let component = TestUtils.renderIntoDocument(<Field {...fixture}/>);
+    let handler = (event) => {
+      expect(event.component).toBeDefined();
+      expect(event.component.id).toEqual(fixture.id);
+      expect(event.component.modelUpdates).toBeDefined();
+      expect(event.component.modelUpdates.value).toEqual('Johnny');
+      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
     let event = {target: {value: 'Johnny'}};
-    component.handleChange(event);
-    expect(event.component).toBeDefined();
-    expect(event.component.id).toEqual(fixture.id);
-    expect(event.component.modelUpdates).toBeDefined();
-    expect(event.component.modelUpdates.value).toEqual('Johnny');
-    expect(event.component.modelUpdates.id).toEqual(fixture.name);
+    let node = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
+    TestUtils.Simulate.change(node, event);
   });
 
-  it('can handle blur event', () => {
+  it('can handle blur event', (done) => {
     let fixture = {
       type: 'text',
       id: 'test',
@@ -233,16 +243,25 @@ describe('Field', () => {
       value: 'John'
     };
 
-    let component = TestUtils.renderIntoDocument(<Field {...fixture}/>);
-    let event = {};
-    component.handleBlur(event);
-    expect(event.component).toBeDefined();
-    expect(event.component.id).toEqual(fixture.id);
-    expect(event.component.name).toEqual(fixture.name);
-    expect(event.component.type).toEqual(fixture.type);
+    let handler = (event) => {
+      expect(event.component).toBeDefined();
+      expect(event.component.id).toEqual(fixture.id);
+      expect(event.component.name).toEqual(fixture.name);
+      expect(event.component.type).toEqual(fixture.type);
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onBlur={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
+    TestUtils.Simulate.blur(input, {});
   });
 
-  it('can handle change events for radios/checkboxes', () => {
+  it('can handle change events for radios/checkboxes', (done) => {
     let fixture = {
       type: 'checkbox',
       id: 'test',
@@ -251,15 +270,127 @@ describe('Field', () => {
       value: 'yes'
     };
 
+    let handler = (event) => {
+      expect(event.component).toBeDefined();
+      expect(event.component.id).toEqual(fixture.id);
+      expect(event.component.schemaUpdates).toBeDefined();
+      expect(event.component.schemaUpdates.checked).toBe(true);
+      expect(event.component.modelUpdates).toBeDefined();
+      expect(event.component.modelUpdates.value).toEqual('yes');
+      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
+    TestUtils.Simulate.change(input, {target: {checked: true}});
+
+  });
+
+  it('can mask input', (done) => {
+    let fixture = {
+      id: 'test',
+      name: 'foo',
+      type: 'text',
+      value: '123456789',
+      mask: 'phone'
+    };
+
+    let handler = (event) => {
+      expect(event.component.modelUpdates.value).toBe('1234567890');
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
+    let dom = React.findDOMNode(input);
+    expect(dom.value).toBe('123-456-789');
+    expect(component.props.children.props.value).toBe('123456789');
+
+    TestUtils.Simulate.change(dom, {target: {value: '123-456-7890'}});
+  });
+
+  it('can handle backspaces in masked inputs', () => {
+    let fixture = {
+      id: 'test',
+      name: 'foo',
+      type: 'text',
+      value: '1234567890',
+      mask: 'phone'
+    };
+
+    let handler = (event) => {
+      expect(event.component.modelUpdates.value).toBe('123456789');
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onKeyUp={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
+    let dom = React.findDOMNode(input);
+    expect(dom.value).toBe('123-456-7890');
+    expect(component.props.children.props.value).toBe('1234567890');
+
+    TestUtils.Simulate.keyDown(dom, {
+      keyCode: 8,
+      preventDefault() {}
+    });
+  });
+
+  it('can force max length', (done) => {
+    let fixture = {
+      id: 'test',
+      name: 'foo',
+      type: 'text',
+      value: '1234567890',
+      min: 10,
+      max: 10
+    };
+
+    let handler = (event) => {
+      expect(event.component.modelUpdates.value).toBe('1234567890');
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
+    let dom = React.findDOMNode(input);
+    expect(dom.value).toBe('1234567890');
+    expect(component.props.children.props.value).toBe('1234567890');
+
+    TestUtils.Simulate.change(dom, {target: {value: '12345678901'}});
+  });
+
+  it('can force manual input', () => {
+    let fixture = {
+      id: 'test',
+      name: 'foo',
+      type: 'text',
+      forceManualInput: true
+    };
+
     let component = TestUtils.renderIntoDocument(<Field {...fixture}/>);
-    let event = {target: {checked: true}};
-    component.handleChange(event);
-    expect(event.component).toBeDefined();
-    expect(event.component.id).toEqual(fixture.id);
-    expect(event.component.schemaUpdates).toBeDefined();
-    expect(event.component.schemaUpdates.checked).toBe(true);
-    expect(event.component.modelUpdates).toBeDefined();
-    expect(event.component.modelUpdates.value).toEqual('yes');
-    expect(event.component.modelUpdates.id).toEqual(fixture.name);
+    let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
+    let dom = React.findDOMNode(input);
+    expect(input.props.autoComplete).toBe('off');
   });
 });
