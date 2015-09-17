@@ -6,7 +6,7 @@ import utils from './utils';
 
 /**
  * Date input component
- * @module Date Date component
+ * @module DateField Date component
  */
 class DateField extends React.Component {
 
@@ -17,33 +17,12 @@ class DateField extends React.Component {
     } else if (input) {
       value = new Date(input);
     }
-
     return value;
-  }
-
-  /**
-   * Populate the default value of the Date component with either today's date,
-   * a specific date, or render it empty.
-   * @param {string} today - results in populating with today's date
-   * @param {string} format - if this.props.value is supplied, and not 'today',
-   * you can provide any other date in the format corresponding to the pattern
-   * passed into this.props.format
-   */
-  componentWillMount() {
-    let value = DateField.getDateValue(this.props.value);
-    this.setState({value});
   }
 
   componentDidMount() {
     let dateString = utils.getDateString(this.props.value);
     this.onChange({target: {value: this.props.value, dateString}});
-  }
-
-  componentWillReceiveProps({value}) {
-    if (value) {
-      let date = DateField.getDateValue(value);
-      this.setState({value: date});
-    }
   }
 
   handleDateChange(date, dateString) {
