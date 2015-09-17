@@ -87,7 +87,13 @@ class Grid extends React.Component {
 };
 
 Grid.propTypes = {
-  rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired
+  rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      md: React.PropTypes.string,
+      sm: React.PropTypes.string,
+      xs: React.PropTypes.string
+    })
+  )).isRequired
 };
 
 Grid.defaultProps = {
