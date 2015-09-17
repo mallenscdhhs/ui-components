@@ -16,15 +16,6 @@ class Terms extends React.Component {
     this.renderCheckboxHeader = this.renderCheckboxHeader.bind(this);
   }
 
-  componentDidMount() {
-    //Add Scroll listener to the DOM
-    React.findDOMNode(this.refs.terms).addEventListener('scroll', this.handleScroll);
-  }
-
-  componentWillUnmount() {
-    React.findDOMNode(this.refs.terms).removeEventListener('scroll', this.handleScroll);
-  }
-
   handleScroll(e) {
     let $terms = e.target;
     // enable Agree checkbox upon scrolling to the bottom of the terms textarea
