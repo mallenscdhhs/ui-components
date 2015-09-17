@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { Row as GridRow, Col as GridColumn } from 'react-bootstrap';
-import update from 'react/lib/update';
+import Immutable from 'immutable';
 
 /**
  * Takes a list of components and a list of grid row configs and produces
@@ -43,11 +43,7 @@ class Grid extends React.Component {
     let fullRows = _.map(rows, function(row, i){
       return _.map(row, function(col, n){
         index = index + 1;
-        return update(col, {
-          children: {
-            $set: _.at(components, index)
-          }
-        });
+        return Immutable.fromJS(col).set('children', _.at(components, index)).toJS();
       });
     });
 
