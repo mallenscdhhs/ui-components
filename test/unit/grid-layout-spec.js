@@ -20,7 +20,7 @@ describe('Grid', function(){
       <Grid {...config}>
         <div>one</div>
         <div>two</div>
-				<div>three</div>
+        <div>three</div>
         <div>four</div>
       </Grid>
     );
