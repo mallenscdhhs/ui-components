@@ -134,6 +134,7 @@ class Field extends React.Component {
   handleChange(e) {
     let value = e.target.value;
     let schemaUpdates = {};
+
     if (this.isRadioOrCheckbox()) {
       value = e.target.checked? this.props.value : null;
       schemaUpdates.checked = e.target.checked;
@@ -204,7 +205,7 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-  inputProps: ['id', 'name', 'type', 'disabled', 'checked', 'multiple'],
+  inputProps: ['id', 'name', 'type', 'disabled', 'checked', 'multiple', 'options'],
   componentType: 'field',
   initialState: 'visible',
   disabled: false,
