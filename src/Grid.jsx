@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { Row as GridRow, Col as GridColumn } from 'react-bootstrap';
-import update from 'react/lib/update';
+import Immutable from 'immutable';
 
 /**
  * Takes a list of components and a list of grid row configs and produces
@@ -40,20 +40,16 @@ class Grid extends React.Component {
   static distributeComponents(rows, components){
     // Fill available rows/columns with components
     let index = -1;
-    let fullRows = _.map(rows, function(row, i){
-      return _.map(row, function(col, n){
+    let fullRows = _.map(rows, (row, i) => {
+      return _.map(row, (col, n) => {
         index = index + 1;
-        return update(col, {
-          children: {
-            $set: _.at(components, index)
-          }
-        });
+        return Immutable.fromJS(col).set('children', _.at(components, index)).toJS();
       });
     });
 
     let extraRows = [];
     if ( index < components.length-1) {
-      extraRows = _.map(components.slice(index+1), function(component){
+      extraRows = _.map(components.slice(index+1), (component) => {
         return [{
           md: '12',
           children: [component]
@@ -69,10 +65,10 @@ class Grid extends React.Component {
       let rows = Grid.distributeComponents(this.props.rows, this.props.children);
       return (
         <div className="grid-layout">
-        {_.map(rows, function (row, i) {
+        {_.map(rows, (row, i) => {
           return (
             <GridRow key={`row-${i}`}>
-              {_.map(row, function (col, n) {
+              {_.map(row, (col, n) => {
                 return <GridColumn key={`col-${n}`} {...col}/>;
               })}
             </GridRow>
@@ -87,7 +83,13 @@ class Grid extends React.Component {
 };
 
 Grid.propTypes = {
-  rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(React.PropTypes.object)).isRequired
+  rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      md: React.PropTypes.string,
+      sm: React.PropTypes.string,
+      xs: React.PropTypes.string
+    })
+  )).isRequired
 };
 
 Grid.defaultProps = {
