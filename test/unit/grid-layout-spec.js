@@ -2,6 +2,7 @@ import React from 'react';
 import elements from '../../src/index';
 import Factory from '../../src/Factory';
 import TestUtils from 'react/lib/ReactTestUtils';
+import Immutable from 'immutable';
 import update from 'react/lib/update';
 
 let multirowFixture = require('../fixtures/grid-multi-row.json');
@@ -12,23 +13,40 @@ describe('Grid', function(){
 
 	let Grid = elements.grid;
 
-	it('can render a Bootstrap 3 grid', function(){
-		let component = Factory.build(elements, twoColFixture, twoColFixture)[0];
-		let grid = TestUtils.renderIntoDocument(component);
-		let row = grid.getDOMNode().childNodes[0];
-		let cols = row.childNodes;
-		expect(grid.getDOMNode().className).toEqual('grid-layout');
-		expect(cols.length).toEqual(2);
-		expect(cols[0].className).toEqual('col-md-6 col-sm-4');
-		expect(cols[1].className).toEqual('col-md-12 col-sm-12 col-xs-12');
-		expect(cols[0].childNodes[0].textContent).toEqual('Test one');
-		expect(cols[1].childNodes[0].textContent).toEqual('Test two');
-	});
-
-	it('can render multiple rows', function(){
-		let component = Factory.build(elements, multirowFixture, multirowFixture)[0];
-		let grid = TestUtils.renderIntoDocument(component);
-		expect(grid.getDOMNode().childNodes.length).toEqual(3);
+	it('can render a Bootstrap 3 grid, with multiple rows and columns', function(){
+		let config = Immutable.fromJS(multirowFixture.config).toJS();
+		let renderer = TestUtils.createRenderer();
+		renderer.render(
+			<Grid {...config}>
+				<div>one</div>
+				<div>two</div>
+				<div>three</div>
+				<div>four</div>
+			</Grid>
+		);
+		let output = renderer.getRenderOutput();
+		let rowOne = output.props.children[0];
+		let rowTwo = output.props.children[1];
+		let first = rowOne.props.children[0].props;
+		let second = rowOne.props.children[1].props;
+		let third = rowTwo.props.children[0].props;
+		let fourth = rowTwo.props.children[1].props;
+		expect(first.md).toBe('6');
+		expect(first.sm).toBe('4');
+		expect(first.xs).toBe(undefined);
+		expect(first.children[0].props.children).toBe('one');
+		expect(second.md).toBe('6');
+		expect(second.sm).toBe('12');
+		expect(second.xs).toBe('12');
+		expect(second.children[0].props.children).toBe('two');
+		expect(third.md).toBe('4');
+		expect(third.sm).toBe(undefined);
+		expect(third.xs).toBe(undefined);
+		expect(third.children[0].props.children).toBe('three');
+		expect(fourth.md).toBe('4');
+		expect(fourth.sm).toBe(undefined);
+		expect(fourth.xs).toBe(undefined);
+		expect(fourth.children[0].props.children).toBe('four');
 	});
 
 	describe('#add', function(){
