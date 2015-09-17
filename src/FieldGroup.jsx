@@ -36,9 +36,10 @@ class FieldGroup extends React.Component {
 
     if (this.props.type === 'checkbox') {
       if (!e.target.checked) {
-        value = _.filter(this.props.value, {name: e.target.name});
+        value = _.filter(this.props.value, v => v !== value);
       } else {
-        value = this.props.value.concat([value]);
+        let current = this.props.value || [];
+        value = current.concat([value]);
       }
     } else {
       value = e.target.checked? value : null;

@@ -117,6 +117,44 @@ describe('FieldGroup', () => {
     });
   });
 
+  it('can handle unchecking a checkbox', (done) => {
+    let fixture = {
+      type: 'checkbox',
+      id: 'test',
+      name: 'testbox',
+      label: 'Do you compute?',
+      value: ['bar', 'foo', 'baz'],
+      options
+    };
+
+    let handler = (event) => {
+      expect(event.target.value).toBe('baz');
+      expect(event.component).toBeDefined();
+      expect(event.component.id).toEqual(fixture.id);
+      expect(event.component.schemaUpdates).toBeDefined();
+      expect(event.component.schemaUpdates.checked).toBeUndefined();
+      expect(event.component.modelUpdates).toBeDefined();
+      expect(event.component.modelUpdates.value.join('-')).toEqual('bar-foo');
+      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(component, 'input');
+    let input = inputs[2];
+    TestUtils.Simulate.change(input, {
+      target: {
+        value: React.findDOMNode(input).value,
+        checked: false
+      }
+    });
+  });
+
   describe('#isOptionChecked', () => {
     it('can determine checked state', () => {
       let result = FieldGroup.isOptionChecked({value: ['bar', 'baz']}, 'bar');
