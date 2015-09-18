@@ -22,10 +22,9 @@ class Factory extends React.Component {
 
     let tree = [];
     let list = schema.components || {};
-    let element, elementFactory, props, children;
+    let element, elementFactory, props;
 
     while(head) {
-      children = null;
       element = elements[head.type];
       elementFactory = React.createFactory(element);
       props = head.config;
