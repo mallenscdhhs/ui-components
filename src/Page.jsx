@@ -1,6 +1,6 @@
 'use-strict';
-var React = require('react');
-var Content = require('./Content');
+import React from 'react';
+import Content from './Content';
 import renderChildren from './render-children';
 
 class Page extends React.Component {
