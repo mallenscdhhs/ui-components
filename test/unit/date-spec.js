@@ -10,8 +10,7 @@ describe('Date input', function() {
     renderer.render(
       <Field {...fixture}/>
     );
-    let output = renderer.getRenderOutput();
-    let dateComponent = output;
+    let dateComponent = renderer.getRenderOutput();
     expect(dateComponent.props.type).toBe(fixture.type);
     expect(dateComponent.props.name).toBe(fixture.name);
     expect(dateComponent.props.value).toBe(fixture.value);
