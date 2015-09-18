@@ -1,36 +1,35 @@
 'use-strict';
 var React = require('react');
 var Content = require('./Content');
+import renderChildren from './render-children';
 
-module.exports = React.createClass({
-
-  displayName: 'Page',
-
-  /**
-   * Set default props.
-   * @returns {object}
-   */
-  getDefaultProps: function(){
-    return {
-      content: '',
-      title: '',
-      componentType: 'page'
-    };
-  },
+class Page extends React.Component {
 
   /**
    * Render a Page component to the screen.
    * @returns {JSX}
    */
-  render: function(){
+  render(){
     return (
       <article>
         <header>
           <h2>{this.props.title}</h2>
         </header>
         <Content key="content" ref="content" content={this.props.content} />
-        {this.props.children}
+        {renderChildren(this.props)}
       </article>
     );
   }
-});
+};
+
+Page.propTypes = {
+  title: React.PropTypes.string
+};
+
+Page.defaultProps = {
+  content: '',
+  title: '',
+  componentType: 'page'
+};
+
+export default Page;
