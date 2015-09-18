@@ -10,6 +10,11 @@ import utils from './utils';
  */
 class DateField extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.handleDateChange = this.handleDateChange.bind(this);
+  }
+
   static getDateValue(input) {
     let value = null;
     if (input === 'today') {
@@ -20,23 +25,23 @@ class DateField extends React.Component {
     return value;
   }
 
-  componentDidMount() {
-    let dateString = utils.getDateString(this.props.value);
-    this.onChange({target: {value: this.props.value, dateString}});
-  }
-
-  handleDateChange(date, dateString) {
-    this.onChange({target: {value: date, dateString: dateString}});
+  handleDateChange(e) {
+    e.component = {
+      id: this.props.id,
+      modelUpdates: {
+        id: this.props.name,
+        value: e.target.value
+      }
+    };
   }
 
   render() {
     let props = _.pick(this.props, this.props.inputProps);
     return (
-      <DateTimePicker
-        onChange={this.handleDateChange}
-        onBlur={this.onBlur}
-        value={this.props.value}
-        {...props} />
+      <div onChange={this.handleDateChange}>
+        <DateTimePicker {...props}
+          value={DateField.getDateValue(this.props.value)} />
+      </div>
     );
   }
 };
