@@ -26,7 +26,6 @@ function testNonRenderedOutputFromElement(el){
   expect(divs.length).toEqual(1);
 }
 
-/*
 describe('Factory', function(){
 
   describe('#build', function(){
@@ -37,10 +36,6 @@ describe('Factory', function(){
     it('will not render if schema is not provided', function(){
       let result = Factory.build.bind(null, elements, null, fixture);
       expect(result).toThrowError(TypeError, 'You must provide a root schema to Factory#build.');
-    });
-    it('will not render if head is not provided', function(){
-      let result = Factory.build.bind(null, elements, fixture, null);
-      expect(result).toThrowError(TypeError, 'You must provide a head config to Factory#build.');
     });
     it('will not render if elements is not provided', function(){
       let result = Factory.build.bind(null, null, fixture, fixture);
@@ -65,4 +60,3 @@ describe('Factory', function(){
   })
 
 });
-*/
