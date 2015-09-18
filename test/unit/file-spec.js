@@ -32,7 +32,7 @@ describe('File', () => {
       expect(previewImg.src).toEqual(fixture.binary);
   });
 
-  it('can configure maximum number of files to be uploaded', () => {
+  xit('can configure maximum number of files to be uploaded', () => {
       expect(wrapper.childNodes[1].id).toEqual('file-test');
       // set this.props.limit to 1 (file uploaded earlier will bring us up to max)
       comp.props.limit = 1;

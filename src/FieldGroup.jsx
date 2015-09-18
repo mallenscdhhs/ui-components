@@ -1,124 +1,96 @@
 'use-strict';
 import React from 'react';
 import Immutable from 'immutable';
-import Checkable from './Checkable';
-import { dispatcher as Dispatcher } from 'fluxify';
-import constants from './constants';
+import {Input} from 'react-bootstrap';
+import FieldLabel from './FieldLabel';
 import _ from 'lodash';
-
-let {
-  FIELD_VALUE_CHANGE,
-  FIELD_GROUP_VALUE_CHANGE
-} = constants.actions;
-
-/**
- * Determines if the passed-in value matches the value of
- * the FieldGroup(can be an Array or String).
- * @param {object} props
- * @param {string} value
- * @returns {boolean}
- */
-let isOptionChecked = function(props, value) {
-  if (_.isArray(props.value)) {
-    return _.contains(props.value, value);
-  } else {
-    return value === props.value;
-  }
-};
 
 /**
  * Represents a group of Checkable instances. Will manage value changes and blurs.
  * @class FieldGroup
  */
-export default React.createClass({
-
-  displayName: 'FieldGroup',
-
-  statics: {
-    isOptionChecked
-  },
-
-  propTypes: {
-    id: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    type: React.PropTypes.string.isRequired,
-    value: React.PropTypes.any,
-    required: React.PropTypes.bool,
-    persistInSession: React.PropTypes.bool
-  },
-
-  getDefaultProps() {
-    return {
-      fieldValueChangeAction: FIELD_VALUE_CHANGE
-    };
-  },
-
-  componentWillMount() {
-    let value = this.props.value || (this.props.type === 'checkbox' ? [] : '');
-    this.setState({value});
-  },
-
-  componentDidMount() {
-    Dispatcher.register(`${this.props.id}-FIELD-GROUP-CHANGE`, (action, data) => {
-      if (action === FIELD_GROUP_VALUE_CHANGE &&
-        data.name === this.props.name &&
-        data.id.lastIndexOf(this.props.id) >= 0) {
-
-        let value = data.value;
-        if (this.props.type === 'checkbox') {
-          if (data.value === null) {
-            value = _.filter(this.state.value, {name: data.name});
-          } else {
-            value = this.state.value.concat([data.value]);
-          }
-        }
-
-        this.setState({value});
-
-        // added individualValue to represent the latest individual value changed in a field-group
-        Dispatcher.dispatch(
-          this.props.fieldValueChangeAction,
-          _.merge({individualValue: data.value, value}, this.props)
-        );
-      }
-    });
-  },
-
+class FieldGroup extends React.Component {
   /**
-   * When re-rendering a view with new values, allow the rendered field to
-   * update its internal value with the new props.
-   * @param {object} nextProps - new prop values
+   * Determines if the passed-in value matches the value of
+   * the FieldGroup(can be an Array or String).
+   * @param {object} props
+   * @param {string} value
+   * @returns {boolean}
    */
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.value) {
-      this.setState({value: nextProps.value});
+  static isOptionChecked(props, value) {
+    if (_.isArray(props.value)) {
+      return _.contains(props.value, value);
+    } else {
+      return value === props.value;
     }
-  },
+  }
 
-  componentWillUnmount() {
-    Dispatcher.unregister(`${this.props.id}-FIELD-GROUP-CHANGE`);
-  },
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    let value = e.target.value;
+    let schemaUpdates = {};
+
+    if (this.props.type === 'checkbox') {
+      if (!e.target.checked) {
+        value = _.filter(this.props.value, v => v !== value);
+      } else {
+        let current = this.props.value || [];
+        value = current.concat([value]);
+      }
+    } else {
+      value = e.target.checked? value : null;
+      schemaUpdates.checked = e.target.checked;
+    }
+
+    e.component = {
+      id: this.props.id,
+      schemaUpdates,
+      modelUpdates: {
+        id: this.props.name,
+        value
+      }
+    };
+  }
 
   render() {
     return (
-      <div className="field-group" onBlur={this.onBlur}>
-        {_.map(this.state.options, option => {
-          let id = `${this.props.id}-option-${option.value}`;
-          let config = Immutable.fromJS(option).withMutations(data => {
-            data
-              .set('id', id)
-              .set('name', this.props.name)
-              .set('type', this.props.type)
-              .set('checked', isOptionChecked(this.state, option.value))
-              .set('isFieldGroup', true)
-              .set('key', id)
-              .set('inline', this.props.inline);
-          }).toJSON();
+      <fieldset onChange={this.handleChange} onBlur={this.props.onBlur}>
+        <legend>
+          <FieldLabel {...this.props}/>
+        </legend>
+        <div className="field-group">
+          {_.map(this.props.options, (option) => {
+            let id = `${this.props.id}-option-${option.value}`;
+            let config = Immutable.fromJS(option).withMutations(data => {
+              data
+                .set('id', id)
+                .set('name', this.props.name)
+                .set('type', this.props.type)
+                .set('checked', FieldGroup.isOptionChecked(this.props, option.value))
+                .set('isFieldGroup', true)
+                .set('key', id)
+                .set('inline', this.props.inline);
+            }).toJSON();
 
-          return <Checkable {...config}/>;
-        })}
-      </div>
+            return <Input {...config}/>;
+          })}
+        </div>
+      </fieldset>
     );
   }
+}
 
-});
+FieldGroup.propTypes = {
+  id: React.PropTypes.string.isRequired,
+  name: React.PropTypes.string.isRequired,
+  type: React.PropTypes.string.isRequired,
+  value: React.PropTypes.any,
+  required: React.PropTypes.bool,
+  persistInSession: React.PropTypes.bool
+};
+
+export default FieldGroup;
