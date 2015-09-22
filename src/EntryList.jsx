@@ -21,17 +21,6 @@ class EntryList extends React.Component {
     this.updateEntries = this.updateEntries.bind(this);
   }
 
-  transformModelValue(property, model, value) {
-    let _model = _.slice(model[this.props.name], 0);
-    let index = this.props.entryIndex;
-    let entry = _model[index];
-    if (entry) {
-      entry[property] = value;
-    }
-    _model.splice(index, 1, entry);
-    return _model;
-  }
-
   updateEntries(property, entries, value) {
     let _entries = _.slice(entries, 0);
     let index = this.props.entryIndex;
