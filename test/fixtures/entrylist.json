@@ -1,0 +1,54 @@
+{
+  "type": "entrylist",
+  "child": "elForm",
+  "config": {
+    "id": "sampleEntryList",
+    "name": "names",
+    "emptyText": "Please add your name.",
+    "addNewButtonText": "Add Name",
+    "columns": [
+      {"header": "First", "dataKey": "firstName"},
+      {"header": "Middle", "dataKey": "middleName"},
+      {"header": "Last", "dataKey": "lastName"}
+    ]
+  },
+  "components": {
+    "elForm": {
+      "type": "form",
+      "child": "elField1",
+      "config": {
+        "id": "elForm"
+      }
+    },
+    "elField1": {
+      "type": "field",
+      "next": "elField2",
+      "config": {
+        "id": "elField1",
+        "name": "firstName",
+        "type": "text",
+        "label": "First name"
+      }
+    },
+    "elField2": {
+      "type": "field",
+      "next": "elField3",
+      "config": {
+        "id": "elField2",
+        "name": "middleName",
+        "mask": true,
+        "type": "text",
+        "label": "Middle"
+      }
+    },
+    "elField3": {
+      "type": "field",
+      "config": {
+        "id": "elField3",
+        "name": "lastName",
+        "type": "text",
+        "label": "Last name"
+      }
+    }
+  }
+}
