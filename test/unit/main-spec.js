@@ -1,12 +1,12 @@
-var React = require('react');
-var Components = require('../../src/main');
-var TestUtils = require('react/lib/ReactTestUtils');
+import React from 'react';
+import Components from '../../src/main';
+import TestUtils from 'react/lib/ReactTestUtils';
 
-describe('main component', function(){
-  it('exposes the list of elements', function(){
+describe('main component', () => {
+  it('exposes the list of elements', () => {
     expect(Components.elements).toBeDefined();
   });
-  it('exposes the constants', function(){
+  it('exposes the constants', () => {
     expect(Components.constants).toBeDefined();
   });
 });

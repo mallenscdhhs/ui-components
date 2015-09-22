@@ -2,7 +2,7 @@
 import elements from './index';
 import Factory from './Factory';
 import _ from 'lodash';
-import constants from './constants';
+import {KEY_CODES} from './constants';
 
 
 /**
@@ -15,11 +15,11 @@ export default {
   /**
    * @type {object}
    */
-  elements: elements,
+  elements,
   /**
    * @type {object}
    */
-  constants: constants,
+  constants: KEY_CODES,
   /**
    * DEPRECATED, use Factory.build instead.
    */
