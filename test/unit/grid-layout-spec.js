@@ -1,6 +1,7 @@
 import React from 'react';
 import elements from '../../src/index';
 import Factory from '../../src/Factory';
+import Field from '../../src/Field';
 import TestUtils from 'react/lib/ReactTestUtils';
 import Immutable from 'immutable';
 import update from 'react/lib/update';
@@ -14,14 +15,14 @@ describe('Grid', function(){
   let Grid = elements.grid;
 
   it('can render a Bootstrap 3 grid, with multiple rows and columns', function(){
-    let config = Immutable.fromJS(multirowFixture.config).toJS();
+    let config = Immutable.fromJS(multirowFixture.config).set('schema', multirowFixture).toJS();
     let renderer = TestUtils.createRenderer();
     renderer.render(
       <Grid {...config}>
-        <div>one</div>
-        <div>two</div>
-        <div>three</div>
-        <div>four</div>
+        <Field {...config.schema.components.field_1.config}>one</Field>
+        <Field {...config.schema.components.field_2.config}>two</Field>
+        <Field {...config.schema.components.field_3.config}>three</Field>
+        <Field {...config.schema.components.field_4.config}>four</Field>
       </Grid>
     );
     let output = renderer.getRenderOutput();

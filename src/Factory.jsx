@@ -1,6 +1,7 @@
 'use-strict';
 import React from 'react';
 import _ from 'lodash';
+import Immutable from 'immutable';
 
 /**
  * An element/static method for creating a DOM structure from JSON.
@@ -29,6 +30,7 @@ class Factory extends React.Component {
       elementFactory = React.createFactory(element);
       props = head.config;
       props.key = _.uniqueId(head.type+'-');
+      props.schema = Immutable.fromJS(schema).toJS();
       tree.push(elementFactory(props, Factory.build(elements, schema, list[head.child])));
       head = list[head.next];
     }

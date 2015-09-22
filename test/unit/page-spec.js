@@ -21,8 +21,8 @@ describe('Page component', function() {
     let title = output.props.children[0];
     let content = output.props.children[1];
     let fields = output.props.children[2];
-    let fieldOne = fields['.0'];
-    let fieldTwo = fields['.1'];
+    let fieldOne = fields['.$field-7'];
+    let fieldTwo = fields['.$field-8'];
     expect(title.type).toBe('header');
     expect(title.props.children.props.children).toBe(layoutFixture.config.title);
     expect(content.props.content).toBe(layoutFixture.config.content);
