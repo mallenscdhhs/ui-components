@@ -48,13 +48,24 @@ describe('EntryList', () => {
       expect(saveBtn).toBeDefined();
       expect(cancelBtn).toBeDefined();
       expect(e.component.schemaUpdates.showForm).toEqual(true);
-      expect(comp.state.previousValue).toEqual([{firstName: 'John', middleName: 'Sonnyboy', lastName: 'Doe'}]);
+      expect(comp.state.previousValue).toEqual([{firstName: 'John', middleName: '', lastName: ''}]);
     }, 300);
 
     // change firstName value
     comp.setState({previousValue: lastSavedEntry});
-    e = {target: {value: [{firstName: 'Joe', middleName: 'Sonnyboy', lastName: 'Doe'}]}};
-    e.component = {modelUpdates: {}};
+
+    e = {
+      target: {
+        name: 'firstName',
+        value: [{firstName: 'Joe', middleName: '', lastName: ''}]
+      },
+      component: {
+        modelUpdates: {
+          id: 'firstName',
+          value: 'Joe'
+        }
+      }
+    };
     comp.handleChange(e);
     applyUpdates(e);
     expect(e.component.modelUpdates.value).toEqual(e.target.value);
@@ -92,8 +103,18 @@ describe('EntryList', () => {
     }, 300);
 
     // click Add button to submit new entry
-    e = {target: {value: [{firstName: 'John', middleName: 'Sonnyboy', lastName: 'Doe'}]}};
-    e.component = {modelUpdates: {}};
+    e = {
+      target: {
+        name: 'firstName',
+        value: [{firstName: 'John', middleName: '', lastName: ''}]
+      },
+      component: {
+        modelUpdates: {
+          id: 'firstName',
+          value: 'John'
+        }
+      }
+    };
     comp.handleChange(e);
     applyUpdates(e);
     expect(e.component.modelUpdates.id).toEqual(config.name);
@@ -104,7 +125,7 @@ describe('EntryList', () => {
   it('can facilitate editing of entries', () => {
     // click edit button to edit entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
-    let lastSavedEntry = [{firstName: 'John', middleName: 'Sonnyboy', lastName: 'Doe'}];
+    let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
     runEditFlow(e, lastSavedEntry);
 
     // clicking save button, hides form and clears entryIdx
@@ -118,7 +139,7 @@ describe('EntryList', () => {
   it('can cancel entry while editing', () => {
     // click edit button to edit entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
-    let lastSavedEntry = [{firstName: 'John', middleName: 'Sonnyboy', lastName: 'Doe'}];
+    let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
     runEditFlow(e, lastSavedEntry);
 
     // clicking cancel button, reverts to last saved entry, hides form, and clears entryIdx

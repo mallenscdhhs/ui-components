@@ -18,6 +18,7 @@ class EntryList extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.showForm = this.showForm.bind(this);
     this.saveEntry = this.saveEntry.bind(this);
+    this.updateEntries = this.updateEntries.bind(this);
   }
 
   transformModelValue(property, model, value) {
@@ -29,6 +30,17 @@ class EntryList extends React.Component {
     }
     _model.splice(index, 1, entry);
     return _model;
+  }
+
+  updateEntries(property, entries, value) {
+    let _entries = _.slice(entries, 0);
+    let index = this.props.entryIndex;
+    let entry = _entries[index];
+    if (entry) {
+      entry[property] = value;
+    }
+    _entries.splice(index, 1, entry);
+    return _entries;
   }
 
   handleEdit(e) {
@@ -61,16 +73,12 @@ class EntryList extends React.Component {
   }
 
   handleChange(e) {
-    let {transforms = []} = e.component.modelUpdates;
-    let name = e.target.name;
-    let transFn = this.transformModelValue.bind(this, name);
-    transforms.push(transFn);
+    let updatedEntries = this.updateEntries(e.target.name, this.props.value, e.component.modelUpdates.value);
     e.component = {
       id: this.props.id,
       modelUpdates: {
         id: this.props.name,
-        value: e.target.value,
-        transforms
+        value: updatedEntries
       }
     };
   }
