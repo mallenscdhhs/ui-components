@@ -15,7 +15,7 @@ class Page extends React.Component {
         <header>
           <h2>{this.props.title}</h2>
         </header>
-        <Content key="content" ref="content" content={this.props.content} />
+        <Content visible={true} key="content" ref="content" content={this.props.content} />
         {renderChildren(this.props)}
       </article>
     );
