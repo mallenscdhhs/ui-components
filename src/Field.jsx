@@ -8,9 +8,9 @@ import FieldGroup from './FieldGroup';
 import DateComponent from './Date';
 import File from './File';
 import masker from './input-masker';
+import {KEY_CODES} from './constants';
 
-import {keyCodes} from './constants';
-let {BACKSPACE} = keyCodes;
+let {BACKSPACE} = KEY_CODES;
 
 /**
  * @class Field
