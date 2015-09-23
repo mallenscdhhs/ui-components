@@ -6,7 +6,4 @@ describe('main component', () => {
   it('exposes the list of elements', () => {
     expect(Components.elements).toBeDefined();
   });
-  it('exposes the constants', () => {
-    expect(Components.constants).toBeDefined();
-  });
 });
