@@ -3,6 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import { Row as GridRow, Col as GridColumn } from 'react-bootstrap';
 import Immutable from 'immutable';
+import renderChildren from './render-children';
 
 /**
  * Takes a list of components and a list of grid row configs and produces
@@ -16,9 +17,9 @@ class Grid extends React.Component {
    * @param {number} y
    * @returns {number}
    */
-  static add(x, y){
+  static add(x, y) {
     return x + y;
-  };
+  }
 
   /**
    * If the current row number is greater than 0 we need to add
@@ -26,9 +27,9 @@ class Grid extends React.Component {
    * @param {number} n - current row number
    * @returns {number};
    */
-  static getRowIndex(n){
-    return n > 0? add(1, n) : n;
-  };
+  static getRowIndex(n) {
+    return (n > 0) ? Grid.add(1, n) : n;
+  }
 
   /**
    * Adds the children components to each column in sequence, distributing
@@ -57,7 +58,7 @@ class Grid extends React.Component {
       });
     }
     return fullRows.concat(extraRows);
-  };
+  }
 
   render(){
     let numChildren = this.props.children ? this.props.children.length : 0;
@@ -69,7 +70,13 @@ class Grid extends React.Component {
           return (
             <GridRow key={`row-${i}`}>
               {_.map(row, (col, n) => {
-                return <GridColumn key={`col-${n}`} {...col}/>;
+                let columnProps = _.omit(col, 'children');
+                col.schema = this.props.schema;
+                return (
+                  <GridColumn key={`col-${n}`} {...columnProps}>
+                    {renderChildren(col)}
+                  </GridColumn>
+                );
               })}
             </GridRow>
           );
@@ -80,7 +87,7 @@ class Grid extends React.Component {
       return (<div className="grid-layout"></div>);
     }
   }
-};
+}
 
 Grid.propTypes = {
   rows: React.PropTypes.arrayOf(React.PropTypes.arrayOf(
