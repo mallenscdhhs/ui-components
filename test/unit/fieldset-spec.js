@@ -20,7 +20,7 @@ describe('Fieldset component', function() {
         expect(output.type).toBe('fieldset');
         expect(output.props.id).toBe(fixture.config.id);
         let legend = output.props.children[0];
-        expect(legend.props.children[0]).toBe(fixture.config.legend);
+        expect(legend.props.children.props.legend).toBe(fixture.config.legend);
         let helpText = output.props.children[1];
         expect(helpText.props.children).toBe(fixture.config.helpText);
         let fields = output.props.children[2];
