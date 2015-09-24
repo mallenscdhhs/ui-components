@@ -3,8 +3,10 @@ import React from 'react';
 import Factory from '../../src/Factory';
 import elements from '../../src/index';
 import TestUtils from 'react/lib/ReactTestUtils';
+import Immutable from 'immutable';
 
-let fixture = require('../fixtures/page-with-layout.json');
+let config = require('../fixtures/page-with-layout.json');
+let fixture = Immutable.fromJS(config).setIn(['config','schema'], config).toJS();
 
 function testRenderedOutput(result){
   let dom = TestUtils.renderIntoDocument(result);
