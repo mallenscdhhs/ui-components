@@ -174,10 +174,10 @@ class EntryList extends React.Component {
                     return <td key={`${col.dataKey}-${i}`}>{data}</td>;
                   })}
                   <td key={`edit-entry-${i}`} className="entrylist-edit">
-                    <a onClick={this.handleEdit} data-index={i} href="#">edit</a>
+                    <a onClick={this.handleEdit} data-index={i} href="javascript:void(0);">edit</a>
                   </td>
                   <td key={`remove-entry-${i}`} className="entrylist-remove">
-                    <a onClick={this.handleRemove} data-index={i} href="#">remove</a>
+                    <a onClick={this.handleRemove} data-index={i} href="javascript:void(0);">remove</a>
                   </td>
                 </tr>
               );
