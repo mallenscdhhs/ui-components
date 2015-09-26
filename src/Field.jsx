@@ -141,8 +141,10 @@ class Field extends React.Component {
     }
 
     if (this.props.mask) {
-      let newChar = value.slice(-1);
-      value = this.props.value + newChar;
+      if (this.props.value) {
+        let newChar = value.slice(-1);
+        value = this.props.value + newChar;
+      }
     }
 
     value = this.forceMaxLength(value);
