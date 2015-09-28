@@ -1,7 +1,6 @@
 import React from 'react';
 import elements from '../../src/index';
 import Factory from '../../src/Factory';
-import Field from '../../src/Field';
 import TestUtils from 'react/lib/ReactTestUtils';
 import Immutable from 'immutable';
 import update from 'react/lib/update';
@@ -9,12 +8,12 @@ import update from 'react/lib/update';
 let multirowFixture = require('../fixtures/grid-multi-row.json');
 let twoColFixture = require('../fixtures/grid-two-col.json');
 let distFixture = require('../fixtures/grid-distributeComponents.json');
+let Field = elements.field;
+let Grid = elements.grid;
 
-describe('Grid', function(){
+describe('Grid', () => {
 
-  let Grid = elements.grid;
-
-  it('can render a Bootstrap 3 grid, with multiple rows and columns', function(){
+  it('can render a Bootstrap 3 grid, with multiple rows and columns', () => {
     let config = Immutable.fromJS(multirowFixture.config).set('schema', multirowFixture).toJS();
     let renderer = TestUtils.createRenderer();
     renderer.render(
@@ -35,31 +34,27 @@ describe('Grid', function(){
     expect(first.md).toBe('6');
     expect(first.sm).toBe('4');
     expect(first.xs).toBe(undefined);
-    expect(first.children[0].props.children).toBe('one');
     expect(second.md).toBe('6');
     expect(second.sm).toBe('12');
     expect(second.xs).toBe('12');
-    expect(second.children[0].props.children).toBe('two');
     expect(third.md).toBe('4');
     expect(third.sm).toBe(undefined);
     expect(third.xs).toBe(undefined);
-    expect(third.children[0].props.children).toBe('three');
     expect(fourth.md).toBe('4');
     expect(fourth.sm).toBe(undefined);
     expect(fourth.xs).toBe(undefined);
-    expect(fourth.children[0].props.children).toBe('four');
   });
 
-  describe('#add', function(){
-    it('adds two params together', function(){
+  describe('#add', () => {
+    it ('adds two params together', () => {
       expect(Grid.add(133, 1)).toEqual(134);
-      expect(Grid.add(1,1)).toEqual(2);
+      expect(Grid.add(1, 1)).toEqual(2);
       expect(Grid.add('a', 'b')).toEqual('ab');
     });
   });
 
-  describe('#distributeComponents', function(){
-    it('will distribute components sequentially', function(){
+  describe('#distributeComponents', () => {
+    it ('will distribute components sequentially', () => {
       let config = update(multirowFixture, {config: {id: {$set: 'test'}}});
       let rows = Grid.distributeComponents(config.config.rows, distFixture);
       expect(rows[0][0].children[0].name).toEqual('one');
@@ -67,7 +62,8 @@ describe('Grid', function(){
       expect(rows[1][0].children[0].name).toEqual('three');
       expect(rows[1][1].children[0].name).toEqual('four');
     });
-    it('can distribute components sequentially even if columns.length < components.length', function(){
+
+    it ('can distribute components sequentially even if columns.length < components.length', () => {
       let rows = Grid.distributeComponents(multirowFixture.config.rows, distFixture);
       expect(rows[0][0].children[0].name).toEqual('one');
       expect(rows[0][1].children[0].name).toEqual('two');
@@ -76,5 +72,4 @@ describe('Grid', function(){
       expect(rows[2][0].children[0].name).toEqual('five');
     });
   });
-
 });
