@@ -40,7 +40,10 @@
       "type": "workflowitem",
       "config": {
         "id": "page1",
-        "title": "Page One"
+        "title": "Page One",
+        "active": true,
+        "current": false,
+        "disabled": false
       },
       "next": "page3",
       "child": "page2"
@@ -57,7 +60,10 @@
       "next": "page4",
       "config": {
         "id": "page3",
-        "title": "Page Three"
+        "title": "Page Three",
+        "active": false,
+        "current": true,
+        "disabled": false
       }
     },
     "page4": {

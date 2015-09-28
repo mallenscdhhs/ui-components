@@ -47,16 +47,12 @@ describe('utils', () => {
       type: 'input'
     };
     let dom = TestUtils.renderIntoDocument(<Field {...fieldConfig} {...utils.getComputedInputAttr('first-name')} />);
-    let wrapperDiv = dom.getDOMNode();
+    let wrapperDiv = React.findDOMNode(dom);
     let input = wrapperDiv.childNodes[1];
     let helpBlock = wrapperDiv.childNodes[2];
 
     it('assigns form-control className', () => {
       expect(input.className).toEqual('form-control');
-    });
-    it('accepts the fieldId as an argument and assigns the proper aria-describedby attr to correspond with the help-block that follows the input', () => {
-      expect(input.getAttribute('aria-describedby')).toEqual('first-name-help-block');
-      expect(helpBlock.id).toEqual('first-name-help-block');
     });
   });
 

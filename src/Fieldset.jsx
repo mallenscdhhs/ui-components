@@ -1,67 +1,67 @@
 'use-strict';
-var React = require('react');
-var DependencyMixin = require('./DependencyMixin');
-var Description = require('./Description');
-var setClassNames = require('classnames');
+import React from 'react';
+import FieldLabel from './FieldLabel';
+import classnames from 'classnames';
+import renderChildren from './render-children';
+import _ from 'lodash';
 
 /**
  * Fieldset component
  * @module Fieldset
  */
-module.exports = React.createClass({
+class Fieldset extends React.Component {
 
-  displayName: 'Fieldset',
+  constructor(props) {
+    super(props);
+  }
 
-  mixins: [DependencyMixin],
-
-  getDefaultProps: function(){
-    return {
-      componentType: 'fieldset'
-    };
-  },
-
-  getHelpText: function(){
-    var helpText;
-    if(this.props.helpText){
-      helpText = <p key="help-block">{this.props.helpText}</p>;
+  renderHelpText() {
+    if (this.props.helpText) {
+      return <p key="help-block">{this.props.helpText}</p>;
     }
-    return helpText;
-  },
+  }
 
-  getDescription: function(){
-    var description;
-    if(this.props.description){
-      description = <Description key="description-text" {...this.props} />;
+  renderLabel() {
+    if (this.props.legend) {
+      // FieldLabel uses this.props.children which will duplicate
+      // any children of the Fieldset if not omitted
+      let props = _.omit(this.props, 'children');
+      return (
+        <legend className="field-label" key={`${this.props.id}-legend`}>
+          <FieldLabel {...props} label={this.props.legend}/>
+        </legend>
+      );
     }
-    return description;
-  },
+  }
 
-  getLabel: function(){
-    var fieldSetLabel = null;
-    if(this.props.name){
-      fieldSetLabel = <legend className="field-label" key={this.props.name+"Legend"}>{this.props.legend}{this.getDescription()}</legend>;
-    }
-    return fieldSetLabel;
-  },
-
-  getClassNames: function(){
-    return setClassNames({
-      'hidden': !this.state.visible
+  getClassNames() {
+    return classnames({
+      hidden: !this.props.visible
     });
-  },
+  }
 
   /**
    * Render a Fieldset component.
    * @returns {JSX}
    */
-  render: function(){
+  render() {
     return (
       <fieldset key="fieldSetWithComponentsKey" id={this.props.id} className={this.getClassNames()}>
-        {this.getLabel()}
-        {this.getHelpText()}
-        {this.props.children}
+        {this.renderLabel()}
+        {this.renderHelpText()}
+        {renderChildren(this.props)}
       </fieldset>
     );
   }
 
-});
+};
+
+Fieldset.propTypes = {
+  title: React.PropTypes.string
+};
+
+Fieldset.defaultProps = {
+  componentType: 'fieldset'
+};
+
+export default Fieldset;

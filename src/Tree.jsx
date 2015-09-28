@@ -5,17 +5,9 @@ var React = require('react');
  * A tree navigation component.
  * @module Tree
  */
-module.exports = React.createClass({
+class Tree extends React.Component {
 
-  displayName: 'Tree',
-
-  getDefaultProps: function(){
-    return {
-      componentType: 'tree'
-    };
-  },
-
-  render: function(){
+  render(){
     if ( this.props.children ) {
       return (
         <ul className="nav nav-tree">
@@ -26,4 +18,10 @@ module.exports = React.createClass({
       return null;
     }
   }
-});
+};
+
+Tree.defaultProps = {
+  componentType: 'tree'
+};
+
+export default Tree;
