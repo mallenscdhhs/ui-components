@@ -1,9 +1,7 @@
 'use-strict';
 import React from 'react';
-import OptionsMixin from './OptionsMixin';
 import _ from 'lodash';
 import update from 'react/lib/update';
-import ValueChangeMixin from './ValueChangeMixin';
 
 /**
  * Renders a <select> and manages its state.
@@ -12,8 +10,6 @@ import ValueChangeMixin from './ValueChangeMixin';
 export default React.createClass({
 
   displayName: 'Select',
-
-  mixins: [OptionsMixin, ValueChangeMixin],
 
   propTypes: {
     id: React.PropTypes.string.isRequired,

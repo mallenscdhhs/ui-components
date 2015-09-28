@@ -1,5 +1,7 @@
 {
-  "id": "terms-and-conditions",
-  "value": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  "fieldLabel": "I understand that by checking the electronic signature box on the Terms and Conditions included with this provider enrollment application constitutes a signed contract with South Carolina Department of Health and Human Services."
+  "id": "terms",
+  "legend": "Terms Legend",
+  "value": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ultricies ultrices rhoncus. Donec mi arcu, faucibus sed tortor vitae, mattis tempus odio. Nunc cursus fringilla volutpat. Pellentesque maximus, dolor nec tempor cursus, massa dui placerat diam, et commodo arcu turpis consequat tortor. Sed pellentesque, enim quis porttitor sollicitudin, dui orci pulvinar massa, non sagittis tellus sapien et orci. Pellentesque molestie sem id finibus rhoncus. Nullam lectus justo, pretium eu luctus posuere, lobortis in arcu. Duis ac auctor nisi. Sed porttitor arcu nec purus malesuada, a fringilla arcu mollis. Donec eget euismod purus.",
+  "checkboxHeader": "<p>If you need text above the checkbox label, put it <strong>here!</strong></p>",
+  "checkboxLabel": "Checkbox label goes here"
 }

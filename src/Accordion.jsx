@@ -1,6 +1,7 @@
+'use-strict';
 import React from 'react';
 import {Accordion as RBAccordion} from 'react-bootstrap';
-import Immutable from 'immutable';
+import renderChildren from './render-children';
 
 /**
  * Returns a Bootstrap Accordion (panel-group supporting collapsible panels)
@@ -9,28 +10,19 @@ import Immutable from 'immutable';
  * @module Accordion
  */
 class Accordion extends React.Component {
+  constructor() {
+    super();
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      defaultActiveKey: 0
+  handleClick(e) {
+    let eventKey = e.component.eventKey;
+    e.component = {
+      id: this.props.id,
+      schemaUpdates: {
+        defaultActiveKey: eventKey
+      }
     };
-    this.handleSelection = this.handleSelection.bind(this);
-    this.getActiveStyle = this.getActiveStyle.bind(this);
-  }
-
-  componentWillMount() {
-    if (this.props.defaultActiveKey) {
-      this.setState({defaultActiveKey: this.props.defaultActiveKey});
-    }
-  }
-
-  handleSelection(eventKey) {
-    this.setState({defaultActiveKey: eventKey});
-  }
-
-  getActiveStyle(idx, defaultActiveKey) {
-    return (idx === defaultActiveKey) ? 'info' : 'default';
   }
 
   render() {
@@ -38,14 +30,8 @@ class Accordion extends React.Component {
       <RBAccordion
         id={this.props.id}
         defaultActiveKey={this.props.defaultActiveKey}
-        onSelect={this.handleSelection} >
-          {React.Children.map(this.props.children, (child, idx) => {
-            let props = Immutable.Map(child.props);
-            let cloneProps = props
-              .set('eventKey', idx)
-              .set('bsStyle', this.getActiveStyle(idx, this.state.defaultActiveKey)).toJSON();
-            return React.cloneElement(child, cloneProps, child.props.children);
-          })}
+        onClick={this.handleClick}>
+          {renderChildren(this.props)}
       </RBAccordion>
     );
   }

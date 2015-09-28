@@ -1,108 +1,166 @@
 import React from 'react';
+import FieldGroup from '../../src/FieldGroup';
 import TestUtils from 'react/lib/ReactTestUtils';
 import Field from '../../src/Field';
-import FieldGroup from '../../src/FieldGroup';
-import { config as fixture } from '../fixtures/field-group.json';
-import { dispatcher as Dispatcher } from 'fluxify';
-import constants from '../../src/constants';
-import Immutable from 'immutable';
 
-let {
-  FIELD_VALUE_CHANGE,
-  GET_SESSION_VALUES
-} = constants.actions;
+let options = [
+  {label: 'Foo', value: 'foo'},
+  {label: 'Bar', value: 'bar'},
+  {label: 'Baz', value: 'baz'}
+];
 
 describe('FieldGroup', () => {
+  it('can render a group of checkboxes/radios', () => {
+    let fixture = {
+      id: 'test',
+      name: 'testing',
+      type: 'checkbox',
+      label: 'Testing',
+      options
+    };
 
-  it('can render a list of checkboxes', () => {
-    let comp = TestUtils.renderIntoDocument(<FieldGroup {...fixture}/>);
-    let checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
-    expect(checkboxes.length).toEqual(fixture.options.length);
-    expect(checkboxes[0].getDOMNode().type).toEqual('checkbox');
-    expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options[0].value);
+    let component = TestUtils.renderIntoDocument(<FieldGroup {...fixture}/>);
+    let dom = React.findDOMNode(component);
+    let _legend = dom.childNodes[0];
+    let fieldGroup = dom.childNodes[1];
+    expect(dom.tagName).toEqual('FIELDSET');
+    expect(_legend.childNodes[0].textContent).toEqual(fixture.label);
+    expect(fieldGroup.className).toEqual('field-group');
+    expect(fieldGroup.childNodes.length).toEqual(fixture.options.length);
+    let firstField = fieldGroup.childNodes[0];
+    let firstLabel = firstField.childNodes[0].childNodes[0];
+    let firstInput = firstLabel.childNodes[0];
+    let firstLabelText = firstLabel.childNodes[1].textContent;
+    let firstFieldId = `${fixture.id}-option-${fixture.options[0].value}`;
+    expect(firstInput.getAttribute('name')).toEqual(fixture.name);
+    expect(firstInput.getAttribute('type')).toEqual(fixture.type);
+    expect(firstInput.getAttribute('id')).toEqual(firstFieldId);
+    expect(firstLabel.getAttribute('for')).toEqual(firstFieldId);
+    expect(firstLabelText).toEqual(fixture.options[0].label);
   });
 
-  it('can render a list of radio inputs', () => {
-    let config = Immutable.fromJS(fixture).set('type', 'radio').toJSON();
-    let comp = TestUtils.renderIntoDocument(<FieldGroup {...config}/>);
-    let checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
-    expect(checkboxes.length).toEqual(fixture.options.length);
-    expect(checkboxes[0].getDOMNode().type).toEqual('radio');
-    expect(checkboxes[0].getDOMNode().value).toEqual(fixture.options[0].value);
-  });
+  it('can handle checkbox change events', (done) => {
+    let fixture = {
+      type: 'checkbox',
+      id: 'test',
+      name: 'testbox',
+      label: 'Do you compute?',
+      value: ['bar'],
+      options
+    };
 
-  it('can manage a list of values for checkboxes', (done) => {
-    let comp = TestUtils.renderIntoDocument(<FieldGroup {...fixture}/>);
-    let dom = comp.getDOMNode();
-    let checkboxes = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
-    let numChanges = 0;
-    expect(comp.state.value).toEqual([]);
-    Dispatcher.register('FIELD-GROUP-TEST-1', (action, data) => {
-      if (action === FIELD_VALUE_CHANGE && data.name === fixture.name) {
-        numChanges += 1;
-        if ( numChanges === 2 && data.id === fixture.id ) {
-          Dispatcher.unregister('FIELD-GROUP-TEST-1');
-          expect(data.value.join(',')).toEqual('1,2');
-          done();
-        }
+    let handler = (event) => {
+      expect(event.target.value).toBe('baz');
+      expect(event.component).toBeDefined();
+      expect(event.component.id).toEqual(fixture.id);
+      expect(event.component.schemaUpdates).toBeDefined();
+      expect(event.component.schemaUpdates.checked).toBeUndefined();
+      expect(event.component.modelUpdates).toBeDefined();
+      expect(event.component.modelUpdates.value.join('-')).toEqual('bar-baz');
+      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(component, 'input');
+    let input = inputs[2];
+    TestUtils.Simulate.change(input, {
+      target: {
+        value: React.findDOMNode(input).value,
+        checked: true
       }
     });
-
-    TestUtils.Simulate.change(checkboxes[0].getDOMNode(), {target: {checked: true}});
-    TestUtils.Simulate.change(checkboxes[1].getDOMNode(), {target: {checked: true}});
   });
 
-  it('can manage a single value for radios', (done) => {
-    let config = Immutable.fromJS(fixture).set('type', 'radio').toJSON();
-    let comp = TestUtils.renderIntoDocument(<FieldGroup {...config}/>);
-    let dom = comp.getDOMNode();
-    let radios = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
-    let numChanges = 0;
-    expect(comp.state.value).toEqual('');
-    Dispatcher.register('FIELD-GROUP-TEST-2', (action, data) => {
-      if (action === FIELD_VALUE_CHANGE && data.name === fixture.name) {
-        numChanges += 1;
-        expect(data.value).toEqual(numChanges.toString());
-        if (numChanges === 2) {
-          Dispatcher.unregister('FIELD-GROUP-TEST-2');
-          done();
-        }
-      }
-    });
-
-    TestUtils.Simulate.change(radios[0].getDOMNode(), {target: {checked: true}});
-    setTimeout(() => {
-      TestUtils.Simulate.change(radios[1].getDOMNode(), {target: {checked: true}});
-    }, 200);
-  });
-
-  it('will run validation on blur', (done) => {
-    let config = {
+  it('can handle radio change events', (done) => {
+    let fixture = {
       type: 'radio',
-      id: 'foo',
-      name: 'foo',
-      required: true,
-      rules: {
-        '/VR_InputRequiredCheck': true
-      },
+      id: 'test',
+      name: 'testbox',
+      label: 'Do you compute?',
       options: [
-        {label: 'One', value: 1},
-        {label: 'Two', value: 2}
+        {label: 'Yes', value: 'yes'},
+        {label: 'No', value: 'no'}
       ]
     };
 
-    let field = TestUtils.renderIntoDocument(<Field {...config}/>);
-    let radios = TestUtils.scryRenderedDOMComponentsWithTag(field, 'input');
-    let input = radios[0].getDOMNode();
-    let handler = Dispatcher.register((action, data) => {
-      if (action === GET_SESSION_VALUES && data.id === config.id) {
-        Dispatcher.unregister(handler);
-        expect(data.name).toEqual(config.name);
-        done();
+    let handler = (event) => {
+      expect(event.target.value).toBe('no');
+      expect(event.component).toBeDefined();
+      expect(event.component.id).toEqual(fixture.id);
+      expect(event.component.schemaUpdates).toBeDefined();
+      expect(event.component.schemaUpdates.checked).toBe(true);
+      expect(event.component.modelUpdates).toBeDefined();
+      expect(event.component.modelUpdates.value).toEqual('no');
+      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(component, 'input');
+    let input = inputs[1];
+    TestUtils.Simulate.change(input, {
+      target: {
+        value: React.findDOMNode(input).value,
+        checked: true
       }
     });
+  });
 
-    TestUtils.Simulate.focus(input, {});
-    TestUtils.Simulate.blur(input, {});
+  it('can handle unchecking a checkbox', (done) => {
+    let fixture = {
+      type: 'checkbox',
+      id: 'test',
+      name: 'testbox',
+      label: 'Do you compute?',
+      value: ['bar', 'foo', 'baz'],
+      options
+    };
+
+    let handler = (event) => {
+      expect(event.target.value).toBe('baz');
+      expect(event.component).toBeDefined();
+      expect(event.component.id).toEqual(fixture.id);
+      expect(event.component.schemaUpdates).toBeDefined();
+      expect(event.component.schemaUpdates.checked).toBeUndefined();
+      expect(event.component.modelUpdates).toBeDefined();
+      expect(event.component.modelUpdates.value.join('-')).toEqual('bar-foo');
+      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      done();
+    };
+
+    let component = TestUtils.renderIntoDocument(
+      <div onChange={handler}>
+        <Field {...fixture}/>
+      </div>
+    );
+
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(component, 'input');
+    let input = inputs[2];
+    TestUtils.Simulate.change(input, {
+      target: {
+        value: React.findDOMNode(input).value,
+        checked: false
+      }
+    });
+  });
+
+  describe('#isOptionChecked', () => {
+    it('can determine checked state', () => {
+      let result = FieldGroup.isOptionChecked({value: ['bar', 'baz']}, 'bar');
+      expect(result).toBe(true);
+      result = FieldGroup.isOptionChecked({value: 'bar'}, 'bar');
+      expect(result).toBe(true);
+    });
   });
 });

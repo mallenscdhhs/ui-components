@@ -2,7 +2,8 @@
   "id": "test_page",
   "type": "page",
   "config": {
-    "title": "Test"
+    "title": "Test",
+    "content": "<p>Test Content</p>"
   },
   "child": "pageLayout",
   "components": {
@@ -10,6 +11,7 @@
       "child": "field_1",
       "type": "grid",
       "config": {
+        "id": "pageLayout",
         "rows": [[{"md": "6"}, {"md": "6"}]]
       }
     },
@@ -19,7 +21,7 @@
       "config": {
         "id": "field_1",
         "type": "text",
-        "name": "testone",
+        "name": "field_1",
         "label": "Test one"
       }
     },
@@ -28,7 +30,7 @@
       "config": {
         "id": "field_2",
         "type": "text",
-        "name": "testtwo",
+        "name": "field_2",
         "label": "Test two"
       }
     }
