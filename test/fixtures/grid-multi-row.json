@@ -1,7 +1,8 @@
 {
 	"id": "grid_test",
 	"type": "grid",
-	"config": { 
+	"config": {
+	  	"id": "grid_test",
 		"rows": [
 			[{"md": "6", "sm": "4"}, {"md": "6", "sm": "12", "xs": "12"}],
 			[{"md": "4"}, {"md": "4"}]

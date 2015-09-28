@@ -1,8 +1,6 @@
 {
   "framework": "custom",
   "serve_files": [
-    "node_modules/jquery/dist/jquery.js",
-    "node_modules/bootstrap/dist/js/bootstrap.js",
     "test/tests.js"
   ],
   "src_files": [

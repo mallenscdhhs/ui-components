@@ -1,184 +1,165 @@
 import React from 'react';
-import Factory from '../../src/Factory';
-import Components from '../../src/main';
 import EntryList from '../../src/EntryList';
+import Form from '../../src/Form';
+import Field from '../../src/Field';
 import TestUtils from 'react/lib/ReactTestUtils';
 import Immutable from 'immutable';
-import Flux from 'fluxify';
-import {dispatcher as Dispatcher } from 'fluxify';
 import fixture from '../fixtures/entrylist.json';
 
-const API_URI = '/api/rules';
-
-// setup the rules endpoint for testing
-Components.configure({API: {validation: API_URI}});
-
-let schema = Immutable.fromJS(fixture.components.myEntryList);
-let model = Immutable.Map(fixture.model);
-let renderer = TestUtils.createRenderer();
-let {
-  APPLICATION_VALIDATE_ENTRY,
-  ENTRYLIST_NEW_ENTRY_VALIDATED,
-  ENTRYLIST_ENTRY_REMOVE,
-  ENTRYLIST_ENTRY_EDIT,
-  ENTRYLIST_NEW_ENTRY_ADD,
-  FIELD_VALUE_CHANGE,
-  FIELD_VALIDATION_ERROR,
-  ENTRYLIST_FORM_SHOW
-} = Components.constants.actions;
-
-function createEntryListWithoutRules() {
-  let config = fixture.components.myEntryList.config;
-  let configWithEntries = EntryList.configure(schema, model);
-  let component = <EntryList {...configWithEntries}/>;
-  renderer.render(component);
-  let renderedComponent = renderer.getRenderOutput();
-  let entrylist = TestUtils.renderIntoDocument(component);
-  return {entrylist, renderedComponent};
-}
-
 describe('EntryList', () => {
-  beforeEach(() => jasmine.Ajax.install());
-  afterEach(() => jasmine.Ajax.uninstall());
+  let config = Immutable.fromJS(fixture.config).set('schema', fixture).toJS();
+  let comp = TestUtils.renderIntoDocument(
+    <EntryList {...config}>
+      <Form {...config.schema.components.elForm.config}>
+        <Field {...config.schema.components.elField1.config}/>
+        <Field {...config.schema.components.elField2.config}/>
+        <Field {...config.schema.components.elField3.config}/>
+      </Form>
+    </EntryList>
+  );
+  let dom = React.findDOMNode(comp);
+  let entrylist = TestUtils.findRenderedDOMComponentWithClass(comp, 'entrylist');
+  let table = React.findDOMNode(entrylist).childNodes[0];
+  let columns = table.childNodes[0].childNodes[0].childNodes;
+
+  // simulate schema/model updates and re-rendering of the entrylist component
+  let applyUpdates = (e) => {
+    let component = Immutable.fromJS(e.component);
+    if (component.has('schemaUpdates')) {
+      component.get('schemaUpdates').forEach((value, key) => comp.props[key] = value);
+    }
+    if (component.has('modelUpdates')) {
+      comp.props.value = e.component.modelUpdates.value;
+    }
+    // rerender the component
+    comp.setState();
+  };
+
+  // simulate running through the steps of clicking edit, opening the form, and changing a field value
+  let runEditFlow = (e, lastSavedEntry) => {
+    comp.handleEdit(e);
+    applyUpdates(e);
+    // allow re-render to finish
+    setTimeout(() => {
+      let formBtns = TestUtils.scryRenderedDOMComponentsWithTag(entrylist, 'button');
+      let saveBtn = formBtns[0];
+      let cancelBtn = formBtns[1];
+      // show form with save and cancel buttons and cache previous entrylist value
+      expect(saveBtn).toBeDefined();
+      expect(cancelBtn).toBeDefined();
+      expect(e.component.schemaUpdates.showForm).toEqual(true);
+      expect(comp.state.previousValue).toEqual([{firstName: 'John', middleName: '', lastName: ''}]);
+    }, 300);
+
+    // change firstName value
+    comp.setState({previousValue: lastSavedEntry});
+
+    e = {
+      target: {
+        name: 'firstName',
+        value: [{firstName: 'Joe', middleName: '', lastName: ''}]
+      },
+      component: {
+        modelUpdates: {
+          id: 'firstName',
+          value: 'Joe'
+        }
+      }
+    };
+    comp.handleChange(e);
+    applyUpdates(e);
+    expect(e.component.modelUpdates.value).toEqual(e.target.value);
+  };
 
   it('renders an entrylist', () => {
-    let {renderedComponent} = createEntryListWithoutRules();
-    let entries = renderedComponent.props.children[0].props.children;
-    expect(entries.length).toEqual(fixture.model.medicaidNumbers.length);
-  });
-
-  it('can facilitate removal of entries', (done) => {
-    let {entrylist} = createEntryListWithoutRules();
-    let removeFirstEntry = TestUtils.scryRenderedDOMComponentsWithTag(entrylist, 'a')[1];
-    let handler = Dispatcher.register((action, data) => {
-      if (action === ENTRYLIST_ENTRY_REMOVE) {
-        Dispatcher.unregister(handler);
-        expect(entrylist.state.entries.length).toEqual(fixture.model.medicaidNumbers.length - 1);
-        done();
-      }
-    });
-
-    expect(entrylist.state.entries.length).toEqual(fixture.model.medicaidNumbers.length);
-    TestUtils.Simulate.click(removeFirstEntry);
-  });
-
-  it('can facilitate editing of entries', (done) => {
-    let {entrylist} = createEntryListWithoutRules();
-    let editFirstEntry = TestUtils.scryRenderedDOMComponentsWithTag(entrylist, 'a')[0];
-    let testValue = 'test-value';
-    let editHandler = Dispatcher.register((action, data) => {
-      if (action === ENTRYLIST_ENTRY_EDIT) {
-        let firstInput = TestUtils.scryRenderedDOMComponentsWithTag(entrylist, 'input')[0];
-        let updateEntry = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-default');
-
-        // accept user input
-        TestUtils.Simulate.change(firstInput.getDOMNode(), {target: {value: testValue}});
-
-        // click Update button to update the entry
-        TestUtils.Simulate.click(updateEntry);
-      }
-    });
-
-    let updateHandler = Dispatcher.register((action, data) => {
-      if (action === ENTRYLIST_NEW_ENTRY_ADD) {
-        Dispatcher.unregister(updateHandler);
-        expect(entrylist.state.entry.medicaidNumber).toEqual(testValue);
-        done();
-      }
-    });
-
-    // click Edit link on the first entry and update it
-    TestUtils.Simulate.click(editFirstEntry);
-  });
-
-  it('can facilitate adding new entries', (done) => {
-    let {entrylist} = createEntryListWithoutRules();
-    let newEntry = {
-      medicaidNumber: '0509584',
-      npi: '0987654325',
-      enrollmentDate: '01/01/2015',
-      state: 'GA'
-    };
+    expect(entrylist).toBeDefined();
+    expect(table.className).toEqual('table table-striped table-bordered table-hover');
+    // extra column is for actions
+    expect(columns.length).toEqual(config.columns.length + 1);
+    // entrylist is empty by default, form is hidden, and Add New Entry button is present
     let addNewEntryBtn = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-primary');
-    let addHandler = Dispatcher.register((action, data) => {
-      if (action === ENTRYLIST_FORM_SHOW) {
-        Dispatcher.unregister(addHandler);
-        let addEntry = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-default');
-        expect(entrylist.state.entries.length).toEqual(fixture.model.medicaidNumbers.length);
-        entrylist.setState({entry: newEntry});
-
-        // click button to add the entry
-        TestUtils.Simulate.click(addEntry.getDOMNode());
-      }
-    });
-
-    let saveHandler = Dispatcher.register((action, data) => {
-      if (action === FIELD_VALUE_CHANGE) {
-        Dispatcher.unregister(saveHandler);
-        let comp = fixture.components.myEntryList;
-        expect(data.id).toBe(comp.config.model);
-        expect(data.name).toBe(comp.config.model);
-        expect(data.type).toBe('entrylist');
-        expect(data.value.length).toBe(3);
-        expect(data.latestEntry.medicaidNumber).toBe(newEntry.medicaidNumber);
-        done();
-      }
-    });
-
-    jasmine.Ajax
-      .stubRequest(API_URI)
-      .andReturn({
-        responseText: '{"operationStatus": "SUCCESS"}'
-      });
-
-    // click Add New Entry button to show new entry form
-    TestUtils.Simulate.click(addNewEntryBtn);
+    expect(comp.props.value.length).toEqual(0);
+    expect(addNewEntryBtn).toBeDefined();
+    expect(comp.props.showForm).toEqual(false);
   });
 
-  it('can validate entries', (done) => {
-    let {entrylist} = createEntryListWithoutRules();
-    let newEntry = {
-      medicaidNumber: '000348992',
-      npi: '',
-      enrollmentDate: '05/01/2015',
-      state: 'SC'
-    };
-    let addNewEntryBtn = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-primary');
-    let addHandler = Dispatcher.register((action, data) => {
-      if (action === ENTRYLIST_FORM_SHOW) {
-        Dispatcher.unregister(addHandler);
-        let addEntry = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-default');
-        entrylist.setState({entry: newEntry});
-        TestUtils.Simulate.click(addEntry.getDOMNode());
-      }
-    });
-
-    let errorHandler = Dispatcher.register((action, data) => {
-      if (action === FIELD_VALIDATION_ERROR && data.name === 'npi') {
-        Dispatcher.unregister(errorHandler);
-        expect(data.hasError).toBe(true);
-        done();
-      }
-    });
-
-    jasmine.Ajax
-      .stubRequest(API_URI)
-      .andReturn({
-        responseText: JSON.stringify({
-          operationStatus: 'FAILURE',
-          operationMessages: [
-            {
-              metadata: {
-                rule: 'required',
-                params: ['npi']
-              },
-              description: 'Field is not valid.'
-            }
-          ]
-        })
-      });
-
+  it('can facilitate adding new entries', () => {
     // click Add New Entry button to show new entry form
-    TestUtils.Simulate.click(addNewEntryBtn);
+    let e = {nativeEvent: {type: 'click'}};
+    comp.showForm(e);
+    expect(e.component).toBeDefined();
+    expect(e.component.schemaUpdates.showForm).toEqual(true);
+    expect(e.component.schemaUpdates.entryIndex).toEqual(0);
+    expect(e.component.modelUpdates.id).toEqual(config.name);
+    expect(e.component.modelUpdates.value).toEqual([{firstName: '', middleName: '', lastName: ''}]);
+    applyUpdates(e);
+    // allow re-render to finish
+    setTimeout(() => {
+      // entrylist form is showing, add/submit entry is present
+      let entrylistForm = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'entrylist-form');
+      let addEntry = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-default');
+      expect(entrylistForm).toBeDefined();
+      expect(addEntry).toBeDefined();
+    }, 300);
+
+    // click Add button to submit new entry
+    e = {
+      target: {
+        name: 'firstName',
+        value: [{firstName: 'John', middleName: '', lastName: ''}]
+      },
+      component: {
+        modelUpdates: {
+          id: 'firstName',
+          value: 'John'
+        }
+      }
+    };
+    comp.handleChange(e);
+    applyUpdates(e);
+    expect(e.component.modelUpdates.id).toEqual(config.name);
+    expect(e.component.modelUpdates.value).toEqual(e.target.value);
+    expect(comp.props.value.length).toEqual(1);
+  });
+
+  it('can facilitate editing of entries', () => {
+    // click edit button to edit entry
+    let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
+    let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
+    runEditFlow(e, lastSavedEntry);
+
+    // clicking save button, hides form and clears entryIdx
+    e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
+    comp.saveEntry(e);
+    applyUpdates(e);
+    expect(e.component.schemaUpdates.showForm).toEqual(false);
+    expect(e.component.schemaUpdates.entryIndex).toEqual(null);
+  });
+
+  it('can cancel entry while editing', () => {
+    // click edit button to edit entry
+    let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
+    let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
+    runEditFlow(e, lastSavedEntry);
+
+    // clicking cancel button, reverts to last saved entry, hides form, and clears entryIdx
+    e = {nativeEvent: {type: 'click'}};
+    comp.cancelEdit(e);
+    applyUpdates(e);
+    expect(e.component.modelUpdates.value).toEqual(lastSavedEntry);
+    expect(e.component.schemaUpdates.showForm).toEqual(false);
+    expect(e.component.schemaUpdates.entryIndex).toEqual(null);
+  });
+
+  it('can facilitate removal of entries', () => {
+    // click remove button to remove entry
+    let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
+    comp.handleRemove(e);
+    applyUpdates(e);
+
+    // hide form and clear entryIdx
+    expect(e.component.schemaUpdates.showForm).toEqual(false);
+    expect(e.component.schemaUpdates.entryIndex).toEqual(null);
+    expect(comp.props.value.length).toEqual(0);
   });
 });
