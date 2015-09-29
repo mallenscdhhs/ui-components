@@ -7,11 +7,16 @@ class ControlledTab extends React.Component {
 
   constructor() {
     super();
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e){
+    console.log(e);
   }
 
   render() {
     return (
-      <Tab {...this.props}>
+      <Tab {...this.props} onClick={this.handleClick}>
         <Panel>{renderChildren(this.props)}</Panel>
       </Tab>
     )
