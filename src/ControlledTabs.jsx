@@ -13,7 +13,7 @@ class ControlledTabs extends React.Component {
 
   handleSelect(key) {
     let _div = React.findDOMNode(this);
-    let event = new Event('change', {});
+    let event = new Event('change', {bubbles: true, cancelable: true});
     event.component = {
       id: this.props.id,
       schemaUpdates: {
