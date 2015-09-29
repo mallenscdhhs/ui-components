@@ -13,13 +13,18 @@ class ControlledTabs extends React.Component {
 
   handleSelect(key) {
     let _div = React.findDOMNode(this);
-    let event = new Event('change', {});
+    let event = new Event('change', {
+      id: this.props.id,
+      schemaUpdates: {
+        id: this.props.id,
+        activeKey: key
+      }
+    });
     _div.dispatchEvent(event);
     console.log('handleSelect',key,event);
   }
 
   handleChange(e){
-    e.component = this.props;
     console.log('changeEvent',e);
   }
 
