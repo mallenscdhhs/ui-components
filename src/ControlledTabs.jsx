@@ -8,7 +8,6 @@ class ControlledTabs extends React.Component {
   constructor() {
     super();
     this.handleSelect = this.handleSelect.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
   handleSelect(key) {
