@@ -22,16 +22,6 @@ class ControlledTabs extends React.Component {
       }
     };
     _div.dispatchEvent(event);
-    console.log('handleSelect',key,event);
-  }
-
-  handleChange(e){
-    console.log('changeEvent',e);
-  }
-
-  componentDidMount() {
-    let _div = React.findDOMNode(this);
-    _div.addEventListener('change', this.handleChange);
   }
 
   render() {
