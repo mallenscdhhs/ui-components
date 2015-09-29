@@ -140,11 +140,9 @@ class Field extends React.Component {
       schemaUpdates.checked = e.target.checked;
     }
 
-    if (this.props.mask) {
-      if (this.props.value) {
-        let newChar = value.slice(-1);
-        value = this.props.value + newChar;
-      }
+    if (this.props.mask && this.props.value) {
+      let newChar = value.slice(-1);
+      value = this.props.value + newChar;
     }
 
     value = this.forceMaxLength(value);

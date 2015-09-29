@@ -267,7 +267,8 @@ describe('Field', () => {
       id: 'test',
       name: 'testbox',
       label: 'Are you in?',
-      value: 'yes'
+      value: 'yes',
+      defaultValue: 'yes'
     };
 
     let handler = (event) => {
