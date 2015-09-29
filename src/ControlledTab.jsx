@@ -7,7 +7,8 @@ class ControlledTab extends React.Component {
 
   constructor() {
     super();
-    this.handleClick = this.handleClick.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleSelect(key) {
