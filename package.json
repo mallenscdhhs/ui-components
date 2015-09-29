@@ -33,7 +33,7 @@
     "lodash": "3",
     "bootstrap": "3",
     "react": "^0.13",
-    "react-bootstrap": "^0.24",
+    "react-bootstrap": "^0.25",
     "react-widgets": "2"
   },
   "dependencies": {
@@ -45,7 +45,7 @@
     "@scdhhs/ui-form-validator": "1",
     "lodash": "3",
     "react": "^0.13",
-    "react-bootstrap": "^0.24",
+    "react-bootstrap": "^0.25",
     "react-widgets": "2",
     "bootstrap": "3",
     "jquery": "2",
