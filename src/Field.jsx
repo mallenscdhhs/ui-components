@@ -136,7 +136,9 @@ class Field extends React.Component {
     let schemaUpdates = {};
 
     if (this.isRadioOrCheckbox()) {
-      value = e.target.checked? this.props.defaultValue : null;
+      let optionValue = (this.props.value === undefined || this.props.value === null) ?
+        this.props.defaultValue : this.props.value;
+      value = e.target.checked? optionValue : null;
       schemaUpdates.checked = e.target.checked;
     }
 
