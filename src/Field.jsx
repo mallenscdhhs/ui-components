@@ -166,7 +166,8 @@ class Field extends React.Component {
       modelUpdates: {
         id: this.props.name,
         value
-      }
+      },
+      props: this.props
     };
   }
 
