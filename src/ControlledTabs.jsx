@@ -1,16 +1,9 @@
 'use-strict';
 import React from 'react';
 import {Tabs} from 'react-bootstrap';
-import {elements} from '@scdhhs/ui-components';
-import Immutable from 'immutable';
 import renderChildren from './render-children';
 
-class Tabs extends React.Component {
-
-  static defaultProps = {
-    activeKey: 0,
-    lastSectionCompleted: -1
-  };
+class ControlledTabs extends React.Component {
 
   constructor() {
     super();
@@ -28,4 +21,4 @@ class Tabs extends React.Component {
   }
 };
 
-export default Tabs;
+export default ControlledTabs;

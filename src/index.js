@@ -5,6 +5,8 @@ module.exports = {
 	alert: require('react-bootstrap').Alert,
 	content: require('./Content'),
 	contentEditor: require('./ContentEditor'),
+	controlledtab: require('./ControlledTab'),
+	controlledtabs: require('./ControlledTabs'),
 	date: require('./Date'),
 	entrylist: require('./EntryList'),
 	field: require('./Field'),

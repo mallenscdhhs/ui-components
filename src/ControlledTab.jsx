@@ -3,12 +3,7 @@ import React from 'react';
 import {Tab, Panel} from 'react-bootstrap';
 import renderChildren from './render-children';
 
-/**
- * Wraps the react-bootstrap TabPane component with some custom markup, and
- * facilitates re-rendering of the tab by a parent component.
- * @class WrappedTabPane
- */
-class Tab extends React.Component {
+class ControlledTab extends React.Component {
 
   constructor() {
     super();
@@ -23,4 +18,4 @@ class Tab extends React.Component {
   }
 }
 
-export default Tab;
+export default ControlledTab;
