@@ -93,6 +93,9 @@ class Field extends React.Component {
     props.help = help;
     props.bsStyle = classNames({error: this.props.hasError});
     props.label = <FieldLabel {...this.props}/>;
+    if (this.isRadioOrCheckbox() && !this.isFieldGroup()) {
+      props.checked = FieldGroup.isOptionChecked({value: this.props.defaultValue}, props.value);
+    }
     if (this.props.type === 'select') {
       let options = this.props.options || [];
       let renderOption = opt => <option value={opt.value}>{opt.label}</option>;
