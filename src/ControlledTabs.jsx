@@ -7,6 +7,25 @@ class ControlledTabs extends React.Component {
 
   constructor() {
     super();
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleSelect(key) {
+    let _div = React.findDOMNode(this);
+    let event = new Event('change', {});
+    _div.dispatchEvent(event);
+    console.log('handleSelect',key,event);
+  }
+
+  handleChange(e){
+    e.component = this.props;
+    console.log('changeEvent',e);
+  }
+
+  componentDidMount() {
+    let _div = React.findDOMNode(this);
+    _div.addEventListener('change', this.handleChange);
   }
 
   render() {
@@ -14,6 +33,7 @@ class ControlledTabs extends React.Component {
       <Tabs
         activeKey={this.props.activeKey}
         animation={false}
+        onSelect={this.handleSelect}
         key='controlledTabbedArea'>
         {renderChildren(this.props)}
       </Tabs>
