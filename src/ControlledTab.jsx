@@ -10,13 +10,26 @@ class ControlledTab extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(e){
-    console.log(e);
+  handleSelect(key) {
+    let _div = React.findDOMNode(this);
+    let event = new Event('change', {});
+    _div.dispatchEvent(event);
+    console.log('handleSelect',key,event);
+  }
+
+  handleChange(e){
+    e.component = this;
+    console.log('changeEvent',e);
+  }
+
+  componentDidMount() {
+    let _div = React.findDOMNode(this);
+    _div.addEventListener('change', this.handleChange);
   }
 
   render() {
     return (
-      <Tab {...this.props} onClick={this.handleClick}>
+      <Tab {...this.props} onSelect={this.handleSelect}>
         <Panel>{renderChildren(this.props)}</Panel>
       </Tab>
     )
