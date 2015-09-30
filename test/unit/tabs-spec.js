@@ -1,11 +1,11 @@
 import React from 'react';
 import TestUtils from 'react/lib/ReactTestUtils';
 import Factory from '../../src/Factory';
-import ControlledTabs from '../../src/ControlledTabs';
-import ControlledTab from '../../src/ControlledTab';
+import ControlledTabs from '../../src/Tabs';
+import ControlledTab from '../../src/Tab';
 import elements from '../../src/index';
 import Immutable from 'immutable';
-let fixture = require('../fixtures/controlledtabs.json');
+let fixture = require('../fixtures/tabs.json');
 
 describe('ControlledTabs', function(){
 
