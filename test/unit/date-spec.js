@@ -15,7 +15,7 @@ describe('Date input', function() {
     expect(dateComponent.props.value).toBe(fixture.value);
   });
 
-  it('can handle change event', (done) => {
+  xit('can handle change event', (done) => {
     let handleSimulatedChange = (e) => {
       expect(e.component).toBeDefined();
       expect(e.component.id).toEqual(fixture.id);
