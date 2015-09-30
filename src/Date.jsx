@@ -26,21 +26,21 @@ class DateField extends React.Component {
   }
 
   componentDidMount() {
-    let _div = React.findDOMNode(this);
-    _div.addEventListener('change', this.handleManualChange);
+    let _El = React.findDOMNode(this);
+    _El.addEventListener('change', this.handleManualChange);
   }
 
   componentWillUnmount() {
-    let _div = React.findDOMNode(this);
-    _div.removeEventListener('change', this.handleManualChange);
+    let _El = React.findDOMNode(this);
+    _El.removeEventListener('change', this.handleManualChange);
   }
 
   handleDateChange(date, dateString) {
-    let _div = React.findDOMNode(this);
+    let _El = React.findDOMNode(this);
     let event = new Event('change', {bubbles: true});
     event.date = date;
     event.dateString = dateString;
-    _div.dispatchEvent(event);
+    _El.dispatchEvent(event);
   }
 
   handleManualChange(e) {
@@ -57,12 +57,10 @@ class DateField extends React.Component {
 
   render() {
     return (
-      <div>
-        <DateTimePicker
-          {...this.props}
-          onChange={this.handleDateChange}
-          value={DateField.getDateValue(this.props.value)}/>
-      </div>
+      <DateTimePicker
+        {...this.props}
+        onChange={this.handleDateChange}
+        value={DateField.getDateValue(this.props.value)}/>
     );
   }
 };
