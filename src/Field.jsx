@@ -96,9 +96,7 @@ class Field extends React.Component {
     // If we have a single option checkbox/radio, that does not get it's values from the 'options' or 'optionsResource'
     // props, then check to see if the current value matches the default value, and if so, the field is checked
     if (this.isRadioOrCheckbox() && !this.isFieldGroup()) {
-      let optionValue = (this.props.value === undefined || this.props.value === null) ?
-        this.props.defaultValue : this.props.value;
-      props.checked = FieldGroup.isOptionChecked({value: optionValue}, props.value);
+      props.checked = FieldGroup.isOptionChecked({value: this.props.submitValue }, props.value);
     }
     if (this.props.type === 'select') {
       let options = this.props.options || [];
@@ -142,14 +140,12 @@ class Field extends React.Component {
     let value = e.target.value;
     let schemaUpdates = {};
 
-    // Only radio/check boxes that are not part of a fieldgroup will get here.
-    // These are single instance fields, where their value does not come from the 'options' or 'optionsResource', but
-    // from the 'value' and 'defaultValue' props.  If the field is 'unchecked', the value is 'null', so we need to have a
-    // reference value that is not nullable to replace when 'checking' later.  For this, we use the 'defaultValue' prop.
+
+    // Single instance fields, where their value does not come from the 'options' or 'optionsResource', but
+    // from the 'value' and 'submitValue' props.  If the field is 'unchecked', the value is 'null', so we need to have a
+    // reference value that is not nullable to replace when 'checking' later.  For this, we use the 'submitValue' prop.
     if (this.isRadioOrCheckbox()) {
-      let optionValue = (this.props.value === undefined || this.props.value === null) ?
-        this.props.defaultValue : this.props.value;
-      value = e.target.checked? optionValue : null;
+      value = e.target.checked? this.props.submitValue : null;
       schemaUpdates.checked = e.target.checked;
     }
 

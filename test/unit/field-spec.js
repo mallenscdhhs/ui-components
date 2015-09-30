@@ -12,7 +12,7 @@ describe('Field', () => {
       id: 'test',
       name: 'kidding_question',
       value: 'yes',
-      defaultValue: 'yes',
+      submitValue: 'yes',
       label: 'Are you kidding me?'
     };
 
@@ -44,7 +44,7 @@ describe('Field', () => {
       id: 'test',
       name: 'kidding_question',
       value: 'yes',
-      defaultValue: 'yes',
+      submitValue: 'yes',
       label: 'Are you kidding me?'
     };
 
@@ -268,7 +268,7 @@ describe('Field', () => {
       name: 'testbox',
       label: 'Are you in?',
       value: 'yes',
-      defaultValue: 'yes'
+      submitValue: 'yes'
     };
 
     let handler = (event) => {
