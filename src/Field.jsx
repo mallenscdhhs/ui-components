@@ -93,6 +93,11 @@ class Field extends React.Component {
     props.help = help;
     props.bsStyle = classNames({error: this.props.hasError});
     props.label = <FieldLabel {...this.props}/>;
+    // If we have a single option checkbox/radio, that does not get it's values from the 'options' or 'optionsResource'
+    // props, then check to see if the current value matches the default value, and if so, the field is checked
+    if (this.isRadioOrCheckbox() && !this.isFieldGroup()) {
+      props.checked = FieldGroup.isOptionChecked({value: this.props.submitValue }, props.value);
+    }
     if (this.props.type === 'select') {
       let options = this.props.options || [];
       let renderOption = opt => <option value={opt.value}>{opt.label}</option>;
@@ -135,16 +140,18 @@ class Field extends React.Component {
     let value = e.target.value;
     let schemaUpdates = {};
 
+
+    // Single instance fields, where their value does not come from the 'options' or 'optionsResource', but
+    // from the 'value' and 'submitValue' props.  If the field is 'unchecked', the value is 'null', so we need to have a
+    // reference value that is not nullable to replace when 'checking' later.  For this, we use the 'submitValue' prop.
     if (this.isRadioOrCheckbox()) {
-      value = e.target.checked? this.props.value : null;
+      value = e.target.checked? this.props.submitValue : null;
       schemaUpdates.checked = e.target.checked;
     }
 
-    if (this.props.mask) {
-      if (this.props.value) {
-        let newChar = value.slice(-1);
-        value = this.props.value + newChar;
-      }
+    if (this.props.mask && this.props.value) {
+      let newChar = value.slice(-1);
+      value = this.props.value + newChar;
     }
 
     value = this.forceMaxLength(value);
@@ -155,7 +162,8 @@ class Field extends React.Component {
       modelUpdates: {
         id: this.props.name,
         value
-      }
+      },
+      props: this.props
     };
   }
 

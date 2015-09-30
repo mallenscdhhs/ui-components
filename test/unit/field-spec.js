@@ -12,7 +12,7 @@ describe('Field', () => {
       id: 'test',
       name: 'kidding_question',
       value: 'yes',
-      checked: true,
+      submitValue: 'yes',
       label: 'Are you kidding me?'
     };
 
@@ -27,10 +27,10 @@ describe('Field', () => {
     expect(input.getAttribute('type')).toEqual(fixture.type);
     expect(input.getAttribute('name')).toEqual(fixture.name);
     expect(input.getAttribute('value')).toEqual(fixture.value);
-    expect(input.checked).toEqual(fixture.checked);
+    expect(input.checked).toEqual(true);
 
     // renders as unchecked
-    fixture.checked = false;
+    fixture.value = null;
     component = TestUtils.renderIntoDocument(<Field {...fixture}/>);
     input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
     input = React.findDOMNode(input);
@@ -44,7 +44,7 @@ describe('Field', () => {
       id: 'test',
       name: 'kidding_question',
       value: 'yes',
-      checked: true,
+      submitValue: 'yes',
       label: 'Are you kidding me?'
     };
 
@@ -59,10 +59,10 @@ describe('Field', () => {
     expect(input.getAttribute('type')).toEqual(fixture.type);
     expect(input.getAttribute('name')).toEqual(fixture.name);
     expect(input.getAttribute('value')).toEqual(fixture.value);
-    expect(input.checked).toEqual(fixture.checked);
+    expect(input.checked).toEqual(true);
 
     // renders as unchecked
-    fixture.checked = false;
+    fixture.value = null;
     component = TestUtils.renderIntoDocument(<Field {...fixture}/>);
     input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
     input = React.findDOMNode(input);
@@ -267,7 +267,8 @@ describe('Field', () => {
       id: 'test',
       name: 'testbox',
       label: 'Are you in?',
-      value: 'yes'
+      value: 'yes',
+      submitValue: 'yes'
     };
 
     let handler = (event) => {
