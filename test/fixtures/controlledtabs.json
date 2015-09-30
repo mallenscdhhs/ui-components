@@ -1,0 +1,1708 @@
+{
+  "type": "page",
+  "enrollmentType": "DEF",
+  "taxonomyCode": "DEF000000X",
+  "pageId": "addresses",
+  "child": "addressTabs",
+  "config": {
+    "title": "Provider Addresses",
+    "content": "<p><strong>*</strong>indicates required field.</p><p>This is the physical location where services will be rendered (or in the case of mobile services where management/supervision occurs). P.O. Box or P.O. Drawer is not acceptable as a Street address.</p>"
+  },
+  "components": {
+    "addressTabs": {
+      "type": "controlledtabs",
+      "child": "primaryAddressTab",
+      "config": {
+        "id": "addressTabs",
+        "activeKey": 0
+      }
+    },
+    "primaryAddressTab": {
+      "type": "controlledtab",
+      "child": "primaryAddress:providerAddressForm",
+      "next": "billingAddressTab",
+      "config": {
+        "id": "primaryAddressTab",
+        "title": "Primary Practice Address",
+        "eventKey": 0,
+        "disabled": false
+      }
+    },
+    "primaryAddress:providerAddressForm": {
+      "child": "primaryAddress:paProviderAddressFieldsetLayout",
+      "type": "form",
+      "config": {
+        "id": "primaryAddress:providerAddressForm",
+        "name": "primaryAddress:providerAddressForm"
+      }
+    },
+    "primaryAddress:paProviderAddressFieldsetLayout": {
+      "type": "grid",
+      "next": "primaryAddress:paProviderContactPersonFieldset",
+      "child": "primaryAddress:street",
+      "config": {
+        "id": "primaryAddress:paProviderAddressFieldsetLayout",
+        "name": "primaryAddress:paProviderAddressFieldsetLayout",
+        "rows": [
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}]
+        ]
+      }
+    },
+    "primaryAddress:street": {
+      "next": "primaryAddress:street2",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:street",
+        "type": "text",
+        "name": "primaryAddress:street",
+        "label": "Street",
+        "required": true,
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:street2": {
+      "next": "primaryAddress:city",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:street2",
+        "type": "text",
+        "name": "primaryAddress:street2",
+        "label": "Street Line 2",
+        "required": false,
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true
+        }
+      }
+    },
+    "primaryAddress:city": {
+      "next": "primaryAddress:stateProvince",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:city",
+        "type": "text",
+        "name": "primaryAddress:city",
+        "label": "City",
+        "required": true,
+        "description": "City associated with the provider address field.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_CityCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:stateProvince": {
+      "next": "primaryAddress:zipCode",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:stateProvince",
+        "type": "select",
+        "name": "primaryAddress:stateProvince",
+        "label": "State / Province",
+        "required": true,
+        "optionsResource": "REF_STATE",
+        "description": "The ISO 3166-2 Two Character Code associated with the State/Province/Region of the applicable Country.",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:zipCode": {
+      "type": "field",
+      "next": "primaryAddress:county",
+      "config": {
+        "id": "primaryAddress:zipCode",
+        "type": "text",
+        "name": "primaryAddress:zipCode",
+        "label": "Zip Code / Postal Code",
+        "required": true,
+        "max": 9,
+        "min": 9,
+        "mask": "zip",
+        "description": "System of postal-zone codes (zip stands for 'zone improvement plan') introduced in the U.S. in 1963 to improve mail delivery and exploit electronic reading and sorting capabilities. If zip +4 code is used, place a hyphen between the Zip Code and Postal code fields.",
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:county": {
+      "next": "primaryAddress:telephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:county",
+        "type": "select",
+        "name": "primaryAddress:county",
+        "label": "County",
+        "required": true,
+        "optionsResource": "REF_COUNTY",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:telephoneNumber": {
+      "next": "primaryAddress:telephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:telephoneNumber",
+        "type": "tel",
+        "name": "primaryAddress:telephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:telephoneNumberExtension": {
+      "next": "primaryAddress:fax",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:telephoneNumberExtension",
+        "type": "text",
+        "name": "primaryAddress:telephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "primaryAddress:fax": {
+      "type": "field",
+      "next": "primaryAddress:practiceWebsite",
+      "config": {
+        "id": "primaryAddress:fax",
+        "type": "tel",
+        "name": "primaryAddress:fax",
+        "label": "Fax Number",
+        "required": false,
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "primaryAddress:practiceWebsite": {
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:practiceWebsite",
+        "type": "url",
+        "name": "primaryAddress:practiceWebsite",
+        "label": "Practice Website",
+        "required": false,
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true
+        }
+      }
+    },
+    "primaryAddress:paProviderContactPersonFieldset": {
+      "child": "primaryAddress:paProviderContactPersonFieldsetLayout",
+      "type": "fieldset",
+      "config": {
+        "id": "primaryAddress:paProviderContactPersonFieldset",
+        "name": "primaryAddress:paProviderContactPersonFieldset",
+        "legend": "Primary Contact Person",
+        "description" : null,
+        "helpText": null
+      }
+    },
+    "primaryAddress:paProviderContactPersonFieldsetLayout": {
+      "type": "grid",
+      "child": "primaryAddress:providerContactName",
+      "config": {
+        "id": "primaryAddress:paProviderContactPersonFieldsetLayout",
+        "name": "primaryAddress:paProviderContactPersonFieldsetLayout",
+        "rows": [
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}]
+        ]
+      }
+    },
+    "primaryAddress:providerContactName": {
+      "next": "primaryAddress:providerContactNameCareOf",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:providerContactName",
+        "type": "text",
+        "name": "primaryAddress:providerContactName",
+        "label": "Provider Contact Name",
+        "required": true,
+        "max": 60,
+        "min": 0,
+        "description": "Complete legal name of institution, corporate entity, practice or individual provider.",
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:providerContactNameCareOf": {
+      "next": "primaryAddress:providerContactTelephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:providerContactNameCareOf",
+        "type": "text",
+        "name": "primaryAddress:providerContactNameCareOf",
+        "label": "c/o",
+        "required": false,
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true
+        }
+      }
+    },
+    "primaryAddress:providerContactTelephoneNumber": {
+      "next": "primaryAddress:providerContactTelephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:providerContactTelephoneNumber",
+        "type": "tel",
+        "name": "primaryAddress:providerContactTelephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:providerContactTelephoneNumberExtension": {
+      "next": "primaryAddress:providerContactFax",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:providerContactTelephoneNumberExtension",
+        "type": "text",
+        "name": "primaryAddress:providerContactTelephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "primaryAddress:providerContactFax": {
+      "type": "field",
+      "next": "primaryAddress:providerContactEmailAddress1",
+      "config": {
+        "id": "primaryAddress:providerContactFax",
+        "type": "tel",
+        "name": "primaryAddress:providerContactFax",
+        "label": "Fax Number",
+        "required": false,
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "primaryAddress:providerContactEmailAddress1": {
+      "next": "primaryAddress:providerContactConfirmEmailAddress1",
+      "type": "field",
+      "config": {
+        "id": "primaryAddress:providerContactEmailAddress1",
+        "type": "email",
+        "name": "primaryAddress:providerContactEmailAddress1",
+        "label": "Email Address",
+        "description": "An electronic mail address at which the health plan might contact the provider.",
+        "required": true,
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:providerContactConfirmEmailAddress1": {
+      "type": "field",
+      "next": "primaryAddress:gotoNextButton",
+      "config": {
+        "id": "primaryAddress:providerContactConfirmEmailAddress1",
+        "type": "email",
+        "name": "primaryAddress:providerContactConfirmEmailAddress1",
+        "label": "Confirm Email Address",
+        "required": true,
+        "helpText": "Copy / paste functions not allowed.",
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "primaryAddress:gotoNextButton": {
+      "type": "action",
+      "config": {
+        "type": "button",
+        "id": "primaryAddress:gotoNextButton",
+        "name": "primaryAddress:gotoNextButton",
+        "className": ["btn btn-primary pull-right"],
+        "formId": "primaryAddress:providerAddressForm",
+        "currentKey": 0,
+        "nextKey": 1,
+        "nextTab": "billingAddressTab",
+        "containerId": "addressTabs",
+        "label": "Go to Next Section"
+      }
+    },
+    "billingAddressTab": {
+      "type": "controlledtab",
+      "child": "billingAddress:providerAddressForm",
+      "next": "payToAddressTab",
+      "config": {
+        "id": "billingAddressTab",
+        "title": "Billing Address",
+        "eventKey": 1,
+        "disabled": true
+      }
+    },
+    "billingAddress:providerAddressForm": {
+      "child": "billingAddress:paProviderAddressFieldsetLayout",
+      "type": "form",
+      "config": {
+        "id": "billingAddress:providerAddressForm",
+        "name": "billingAddress:providerAddressForm",
+        "mappings" : {
+          "billingAddress:street" : "primaryAddress:street",
+          "billingAddress:street2" : "primaryAddress:street2",
+          "billingAddress:city" : "primaryAddress:city",
+          "billingAddress:stateProvince" : "primaryAddress:stateProvince",
+          "billingAddress:zipCode" : "primaryAddress:zipCode",
+          "billingAddress:county" : "primaryAddress:county",
+          "billingAddress:telephoneNumber" : "primaryAddress:telephoneNumber",
+          "billingAddress:telephoneNumberExtension" : "primaryAddress:telephoneNumberExtension",
+          "billingAddress:fax" : "primaryAddress:fax",
+          "billingAddress:providerContactName" : "primaryAddress:providerContactName",
+          "billingAddress:providerContactNameCareOf" : "primaryAddress:providerContactNameCareOf",
+          "billingAddress:providerContactTelephoneNumber" : "primaryAddress:providerContactTelephoneNumber",
+          "billingAddress:providerContactTelephoneNumberExtension" : "primaryAddress:providerContactTelephoneNumberExtension",
+          "billingAddress:providerContactFax" : "primaryAddress:providerContactFax",
+          "billingAddress:providerContactEmailAddress1" : "primaryAddress:providerContactEmailAddress1",
+          "billingAddress:providerContactConfirmEmailAddress1" : "primaryAddress:providerContactConfirmEmailAddress1"
+        }
+      }
+    },
+    "billingAddress:paProviderAddressFieldsetLayout": {
+      "type": "grid",
+      "next": "billingAddress:paProviderContactPersonFieldset",
+      "child": "mapPrimaryToBilling",
+      "config": {
+        "id": "billingAddress:paProviderAddressFieldsetLayout",
+        "name": "billingAddress:paProviderAddressFieldsetLayout",
+        "rows": [
+          [{"md": "8"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}]
+        ]
+      }
+    },
+    "mapPrimaryToBilling": {
+      "next": "billingAddress:street",
+      "type": "field",
+      "config": {
+        "id" : "mapPrimaryToBilling",
+        "name" : "mapPrimaryToBilling",
+        "label" : "Primary Address is the same as Billing Address",
+        "type" : "checkbox",
+        "mapTo" : "billingAddress:providerAddressForm",
+        "value" : null,
+        "submitValue" : "map",
+        "fieldValueChangeAction" : "formFieldsMap"
+      }
+    },
+    "billingAddress:street": {
+      "next": "billingAddress:street2",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:street",
+        "type": "text",
+        "name": "billingAddress:street",
+        "label": "Street",
+        "required": true,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:street2": {
+      "next": "billingAddress:city",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:street2",
+        "type": "text",
+        "name": "billingAddress:street2",
+        "label": "Street Line 2",
+        "required": false,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true
+        }
+      }
+    },
+    "billingAddress:city": {
+      "next": "billingAddress:stateProvince",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:city",
+        "type": "text",
+        "name": "billingAddress:city",
+        "label": "City",
+        "required": true,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "City associated with the provider address field.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_CityCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:stateProvince": {
+      "next": "billingAddress:zipCode",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:stateProvince",
+        "type": "select",
+        "name": "billingAddress:stateProvince",
+        "label": "State / Province",
+        "required": true,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "optionsResource": "REF_STATE",
+        "description": "The ISO 3166-2 Two Character Code associated with the State/Province/Region of the applicable Country.",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:zipCode": {
+      "type": "field",
+      "next": "billingAddress:county",
+      "config": {
+        "id": "billingAddress:zipCode",
+        "type": "text",
+        "name": "billingAddress:zipCode",
+        "label": "Zip Code / Postal Code",
+        "required": true,
+        "mask": "zip",
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 9,
+        "min": 9,
+        "description": "System of postal-zone codes (zip stands for 'zone improvement plan') introduced in the U.S. in 1963 to improve mail delivery and exploit electronic reading and sorting capabilities. If zip +4 code is used, place a hyphen between the Zip Code and Postal code fields.",
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:county": {
+      "next": "billingAddress:telephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:county",
+        "type": "select",
+        "name": "billingAddress:county",
+        "label": "County",
+        "required": true,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "optionsResource": "REF_COUNTY",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:telephoneNumber": {
+      "next": "billingAddress:telephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:telephoneNumber",
+        "type": "tel",
+        "name": "billingAddress:telephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "mask": "phone",
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:telephoneNumberExtension": {
+      "next": "billingAddress:fax",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:telephoneNumberExtension",
+        "type": "text",
+        "name": "billingAddress:telephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "billingAddress:fax": {
+      "type": "field",
+      "config": {
+        "id": "billingAddress:fax",
+        "type": "tel",
+        "name": "billingAddress:fax",
+        "label": "Fax Number",
+        "required": false,
+        "mask": "phone",
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "billingAddress:paProviderContactPersonFieldset": {
+      "child": "billingAddress:paProviderContactPersonFieldsetLayout",
+      "type": "fieldset",
+      "config": {
+        "id": "billingAddress:paProviderContactPersonFieldset",
+        "name": "billingAddress:paProviderContactPersonFieldset",
+        "legend": "Billing Contact Person",
+        "description" : null,
+        "helpText": null
+      }
+    },
+    "billingAddress:paProviderContactPersonFieldsetLayout": {
+      "type": "grid",
+      "child": "billingAddress:providerContactName",
+      "config": {
+        "id": "billingAddress:paProviderContactPersonFieldsetLayout",
+        "name": "billingAddress:paProviderContactPersonFieldsetLayout",
+        "rows": [
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}]
+        ]
+      }
+    },
+    "billingAddress:providerContactName": {
+      "next": "billingAddress:providerContactNameCareOf",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:providerContactName",
+        "type": "text",
+        "name": "billingAddress:providerContactName",
+        "label": "Contact Name",
+        "required": true,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "Complete legal name of institution, corporate entity, practice or individual provider.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:providerContactNameCareOf": {
+      "next": "billingAddress:providerContactTelephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:providerContactNameCareOf",
+        "type": "text",
+        "name": "billingAddress:providerContactNameCareOf",
+        "label": "c/o",
+        "required": false,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true
+        }
+      }
+    },
+    "billingAddress:providerContactTelephoneNumber": {
+      "next": "billingAddress:providerContactTelephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:providerContactTelephoneNumber",
+        "type": "tel",
+        "name": "billingAddress:providerContactTelephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "dependencyName": "mapPrimaryToBilling",
+        "dependencyValue": "map",
+        "initialState": "enabled",
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:providerContactTelephoneNumberExtension": {
+      "next": "billingAddress:providerContactFax",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:providerContactTelephoneNumberExtension",
+        "type": "text",
+        "name": "billingAddress:providerContactTelephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "billingAddress:providerContactFax": {
+      "type": "field",
+      "next": "billingAddress:providerContactEmailAddress1",
+      "config": {
+        "id": "billingAddress:providerContactFax",
+        "type": "tel",
+        "name": "billingAddress:providerContactFax",
+        "label": "Fax Number",
+        "required": false,
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "billingAddress:providerContactEmailAddress1": {
+      "next": "billingAddress:providerContactConfirmEmailAddress1",
+      "type": "field",
+      "config": {
+        "id": "billingAddress:providerContactEmailAddress1",
+        "type": "email",
+        "name": "billingAddress:providerContactEmailAddress1",
+        "label": "Email Address",
+        "required": true,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "An electronic mail address at which the health plan might contact the provider.",
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:providerContactConfirmEmailAddress1": {
+      "type": "field",
+      "next": "billingAddress:gotoNextBtn",
+      "config": {
+        "id": "billingAddress:providerContactConfirmEmailAddress1",
+        "type": "email",
+        "name": "billingAddress:providerContactConfirmEmailAddress1",
+        "label": "Confirm Email Address",
+        "required": true,
+        "dependencyName" : "mapPrimaryToBilling",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "helpText": "Copy / paste functions not allowed.",
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "billingAddress:gotoNextBtn": {
+      "type": "action",
+      "config": {
+        "type": "button",
+        "id": "billingAddress:gotoNextBtn",
+        "name": "billingAddress:gotoNextBtn",
+        "className": ["btn btn-primary pull-right"],
+        "formId": "billingAddress:providerAddressForm",
+        "currentKey": 1,
+        "nextKey": 2,
+        "nextTab": "payToAddressTab",
+        "containerId": "addressTabs",
+        "label": "Go to Next Section"
+      }
+    },
+    "payToAddressTab": {
+      "type": "controlledtab",
+      "child": "payToAddress:providerAddressForm",
+      "next": "mailingAddressTab",
+      "config": {
+        "id": "payToAddressTab",
+        "title": "Pay-To Address",
+        "eventKey": 2,
+        "disabled": true
+      }
+    },
+    "payToAddress:providerAddressForm": {
+      "child": "payToAddress:paProviderAddressFieldsetLayout",
+      "type": "form",
+      "config": {
+        "id": "payToAddress:providerAddressForm",
+        "name": "payToAddress:providerAddressForm",
+        "mappings" : {
+          "payToAddress:street" : "primaryAddress:street",
+          "payToAddress:street2" : "primaryAddress:street2",
+          "payToAddress:city" : "primaryAddress:city",
+          "payToAddress:stateProvince" : "primaryAddress:stateProvince",
+          "payToAddress:zipCode" : "primaryAddress:zipCode",
+          "payToAddress:county" : "primaryAddress:county",
+          "payToAddress:telephoneNumber" : "primaryAddress:telephoneNumber",
+          "payToAddress:telephoneNumberExtension" : "primaryAddress:telephoneNumberExtension",
+          "payToAddress:fax" : "primaryAddress:fax",
+          "payToAddress:providerContactName" : "primaryAddress:providerContactName",
+          "payToAddress:providerContactNameCareOf" : "primaryAddress:providerContactNameCareOf",
+          "payToAddress:providerContactTelephoneNumber" : "primaryAddress:providerContactTelephoneNumber",
+          "payToAddress:providerContactTelephoneNumberExtension" : "primaryAddress:providerContactTelephoneNumberExtension",
+          "payToAddress:providerContactFax" : "primaryAddress:providerContactFax",
+          "payToAddress:providerContactEmailAddress1" : "primaryAddress:providerContactEmailAddress1",
+          "payToAddress:providerContactConfirmEmailAddress1" : "primaryAddress:providerContactConfirmEmailAddress1"
+        }
+      }
+    },
+    "payToAddress:paProviderAddressFieldsetLayout": {
+      "type": "grid",
+      "next": "payToAddress:paProviderContactPersonFieldset",
+      "child": "mapPrimaryToPayTo",
+      "config": {
+        "id": "payToAddress:paProviderAddressFieldsetLayout",
+        "name": "payToAddress:paProviderAddressFieldsetLayout",
+        "rows": [
+          [{"md": "8"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}]
+        ]
+      }
+    },
+    "mapPrimaryToPayTo": {
+      "next": "payToAddress:street",
+      "type": "field",
+      "config": {
+        "id" : "mapPrimaryToPayTo",
+        "name" : "mapPrimaryToPayTo",
+        "label" : "Pay-To Address is the same as Primary Practice Address",
+        "type" : "checkbox",
+        "mapTo" : "payToAddress:providerAddressForm",
+        "value" : null,
+        "submitValue" : "map",
+        "fieldValueChangeAction" : "formFieldsMap"
+      }
+    },
+    "payToAddress:street": {
+      "next": "payToAddress:street2",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:street",
+        "type": "text",
+        "name": "payToAddress:street",
+        "label": "Street",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:street2": {
+      "next": "payToAddress:city",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:street2",
+        "type": "text",
+        "name": "payToAddress:street2",
+        "label": "Street Line 2",
+        "required": false,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true
+        }
+      }
+    },
+    "payToAddress:city": {
+      "next": "payToAddress:stateProvince",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:city",
+        "type": "text",
+        "name": "payToAddress:city",
+        "label": "City",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "City associated with the provider address field.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_CityCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:stateProvince": {
+      "next": "payToAddress:zipCode",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:stateProvince",
+        "type": "select",
+        "name": "payToAddress:stateProvince",
+        "label": "State / Province",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "optionsResource": "REF_STATE",
+        "description": "The ISO 3166-2 Two Character Code associated with the State/Province/Region of the applicable Country.",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:zipCode": {
+      "type": "field",
+      "next": "payToAddress:county",
+      "config": {
+        "id": "payToAddress:zipCode",
+        "type": "text",
+        "name": "payToAddress:zipCode",
+        "label": "Zip Code / Postal Code",
+        "required": true,
+        "mask": "zip",
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 9,
+        "min": 9,
+        "description": "System of postal-zone codes (zip stands for 'zone improvement plan') introduced in the U.S. in 1963 to improve mail delivery and exploit electronic reading and sorting capabilities. If zip +4 code is used, place a hyphen between the Zip Code and Postal code fields.",
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:county": {
+      "next": "payToAddress:telephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:county",
+        "type": "select",
+        "name": "payToAddress:county",
+        "label": "County",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "optionsResource": "REF_COUNTY",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:telephoneNumber": {
+      "next": "payToAddress:telephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:telephoneNumber",
+        "type": "tel",
+        "name": "payToAddress:telephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:telephoneNumberExtension": {
+      "next": "payToAddress:fax",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:telephoneNumberExtension",
+        "type": "text",
+        "name": "payToAddress:telephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "payToAddress:fax": {
+      "type": "field",
+      "config": {
+        "id": "payToAddress:fax",
+        "type": "tel",
+        "name": "payToAddress:fax",
+        "label": "Fax Number",
+        "required": false,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "payToAddress:paProviderContactPersonFieldset": {
+      "child": "payToAddress:paProviderContactPersonFieldsetLayout",
+      "type": "fieldset",
+      "config": {
+        "id": "payToAddress:paProviderContactPersonFieldset",
+        "name": "payToAddress:paProviderContactPersonFieldset",
+        "legend": "Pay-To Contact Person",
+        "description" : null,
+        "helpText": null
+      }
+    },
+    "payToAddress:paProviderContactPersonFieldsetLayout": {
+      "type": "grid",
+      "child": "payToAddress:providerContactName",
+      "config": {
+        "id": "payToAddress:paProviderContactPersonFieldsetLayout",
+        "name": "payToAddress:paProviderContactPersonFieldsetLayout",
+        "rows": [
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}]
+        ]
+      }
+    },
+    "payToAddress:providerContactName": {
+      "next": "payToAddress:providerContactNameCareOf",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:providerContactName",
+        "type": "text",
+        "name": "payToAddress:providerContactName",
+        "label": "Contact Name",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "Complete legal name of institution, corporate entity, practice or individual provider.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:providerContactNameCareOf": {
+      "next": "payToAddress:providerContactTelephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:providerContactNameCareOf",
+        "type": "text",
+        "name": "payToAddress:providerContactNameCareOf",
+        "label": "c/o",
+        "required": false,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true
+        }
+      }
+    },
+    "payToAddress:providerContactTelephoneNumber": {
+      "next": "payToAddress:providerContactTelephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:providerContactTelephoneNumber",
+        "type": "tel",
+        "name": "payToAddress:providerContactTelephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "dependencyName": "mapPrimaryToPayTo",
+        "dependencyValue": "map",
+        "initialState": "enabled",
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:providerContactTelephoneNumberExtension": {
+      "next": "payToAddress:providerContactFax",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:providerContactTelephoneNumberExtension",
+        "type": "text",
+        "name": "payToAddress:providerContactTelephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "payToAddress:providerContactFax": {
+      "type": "field",
+      "next": "payToAddress:providerContactEmailAddress1",
+      "config": {
+        "id": "payToAddress:providerContactFax",
+        "type": "tel",
+        "name": "payToAddress:providerContactFax",
+        "label": "Fax Number",
+        "required": false,
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "payToAddress:providerContactEmailAddress1": {
+      "next": "payToAddress:providerContactConfirmEmailAddress1",
+      "type": "field",
+      "config": {
+        "id": "payToAddress:providerContactEmailAddress1",
+        "type": "email",
+        "name": "payToAddress:providerContactEmailAddress1",
+        "label": "Email Address",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "An electronic mail address at which the health plan might contact the provider.",
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:providerContactConfirmEmailAddress1": {
+      "type": "field",
+      "next": "payToAddress:gotoNextBtn",
+      "config": {
+        "id": "payToAddress:providerContactConfirmEmailAddress1",
+        "type": "email",
+        "name": "payToAddress:providerContactConfirmEmailAddress1",
+        "label": "Confirm Email Address",
+        "required": true,
+        "dependencyName" : "mapPrimaryToPayTo",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "helpText": "Copy / paste functions not allowed.",
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "payToAddress:gotoNextBtn": {
+      "type": "action",
+      "config": {
+        "type": "button",
+        "id": "payToAddress:gotoNextBtn",
+        "name": "payToAddress:gotoNextBtn",
+        "className": ["btn btn-primary pull-right"],
+        "formId": "payToAddress:providerAddressForm",
+        "currentKey": 2,
+        "nextKey": 3,
+        "nextTab": "mailingAddressTab",
+        "containerId": "addressTabs",
+        "label": "Go to Next Section"
+      }
+    },
+    "mailingAddressTab": {
+      "type": "controlledtab",
+      "child": "mailingAddress:providerAddressForm",
+      "config": {
+        "id": "mailingAddressTab",
+        "title": "Mailing Address",
+        "eventKey": 3,
+        "disabled": true
+      }
+    },
+    "mailingAddress:providerAddressForm": {
+      "child": "mailingAddress:paProviderAddressFieldsetLayout",
+      "type": "form",
+      "config": {
+        "id": "mailingAddress:providerAddressForm",
+        "name": "mailingAddress:providerAddressForm",
+        "mappings" : {
+          "mailingAddress:street" : "primaryAddress:street",
+          "mailingAddress:street2" : "primaryAddress:street2",
+          "mailingAddress:city" : "primaryAddress:city",
+          "mailingAddress:stateProvince" : "primaryAddress:stateProvince",
+          "mailingAddress:zipCode" : "primaryAddress:zipCode",
+          "mailingAddress:county" : "primaryAddress:county",
+          "mailingAddress:telephoneNumber" : "primaryAddress:telephoneNumber",
+          "mailingAddress:telephoneNumberExtension" : "primaryAddress:telephoneNumberExtension",
+          "mailingAddress:fax" : "primaryAddress:fax",
+          "mailingAddress:providerContactName" : "primaryAddress:providerContactName",
+          "mailingAddress:providerContactNameCareOf" : "primaryAddress:providerContactNameCareOf",
+          "mailingAddress:providerContactTelephoneNumber" : "primaryAddress:providerContactTelephoneNumber",
+          "mailingAddress:providerContactTelephoneNumberExtension" : "primaryAddress:providerContactTelephoneNumberExtension",
+          "mailingAddress:providerContactFax" : "primaryAddress:providerContactFax",
+          "mailingAddress:providerContactEmailAddress1" : "primaryAddress:providerContactEmailAddress1",
+          "mailingAddress:providerContactConfirmEmailAddress1" : "primaryAddress:providerContactConfirmEmailAddress1"
+        }
+      }
+    },
+    "mailingAddress:paProviderAddressFieldsetLayout": {
+      "type": "grid",
+      "next": "mailingAddress:paProviderContactPersonFieldset",
+      "child": "mapPrimaryToMailing",
+      "config": {
+        "id": "mailingAddress:paProviderAddressFieldsetLayout",
+        "name": "mailingAddress:paProviderAddressFieldsetLayout",
+        "rows": [
+          [{"md": "8"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}]
+        ]
+      }
+    },
+    "mapPrimaryToMailing": {
+      "next": "mailingAddress:street",
+      "type": "field",
+      "config": {
+        "id" : "mapPrimaryToMailing",
+        "name" : "mapPrimaryToMailing",
+        "label" : "Primary Address is the same as Mailing Address",
+        "type" : "checkbox",
+        "mapTo" : "mailingAddress:providerAddressForm",
+        "value" : null,
+        "submitValue" : "map",
+        "fieldValueChangeAction" : "formFieldsMap"
+      }
+    },
+    "mailingAddress:street": {
+      "next": "mailingAddress:street2",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:street",
+        "type": "text",
+        "name": "mailingAddress:street",
+        "label": "Street",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:street2": {
+      "next": "mailingAddress:city",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:street2",
+        "type": "text",
+        "name": "mailingAddress:street2",
+        "label": "Street Line 2",
+        "required": false,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "The number and street name where a person or organization can be found.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_StreetAddessCharsCheck": true
+        }
+      }
+    },
+    "mailingAddress:city": {
+      "next": "mailingAddress:stateProvince",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:city",
+        "type": "text",
+        "name": "mailingAddress:city",
+        "label": "City",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "City associated with the provider address field.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_CityCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:stateProvince": {
+      "next": "mailingAddress:zipCode",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:stateProvince",
+        "type": "select",
+        "name": "mailingAddress:stateProvince",
+        "label": "State / Province",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "optionsResource": "REF_STATE",
+        "description": "The ISO 3166-2 Two Character Code associated with the State/Province/Region of the applicable Country.",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:zipCode": {
+      "type": "field",
+      "next": "mailingAddress:county",
+      "config": {
+        "id": "mailingAddress:zipCode",
+        "type": "text",
+        "name": "mailingAddress:zipCode",
+        "label": "Zip Code / Postal Code",
+        "required": true,
+        "dependencyName": "mapPrimaryToMailing",
+        "dependencyValue": "map",
+        "initialState": "enabled",
+        "mask": "zip",
+        "max": 9,
+        "min": 9,
+        "description": "System of postal-zone codes (zip stands for 'zone improvement plan') introduced in the U.S. in 1963 to improve mail delivery and exploit electronic reading and sorting capabilities. If zip +4 code is used, place a hyphen between the Zip Code and Postal code fields.",
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:county": {
+      "next": "mailingAddress:telephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:county",
+        "type": "select",
+        "name": "mailingAddress:county",
+        "label": "County",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "optionsResource": "REF_COUNTY",
+        "rules": {
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:telephoneNumber": {
+      "next": "mailingAddress:telephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:telephoneNumber",
+        "type": "tel",
+        "name": "mailingAddress:telephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:telephoneNumberExtension": {
+      "next": "mailingAddress:fax",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:telephoneNumberExtension",
+        "type": "text",
+        "name": "mailingAddress:telephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "mailingAddress:fax": {
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:fax",
+        "type": "tel",
+        "name": "mailingAddress:fax",
+        "label": "Fax Number",
+        "required": false,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "mailingAddress:paProviderContactPersonFieldset": {
+      "child": "mailingAddress:paProviderContactPersonFieldsetLayout",
+      "type": "fieldset",
+      "config": {
+        "id": "mailingAddress:paProviderContactPersonFieldset",
+        "name": "mailingAddress:paProviderContactPersonFieldset",
+        "legend": "Mailing Contact Person",
+        "description" : null,
+        "helpText": null
+      }
+    },
+    "mailingAddress:paProviderContactPersonFieldsetLayout": {
+      "type": "grid",
+      "child": "mailingAddress:providerContactName",
+      "config": {
+        "id": "mailingAddress:paProviderContactPersonFieldsetLayout",
+        "name": "mailingAddress:paProviderContactPersonFieldsetLayout",
+        "rows": [
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}, {"md": "4"}],
+          [{"md": "4"}],
+          [{"md": "4"}, {"md": "4"}]
+        ]
+      }
+    },
+    "mailingAddress:providerContactName": {
+      "next": "mailingAddress:providerContactNameCareOf",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:providerContactName",
+        "type": "text",
+        "name": "mailingAddress:providerContactName",
+        "label": "Contact Name",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "Complete legal name of institution, corporate entity, practice or individual provider.",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:providerContactNameCareOf": {
+      "next": "mailingAddress:providerContactTelephoneNumber",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:providerContactNameCareOf",
+        "type": "text",
+        "name": "mailingAddress:providerContactNameCareOf",
+        "label": "c/o",
+        "required": false,
+        "dependencyName": "mapPrimaryToMailing",
+        "dependencyValue": "map",
+        "initialState": "enabled",
+        "max": 60,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_FirstMidLastNameCharsCheck": true
+        }
+      }
+    },
+    "mailingAddress:providerContactTelephoneNumber": {
+      "next": "mailingAddress:providerContactTelephoneNumberExtension",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:providerContactTelephoneNumber",
+        "type": "tel",
+        "name": "mailingAddress:providerContactTelephoneNumber",
+        "label": "Telephone Number",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:providerContactTelephoneNumberExtension": {
+      "next": "mailingAddress:providerContactFax",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:providerContactTelephoneNumberExtension",
+        "type": "text",
+        "name": "mailingAddress:providerContactTelephoneNumberExtension",
+        "label": "Telephone Number Extension",
+        "required": false,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 6,
+        "min": 0,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "mailingAddress:providerContactFax": {
+      "type": "field",
+      "next": "mailingAddress:providerContactEmailAddress1",
+      "config": {
+        "id": "mailingAddress:providerContactFax",
+        "type": "tel",
+        "name": "mailingAddress:providerContactFax",
+        "label": "Fax Number",
+        "required": false,
+        "mask": "phone",
+        "helpText": "format: 555-555-5555",
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "max": 10,
+        "min": 10,
+        "rules": {
+          "/CR/VR/VR_CharLengthBetweenMinMaxParam": true,
+          "/CR/VR/VR_NumericCharsOnly": true
+        }
+      }
+    },
+    "mailingAddress:providerContactEmailAddress1": {
+      "next": "mailingAddress:providerContactConfirmEmailAddress1",
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:providerContactEmailAddress1",
+        "type": "email",
+        "name": "mailingAddress:providerContactEmailAddress1",
+        "label": "Email Address",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "description": "An electronic mail address at which the health plan might contact the provider.",
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    },
+    "mailingAddress:providerContactConfirmEmailAddress1": {
+      "type": "field",
+      "config": {
+        "id": "mailingAddress:providerContactConfirmEmailAddress1",
+        "type": "email",
+        "name": "mailingAddress:providerContactConfirmEmailAddress1",
+        "label": "Confirm Email Address",
+        "required": true,
+        "dependencyName" : "mapPrimaryToMailing",
+        "dependencyValue" : "map",
+        "initialState" : "enabled",
+        "helpText": "Copy / paste functions not allowed.",
+        "rules": {
+          "/CR/VR/VR_EmailFormatCheck": true,
+          "/CR/VR/VR_InputRequiredCheck": true
+        }
+      }
+    }
+  }
+}
