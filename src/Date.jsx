@@ -1,8 +1,7 @@
 'use-strict';
 import React from 'react';
 import _ from 'lodash';
-import { DateTimePicker } from 'react-widgets';
-import utils from './utils';
+import {DateTimePicker} from 'react-widgets';
 
 /**
  * Date input component
@@ -10,9 +9,10 @@ import utils from './utils';
  */
 class DateField extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleManualChange = this.handleManualChange.bind(this);
   }
 
   static getDateValue(input) {
@@ -25,22 +25,43 @@ class DateField extends React.Component {
     return value;
   }
 
-  handleDateChange(e) {
+  componentDidMount() {
+    let _div = React.findDOMNode(this);
+    _div.addEventListener('change', this.handleManualChange);
+  }
+
+  componentWillUnmount() {
+    let _div = React.findDOMNode(this);
+    _div.removeEventListener('change', this.handleManualChange);
+  }
+
+  handleDateChange(date, dateString) {
+    let _div = React.findDOMNode(this);
+    let event = new Event('change', {bubbles: true});
+    event.date = date;
+    event.dateString = dateString;
+    _div.dispatchEvent(event);
+  }
+
+  handleManualChange(e) {
+    let value = {date: _.clone(e.date), dateString: _.clone(e.dateString)};
     e.component = {
       id: this.props.id,
+      schemaUpdates: this.props,
       modelUpdates: {
         id: this.props.name,
-        value: e.target.value
+        value
       }
     };
   }
 
   render() {
-    let props = _.pick(this.props, this.props.inputProps);
     return (
-      <div onChange={this.handleDateChange}>
-        <DateTimePicker {...props}
-          value={DateField.getDateValue(this.props.value)} />
+      <div>
+        <DateTimePicker
+          {...this.props}
+          onChange={this.handleDateChange}
+          value={DateField.getDateValue(this.props.value)}/>
       </div>
     );
   }
