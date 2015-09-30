@@ -16,13 +16,7 @@ class ControlledTabs extends React.Component {
     event.component = {
       id: this.props.id,
       schemaUpdates: {
-        components: {
-          [this.props.id]: {
-            config: {
-              activeKey: key
-            }
-          }
-        }
+        activeKey: key
       }
     };
     _div.dispatchEvent(event);
