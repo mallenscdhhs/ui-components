@@ -87,7 +87,7 @@ class Field extends React.Component {
    * @returns {object}
    */
   getInputProps() {
-    let props = _.pick(this.props, this.props.inputProps);
+    let props = (this.props.type === 'date') ? _.omit(this.props, ['bsStyle']) : _.pick(this.props, this.props.inputProps);
     let help = this.props.message || this.props.helpText;
     props.value = this.getDisplayValue();
     props.help = help;
@@ -215,7 +215,7 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-  inputProps: ['id', 'name', 'type', 'disabled', 'checked', 'multiple', 'options'],
+  inputProps: ['id', 'name', 'type', 'disabled', 'checked', 'multiple', 'options', 'placeholder'],
   componentType: 'field',
   initialState: 'visible',
   disabled: false,
