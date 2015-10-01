@@ -3,6 +3,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {Input} from 'react-bootstrap';
 import FieldLabel from './FieldLabel';
+import classNames from 'classnames';
 import _ from 'lodash';
 
 /**
@@ -56,13 +57,20 @@ class FieldGroup extends React.Component {
     };
   }
 
+  getClasses(){
+    return classNames({
+      'field-group': true,
+      'form-inline': true
+    });
+  }
+
   render() {
     return (
       <fieldset onChange={this.handleChange} onBlur={this.props.onBlur}>
         <legend>
           <FieldLabel {...this.props}/>
         </legend>
-        <div className="field-group">
+        <div className={this.getClasses()}>
           {_.map(this.props.options, (option) => {
             let id = `${this.props.id}-option-${option.value}`;
             let config = Immutable.fromJS(option).withMutations(data => {

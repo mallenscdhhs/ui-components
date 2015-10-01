@@ -91,7 +91,7 @@ class Field extends React.Component {
     let help = this.props.message || this.props.helpText;
     props.value = this.getDisplayValue();
     props.help = help;
-    props.bsStyle = classNames({error: this.props.hasError, 'form-inline': true});
+    props.bsStyle = classNames({error: this.props.hasError});
     props.label = <FieldLabel {...this.props}/>;
     // If we have a single option checkbox/radio, that does not get it's values from the 'options' or 'optionsResource'
     // props, then check to see if the current value matches the default value, and if so, the field is checked
