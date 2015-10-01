@@ -44,13 +44,13 @@ class DateField extends React.Component {
   }
 
   handleManualChange(e) {
-    let value = {date: _.clone(e.date), dateString: _.clone(e.dateString)};
+    let value = _.clone(e.dateString);
     e.component = {
       id: this.props.id,
       schemaUpdates: this.props,
       modelUpdates: {
         id: this.props.name,
-        value: _.isEqual(this.props.dayIdx, undefined) ? value.dateString : value
+        value
       }
     };
   }

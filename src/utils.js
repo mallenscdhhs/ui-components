@@ -73,10 +73,10 @@ exports.composeFromFields = (props, model, opConfig) => {
 * @return {string}
 */
 exports.getDateString = (currentValue) => {
-  let value = new Date(currentValue);
+  let value = _.isUndefined(currentValue) ? new Date() : new Date(currentValue);
   let dd = _.padLeft(value.getDate(), 2, '0');
   // January is 0
   let mm = _.padLeft(value.getMonth() + 1, 2, '0');
-  let yyyy = value.getFullYear();  
+  let yyyy = value.getFullYear();
   return `${mm}/${dd}/${yyyy}`;
 };
