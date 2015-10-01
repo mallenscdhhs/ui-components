@@ -25,14 +25,21 @@ fieldset {
     margin-left: @padding-xs-horizontal;
     color: @brand-danger;
   }
+
+  &.form-inline {
+    .radio input[type="radio"],
+    .checkbox input[type="checkbox"] {
+      margin-right: 5px;
+    }
+  }
 }
+
 .field-description .glyphicon-info-sign{
   margin-left:5px !important;
 }
-legend{
-  margin-bottom: 5px !important;
-}
+
 .file-preview-list { list-style: none; }
+
 .file-preview-list-item {
   border-top: 1px solid @table-border-color;
   padding-top: 20px;
