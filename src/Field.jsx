@@ -87,7 +87,7 @@ class Field extends React.Component {
    * @returns {object}
    */
   getInputProps() {
-    let props = (this.props.type === 'date') ? _.omit(this.props, ['bsStyle']) : this.props;
+    let props = (this.props.type === 'date') ? _.omit(this.props, ['bsStyle']) : _.clone(this.props);
     let help = this.props.message || this.props.helpText;
     props.value = this.getDisplayValue();
     props.help = help;
@@ -215,7 +215,7 @@ Field.propTypes = {
   forceManualInput: React.PropTypes.bool
 };
 
-Field.defaultProps = {  
+Field.defaultProps = {
   componentType: 'field',
   initialState: 'visible',
   disabled: false,
