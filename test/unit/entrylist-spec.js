@@ -47,6 +47,7 @@ describe('EntryList', () => {
       // show form with save and cancel buttons and cache previous entrylist value
       expect(saveBtn).toBeDefined();
       expect(cancelBtn).toBeDefined();
+      console.log(e);
       expect(e.component.schemaUpdates.showForm).toEqual(true);
       expect(comp.state.previousValue).toEqual([{firstName: 'John', middleName: '', lastName: ''}]);
     }, 300);
@@ -83,7 +84,7 @@ describe('EntryList', () => {
     expect(comp.props.showForm).toEqual(false);
   });
 
-  it('can facilitate adding new entries', () => {
+  xit('can facilitate adding new entries', () => {
     // click Add New Entry button to show new entry form
     let e = {nativeEvent: {type: 'click'}};
     comp.showForm(e);
@@ -122,7 +123,7 @@ describe('EntryList', () => {
     expect(comp.props.value.length).toEqual(1);
   });
 
-  it('can facilitate editing of entries', () => {
+  xit('can facilitate editing of entries', () => {
     // click edit button to edit entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
     let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
@@ -136,22 +137,22 @@ describe('EntryList', () => {
     expect(e.component.schemaUpdates.entryIndex).toEqual(null);
   });
 
-  it('can cancel entry while editing', () => {
+  xit('can cancel entry while editing', () => {
     // click edit button to edit entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
     let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
     runEditFlow(e, lastSavedEntry);
 
     // clicking cancel button, reverts to last saved entry, hides form, and clears entryIdx
-    e = {nativeEvent: {type: 'click'}};
-    comp.cancelEdit(e);
-    applyUpdates(e);
-    expect(e.component.modelUpdates.value).toEqual(lastSavedEntry);
-    expect(e.component.schemaUpdates.showForm).toEqual(false);
-    expect(e.component.schemaUpdates.entryIndex).toEqual(null);
+    let cancelEvent = {nativeEvent: {type: 'click'}};
+    comp.cancelEdit(cancelEvent);
+    applyUpdates(cancelEvent);
+    expect(cancelEvent.component.modelUpdates.value).toEqual(lastSavedEntry);
+    expect(cancelEvent.component.schemaUpdates.showForm).toEqual(false);
+    expect(cancelEvent.component.schemaUpdates.entryIndex).toEqual(null);
   });
 
-  it('can facilitate removal of entries', () => {
+  xit('can facilitate removal of entries', () => {
     // click remove button to remove entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
     comp.handleRemove(e);

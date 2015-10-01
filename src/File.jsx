@@ -45,8 +45,6 @@ class File extends React.Component {
     return (
       <input
         {...this.props}
-        type="file"
-        value={this.props.value}
         onChange={this.handleInputChange} />
     );
   }
@@ -92,16 +90,21 @@ class File extends React.Component {
 
 File.propTypes = {
   id: React.PropTypes.string.isRequired,
+  type: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
+  label: React.PropTypes.string,
   file: React.PropTypes.object,
   className: React.PropTypes.string,
-  readOnly: React.PropTypes.bool
+  readOnly: React.PropTypes.bool,
+  value: React.PropTypes.object
 };
 
 File.defaultProps = {
   id: '',
   name: '',
+  type: 'file',
   file: {},
+  value: {},
   className: '',
   readOnly: false
 };
