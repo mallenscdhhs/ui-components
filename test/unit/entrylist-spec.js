@@ -6,7 +6,7 @@ import TestUtils from 'react/lib/ReactTestUtils';
 import Immutable from 'immutable';
 import fixture from '../fixtures/entrylist.json';
 
-xdescribe('EntryList', () => {
+describe('EntryList', () => {
   let config = Immutable.fromJS(fixture.config).set('schema', fixture).toJS();
   let comp = TestUtils.renderIntoDocument(
     <EntryList {...config}>
@@ -84,7 +84,7 @@ xdescribe('EntryList', () => {
     expect(comp.props.showForm).toEqual(false);
   });
 
-  it('can facilitate adding new entries', () => {
+  xit('can facilitate adding new entries', () => {
     // click Add New Entry button to show new entry form
     let e = {nativeEvent: {type: 'click'}};
     comp.showForm(e);
@@ -123,7 +123,7 @@ xdescribe('EntryList', () => {
     expect(comp.props.value.length).toEqual(1);
   });
 
-  it('can facilitate editing of entries', () => {
+  xit('can facilitate editing of entries', () => {
     // click edit button to edit entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
     let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
@@ -137,7 +137,7 @@ xdescribe('EntryList', () => {
     expect(e.component.schemaUpdates.entryIndex).toEqual(null);
   });
 
-  it('can cancel entry while editing', () => {
+  xit('can cancel entry while editing', () => {
     // click edit button to edit entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
     let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
@@ -152,7 +152,7 @@ xdescribe('EntryList', () => {
     expect(cancelEvent.component.schemaUpdates.entryIndex).toEqual(null);
   });
 
-  it('can facilitate removal of entries', () => {
+  xit('can facilitate removal of entries', () => {
     // click remove button to remove entry
     let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
     comp.handleRemove(e);
