@@ -50,7 +50,7 @@ class DateField extends React.Component {
       schemaUpdates: this.props,
       modelUpdates: {
         id: this.props.name,
-        value
+        value: _.isEqual(this.props.dayIdx, undefined) ? value.dateString : value
       }
     };
   }
