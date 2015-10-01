@@ -2,41 +2,6 @@ import _ from 'lodash';
 import setClassNames from 'classnames';
 
 /**
- * Determines if the passed-in list contains a value from the passedin "values" array.
- * @param {array} list - the array containing values to compare with
- * @param {array} values - the array contains values to find
- * @returns {boolean}
- */
-exports.containsOneOf = (list, values) => {
-  if (!values.length) return false;
-  return _.contains(list, _.first(values)) || exports.containsOneOf(list, _.rest(values));
-};
-
-/**
-* Returns a string of classes
-* @param {object} props - Abstract the classNames array, type string,
-* and disabled boolean from the parent component to determine which
-* classes should be passed to the owner component
-* @return {string}
-*/
-exports.getClasses = (props) => {
-  return setClassNames(props.classNames, {link: (props.type === 'link'), disabled: props.disabled});
-};
-
-/**
-* Returns a config object with a few computed properties
-* @param {string} fieldId - Pass in the fieldId from the parent
-* component and return computed props to the owner component
-* @return {object}
-*/
-exports.getComputedInputAttr = (fieldId) => {
-  return {
-    className: 'form-control',
-    'aria-describedby': `${fieldId}-help-block`
-  };
-};
-
-/**
 * Determines whether or not a field should be visible based on values of dependent
 * fields on previous pages, returns a props object
 * @param {object} props - Pass in the field's props
@@ -73,10 +38,10 @@ exports.composeFromFields = (props, model, opConfig) => {
 * @return {string}
 */
 exports.getDateString = (currentValue) => {
-  let value = new Date(currentValue);
+  let value = _.isUndefined(currentValue) ? new Date() : new Date(currentValue);
   let dd = _.padLeft(value.getDate(), 2, '0');
   // January is 0
   let mm = _.padLeft(value.getMonth() + 1, 2, '0');
-  let yyyy = value.getFullYear();  
+  let yyyy = value.getFullYear();
   return `${mm}/${dd}/${yyyy}`;
 };

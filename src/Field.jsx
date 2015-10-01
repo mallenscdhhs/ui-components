@@ -87,17 +87,19 @@ class Field extends React.Component {
    * @returns {object}
    */
   getInputProps() {
-    let props = _.pick(this.props, this.props.inputProps);
+    let props = (this.props.type === 'date') ? _.omit(this.props, ['bsStyle']) : _.clone(this.props);
     let help = this.props.message || this.props.helpText;
     props.value = this.getDisplayValue();
     props.help = help;
     props.bsStyle = classNames({error: this.props.hasError});
     props.label = <FieldLabel {...this.props}/>;
+
     // If we have a single option checkbox/radio, that does not get it's values from the 'options' or 'optionsResource'
     // props, then check to see if the current value matches the default value, and if so, the field is checked
     if (this.isRadioOrCheckbox() && !this.isFieldGroup()) {
-      props.checked = FieldGroup.isOptionChecked({value: this.props.submitValue }, props.value);
+      props.checked = FieldGroup.isOptionChecked({value: this.props.submitValue}, props.value);
     }
+
     if (this.props.type === 'select') {
       let options = this.props.options || [];
       let renderOption = opt => <option value={opt.value}>{opt.label}</option>;
@@ -139,7 +141,6 @@ class Field extends React.Component {
   handleChange(e) {
     let value = e.target.value;
     let schemaUpdates = {};
-
 
     // Single instance fields, where their value does not come from the 'options' or 'optionsResource', but
     // from the 'value' and 'submitValue' props.  If the field is 'unchecked', the value is 'null', so we need to have a
@@ -215,15 +216,13 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-  inputProps: ['id', 'name', 'type', 'disabled', 'checked', 'multiple', 'options'],
   componentType: 'field',
   initialState: 'visible',
   disabled: false,
   visible: true,
   mask: '',
   forceManualInput: false,
-  hasError: false,
-  errorMessage: ''
+  hasError: false
 };
 
 export default Field;

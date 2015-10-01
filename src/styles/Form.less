@@ -12,8 +12,15 @@ fieldset {
   fieldset {
     padding-top: 0px;
 
+    &.has-error {
+      legend {
+        color: @brand-danger;
+      }
+    }
+
     legend {
       font-size: @label-size;
+      border: 0;
     }
   }
 

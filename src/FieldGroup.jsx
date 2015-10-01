@@ -3,8 +3,8 @@ import React from 'react';
 import Immutable from 'immutable';
 import {Input} from 'react-bootstrap';
 import FieldLabel from './FieldLabel';
-import classNames from 'classnames';
 import _ from 'lodash';
+import classNames from 'classnames';
 
 /**
  * Represents a group of Checkable instances. Will manage value changes and blurs.
@@ -57,20 +57,24 @@ class FieldGroup extends React.Component {
     };
   }
 
-  getClasses(){
-    return classNames({
-      'field-group': true,
-      'form-inline': true
-    });
+  renderHelpBlock(message) {
+    if (message) {
+      return <p className="help-block">{message}</p>;
+    }
   }
 
   render() {
+    let styles = classNames({
+      'has-error': this.props.hasError,
+      'form-group': true
+    });
+
     return (
-      <fieldset onChange={this.handleChange} onBlur={this.props.onBlur}>
+      <fieldset className={styles} onChange={this.handleChange} onBlur={this.props.onBlur}>
         <legend>
-          <FieldLabel {...this.props}/>
+          {this.props.label}
         </legend>
-        <div className={this.getClasses()}>
+        <div className="field-group">
           {_.map(this.props.options, (option) => {
             let id = `${this.props.id}-option-${option.value}`;
             let config = Immutable.fromJS(option).withMutations(data => {
@@ -86,6 +90,7 @@ class FieldGroup extends React.Component {
 
             return <Input {...config}/>;
           })}
+          {this.renderHelpBlock(this.props.help)}
         </div>
       </fieldset>
     );
@@ -94,11 +99,20 @@ class FieldGroup extends React.Component {
 
 FieldGroup.propTypes = {
   id: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string.isRequired,
   type: React.PropTypes.string.isRequired,
-  value: React.PropTypes.any,
+  name: React.PropTypes.string.isRequired,
+  label: React.PropTypes.string.isRequired,
   required: React.PropTypes.bool,
-  persistInSession: React.PropTypes.bool
+  helpText: React.PropTypes.string,
+  visible: React.PropTypes.bool,
+  disabled: React.PropTypes.bool
+};
+
+FieldGroup.defaultProps = {
+  initialState: 'visible',
+  disabled: false,
+  visible: true,
+  hasError: false
 };
 
 export default FieldGroup;
