@@ -7,11 +7,12 @@ import {Button, Glyphicon} from 'react-bootstrap';
 
 class EntryList extends React.Component {
 
-  constructor(){
+  constructor() {
     super();
     this.state = {
       previousValue: []
     };
+
     this.cancelEdit = this.cancelEdit.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
@@ -109,12 +110,13 @@ class EntryList extends React.Component {
   }
 
   saveEntry(e) {
+    let formId = this.props.schema.components[this.props.id].child;
     e.component = {
       id: this.props.id,
+      formId,
       schemaUpdates: {
         showForm: false,
-        entryIndex: null,
-        isAddingNewEntry: false
+        entryIndex: null
       }
     };
   }
