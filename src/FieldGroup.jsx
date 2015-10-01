@@ -68,8 +68,7 @@ class FieldGroup extends React.Component {
       'has-error': this.props.hasError,
       'form-group': true
     });
-    
-    let message = this.props.message || this.props.helpText;
+
     return (
       <fieldset className={styles} onChange={this.handleChange} onBlur={this.props.onBlur}>
         <legend>
@@ -91,7 +90,7 @@ class FieldGroup extends React.Component {
 
             return <Input {...config}/>;
           })}
-          {this.renderHelpBlock(message)}
+          {this.renderHelpBlock(this.props.help)}
         </div>
       </fieldset>
     );
