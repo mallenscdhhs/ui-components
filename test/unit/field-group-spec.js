@@ -25,7 +25,7 @@ describe('FieldGroup', () => {
     let fieldGroup = dom.childNodes[1];
     expect(dom.tagName).toEqual('FIELDSET');
     expect(_legend.childNodes[0].textContent).toEqual(fixture.label);
-    expect(fieldGroup.className).toEqual('field-group form-inline');
+    expect(fieldGroup.className).toEqual('field-group');
     expect(fieldGroup.childNodes.length).toEqual(fixture.options.length);
     let firstField = fieldGroup.childNodes[0];
     let firstLabel = firstField.childNodes[0].childNodes[0];
