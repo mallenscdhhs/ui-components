@@ -1,14 +1,14 @@
-fieldset {
-  margin-bottom: @padding-large-vertical;
-}
-
 .form-group {
+
+  fieldset& {
+    padding-top: 0;
+  }
 
   legend {
     border: 0 !important;
     font-size: @font-size-base;
     font-weight: bold;
-    margin-bottom: @padding-small-vertical;
+    margin-bottom: @padding-small-vertical !important;
   }
 
   .radio,
