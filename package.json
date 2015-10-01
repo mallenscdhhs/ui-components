@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "test": "npm run lint && npm run test-ci",
-    "test-ci": "node_modules/.bin/testem ci",
+    "test-ci": "node_modules/.bin/testem ci -R dot",
     "test-dev": "node_modules/.bin/testem dev",
     "build": "./node_modules/.bin/gulp build",
     "assets": "./node_modules/.bin/gulp assets",
