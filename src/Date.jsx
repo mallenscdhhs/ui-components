@@ -44,7 +44,7 @@ class DateField extends React.Component {
   }
 
   handleManualChange(e) {
-    let value = _.clone(e.dateString);
+    let value = e.dateString;
     e.component = {
       id: this.props.id,
       schemaUpdates: this.props,
