@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 let fixture = require('../fixtures/file.json');
 
-describe('File', () => {
+xdescribe('File', () => {
   let config = _.omit(fixture, 'file');
   let comp = TestUtils.renderIntoDocument(<File {...config}/>);
 
@@ -31,6 +31,7 @@ describe('File', () => {
     // simulate re-render from schemaUpdate
     comp.props.file = fixture.file;
     comp.setState();
+    console.log(comp);
     let input = TestUtils.scryRenderedDOMComponentsWithTag(comp, 'input');
     let previewLink = TestUtils.findRenderedDOMComponentWithTag(comp, 'a');
     let dom = React.findDOMNode(previewLink);
