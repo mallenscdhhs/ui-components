@@ -2,6 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {DateTimePicker} from 'react-widgets';
+import {Input} from 'react-bootstrap';
 
 /**
  * Date input component
@@ -38,7 +39,6 @@ class DateField extends React.Component {
   handleDateChange(date, dateString) {
     let _El = React.findDOMNode(this);
     let event = new Event('change', {bubbles: true});
-    event.date = date;
     event.dateString = dateString;
     _El.dispatchEvent(event);
   }
@@ -47,7 +47,7 @@ class DateField extends React.Component {
     let value = e.dateString;
     e.component = {
       id: this.props.id,
-      schemaUpdates: this.props,
+      props: _.omit(this.props, 'schema'),
       modelUpdates: {
         id: this.props.name,
         value
@@ -57,10 +57,12 @@ class DateField extends React.Component {
 
   render() {
     return (
-      <DateTimePicker
-        {...this.props}
-        onChange={this.handleDateChange}
-        value={DateField.getDateValue(this.props.value)}/>
+      <Input label={this.props.label} help={this.props.help} bsStyle={this.props.bsStyle}>
+        <DateTimePicker
+          {...this.props}
+          onChange={this.handleDateChange}
+          value={DateField.getDateValue(this.props.value)}/>
+      </Input>
     );
   }
 };
