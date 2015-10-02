@@ -13,6 +13,7 @@ class DateField extends React.Component {
   constructor(props) {
     super(props);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this._handleBlur = this._handleBlur.bind(this);
   }
 
   static getDateValue(input) {
@@ -40,11 +41,17 @@ class DateField extends React.Component {
     node.dispatchEvent(event);
   }
 
+  _handleBlur(e) {
+    e.component = this.props;
+  }
+
   render() {
+    let wrapperProps = _.pick(this.props, ['bsStyle', 'label', 'help']);
     return (
-      <Input label={this.props.label} help={this.props.help} bsStyle={this.props.bsStyle}>
+      <Input {...wrapperProps}>
         <DateTimePicker
           {...this.props}
+          onBlur={this._handleBlur}
           onChange={this.handleDateChange}
           value={DateField.getDateValue(this.props.value)}/>
       </Input>
