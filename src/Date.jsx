@@ -13,7 +13,6 @@ class DateField extends React.Component {
   constructor(props) {
     super(props);
     this.handleDateChange = this.handleDateChange.bind(this);
-    this.handleManualChange = this.handleManualChange.bind(this);
   }
 
   static getDateValue(input) {
@@ -26,26 +25,10 @@ class DateField extends React.Component {
     return value;
   }
 
-  componentDidMount() {
-    let _El = React.findDOMNode(this);
-    _El.addEventListener('change', this.handleManualChange);
-  }
-
-  componentWillUnmount() {
-    let _El = React.findDOMNode(this);
-    _El.removeEventListener('change', this.handleManualChange);
-  }
-
-  handleDateChange(date, dateString) {
-    let _El = React.findDOMNode(this);
+  handleDateChange(date, value) {
+    let node = React.findDOMNode(this);
     let event = new Event('change', {bubbles: true});
-    event.dateString = dateString;
-    _El.dispatchEvent(event);
-  }
-
-  handleManualChange(e) {
-    let value = e.dateString;
-    e.component = {
+    event.component = {
       id: this.props.id,
       props: _.omit(this.props, 'schema'),
       modelUpdates: {
@@ -53,6 +36,8 @@ class DateField extends React.Component {
         value
       }
     };
+
+    node.dispatchEvent(event);
   }
 
   render() {
@@ -75,13 +60,11 @@ DateField.propTypes = {
   calendar: React.PropTypes.bool,
   time: React.PropTypes.bool,
   format: React.PropTypes.string,
-  parse: React.PropTypes.string,
-  inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
+  parse: React.PropTypes.string
 };
 
 DateField.defaultProps = {
   componentType: 'date',
-  inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby', 'placeholder', 'visible', 'disabled'],
   calendar: true,
   time: false,
   format: 'MM/dd/yyyy',

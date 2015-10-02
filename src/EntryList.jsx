@@ -20,6 +20,17 @@ class EntryList extends React.Component {
     this.showForm = this.showForm.bind(this);
     this.saveEntry = this.saveEntry.bind(this);
     this.updateEntries = this.updateEntries.bind(this);
+    this._handleBrowserEvent = this._handleBrowserEvent.bind(this);
+  }
+
+  componentDidMount() {
+    let node = React.findDOMNode(this);
+    node.addEventListener('change', this._handleBrowserEvent);
+  }
+
+  componentWillUnmount() {
+    let node = React.findDOMNode(this);
+    node.removeEventListener('change', this._handleBrowserEvent);
   }
 
   updateEntries(property, entries, value) {
@@ -31,6 +42,12 @@ class EntryList extends React.Component {
     }
     _entries.splice(index, 1, entry);
     return _entries;
+  }
+
+  _handleBrowserEvent(e) {
+    if (e.component) {
+      this.handleChange(e);
+    }
   }
 
   handleEdit(e) {
@@ -63,7 +80,9 @@ class EntryList extends React.Component {
   }
 
   handleChange(e) {
-    let updatedEntries = this.updateEntries(e.target.name, this.props.value, e.component.modelUpdates.value);
+    let fieldValue = e.component.modelUpdates.value;
+    let fieldName = e.component.modelUpdates.id;
+    let updatedEntries = this.updateEntries(fieldName, this.props.value, fieldValue);
     e.component = {
       id: this.props.id,
       modelUpdates: {
