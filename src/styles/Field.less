@@ -1,14 +1,14 @@
-fieldset {
-  margin-bottom: @padding-large-vertical;
-}
-
 .form-group {
+
+  fieldset& {
+    padding-top: 0;
+  }
 
   legend {
     border: 0 !important;
     font-size: @font-size-base;
     font-weight: bold;
-    margin-bottom: @padding-small-vertical;
+    margin-bottom: @padding-small-vertical !important;
   }
 
   .radio,
@@ -25,14 +25,21 @@ fieldset {
     margin-left: @padding-xs-horizontal;
     color: @brand-danger;
   }
+
+  &.form-inline {
+    .radio input[type="radio"],
+    .checkbox input[type="checkbox"] {
+      margin-right: 5px;
+    }
+  }
 }
+
 .field-description .glyphicon-info-sign{
   margin-left:5px !important;
 }
-legend{
-  margin-bottom: 5px !important;
-}
+
 .file-preview-list { list-style: none; }
+
 .file-preview-list-item {
   border-top: 1px solid @table-border-color;
   padding-top: 20px;
