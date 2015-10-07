@@ -3,6 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import Immutable from 'immutable';
 import {Button} from 'react-bootstrap';
+import {Input} from 'react-bootstrap';
 
 /**
 * Renders an <input> control with type of file and a file preview list.
@@ -14,7 +15,6 @@ class File extends React.Component {
     super();
     this.handleClick = this.handleClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.renderInput = this.renderInput.bind(this);
     this.renderEditBtn = this.renderEditBtn.bind(this);
     this.renderPreview = this.renderPreview.bind(this);
   }
@@ -23,30 +23,19 @@ class File extends React.Component {
     e.component = {
       id: this.props.id,
       schemaUpdates: {
-        file: {},
+        file: {}
       }
     };
   }
 
   handleInputChange(e) {
-    // get the latest file from FileList API
-    let file = e.target.files[0];
     e.component = {
       file: {
         id: this.props.id,
         name: this.props.name,
-        properties: file
-      },
-      modelUpdates: {}
+        properties: e.target.files[0]
+      }
     };
-  }
-
-  renderInput() {
-    return (
-      <input
-        {...this.props}
-        onChange={this.handleInputChange} />
-    );
   }
 
   renderEditBtn() {
@@ -57,7 +46,7 @@ class File extends React.Component {
           className="text-left"
           bsStyle="link"
           onClick={this.handleClick}>
-            edit
+            change
         </Button>
       );
     }
@@ -80,10 +69,15 @@ class File extends React.Component {
   }
 
   render() {
-    return _.isEmpty(this.props.file) ? (
-      this.renderInput()
-    ) : (
-      this.renderPreview()
+    return (
+      <Input label={this.props.label} help={this.props.help} bsStyle={this.props.bsStyle}>
+        {_.isEmpty(this.props.file) ? (
+          // render file input initially or when the user requests a change
+          <Input {..._.omit(this.props, 'label', 'help')} onChange={this.handleInputChange}/>
+        ) : (
+          this.renderPreview()
+        )}
+      </Input>
     );
   }
 }
@@ -95,16 +89,15 @@ File.propTypes = {
   label: React.PropTypes.string,
   file: React.PropTypes.object,
   className: React.PropTypes.string,
-  readOnly: React.PropTypes.bool,
-  value: React.PropTypes.object
+  readOnly: React.PropTypes.bool
 };
 
 File.defaultProps = {
   id: '',
   name: '',
+  label: '',
   type: 'file',
   file: {},
-  value: {},
   className: '',
   readOnly: false
 };
