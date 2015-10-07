@@ -11,7 +11,7 @@ describe('File', () => {
 
   it('renders an input with a type of file', () => {
     let input = TestUtils.findRenderedDOMComponentWithTag(comp, 'input');
-    let dom = React.findDOMNode(comp);
+    let dom = React.findDOMNode(input);
     expect(input).toBeDefined();
     expect(dom.type).toEqual('file');
   });

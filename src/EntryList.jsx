@@ -60,6 +60,11 @@ class EntryList extends React.Component {
         entryIndex
       }
     };
+    let entry = this.props.value[entryIndex];
+    e.component.file = {
+      containsFileFields: this.props.containsFileFields,
+      edit: entry
+    };
   }
 
   handleRemove(e) {
@@ -77,19 +82,39 @@ class EntryList extends React.Component {
         entryIndex: null
       }
     };
+
+    let entry = this.props.value[entryIndex];
+    e.component.file = {
+      containsFileFields: this.props.containsFileFields,
+      remove: entry,
+      entryIndex
+    };
   }
 
   handleChange(e) {
-    let fieldValue = e.component.modelUpdates.value;
-    let fieldName = e.component.modelUpdates.id;
-    let updatedEntries = this.updateEntries(fieldName, this.props.value, fieldValue);
-    e.component = {
-      id: this.props.id,
-      modelUpdates: {
-        id: this.props.name,
-        value: updatedEntries
-      }
-    };
+    if (e.component.file) {
+      e.component.file.entryListUpdates = {
+        id: this.props.id,
+        name: this.props.name,
+        config: {
+          fieldName: e.component.file.name,
+          entries: this.props.value,
+          value: e.component.file.properties,
+          index: this.props.entryIndex
+        }
+      };
+    } else {
+      let fieldValue = e.component.modelUpdates.value;
+      let fieldName = e.component.modelUpdates.id;
+      let updatedEntries = this.updateEntries(fieldName, this.props.value, fieldValue);
+      e.component = {
+        id: this.props.id,
+        modelUpdates: {
+          id: this.props.name,
+          value: updatedEntries
+        }
+      };
+    }
   }
 
   cancelEdit(e) {
