@@ -24,7 +24,8 @@ class File extends React.Component {
       id: this.props.id,
       schemaUpdates: {
         file: {}
-      }
+      },
+      file: true
     };
   }
 

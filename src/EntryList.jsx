@@ -61,12 +61,10 @@ class EntryList extends React.Component {
       }
     };
     let entry = this.props.value[entryIndex];
-    if (this.props.containsFileFields) {
-      e.component.file = {
-        containsFileFields: this.props.containsFileFields,
-        edit: entry
-      };
-    }
+    e.component.file = {
+      containsFileFields: this.props.containsFileFields,
+      edit: entry
+    };
   }
 
   handleRemove(e) {
@@ -86,13 +84,11 @@ class EntryList extends React.Component {
     };
 
     let entry = this.props.value[entryIndex];
-    if (this.props.containsFileFields) {
-      e.component.file = {
-        containsFileFields: this.props.containsFileFields,
-        remove: entry,
-        entryIndex
-      };
-    }
+    e.component.file = {
+      containsFileFields: this.props.containsFileFields,
+      remove: entry,
+      entryIndex
+    };
   }
 
   handleChange(e) {
