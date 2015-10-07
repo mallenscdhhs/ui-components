@@ -23,9 +23,8 @@ class File extends React.Component {
     e.component = {
       id: this.props.id,
       schemaUpdates: {
-        file: {}
-      },
-      file: true
+        file: null
+      }
     };
   }
 
