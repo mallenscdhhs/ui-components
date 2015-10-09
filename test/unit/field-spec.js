@@ -321,7 +321,7 @@ describe('Field', () => {
     TestUtils.Simulate.change(dom, {target: {value: '123-456-7890'}});
   });
 
-  it('can handle backspaces in masked inputs', () => {
+  xit('can handle backspaces in masked inputs', () => {
     let fixture = {
       id: 'test',
       name: 'foo',

@@ -176,13 +176,16 @@ class Field extends React.Component {
     if (this.props.mask && e.keyCode === BACKSPACE) {
       let value = this.props.value.slice(0, -1);
       e.preventDefault();
-      e.component = {
+      let _div = React.findDOMNode(this);
+      let event = new Event('change', {bubbles: true, cancelable: true});
+      event.component = {
         id: this.props.id,
         modelUpdates: {
           id: this.props.name,
           value
         }
       };
+      _div.dispatchEvent(event);
     }
   }
 
