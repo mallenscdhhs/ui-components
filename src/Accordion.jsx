@@ -30,6 +30,7 @@ class Accordion extends React.Component {
       <RBAccordion
         id={this.props.id}
         defaultActiveKey={this.props.defaultActiveKey}
+        className="accordion"
         onClick={this.handleClick}>
           {renderChildren(this.props)}
       </RBAccordion>
