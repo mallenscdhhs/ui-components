@@ -72,8 +72,12 @@ class File extends React.Component {
     return (
       <Input label={this.props.label} help={this.props.help} bsStyle={this.props.bsStyle}>
         {_.isEmpty(this.props.file) ? (
-          // render file input initially or when the user requests a change
-          <Input {..._.omit(this.props, 'label', 'help')} onChange={this.handleInputChange}/>
+          // if not readOnly, render file input initially or when the user requests a change
+          this.props.readOnly ? (
+            <p><strong>No file selected.</strong></p>
+          ) : (
+            <Input {..._.omit(this.props, 'label', 'help')} onChange={this.handleInputChange}/>
+          )
         ) : (
           this.renderPreview()
         )}
