@@ -136,7 +136,7 @@ describe('Field', () => {
     expect(input.tagName).toEqual('SELECT');
     expect(input.getAttribute('name')).toEqual(fixture.name);
     expect(input.getAttribute('value')).toBeNull();
-    expect(input.childNodes.length).toBe(1);
+    expect(input.childNodes.length).toBe(2);
     expect(input.childNodes[0].getAttribute('value')).toEqual(fixture.options[0].value);
     expect(input.childNodes[0].textContent).toEqual(fixture.options[0].label);
   });
