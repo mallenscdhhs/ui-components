@@ -169,7 +169,7 @@ class EntryList extends React.Component {
     let html = (
       <div>
         <Button bsStyle="primary" onClick={this.showForm}>
-          <Glyphicon glyph="plus"/> Add
+          <Glyphicon glyph="plus"/> {this.props.addNewButtonText}
         </Button>
       </div>
     );
@@ -244,7 +244,8 @@ EntryList.propTypes = {
   emptyText: React.PropTypes.string,
   columns: React.PropTypes.arrayOf(React.PropTypes.object),
   showForm: React.PropTypes.bool,
-  entryIndex: React.PropTypes.number
+  entryIndex: React.PropTypes.number,
+  addNewButtonText: React.PropTypes.string
 };
 
 EntryList.defaultProps = {
@@ -252,6 +253,7 @@ EntryList.defaultProps = {
   showForm: false,
   entryIndex: null,
   columns: [],
+  addNewButtonText: 'Add',
   emptyText: 'Please add an item to the list.'
 };
 
