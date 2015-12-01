@@ -218,8 +218,7 @@ describe('Field', () => {
       expect(event.component).toBeDefined();
       expect(event.component.id).toEqual(fixture.id);
       expect(event.component.modelUpdates).toBeDefined();
-      expect(event.component.modelUpdates.value).toEqual('Johnny');
-      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      expect(event.component.modelUpdates[fixture.name]).toEqual('Johnny');
       done();
     };
 
@@ -277,8 +276,7 @@ describe('Field', () => {
       expect(event.component.schemaUpdates).toBeDefined();
       expect(event.component.schemaUpdates.checked).toBe(true);
       expect(event.component.modelUpdates).toBeDefined();
-      expect(event.component.modelUpdates.value).toEqual('yes');
-      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      expect(event.component.modelUpdates[fixture.name]).toEqual('yes');
       done();
     };
 
@@ -303,7 +301,7 @@ describe('Field', () => {
     };
 
     let handler = (event) => {
-      expect(event.component.modelUpdates.value).toBe('1234567890');
+      expect(event.component.modelUpdates[fixture.name]).toBe('1234567890');
       done();
     };
 
@@ -363,7 +361,7 @@ describe('Field', () => {
     };
 
     let handler = (event) => {
-      expect(event.component.modelUpdates.value).toBe('1234567890');
+      expect(event.component.modelUpdates[fixture.name]).toBe('1234567890');
       done();
     };
 

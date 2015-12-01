@@ -162,8 +162,7 @@ class Field extends React.Component {
       id: this.props.id,
       schemaUpdates,
       modelUpdates: {
-        id: this.props.name,
-        value
+        [this.props.name]: value
       },
       props: this.props
     };
@@ -182,8 +181,7 @@ class Field extends React.Component {
       event.component = {
         id: this.props.id,
         modelUpdates: {
-          id: this.props.name,
-          value
+          [this.props.name]: value
         }
       };
       _div.dispatchEvent(event);

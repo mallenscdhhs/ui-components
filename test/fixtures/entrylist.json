@@ -6,10 +6,11 @@
     "name": "names",
     "emptyText": "Please add your name.",
     "addNewButtonText": "Add Name",
+    "showForm": false,
     "columns": [
       {"header": "First", "dataKey": "firstName"},
-      {"header": "Middle", "dataKey": "middleName"},
-      {"header": "Last", "dataKey": "lastName"}
+      {"header": "Last", "dataKey": "lastName"},
+      {"header": "Phone", "dataKey": "phone"}
     ]
   },
   "components": {
@@ -35,19 +36,21 @@
       "next": "elField3",
       "config": {
         "id": "elField2",
-        "name": "middleName",
-        "mask": true,
+        "name": "lastName",
         "type": "text",
-        "label": "Middle"
+        "label": "Last",
+        "min": 10,
+        "max": 10
       }
     },
     "elField3": {
       "type": "field",
       "config": {
         "id": "elField3",
-        "name": "lastName",
+        "name": "phone",
         "type": "text",
-        "label": "Last name"
+        "label": "Phone",
+        "mask": "phone"
       }
     }
   }

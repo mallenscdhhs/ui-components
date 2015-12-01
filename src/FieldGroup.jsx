@@ -51,8 +51,7 @@ class FieldGroup extends React.Component {
       id: this.props.id,
       schemaUpdates,
       modelUpdates: {
-        id: this.props.name,
-        value
+        [this.props.name]: value
       }
     };
   }
