@@ -33,8 +33,7 @@ class DateField extends React.Component {
       id: this.props.id,
       props: _.omit(this.props, 'schema'),
       modelUpdates: {
-        id: this.props.name,
-        value
+        [this.props.name]: value
       }
     };
 

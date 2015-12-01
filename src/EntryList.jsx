@@ -6,6 +6,9 @@ import renderChildren from './render-children';
 import {Button, Glyphicon} from 'react-bootstrap';
 
 class EntryList extends React.Component {
+  static clearModelValues(columns) {
+    return _.reduce(_.map(columns, col => ({[col.dataKey]: undefined})), _.assign, {});
+  }
 
   constructor() {
     super();
@@ -74,8 +77,7 @@ class EntryList extends React.Component {
     e.component = {
       id: this.props.id,
       modelUpdates: {
-        id: this.props.name,
-        value
+        [this.props.name]: value
       },
       schemaUpdates: {
         showForm: false,
@@ -104,30 +106,27 @@ class EntryList extends React.Component {
         }
       };
     } else {
-      let fieldValue = e.component.modelUpdates.value;
-      let fieldName = e.component.modelUpdates.id;
+      let fieldName = _.first(_.keys(e.component.modelUpdates));
+      let fieldValue = e.component.modelUpdates[fieldName];
       let updatedEntries = this.updateEntries(fieldName, this.props.value, fieldValue);
+      let updates = {[this.props.name]: updatedEntries};
       e.component = {
         id: this.props.id,
-        modelUpdates: {
-          id: this.props.name,
-          value: updatedEntries
-        }
+        modelUpdates: _.merge(e.component.modelUpdates, updates)
       };
     }
   }
 
   cancelEdit(e) {
+    let modelUpdates = EntryList.clearModelValues(this.props.columns);
+    modelUpdates[this.props.name] = this.state.previousValue;
     e.component = {
       id: this.props.id,
       schemaUpdates: {
         showForm: false,
         entryIndex: null
       },
-      modelUpdates: {
-        id: this.props.name,
-        value: this.state.previousValue
-      }
+      modelUpdates
     };
   }
 
@@ -147,17 +146,18 @@ class EntryList extends React.Component {
         entryIndex
       },
       modelUpdates: {
-        id: this.props.name,
-        value
+        [this.props.name]: value
       }
     };
   }
 
   saveEntry(e) {
-    let formId = this.props.schema.components[this.props.id].child;
+    let formId = this.props.children[0].props.id;
+    let modelUpdates = EntryList.clearModelValues(this.props.columns);
     e.component = {
       id: this.props.id,
       formId,
+      modelUpdates,
       schemaUpdates: {
         showForm: false,
         entryIndex: null
