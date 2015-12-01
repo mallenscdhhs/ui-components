@@ -28,13 +28,19 @@ class DateField extends React.Component {
 
   handleDateChange(date, value) {
     let node = React.findDOMNode(this);
-    let event = new Event('change', {bubbles: true});
+    let event;
+    try {
+      event = new Event('change', {bubbles: true});
+    } catch (e) {
+      event = document.createEvent('Event');
+      event.initEvent('change', true, false);
+    }
+
     event.component = {
       id: this.props.id,
       props: _.omit(this.props, 'schema'),
       modelUpdates: {
-        id: this.props.name,
-        value
+        [this.props.name]: value
       }
     };
 

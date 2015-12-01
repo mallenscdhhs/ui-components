@@ -15,14 +15,12 @@ describe('Date input', function() {
     expect(dateComponent.props.value).toBe(fixture.value);
   });
 
-  xit('can handle change event', (done) => {
+  it('can handle change event', (done) => {
     let handleSimulatedChange = (e) => {
       expect(e.component).toBeDefined();
       expect(e.component.id).toEqual(fixture.id);
       expect(e.component.modelUpdates).toBeDefined();
-      expect(e.component.modelUpdates.value.date).toEqual('2015-09-30T05:00:00.000Z');
-      expect(e.component.modelUpdates.value.dateString).toEqual(fixture.value);
-      expect(e.component.modelUpdates.id).toEqual(fixture.name);
+      expect(e.component.modelUpdates[fixture.name]).toEqual(fixture.value);
       done();
     };
 

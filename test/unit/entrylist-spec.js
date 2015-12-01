@@ -1,166 +1,160 @@
 import React from 'react';
-import EntryList from '../../src/EntryList';
-import Form from '../../src/Form';
-import Field from '../../src/Field';
+import elements from '../../src/index';
 import TestUtils from 'react/lib/ReactTestUtils';
 import Immutable from 'immutable';
+import Factory from '../../src/Factory';
 import fixture from '../fixtures/entrylist.json';
 
+const SCHEMA = fixture;
+const mockEntry = {firstName: 'John', lastName: 'Doe', phone: '5554443210'};
+
+function buildComponent(schema) {
+  let componentBuild = Factory.build(elements, schema, schema)[0];
+  let Component = componentBuild.type;
+  let props = componentBuild.props;
+  return TestUtils.renderIntoDocument(<Component {...props} schema={schema}/>);
+}
+
 describe('EntryList', () => {
-  let config = Immutable.fromJS(fixture.config).set('schema', fixture).toJS();
-  let comp = TestUtils.renderIntoDocument(
-    <EntryList {...config}>
-      <Form {...config.schema.components.elForm.config}>
-        <Field {...config.schema.components.elField1.config}/>
-        <Field {...config.schema.components.elField2.config}/>
-        <Field {...config.schema.components.elField3.config}/>
-      </Form>
-    </EntryList>
-  );
-  let dom = React.findDOMNode(comp);
-  let entrylist = TestUtils.findRenderedDOMComponentWithClass(comp, 'entrylist');
-  let table = React.findDOMNode(entrylist).childNodes[0];
-  let columns = table.childNodes[0].childNodes[0].childNodes;
-
-  // simulate schema/model updates and re-rendering of the entrylist component
-  let applyUpdates = (e) => {
-    let component = Immutable.fromJS(e.component);
-    if (component.has('schemaUpdates')) {
-      component.get('schemaUpdates').forEach((value, key) => comp.props[key] = value);
-    }
-    if (component.has('modelUpdates')) {
-      comp.props.value = e.component.modelUpdates.value;
-    }
-    // rerender the component
-    comp.setState();
-  };
-
-  // simulate running through the steps of clicking edit, opening the form, and changing a field value
-  let runEditFlow = (e, lastSavedEntry) => {
-    comp.handleEdit(e);
-    applyUpdates(e);
-    // allow re-render to finish
-    setTimeout(() => {
-      let formBtns = TestUtils.scryRenderedDOMComponentsWithTag(entrylist, 'button');
-      let saveBtn = formBtns[0];
-      let cancelBtn = formBtns[1];
-      // show form with save and cancel buttons and cache previous entrylist value
-      expect(saveBtn).toBeDefined();
-      expect(cancelBtn).toBeDefined();
-      console.log(e);
-      expect(e.component.schemaUpdates.showForm).toEqual(true);
-      expect(comp.state.previousValue).toEqual([{firstName: 'John', middleName: '', lastName: ''}]);
-    }, 300);
-
-    // change firstName value
-    comp.setState({previousValue: lastSavedEntry});
-
-    e = {
-      target: {
-        name: 'firstName',
-        value: [{firstName: 'Joe', middleName: '', lastName: ''}]
-      },
-      component: {
-        modelUpdates: {
-          id: 'firstName',
-          value: 'Joe'
-        }
-      }
-    };
-    comp.handleChange(e);
-    applyUpdates(e);
-    expect(e.component.modelUpdates.value).toEqual(e.target.value);
-  };
 
   it('renders an entrylist', () => {
-    expect(entrylist).toBeDefined();
-    expect(table.className).toEqual('table table-striped table-bordered table-hover');
-    // extra column is for actions
-    expect(columns.length).toEqual(config.columns.length + 1);
-    // entrylist is empty by default, form is hidden, and Add New Entry button is present
-    let addNewEntryBtn = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-primary');
-    expect(comp.props.value.length).toEqual(0);
-    expect(addNewEntryBtn).toBeDefined();
-    expect(comp.props.showForm).toEqual(false);
+    let component = buildComponent(SCHEMA);
+    let headers = TestUtils.scryRenderedDOMComponentsWithTag(component, 'th');
+    expect(component.props.columns.length).toBe(SCHEMA.config.columns.length);
+    expect(headers.length).toBe(SCHEMA.config.columns.length + 1);
   });
 
-  xit('can facilitate adding new entries', () => {
-    // click Add New Entry button to show new entry form
-    let e = {nativeEvent: {type: 'click'}};
-    comp.showForm(e);
-    expect(e.component).toBeDefined();
-    expect(e.component.schemaUpdates.showForm).toEqual(true);
-    expect(e.component.schemaUpdates.entryIndex).toEqual(0);
-    expect(e.component.modelUpdates.id).toEqual(config.name);
-    expect(e.component.modelUpdates.value).toEqual([{firstName: '', middleName: '', lastName: ''}]);
-    applyUpdates(e);
-    // allow re-render to finish
-    setTimeout(() => {
-      // entrylist form is showing, add/submit entry is present
-      let entrylistForm = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'entrylist-form');
-      let addEntry = TestUtils.findRenderedDOMComponentWithClass(entrylist, 'btn-default');
-      expect(entrylistForm).toBeDefined();
-      expect(addEntry).toBeDefined();
-    }, 300);
+  it('should render a configured form when "showForm" is set to "true"', () => {
+    let _schema = Immutable.fromJS(SCHEMA).setIn(['config', 'showForm'], true).toJS();
+    let componentWithForm = buildComponent(_schema);
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(componentWithForm, 'input');
+    expect(inputs.length).toBe(3);
+  });
 
-    // click Add button to submit new entry
-    e = {
-      target: {
-        name: 'firstName',
-        value: [{firstName: 'John', middleName: '', lastName: ''}]
-      },
+  it('should add a new entry to the value list when adding a new entry', () => {
+    let mockEvent = {};
+    let component = buildComponent(SCHEMA);
+    component.showForm(mockEvent);
+    expect(mockEvent.component).toBeDefined();
+    expect(mockEvent.component.id).toBe(SCHEMA.config.id);
+    expect(mockEvent.component.schemaUpdates).toEqual({showForm: true, entryIndex: 0});
+    expect(mockEvent.component.modelUpdates).toEqual({
+      [SCHEMA.config.name]: [{firstName: '', lastName: '', phone: ''}]
+    });
+  });
+
+  it('should facilitate editing of entries', () => {
+    let schema = Immutable.fromJS(SCHEMA).setIn(['config', 'value'], [mockEntry]).toJS();
+    let componentWithEntries = buildComponent(schema);
+    let mockEvent = {
+      target: {dataset: {index: 0}}
+    };
+    componentWithEntries.handleEdit(mockEvent);
+    expect(mockEvent.component.id).toBe(schema.config.id);
+    expect(mockEvent.component.schemaUpdates).toEqual({
+      showForm: true,
+      entryIndex: 0
+    });
+
+    let mockSaveEvent = {};
+    componentWithEntries.saveEntry(mockSaveEvent);
+    expect(mockSaveEvent.component.formId).toEqual(schema.child);
+    expect(mockSaveEvent.component.schemaUpdates).toEqual({
+      showForm: false,
+      entryIndex: null
+    });
+
+    expect(mockSaveEvent.component.modelUpdates).toEqual({
+      firstName: undefined,
+      lastName: undefined,
+      phone: undefined
+    });
+  });
+
+  it('should send component data when input values change', () => {
+    let schema = Immutable
+      .fromJS(SCHEMA)
+      .setIn(['config', 'showForm'], true)
+      .setIn(['config', 'entryIndex'], 0)
+      .setIn(['config', 'value'], [mockEntry])
+      .toJS();
+
+    let component = buildComponent(schema);
+    let mockEvent = {
       component: {
         modelUpdates: {
-          id: 'firstName',
-          value: 'John'
+          lastName: 'Foo'
         }
       }
     };
-    comp.handleChange(e);
-    applyUpdates(e);
-    expect(e.component.modelUpdates.id).toEqual(config.name);
-    expect(e.component.modelUpdates.value).toEqual(e.target.value);
-    expect(comp.props.value.length).toEqual(1);
+
+    let expectedModelUpdates = {
+      [schema.config.name]: [{lastName: 'Foo', firstName: mockEntry.firstName, phone: mockEntry.phone}],
+      lastName: 'Foo'
+    };
+
+    component.handleChange(mockEvent);
+    expect(mockEvent.component.id).toEqual(schema.config.id);
+    expect(mockEvent.component.modelUpdates).toEqual(expectedModelUpdates);
   });
 
-  xit('can facilitate editing of entries', () => {
-    // click edit button to edit entry
-    let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
-    let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
-    runEditFlow(e, lastSavedEntry);
+  it('should empty all model values associated with entry on cancel', () => {
+    let schema = Immutable
+      .fromJS(SCHEMA)
+      .setIn(['config', 'showForm'], true)
+      .setIn(['config', 'entryIndex'], 0)
+      .setIn(['config', 'value'], [mockEntry])
+      .toJS();
 
-    // clicking save button, hides form and clears entryIdx
-    e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
-    comp.saveEntry(e);
-    applyUpdates(e);
-    expect(e.component.schemaUpdates.showForm).toEqual(false);
-    expect(e.component.schemaUpdates.entryIndex).toEqual(null);
+    let component = buildComponent(schema);
+    let mockEvent = {};
+    let mockResult = {
+      component: {
+        id: schema.config.id,
+        schemaUpdates: {
+          showForm: false,
+          entryIndex: null
+        },
+        modelUpdates: {
+          [schema.config.name]: [],
+          firstName: undefined,
+          lastName: undefined,
+          phone: undefined
+        }
+      }
+    };
+
+    component.cancelEdit(mockEvent);
+    expect(mockEvent).toEqual(mockResult);
   });
 
-  xit('can cancel entry while editing', () => {
-    // click edit button to edit entry
-    let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
-    let lastSavedEntry = [{firstName: 'John', middleName: '', lastName: ''}];
-    runEditFlow(e, lastSavedEntry);
+  it('should be able to remove an entry from value list', () => {
+    let schema = Immutable
+      .fromJS(SCHEMA)
+      .setIn(['config', 'value'], [mockEntry])
+      .toJS();
 
-    // clicking cancel button, reverts to last saved entry, hides form, and clears entryIdx
-    let cancelEvent = {nativeEvent: {type: 'click'}};
-    comp.cancelEdit(cancelEvent);
-    applyUpdates(cancelEvent);
-    expect(cancelEvent.component.modelUpdates.value).toEqual(lastSavedEntry);
-    expect(cancelEvent.component.schemaUpdates.showForm).toEqual(false);
-    expect(cancelEvent.component.schemaUpdates.entryIndex).toEqual(null);
+    let component = buildComponent(schema);
+    let mockEvent = {
+      target: {dataset: {index: 0}}
+    };
+
+    let mockResult = {
+      component: {
+        id: schema.config.id,
+        modelUpdates: {
+          [schema.config.name]: []
+        },
+        schemaUpdates: {
+          showForm: false,
+          entryIndex: null
+        }
+      }
+    };
+
+    component.handleRemove(mockEvent);
+    expect(mockEvent.component.schemaUpdates).toEqual(mockResult.component.schemaUpdates);
+    expect(mockEvent.component.modelUpdates).toEqual(mockResult.component.modelUpdates);
   });
 
-  xit('can facilitate removal of entries', () => {
-    // click remove button to remove entry
-    let e = {nativeEvent: {type: 'click'}, target: {dataset: {index: 0}}};
-    comp.handleRemove(e);
-    applyUpdates(e);
-
-    // hide form and clear entryIdx
-    expect(e.component.schemaUpdates.showForm).toEqual(false);
-    expect(e.component.schemaUpdates.entryIndex).toEqual(null);
-    expect(comp.props.value.length).toEqual(0);
-  });
 });

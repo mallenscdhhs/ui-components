@@ -56,8 +56,7 @@ describe('FieldGroup', () => {
       expect(event.component.schemaUpdates).toBeDefined();
       expect(event.component.schemaUpdates.checked).toBeUndefined();
       expect(event.component.modelUpdates).toBeDefined();
-      expect(event.component.modelUpdates.value.join('-')).toEqual('bar-baz');
-      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      expect(event.component.modelUpdates[fixture.name].join('-')).toEqual('bar-baz');
       done();
     };
 
@@ -96,8 +95,7 @@ describe('FieldGroup', () => {
       expect(event.component.schemaUpdates).toBeDefined();
       expect(event.component.schemaUpdates.checked).toBe(true);
       expect(event.component.modelUpdates).toBeDefined();
-      expect(event.component.modelUpdates.value).toEqual('no');
-      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      expect(event.component.modelUpdates[fixture.name]).toEqual('no');
       done();
     };
 
@@ -134,8 +132,7 @@ describe('FieldGroup', () => {
       expect(event.component.schemaUpdates).toBeDefined();
       expect(event.component.schemaUpdates.checked).toBeUndefined();
       expect(event.component.modelUpdates).toBeDefined();
-      expect(event.component.modelUpdates.value.join('-')).toEqual('bar-foo');
-      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+      expect(event.component.modelUpdates[fixture.name].join('-')).toEqual('bar-foo');      
       done();
     };
 
