@@ -1,5 +1,6 @@
 'use-strict';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import setClassNames from 'classnames';
 import renderChildren from './render-children';
@@ -27,12 +28,12 @@ class EntryList extends React.Component {
   }
 
   componentDidMount() {
-    let node = React.findDOMNode(this);
+    let node = ReactDOM.findDOMNode(this);
     node.addEventListener('change', this._handleBrowserEvent);
   }
 
   componentWillUnmount() {
-    let node = React.findDOMNode(this);
+    let node = ReactDOM.findDOMNode(this);
     node.removeEventListener('change', this._handleBrowserEvent);
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import elements from '../../src/index';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import Immutable from 'immutable';
 import Factory from '../../src/Factory';
 import fixture from '../fixtures/entrylist.json';

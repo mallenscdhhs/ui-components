@@ -1,6 +1,6 @@
 import React from 'react';
 import Tree from '../../src/Tree';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 
 describe('Tree component', function(){
   it('will render if passed children', () => {
