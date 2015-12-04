@@ -17,7 +17,6 @@ describe('Action component', () => {
     let action = output.props.children;
     expect(output.props.className).toBe('pull-left');
     expect(action.props.bsStyle).toBe('default');
-    expect(action.props.bsSize).toBe('medium');
     expect(action.props.children[1]).toEqual(fixture.label);
   });
 
