@@ -71,7 +71,6 @@ Action.defaultProps = {
   componentType: 'action',
   type: 'button',
   styleName: 'default',
-  size: 'medium',
   align: 'left'
 };
 
