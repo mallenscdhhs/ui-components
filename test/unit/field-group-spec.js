@@ -1,7 +1,9 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import FieldGroup from '../../src/FieldGroup';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import Field from '../../src/Field';
+import ComponentWrapper from '../ComponentWrapper';
 
 let options = [
   {label: 'Foo', value: 'foo'},
@@ -20,7 +22,7 @@ describe('FieldGroup', () => {
     };
 
     let component = TestUtils.renderIntoDocument(<FieldGroup {...fixture}/>);
-    let dom = React.findDOMNode(component);
+    let dom = ReactDOM.findDOMNode(component);
     let _legend = dom.childNodes[0];
     let fieldGroup = dom.childNodes[1];
     expect(dom.tagName).toEqual('FIELDSET');
@@ -61,16 +63,16 @@ describe('FieldGroup', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
+      <ComponentWrapper onChange={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(component, 'input');
     let input = inputs[2];
     TestUtils.Simulate.change(input, {
       target: {
-        value: React.findDOMNode(input).value,
+        value: ReactDOM.findDOMNode(input).value,
         checked: true
       }
     });
@@ -100,9 +102,9 @@ describe('FieldGroup', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
+      <ComponentWrapper onChange={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(component, 'input');
@@ -132,21 +134,21 @@ describe('FieldGroup', () => {
       expect(event.component.schemaUpdates).toBeDefined();
       expect(event.component.schemaUpdates.checked).toBeUndefined();
       expect(event.component.modelUpdates).toBeDefined();
-      expect(event.component.modelUpdates[fixture.name].join('-')).toEqual('bar-foo');      
+      expect(event.component.modelUpdates[fixture.name].join('-')).toEqual('bar-foo');
       done();
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
+      <ComponentWrapper onChange={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(component, 'input');
     let input = inputs[2];
     TestUtils.Simulate.change(input, {
       target: {
-        value: React.findDOMNode(input).value,
+        value: ReactDOM.findDOMNode(input).value,
         checked: false
       }
     });

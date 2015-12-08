@@ -1,6 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import utils from '../../src/utils';
 import Field from '../../src/Field';
 import prepopVisibilityFixture from '../fixtures/field-prepopulate-visibility.json';

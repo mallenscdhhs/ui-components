@@ -1,5 +1,5 @@
 import React from 'react';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import Workflow from '../../src/Workflow';
 import WorkflowItem from '../../src/WorkflowItem';
 import Immutable from 'immutable';
@@ -21,7 +21,7 @@ describe('Workflow', function(){
     expect(title.props.children).toBe(longerWorkflow.config.title);
     let tree = output.props.children[1];
     expect(tree.props.componentType).toBe('tree');
-    let workflowItemChild = tree.props.children['.0'];
+    let workflowItemChild = tree.props.children[0];
     expect(workflowItemChild.props.title).toBe(config.schema.components.page1.config.title);
   });
 

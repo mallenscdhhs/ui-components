@@ -1,7 +1,7 @@
 import React from 'react';
 import Field from '../../src/Field';
 import Date from '../../src/Date';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import fixture from '../fixtures/field-date.json';
 
 describe('Date input', function() {
