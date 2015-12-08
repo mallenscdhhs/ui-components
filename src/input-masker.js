@@ -40,7 +40,7 @@ let masks = {
     placeholderChar
   },
   dateFormat: {
-    pattern: '**/**/**',
+    pattern: '**/**/****',
     placeholderChar
   }
 };
