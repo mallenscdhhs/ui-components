@@ -63,9 +63,7 @@ class EntryList extends React.Component {
         showForm: true,
         entryIndex
       },
-      modelUpdates: {
-        [this.props.name]: entry
-      }
+      modelUpdates: entry
     };
 
     e.component.file = {
