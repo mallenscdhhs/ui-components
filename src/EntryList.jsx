@@ -55,15 +55,19 @@ class EntryList extends React.Component {
 
   handleEdit(e) {
     let entryIndex = Number(e.target.dataset.index);
+    let entry = this.props.value[entryIndex];
     this.setState({previousValue: this.props.value});
     e.component = {
       id: this.props.id,
       schemaUpdates: {
         showForm: true,
         entryIndex
+      },
+      modelUpdates: {
+        [this.props.name]: entry
       }
     };
-    let entry = this.props.value[entryIndex];
+
     e.component.file = {
       containsFileFields: this.props.containsFileFields,
       edit: entry
