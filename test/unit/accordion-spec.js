@@ -11,7 +11,7 @@ describe('Accordion', () => {
 
   it('renders a bootstrap accordion', () => {
     expect(dom.id).toEqual('accordion');
-    expect(dom.className).toEqual('panel-group');
+    expect(dom.className).toEqual('accordion panel-group');
   });
 
   it('can be configured for any panel to be expanded by default', () => {

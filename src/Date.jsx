@@ -1,8 +1,8 @@
 'use-strict';
 import React from 'react';
 import _ from 'lodash';
-import { DateTimePicker } from 'react-widgets';
-import utils from './utils';
+import {DateTimePicker} from 'react-widgets';
+import {Input} from 'react-bootstrap';
 
 /**
  * Date input component
@@ -10,9 +10,10 @@ import utils from './utils';
  */
 class DateField extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this._handleBlur = this._handleBlur.bind(this);
   }
 
   static getDateValue(input) {
@@ -25,23 +26,41 @@ class DateField extends React.Component {
     return value;
   }
 
-  handleDateChange(e) {
-    e.component = {
+  handleDateChange(date, value) {
+    let node = React.findDOMNode(this);
+    let event;
+    try {
+      event = new Event('change', {bubbles: true});
+    } catch (e) {
+      event = document.createEvent('Event');
+      event.initEvent('change', true, false);
+    }
+
+    event.component = {
       id: this.props.id,
+      props: _.omit(this.props, 'schema'),
       modelUpdates: {
-        id: this.props.name,
-        value: e.target.value
+        [this.props.name]: value
       }
     };
+
+    node.dispatchEvent(event);
+  }
+
+  _handleBlur(e) {
+    e.component = this.props;
   }
 
   render() {
-    let props = _.pick(this.props, this.props.inputProps);
+    let wrapperProps = _.pick(this.props, ['bsStyle', 'label', 'help']);
     return (
-      <div onChange={this.handleDateChange}>
-        <DateTimePicker {...props}
-          value={DateField.getDateValue(this.props.value)} />
-      </div>
+      <Input {...wrapperProps}>
+        <DateTimePicker
+          {...this.props}
+          onBlur={this._handleBlur}
+          onChange={this.handleDateChange}
+          value={DateField.getDateValue(this.props.value)}/>
+      </Input>
     );
   }
 };
@@ -54,13 +73,11 @@ DateField.propTypes = {
   calendar: React.PropTypes.bool,
   time: React.PropTypes.bool,
   format: React.PropTypes.string,
-  parse: React.PropTypes.string,
-  inputProps: React.PropTypes.arrayOf(React.PropTypes.string)
+  parse: React.PropTypes.string
 };
 
 DateField.defaultProps = {
   componentType: 'date',
-  inputProps: ['id', 'name', 'calendar', 'time', 'format', 'parse', 'aria-describedby', 'placeholder', 'visible', 'disabled'],
   calendar: true,
   time: false,
   format: 'MM/dd/yyyy',

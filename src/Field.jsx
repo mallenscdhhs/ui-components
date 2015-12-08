@@ -87,15 +87,23 @@ class Field extends React.Component {
    * @returns {object}
    */
   getInputProps() {
-    let props = _.pick(this.props, this.props.inputProps);
+    let props = (this.props.type === 'date') ? _.omit(this.props, ['bsStyle']) : _.clone(this.props);
     let help = this.props.message || this.props.helpText;
     props.value = this.getDisplayValue();
     props.help = help;
     props.bsStyle = classNames({error: this.props.hasError});
     props.label = <FieldLabel {...this.props}/>;
+
+    // If we have a single option checkbox/radio, that does not get it's values from the 'options' or 'optionsResource'
+    // props, then check to see if the current value matches the default value, and if so, the field is checked
+    if (this.isRadioOrCheckbox() && !this.isFieldGroup()) {
+      props.checked = FieldGroup.isOptionChecked({value: this.props.submitValue}, props.value);
+    }
+
     if (this.props.type === 'select') {
       let options = this.props.options || [];
       let renderOption = opt => <option value={opt.value}>{opt.label}</option>;
+      options.unshift({label: '', value: ''});
       props.children = _.map(options, renderOption);
     }
 
@@ -135,16 +143,17 @@ class Field extends React.Component {
     let value = e.target.value;
     let schemaUpdates = {};
 
+    // Single instance fields, where their value does not come from the 'options' or 'optionsResource', but
+    // from the 'value' and 'submitValue' props.  If the field is 'unchecked', the value is 'null', so we need to have a
+    // reference value that is not nullable to replace when 'checking' later.  For this, we use the 'submitValue' prop.
     if (this.isRadioOrCheckbox()) {
-      value = e.target.checked? this.props.value : null;
+      value = e.target.checked? this.props.submitValue : null;
       schemaUpdates.checked = e.target.checked;
     }
 
-    if (this.props.mask) {
-      if (this.props.value) {
-        let newChar = value.slice(-1);
-        value = this.props.value + newChar;
-      }
+    if (this.props.mask && this.props.value) {
+      let newChar = value.slice(-1);
+      value = this.props.value + newChar;
     }
 
     value = this.forceMaxLength(value);
@@ -153,9 +162,9 @@ class Field extends React.Component {
       id: this.props.id,
       schemaUpdates,
       modelUpdates: {
-        id: this.props.name,
-        value
-      }
+        [this.props.name]: value
+      },
+      props: this.props
     };
   }
 
@@ -165,15 +174,17 @@ class Field extends React.Component {
    */
   handleKeyDown(e) {
     if (this.props.mask && e.keyCode === BACKSPACE) {
-      let value = this.props.value.slice(0, -1);
       e.preventDefault();
-      e.component = {
+      let value = this.props.value.slice(0, -1);
+      let _div = React.findDOMNode(this);
+      let event = new Event('change', {bubbles: true, cancelable: true});
+      event.component = {
         id: this.props.id,
         modelUpdates: {
-          id: this.props.name,
-          value
+          [this.props.name]: value
         }
       };
+      _div.dispatchEvent(event);
     }
   }
 
@@ -207,15 +218,13 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-  inputProps: ['id', 'name', 'type', 'disabled', 'checked', 'multiple', 'options'],
   componentType: 'field',
   initialState: 'visible',
   disabled: false,
   visible: true,
   mask: '',
   forceManualInput: false,
-  hasError: false,
-  errorMessage: ''
+  hasError: false
 };
 
 export default Field;

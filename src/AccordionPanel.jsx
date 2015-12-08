@@ -11,18 +11,35 @@ class AccordionPanel extends React.Component {
   constructor() {
     super();
     this.handleClick = this.handleClick.bind(this);
+    this.getCollapseState = this.getCollapseState.bind(this);
   }
 
   handleClick(e) {
     e.component = this.props;
   }
 
+  getCollapseState() {
+    return (
+      <h3>
+        {this.props.header}
+        <span>
+          {this.props.expanded ? (
+            <span className="pull-right">Hide <i className="glyphicon glyphicon-triangle-top"></i></span>
+          ) : (
+            <span className="pull-right">Show <i className="glyphicon glyphicon-triangle-bottom"></i></span>
+          )}
+        </span>
+      </h3>
+    );
+  }
+
   render() {
     return (
       <Panel
         {...this.props}
+        className="accordion-panel"
         onClick={this.handleClick}
-        bsStyle={this.props.expanded ? 'info' : 'default'}>
+        header={this.getCollapseState()}>
           {renderChildren(this.props)}
       </Panel>
     );

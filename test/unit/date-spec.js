@@ -1,5 +1,6 @@
 import React from 'react';
-import Field from '../../src/Field'
+import Field from '../../src/Field';
+import Date from '../../src/Date';
 import TestUtils from 'react/lib/ReactTestUtils';
 import fixture from '../fixtures/field-date.json';
 
@@ -7,9 +8,7 @@ describe('Date input', function() {
 
   it('Renders date picker', () => {
     let renderer = TestUtils.createRenderer();
-    renderer.render(
-      <Field {...fixture}/>
-    );
+    renderer.render(<Field {...fixture}/>);
     let dateComponent = renderer.getRenderOutput();
     expect(dateComponent.props.type).toBe(fixture.type);
     expect(dateComponent.props.name).toBe(fixture.name);
@@ -17,26 +16,20 @@ describe('Date input', function() {
   });
 
   it('can handle change event', (done) => {
-
-    let handler = (event) => {
-      expect(event.component).toBeDefined();
-      expect(event.component.id).toEqual(fixture.id);
-      expect(event.component.modelUpdates).toBeDefined();
-      expect(event.component.modelUpdates.value).toEqual('11/02/2008');
-      expect(event.component.modelUpdates.id).toEqual(fixture.name);
+    let handleSimulatedChange = (e) => {
+      expect(e.component).toBeDefined();
+      expect(e.component.id).toEqual(fixture.id);
+      expect(e.component.modelUpdates).toBeDefined();
+      expect(e.component.modelUpdates[fixture.name]).toEqual(fixture.value);
       done();
     };
 
-    let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
-        <Field {...fixture}/>
-      </div>
-    );
-
-    let event = {target: {value: '11/02/2008'}};
-    let node = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
-    TestUtils.Simulate.change(node, event);
-
+    let component = TestUtils.renderIntoDocument(<Date {...fixture}/>);
+    // set change listener on parent component root element
+    let _compRoot = React.findDOMNode(component);
+    _compRoot.addEventListener('change', handleSimulatedChange);
+    // initiate react-widgets DateTimePicker onChange event, in turn triggers simulated change event
+    component.handleDateChange('2015-09-30T05:00:00.000Z', '09/30/2015');
   });
 
 });

@@ -16,6 +16,8 @@ module.exports = {
 	grid: require('./Grid'),
 	page: require('./Page'),
 	panel: require('react-bootstrap').Panel,
+	tab: require('./Tab'),
+	tabs: require('./Tabs'),
 	terms: require('./Terms'),
 	tree: require('./Tree'),
 	workflow: require('./Workflow'),
