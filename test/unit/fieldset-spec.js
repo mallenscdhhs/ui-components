@@ -1,5 +1,5 @@
 import React from 'react';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import fixture from '../fixtures/fieldset.json';
 import Immutable from 'immutable';
 import Fieldset from '../../src/Fieldset';
@@ -11,10 +11,10 @@ describe('Fieldset component', function() {
         let config = Immutable.fromJS(fixture.config).set('schema', fixture).toJS();
         let renderer = TestUtils.createRenderer();
         renderer.render(
-            <Fieldset {...config}>
-                <Field {...config.schema.components.test_field.config} />
-                <Field {...config.schema.components.test_field2.config} />
-            </Fieldset>
+          <Fieldset {...config}>
+            <Field {...config.schema.components.test_field.config} />
+            <Field {...config.schema.components.test_field2.config} />
+          </Fieldset>
         );
         let output = renderer.getRenderOutput();
         expect(output.type).toBe('fieldset');
@@ -24,7 +24,7 @@ describe('Fieldset component', function() {
         let helpText = output.props.children[1];
         expect(helpText.props.children).toBe(fixture.config.helpText);
         let fields = output.props.children[2];
-        let fieldOne = fields['.0'];
+        let fieldOne = fields[0];
         expect(fieldOne.props.id).toBe(fixture.components.test_field.config.id);
         expect(fieldOne.props.label).toBe(fixture.components.test_field.config.label);
     });

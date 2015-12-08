@@ -1,5 +1,5 @@
 import React from 'react';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import Page from '../../src/Page';
 import Field from '../../src/Field';
 import Immutable from 'immutable';
@@ -21,8 +21,8 @@ describe('Page component', function() {
     let title = output.props.children[0];
     let content = output.props.children[1];
     let fields = output.props.children[2];
-    let fieldOne = fields['.0'];
-    let fieldTwo = fields['.1'];
+    let fieldOne = fields[0];
+    let fieldTwo = fields[1];
     expect(title.type).toBe('header');
     expect(title.props.children.props.children).toBe(layoutFixture.config.title);
     expect(content.props.content).toBe(layoutFixture.config.content);

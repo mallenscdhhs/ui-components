@@ -21,7 +21,7 @@ describe('render-children', () => {
       }
     };
     let result = renderChildren({schema, children});
-    let resultElement = result._reactFragment['.0'];
+    let resultElement = result[0];
     expect(resultElement.props.disabled).toBe(true);
     expect(resultElement.props.schema).toBeDefined();
   });
