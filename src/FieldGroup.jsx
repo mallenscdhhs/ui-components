@@ -66,7 +66,7 @@ class FieldGroup extends React.Component {
     let styles = classNames({
       'has-error': this.props.hasError,
       'form-group': true,
-      'form-inline': true
+      'form-inline': this.props.inline !== undefined ? this.props.inline : true
     });
 
     return (
