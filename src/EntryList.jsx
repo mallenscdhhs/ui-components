@@ -1,5 +1,6 @@
 'use-strict';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import setClassNames from 'classnames';
 import renderChildren from './render-children';
@@ -27,12 +28,12 @@ class EntryList extends React.Component {
   }
 
   componentDidMount() {
-    let node = React.findDOMNode(this);
+    let node = ReactDOM.findDOMNode(this);
     node.addEventListener('change', this._handleBrowserEvent);
   }
 
   componentWillUnmount() {
-    let node = React.findDOMNode(this);
+    let node = ReactDOM.findDOMNode(this);
     node.removeEventListener('change', this._handleBrowserEvent);
   }
 
@@ -55,15 +56,17 @@ class EntryList extends React.Component {
 
   handleEdit(e) {
     let entryIndex = Number(e.target.dataset.index);
+    let entry = this.props.value[entryIndex];
     this.setState({previousValue: this.props.value});
     e.component = {
       id: this.props.id,
       schemaUpdates: {
         showForm: true,
         entryIndex
-      }
+      },
+      modelUpdates: entry
     };
-    let entry = this.props.value[entryIndex];
+
     e.component.file = {
       containsFileFields: this.props.containsFileFields,
       edit: entry

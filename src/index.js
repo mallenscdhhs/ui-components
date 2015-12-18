@@ -4,7 +4,6 @@ module.exports = {
 	action: require('./Action'),
 	alert: require('react-bootstrap').Alert,
 	content: require('./Content'),
-	contentEditor: require('./ContentEditor'),
 	date: require('./Date'),
 	entrylist: require('./EntryList'),
 	field: require('./Field'),

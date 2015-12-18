@@ -1,5 +1,5 @@
 import React from 'react';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import Terms from '../../src/Terms';
 import fixture from '../fixtures/terms.json';
 

@@ -12,6 +12,7 @@ class Terms extends React.Component {
    constructor() {
     super();
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.renderLegend = this.renderLegend.bind(this);
     this.renderCheckboxHeader = this.renderCheckboxHeader.bind(this);
   }
@@ -26,6 +27,19 @@ class Terms extends React.Component {
           termsRead: true
         }
       };
+    }
+  }
+
+  handleChange(e) {
+    if (e.component) {
+      if (e.component.schemaUpdates) {
+        e.component = {
+          id: this.props.id,
+          schemaUpdates: {
+            checkboxValue: e.component.schemaUpdates.checked ? 'attested' : null
+          }
+        };
+      }
     }
   }
 
@@ -54,7 +68,7 @@ class Terms extends React.Component {
 
   render() {
     return (
-      <fieldset className="form-group">
+      <fieldset className="form-group" onChange={this.handleChange}>
         {this.renderLegend()}
         <textarea
           id={this.props.id}
@@ -71,7 +85,8 @@ class Terms extends React.Component {
           disabled={!this.props.termsRead}
           label={this.props.checkboxLabel}
           required={this.props.required}
-          value="attested" />
+          value={this.props.checkboxValue}
+          submitValue="attested" />
       </fieldset>
     );
   }

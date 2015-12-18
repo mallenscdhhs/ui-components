@@ -1,8 +1,16 @@
 'use-strict';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import {DateTimePicker} from 'react-widgets';
 import {Input} from 'react-bootstrap';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
+import Globalize from 'globalize';
+import globalizeLocalizer from 'react-widgets/lib/localizers/globalize';
+
+/**
+ * i18N support, now required by react-widgets v3.x
+ */
+globalizeLocalizer(Globalize);
 
 /**
  * Date input component
@@ -27,7 +35,7 @@ class DateField extends React.Component {
   }
 
   handleDateChange(date, value) {
-    let node = React.findDOMNode(this);
+    let node = ReactDOM.findDOMNode(this);
     let event;
     try {
       event = new Event('change', {bubbles: true});

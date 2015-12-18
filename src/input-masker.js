@@ -38,6 +38,10 @@ let masks = {
   zip: {
     pattern: '*****-****',
     placeholderChar
+  },
+  dateFormat: {
+    pattern: '**/**/****',
+    placeholderChar
   }
 };
 

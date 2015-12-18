@@ -1,7 +1,7 @@
 import React from 'react';
 import Accordion from '../../src/Accordion';
 import AccordionPanel from '../../src/AccordionPanel';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import fixture from '../fixtures/accordion.json';
 import _ from 'lodash';
 
