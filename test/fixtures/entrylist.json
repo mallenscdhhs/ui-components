@@ -10,7 +10,7 @@
     "columns": [
       {"header": "First", "dataKey": "firstName"},
       {"header": "Last", "dataKey": "lastName"},
-      {"header": "Phone", "dataKey": "phone"}
+      {"header": "Phone", "dataKey": "phone", "mask": "phone"}
     ]
   },
   "components": {

@@ -6,7 +6,7 @@ import Factory from '../../src/Factory';
 import fixture from '../fixtures/entrylist.json';
 
 const SCHEMA = fixture;
-const mockEntry = {firstName: 'John', lastName: 'Doe', phone: '5554443210'};
+const MOCK_ENTRY = {firstName: 'John', lastName: 'Doe', phone: '5554443210'};
 
 function buildComponent(schema) {
   let componentBuild = Factory.build(elements, schema, schema)[0];
@@ -44,7 +44,7 @@ describe('EntryList', () => {
   });
 
   it('should facilitate editing of entries', () => {
-    let schema = Immutable.fromJS(SCHEMA).setIn(['config', 'value'], [mockEntry]).toJS();
+    let schema = Immutable.fromJS(SCHEMA).setIn(['config', 'value'], [MOCK_ENTRY]).toJS();
     let componentWithEntries = buildComponent(schema);
     let mockEvent = {
       target: {dataset: {index: 0}}
@@ -76,7 +76,7 @@ describe('EntryList', () => {
       .fromJS(SCHEMA)
       .setIn(['config', 'showForm'], true)
       .setIn(['config', 'entryIndex'], 0)
-      .setIn(['config', 'value'], [mockEntry])
+      .setIn(['config', 'value'], [MOCK_ENTRY])
       .toJS();
 
     let component = buildComponent(schema);
@@ -89,7 +89,7 @@ describe('EntryList', () => {
     };
 
     let expectedModelUpdates = {
-      [schema.config.name]: [{lastName: 'Foo', firstName: mockEntry.firstName, phone: mockEntry.phone}],
+      [schema.config.name]: [{lastName: 'Foo', firstName: MOCK_ENTRY.firstName, phone: MOCK_ENTRY.phone}],
       lastName: 'Foo'
     };
 
@@ -103,7 +103,7 @@ describe('EntryList', () => {
       .fromJS(SCHEMA)
       .setIn(['config', 'showForm'], true)
       .setIn(['config', 'entryIndex'], 0)
-      .setIn(['config', 'value'], [mockEntry])
+      .setIn(['config', 'value'], [MOCK_ENTRY])
       .toJS();
 
     let component = buildComponent(schema);
@@ -131,7 +131,7 @@ describe('EntryList', () => {
   it('should be able to remove an entry from value list', () => {
     let schema = Immutable
       .fromJS(SCHEMA)
-      .setIn(['config', 'value'], [mockEntry])
+      .setIn(['config', 'value'], [MOCK_ENTRY])
       .toJS();
 
     let component = buildComponent(schema);
@@ -155,6 +155,18 @@ describe('EntryList', () => {
     component.handleRemove(mockEvent);
     expect(mockEvent.component.schemaUpdates).toEqual(mockResult.component.schemaUpdates);
     expect(mockEvent.component.modelUpdates).toEqual(mockResult.component.modelUpdates);
+  });
+
+  it('should mask column values if a mask is supplied for the corresponding field', () => {
+    let schema = Immutable
+      .fromJS(SCHEMA)
+      .setIn(['config', 'value'], [MOCK_ENTRY])
+      .toJS();
+
+    let component = buildComponent(schema);
+    let rows = TestUtils.scryRenderedDOMComponentsWithTag(component, 'tr');
+    let data = rows[1].childNodes[2].innerText;
+    expect(data).toBe('555-444-3210');
   });
 
 });
