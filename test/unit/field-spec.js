@@ -1,6 +1,7 @@
 import React from 'react';
 import Field from '../../src/Field';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
+import ComponentWrapper from '../ComponentWrapper';
 
 let renderer = TestUtils.createRenderer();
 
@@ -223,9 +224,9 @@ describe('Field', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
+      <ComponentWrapper onChange={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let event = {target: {value: 'Johnny'}};
@@ -251,9 +252,9 @@ describe('Field', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onBlur={handler}>
+      <ComponentWrapper onBlur={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
@@ -281,9 +282,9 @@ describe('Field', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
+      <ComponentWrapper onChange={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
@@ -306,9 +307,9 @@ describe('Field', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
+      <ComponentWrapper onChange={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
@@ -334,9 +335,9 @@ describe('Field', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onKeyUp={handler}>
+      <ComponentWrapper onKeyUp={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');
@@ -366,9 +367,9 @@ describe('Field', () => {
     };
 
     let component = TestUtils.renderIntoDocument(
-      <div onChange={handler}>
+      <ComponentWrapper onChange={handler}>
         <Field {...fixture}/>
-      </div>
+      </ComponentWrapper>
     );
 
     let input = TestUtils.findRenderedDOMComponentWithTag(component, 'input');

@@ -1,5 +1,5 @@
 import React from 'react';
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 import WorkflowItem from '../../src/WorkflowItem';
 import Immutable from 'immutable';
 let longerWorkflow = require('../fixtures/workflow-simple-more-pages.json');

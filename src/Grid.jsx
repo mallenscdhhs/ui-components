@@ -38,7 +38,7 @@ class Grid extends React.Component {
    * @param {array} components
    * @returns {array}
    */
-  static distributeComponents(rows, components){
+  static distributeComponents(rows, components) {
     // Fill available rows/columns with components
     let index = -1;
     let fullRows = _.map(rows, (row, i) => {
@@ -49,7 +49,7 @@ class Grid extends React.Component {
     });
 
     let extraRows = [];
-    if ( index < components.length-1) {
+    if (index < components.length-1) {
       extraRows = _.map(components.slice(index+1), (component) => {
         return [{
           md: '12',
@@ -60,9 +60,9 @@ class Grid extends React.Component {
     return fullRows.concat(extraRows);
   }
 
-  render(){
+  render() {
     let numChildren = this.props.children ? this.props.children.length : 0;
-    if(numChildren) {
+    if (numChildren) {
       let rows = Grid.distributeComponents(this.props.rows, this.props.children);
       return (
         <div className="grid-layout">
@@ -83,7 +83,7 @@ class Grid extends React.Component {
         })}
         </div>
       );
-    }else{
+    } else {
       return (<div className="grid-layout"></div>);
     }
   }
