@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import setClassNames from 'classnames';
 import renderChildren from './render-children';
+import masker from './input-masker';
 import {Button, Glyphicon} from 'react-bootstrap';
 
 class EntryList extends React.Component {
@@ -25,6 +26,7 @@ class EntryList extends React.Component {
     this.saveEntry = this.saveEntry.bind(this);
     this.updateEntries = this.updateEntries.bind(this);
     this._handleBrowserEvent = this._handleBrowserEvent.bind(this);
+    this._renderColumnData = this._renderColumnData.bind(this);
   }
 
   componentDidMount() {
@@ -198,6 +200,10 @@ class EntryList extends React.Component {
     }
   }
 
+  _renderColumnData(col, data) {
+    return (col.mask) ? masker.mask(col.mask, data) : data;
+  }
+
   render() {
     let classNames = setClassNames({
       entrylist: true,
@@ -218,10 +224,7 @@ class EntryList extends React.Component {
             {this.props.value.map((entry, i) => {
               return (
                 <tr key={`entry-row-${i}`}>
-                  {this.props.columns.map((col, colIdx) => {
-                    let data = entry[col.dataKey];
-                    return <td key={`${col.dataKey}-${i}`}>{data}</td>;
-                  })}
+                  {this.props.columns.map(col => <td key={`${col.dataKey}-${i}`}>{this._renderColumnData(col, entry[col.dataKey])}</td>)}
                   <td key={`edit-entry-${i}`} className="entrylist-edit">
                     <a onClick={this.handleEdit} data-index={i} href="javascript:void(0);">edit</a>
                   </td>
