@@ -3,17 +3,29 @@ import InputMask from 'inputmask-core';
 import _ from 'lodash';
 
 let placeholderChar = ' ';
+
+/**
+ * Accept all character types in a mask pattern.
+ * @private
+ */
+let allTypesFormatChars = {
+  '*': {
+    validate: char => char,
+    transform: char => char
+  }
+};
+
 /**
  * An internal dictionary of format characters to use
  * with any mask that requires partial obfuscation.
  * @private
  */
-let obfuscateFormatChars = {
-  'x': {
+let obfuscateFormatChars = _.merge({
+  x: {
     validate: char => char,
     transform: char => '*'
   }
-};
+}, allTypesFormatChars);
 
 /**
  * Internal dictionary of custom masks. These keys will correspond to the value
@@ -33,10 +45,12 @@ let masks = {
   },
   phone: {
     pattern: '***-***-****',
+    formatCharacters: allTypesFormatChars,
     placeholderChar
   },
   zip: {
     pattern: '*****-****',
+    formatCharacters: allTypesFormatChars,
     placeholderChar
   }
 };

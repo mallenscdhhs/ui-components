@@ -29,4 +29,15 @@ describe('input-masker', () => {
     let incompleteResult = masker.mask('zip', '123456');
     expect(incompleteResult).toBe('12345-6');
   });
+
+  it('can accept all character types', () => {
+    let result = masker.mask('phone', '111aaa@#$%');
+    expect(result).toBe('111-aaa-@#$%');
+    result = masker.mask('zip', '29685aa%%');
+    expect(result).toBe('29685-aa%%');
+    result = masker.mask('ein', '11123aa$a');
+    expect(result).toBe('**-***aa$a');
+    result = masker.mask('ssn', '3332a$%a1');
+    expect(result).toBe('***-**-$%a1');
+  });
 });
