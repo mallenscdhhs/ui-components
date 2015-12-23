@@ -20,8 +20,10 @@ describe('EntryList', () => {
   it('renders an entrylist', () => {
     let component = buildComponent(SCHEMA);
     let headers = TestUtils.scryRenderedDOMComponentsWithTag(component, 'th');
+    let title = TestUtils.findRenderedDOMComponentWithTag(component, 'h4');
     expect(component.props.columns.length).toBe(SCHEMA.config.columns.length);
     expect(headers.length).toBe(SCHEMA.config.columns.length + 1);
+    expect(title.innerText).toBe('People List');
   });
 
   it('should render a configured form when "showForm" is set to "true"', () => {
