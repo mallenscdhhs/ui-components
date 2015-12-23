@@ -111,7 +111,7 @@ DateField.defaultProps = {
   time: false,
   format: 'MM/dd/yyyy',
   parse: DateField.parseDate,
-  help: 'Date format: MM/dd/yyyy'
+  help: 'Date format: mm/dd/yyyy'
 };
 
 export default DateField;
