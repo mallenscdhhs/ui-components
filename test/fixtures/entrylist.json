@@ -4,6 +4,7 @@
   "config": {
     "id": "sampleEntryList",
     "name": "names",
+    "title": "People List",
     "emptyText": "Please add your name.",
     "addNewButtonText": "Add Name",
     "showForm": false,

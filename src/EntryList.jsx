@@ -27,6 +27,7 @@ class EntryList extends React.Component {
     this.updateEntries = this.updateEntries.bind(this);
     this._handleBrowserEvent = this._handleBrowserEvent.bind(this);
     this._renderColumnData = this._renderColumnData.bind(this);
+    this._renderTitle = this._renderTitle.bind(this);
   }
 
   componentDidMount() {
@@ -204,6 +205,12 @@ class EntryList extends React.Component {
     return (col.mask) ? masker.mask(col.mask, data) : data;
   }
 
+  _renderTitle() {
+    if (this.props.title) {
+      return <h4>{this.props.title}</h4>;
+    }
+  }
+
   render() {
     let classNames = setClassNames({
       entrylist: true,
@@ -213,6 +220,7 @@ class EntryList extends React.Component {
 
     return (
       <div className={classNames}>
+        {this._renderTitle()}
         <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr>
@@ -251,7 +259,8 @@ EntryList.propTypes = {
   columns: React.PropTypes.arrayOf(React.PropTypes.object),
   showForm: React.PropTypes.bool,
   entryIndex: React.PropTypes.number,
-  addNewButtonText: React.PropTypes.string
+  addNewButtonText: React.PropTypes.string,
+  title: React.PropTypes.string
 };
 
 EntryList.defaultProps = {
