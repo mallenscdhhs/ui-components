@@ -30,6 +30,11 @@ describe('input-masker', () => {
     expect(incompleteResult).toBe('12345-6');
   });
 
+  it('can mask dates', () => {
+    let result = masker.mask('date', '09241981');
+    expect(result).toBe('09/24/1981');
+  });
+
   it('can accept all character types', () => {
     let result = masker.mask('phone', '111aaa@#$%');
     expect(result).toBe('111-aaa-@#$%');

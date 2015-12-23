@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
+import masker from './input-masker';
 import {Input} from 'react-bootstrap';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import Globalize from 'globalize';
@@ -20,21 +21,42 @@ class DateField extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleDateChange = this.handleDateChange.bind(this);
+    this._handleDateChange = this._handleDateChange.bind(this);
     this._handleBlur = this._handleBlur.bind(this);
   }
 
-  static getDateValue(input) {
-    let value = null;
-    if (input === 'today') {
-      value = new Date();
-    } else if (input) {
-      value = new Date(input);
+  /**
+   * Parse the initial Field value for use with react-widgets DateTimePicker.
+   * @param {string} value - the initial prop value
+   * @returns {Date?} Date or null
+   */
+  static getDateValue(value) {
+    let dateValue = null;
+    if (value === 'today') {
+      dateValue = new Date();
+    } else if (value) {
+      dateValue = new Date(value);
     }
-    return value;
+
+    return dateValue;
   }
 
-  handleDateChange(date, value) {
+  /**
+   * Parse user input as Date object.
+   * @param {string} str - user input
+   * @returns {Date}
+   */
+  static parseDate(str) {
+    let date = new Date(str);
+    if (date.toString() === 'Invalid Date') {
+      let maskedDate = masker.mask('date', str);
+      date = new Date(maskedDate);
+    }
+
+    return date;
+  }
+
+  _handleDateChange(date, value) {
     let node = ReactDOM.findDOMNode(this);
     let event;
     try {
@@ -66,7 +88,7 @@ class DateField extends React.Component {
         <DateTimePicker
           {...this.props}
           onBlur={this._handleBlur}
-          onChange={this.handleDateChange}
+          onChange={this._handleDateChange}
           value={DateField.getDateValue(this.props.value)}/>
       </Input>
     );
@@ -80,8 +102,7 @@ DateField.propTypes = {
   disabled: React.PropTypes.bool,
   calendar: React.PropTypes.bool,
   time: React.PropTypes.bool,
-  format: React.PropTypes.string,
-  parse: React.PropTypes.string
+  format: React.PropTypes.string
 };
 
 DateField.defaultProps = {
@@ -89,7 +110,8 @@ DateField.defaultProps = {
   calendar: true,
   time: false,
   format: 'MM/dd/yyyy',
-  parse: 'MM/dd/yyyy'
+  parse: DateField.parseDate,
+  help: 'Date format: MM/dd/yyyy'
 };
 
 export default DateField;

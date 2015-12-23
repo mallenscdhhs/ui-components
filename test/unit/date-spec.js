@@ -1,8 +1,9 @@
 import React from 'react';
 import Field from '../../src/Field';
-import Date from '../../src/Date';
+import DateField from '../../src/Date';
 import TestUtils from 'react-addons-test-utils';
 import fixture from '../fixtures/field-date.json';
+import DateInput from 'react-widgets/lib/DateInput';
 
 describe('Date input', function() {
 
@@ -15,21 +16,31 @@ describe('Date input', function() {
     expect(dateComponent.props.value).toBe(fixture.value);
   });
 
-  it('can handle change event', (done) => {
-    let handleSimulatedChange = (e) => {
-      expect(e.component).toBeDefined();
-      expect(e.component.id).toEqual(fixture.id);
-      expect(e.component.modelUpdates).toBeDefined();
-      expect(e.component.modelUpdates[fixture.name]).toEqual(fixture.value);
-      done();
-    };
+  it('can parse date value', () => {
+    let result = DateField.getDateValue('09/24/1981');
+    expect(result.getFullYear()).toBe(1981);
+    expect(result.getMonth()).toBe(8);
+    expect(result.getDate()).toBe(24);
+  });
 
-    let component = TestUtils.renderIntoDocument(<Date {...fixture}/>);
-    // set change listener on parent component root element
-    let _compRoot = React.findDOMNode(component);
-    _compRoot.addEventListener('change', handleSimulatedChange);
-    // initiate react-widgets DateTimePicker onChange event, in turn triggers simulated change event
-    component.handleDateChange('2015-09-30T05:00:00.000Z', '09/30/2015');
+  it('can parse "today" string as a Date', () => {
+    let today = new Date();
+    let result = DateField.getDateValue('today');
+    expect(result.getFullYear()).toBe(today.getFullYear());
+    expect(result.getMonth()).toBe(today.getMonth());
+    expect(result.getDate()).toBe(today.getDate());
+  });
+
+  it('should return "null" if no value is configured', () => {
+    let result = DateField.getDateValue(undefined);
+    expect(result).toBeNull();
+  });
+
+  it('can parse date strings', () => {
+    let result = DateField.parseDate('09241981');
+    expect(result.getFullYear()).toBe(1981);
+    expect(result.getMonth()).toBe(8);
+    expect(result.getDate()).toBe(24);
   });
 
 });

@@ -53,8 +53,8 @@ let masks = {
     formatCharacters: allTypesFormatChars,
     placeholderChar
   },
-  dateFormat: {
-    pattern: '**/**/****',
+  date: {
+    pattern: '11/11/1111',
     placeholderChar
   }
 };

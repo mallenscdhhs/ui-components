@@ -4,6 +4,5 @@
   "name" : "test-date",
   "label" : "Test Date",
   "value" : "09/30/2015",
-  "required" : false,
-  "options" : { }
+  "required" : false
 }
